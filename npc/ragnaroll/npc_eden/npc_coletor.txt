@@ -1,0 +1,364 @@
+//============================================================
+moc_para01,38,58,5	script	Quest Repetitivas#1	850,{
+
+	if(c_run4==1){
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "^0000FF"+getd("." + currentquest4$ + "_collectionname$")+"^000000";
+		mes "--------------------------------";
+		for( set .@j, 0; .@j < getarraysize(getd("."+ currentquest4$ + "_collectionitem")); set .@j,.@j+2){
+			mes "^FF0000"+getitemname(getd("."+currentquest4$+"_collectionitem["+.@j+"]"))+" - "+countitem(getd("."+currentquest4$+"_collectionitem["+.@j+"]"))+"/"+getd("."+currentquest4$+"_collectionitem["+(.@j+1)+"]")+" ea.^000000";
+		}
+		mes "--------------------------------";
+		mes "[Premiação]";
+		mes "Item: ^0000FF"+((getd("." +currentquest4$+"_collectionprize"))?getitemname(getd("." +currentquest4$+"_collectionprize"))+" - "+getd("." +currentquest4$+"_collectionamount")+" ea.^000000":"Nothing^000000");
+		mes "Zeny: ^0000FF"+getd("." +currentquest4$+"_collectionzeny")+"^000000";
+		mes "Base EXP: ^0000FF"+getd("." +currentquest4$+"_collectionexp["+0+"]")+"^000000";
+		mes "Job EXP: ^0000FF"+getd("." +currentquest4$+"_collectionexp["+1+"]")+"^000000";
+		next;
+		if(select("Entregar:Cancelar") == 2){
+			mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+			mes "Missão Cancelada.";
+			set currentquest4$, "";
+			set c_run4, 0;
+			close;
+		}
+		goto L_checkitems;
+	}
+	
+	if(h_run4==1){
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "^0000FF"+getd("." + currentquest4$ + "_huntingname$")+"^000000";
+		mes "--------------------------------";
+		for( set .@j, 0; .@j < getarraysize(getd("."+ currentquest4$ + "_huntingmob")); set .@j,.@j+2){
+			set .@currentmob, getd("."+currentquest4$+"_huntingmob["+(.@j)+"]");
+			mes "^FF0000"+strmobinfo(1,getd("."+currentquest4$+"_huntingmob["+.@j+"]"))+" - "+getd(currentquest4$+"_"+.@currentmob+"_"+(.@j+1)+"_killcount")+"/"+getd("."+currentquest4$+"_huntingmob["+(.@j+1)+"]")+" ea.^000000";
+		}
+		mes "--------------------------------";
+		mes "[Premiação]";
+		mes "Item: ^0000FF"+((getd("." +currentquest4$+"_huntingprize"))?getitemname(getd("." +currentquest4$+"_huntingprize"))+" - "+getd("." +currentquest4$+"_huntingamount")+" ea.^000000":"Nothing^000000");
+		mes "Zeny: ^0000FF"+getd("." +currentquest4$+"_huntingzeny")+"^000000";
+		mes "Base EXP: ^0000FF"+getd("." +currentquest4$+"_huntingexp["+0+"]")+"^000000";
+		mes "Job EXP: ^0000FF"+getd("." +currentquest4$+"_huntingexp["+1+"]")+"^000000";
+		next;
+		if(select("Entregar:Cancelar") == 2){
+			mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+			mes "Missão Cancelada.";
+			for(set .@x, 1; .@x < getarraysize(getd("."+currentquest4$+"_huntingmob")); set .@x,.@x+2){
+				set .@currentmob, getd("."+currentquest4$+"_huntingmob["+(.@x-1)+"]");
+				setd(currentquest4$+"_"+.@currentmob+"_"+.@x+"_killcount", 0);
+			}
+			set currentquest4$, "";
+			set h_run4, 0;
+			close;
+		}
+		goto L_checkmobs;
+	}
+
+	mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+	mes "<b>Selecione o Tipo de missão :</b>";
+	next;
+	
+	switch(select((.collection)?"Missão de Coleta":"",
+				  (.hunting)?"Missão de Caça":"",
+				  "Nada")) {
+
+case 1:
+	set .@collectmenu$, "";
+	for( set .@i,0; .@i < .collectionquestcount; set .@i,.@i+1){
+		if (.@i) set .@collectmenu$,.@collectmenu$+":";
+		set .@collectmenu$, .@collectmenu$ + "[" + getd("." +(.@i+1)+"_collectionmin") + " - " + getd("." +(.@i+1)+"_collectionmax") + "] " + getd("." + (.@i+1) + "_collectionname$");
+	}
+	set .@selection,select(.@collectmenu$);
+	if(.quest_repeat == 1){
+		if(gettimetick(2) < getd(.@selection + "_collection_delay")){
+			set .@time_left, getd(.@selection + "_collection_delay")-gettimetick(2);
+			mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+			if(.@time_left < 60) mes "Você tem que esperar ^0000FF"+.@time_left+" Segundos^000000 para fazer essa missão novamente.";
+			if(.@time_left < 3600) mes "Você tem que esperar ^0000FF"+.@time_left/60+" Minutos^000000 para fazer essa missão novamente.";
+			mes "Você tem que esperar ^0000FF"+.@time_left/60/60+" Horas^000000 para fazer essa missão novamente.";
+			close;
+		}
+	}
+	else{
+		if(getd(.@selection + "_collection_repeat") == 1){
+			mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+			mes "Você já fez essa missão.";
+			mes "Por favor escolha outra.";
+			close;
+		}
+	}
+	mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+	mes "^0000FF"+getd("." + .@selection + "_collectionname$")+"^000000";
+	mes "--------------------------------";
+	for( set .@j, 0; .@j < getarraysize(getd("."+ .@selection + "_collectionitem")); set .@j,.@j+2){
+		mes "^FF0000"+getitemname(getd("."+.@selection+"_collectionitem["+.@j+"]"))+" - "+getd("."+.@selection+"_collectionitem["+(.@j+1)+"]")+" ea.^000000";
+	}
+	mes "--------------------------------";
+	mes "[Premiação]";
+	mes "Item: ^0000FF"+((getd("." +.@selection+"_collectionprize"))?getitemname(getd("." +.@selection+"_collectionprize"))+" - "+getd("." +.@selection+"_collectionamount")+" ea.^000000":"Nothing^000000");
+	mes "Zeny: ^0000FF"+getd("." +.@selection+"_collectionzeny")+"^000000";
+	mes "Base EXP: ^0000FF"+getd("." +.@selection+"_collectionexp["+0+"]")+"^000000";
+	mes "Job EXP: ^0000FF"+getd("." +.@selection+"_collectionexp["+1+"]")+"^000000";
+	next;
+	if(select("Aceita:Recusa") == 2){
+		close;
+	}
+	if(BaseLevel >= getd("." +.@selection+"_collectionmin") && BaseLevel <= getd("." +.@selection+"_collectionmax")){
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "Missão Aceita.";
+		set c_run4, 1;
+		set currentquest4$, .@selection;
+		close;
+	}
+	else{
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "Você não tem o Nivel necessário";
+		mes "Para fazer esta missão.";
+		close;
+	}
+	
+case 2:
+	set .@huntmenu$, "";
+	for( set .@i,0; .@i < .huntingquestcount; set .@i,.@i+1){
+		if (.@i) set .@huntmenu$,.@huntmenu$+":";
+		set .@huntmenu$, .@huntmenu$ + "[" + getd("." +(.@i+1)+"_huntingmin") + " - " + getd("." +(.@i+1)+"_huntingmax") + "] " + getd("." + (.@i+1) + "_huntingname$");
+	}
+	set .@selection,select(.@huntmenu$);
+	if(.quest_repeat == 1){
+		if(gettimetick(2) < getd(.@selection + "_hunting_delay")){
+			set .@time_left, getd(.@selection + "_hunting_delay")-gettimetick(2);
+			mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+			if(.@time_left < 60) mes "Você tem que esperar ^0000FF"+.@time_left+" Segundos^000000 para fazer essa missão novamente.";
+			if(.@time_left < 3600) mes "Você tem que esperar ^0000FF"+.@time_left/60+" Minutis^000000 para fazer essa missão novamente.";
+			mes "Você tem que esperar ^0000FF"+.@time_left/60/60+" Horas^000000 para fazer essa missão novamente.";
+			close;
+		}
+	}
+	else{
+		if(getd(.@selection + "_hunting_repeat") == 1){
+			mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+			mes "Você já fez essa missão.";
+			mes "Por favor escolha outra.";
+			close;
+		}
+	}
+	mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+	mes "^0000FF"+getd("." + .@selection + "_huntingname$")+"^000000";
+	mes "--------------------------------";
+	for( set .@j, 0; .@j < getarraysize(getd("."+ .@selection + "_huntingmob")); set .@j,.@j+2){
+		mes "^FF0000"+strmobinfo(1,getd("."+.@selection+"_huntingmob["+.@j+"]"))+" - "+getd("."+.@selection+"_huntingmob["+(.@j+1)+"]")+" ea.^000000";
+	}
+	mes "--------------------------------";
+	mes "[Premiação]";
+	mes "Item: ^0000FF"+((getd("." +.@selection+"_huntingprize"))?getitemname(getd("." +.@selection+"_huntingprize"))+" - "+getd("." +.@selection+"_huntingamount")+" ea.^000000":"Nothing^000000");
+	mes "Zeny: ^0000FF"+getd("." +.@selection+"_huntingzeny")+"^000000";
+	mes "Base EXP: ^0000FF"+getd("." +.@selection+"_huntingexp["+0+"]")+"^000000";
+	mes "Job EXP: ^0000FF"+getd("." +.@selection+"_huntingexp["+1+"]")+"^000000";
+	next;
+	if(select("Aceita:Recusa") == 2){
+		close;
+	}
+	if(BaseLevel >= getd("." +.@selection+"_huntingmin") && BaseLevel <= getd("." +.@selection+"_huntingmax")){
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "Missão Aceita.";
+		set h_run4, 1;
+		set currentquest4$, .@selection;
+		close;
+	}
+	else{
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "Você não tem o Nivel necessário";
+		mes "Para fazer esta missão.";
+		close;
+	}
+	
+case 3:
+	close;
+	}
+	
+L_checkitems:
+	for( set .@k,0; .@k < getarraysize(getd("."+currentquest4$+"_collectionitem")); set .@k,.@k+2){
+		if(countitem(getd("."+currentquest4$+"_collectionitem["+.@k+"]"))>=getd("."+currentquest4$+"_collectionitem["+(.@k+1)+"]")){
+			set .@checkitem,.@checkitem+2;
+		}
+	}
+	if(.@checkitem<getarraysize(getd("."+currentquest4$+"_collectionitem"))){
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "Você não tem tudo.";
+		close;
+	}
+	for( set .@delcount,0; .@delcount < getarraysize(getd("."+currentquest4$+"_collectionitem")); set .@delcount,.@delcount+2){
+		delitem getd("."+currentquest4$+"_collectionitem["+.@delcount+"]"),getd("."+currentquest4$+"_collectionitem["+(.@delcount+1)+"]");
+	}
+	mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+	mes "Parabéns! Aqui está sua recompensa.";
+	if(getd("." +currentquest4$+"_collectionprize")!=0) getitem(getd("." +currentquest4$+"_collectionprize"),getd("." +currentquest4$+"_collectionamount"));
+	set Zeny,Zeny+getd("." +currentquest4$+"_collectionzeny");
+	getexp ((getd("." +currentquest4$+"_collectionexp["+0+"]") * CUSTOM_RATE_BASE) / 100), 
+       ((getd("." +currentquest4$+"_collectionexp["+1+"]") * CUSTOM_RATE_JOB) / 100);
+	setd(currentquest4$ + "_collection_delay"),gettimetick(2)+.quest_delay;
+	setd(currentquest4$ + "_collection_repeat"),1;
+	set currentquest4$, "";
+	set c_run4, 0;
+	close;
+	
+L_checkmobs:
+	set .@goal, (getarraysize(getd("."+currentquest4$+"_huntingmob"))/2);
+	for(set .@i, 1; .@i < getarraysize(getd("."+currentquest4$+"_huntingmob")); set .@i,.@i+2){
+		set .@currentmob, getd("."+currentquest4$+"_huntingmob["+(.@i-1)+"]");
+		if(getd(currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount")==getd("."+currentquest4$+"_huntingmob["+.@i+"]")){
+			set .@checkmonster, .@checkmonster+1;
+			if(.@checkmonster==.@goal){
+				goto L_checkmobs2;
+			}
+			continue;
+		}
+		goto L_checkmobs2;
+	}
+	
+L_checkmobs2:
+	if(.@checkmonster<.@goal){
+		mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+		mes "Você não matou tudo.";
+		close;
+	}
+	mes "<b>[^FF7700Quests Repetitivas^000000]</b>";
+	mes "Parabéns! Aqui está sua recompensa.";
+	for(set .@x, 1; .@x < getarraysize(getd("."+currentquest4$+"_huntingmob")); set .@x,.@x+2){
+		set .@currentmob, getd("."+currentquest4$+"_huntingmob["+(.@x-1)+"]");
+		setd(currentquest4$+"_"+.@currentmob+"_"+.@x+"_killcount", 0);
+	}
+	if(getd("." +currentquest4$+"_huntingprize")!=0) getitem(getd("." +currentquest4$+"_huntingprize"),getd("." +currentquest4$+"_huntingamount"));
+	set Zeny, Zeny+getd("." +currentquest4$+"_huntingzeny");
+	getexp ((getd("." +currentquest4$+"_huntingexp["+0+"]") * CUSTOM_RATE_BASE) / 100), 
+       ((getd("." +currentquest4$+"_huntingexp["+1+"]") * CUSTOM_RATE_JOB) / 100);
+	setd(currentquest4$ + "_hunting_delay"),gettimetick(2)+.quest_delay;
+	setd(currentquest4$ + "_hunting_repeat"),1;
+	set currentquest4$, "";
+	set h_run4, 0;
+	close;
+
+OnNPCKillEvent:
+	if(h_run4!=1) end;
+	for(set .@i, 1; .@i < getarraysize(getd("."+currentquest4$+"_huntingmob")); set .@i,.@i+2){
+		if(killedrid==getd("."+currentquest4$+"_huntingmob["+(.@i-1)+"]")){
+			set .@currentmob, getd("."+currentquest4$+"_huntingmob["+(.@i-1)+"]");
+			if(getd(currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount")>=getd("."+currentquest4$+"_huntingmob["+.@i+"]")) end;
+			setd(currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount", getd(currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount")+1);
+			dispbottom getd("."+currentquest4$+"_huntingname$")+": ["+strmobinfo(1,.@currentmob)+"] ("+ getd(currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount")+"/"+getd("."+currentquest4$+"_huntingmob["+.@i+"]")+")";
+			if(getcharid(1) != 0 && .party_support == 1){
+				getmapxy(.@map1$,.@x1,.@y1);
+				set .@killerid, getcharid(3);
+				set .@currentquest4$, currentquest4$;
+				getpartymember getcharid(1),1;
+				getpartymember getcharid(1),2;
+				for(set .@j, 0; .@j < $@partymembercount; .@j++){
+					if(isloggedin($@partymemberaid[.@j], $@partymembercid[.@j])){
+						if(attachrid($@partymemberaid[.@j])){
+							if(h_run4==1 && getcharid(3) != .@killerid && .@currentquest4$ == currentquest4$ && HP > 0){
+								getmapxy(.@map2$,.@x2,.@y2);
+								if(.@map1$ == .@map2$ && distance(.@x1,.@y1,.@x2,.@y2) < .party_range){
+									if(getd(.@currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount")<getd("."+.@currentquest4$+"_huntingmob["+.@i+"]"))
+									{
+										setd(.@currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount", getd(.@currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount")+1);
+										dispbottom getd("."+.@currentquest4$+"_huntingname$")+": ["+strmobinfo(1,.@currentmob)+"] ("+ getd(.@currentquest4$+"_"+.@currentmob+"_"+.@i+"_killcount")+"/"+getd("."+.@currentquest4$+"_huntingmob["+.@i+"]")+")";
+									}
+								}
+							}
+						}
+					}
+				}
+				attachrid(.@killerid);
+			}
+		}
+		continue;
+	}
+	end;
+	
+OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 58;
+	setunittitle getnpcid(0), "[O Coletor]";
+	function AddCollection4;
+	function AddHunting4;
+
+	// Ativar/Desativar categorias de miss?es (1 - ativado, 0 - desativado)
+	set .collection, 1;   // Ativar miss?es de coleta
+	set .hunting, 0;      // Ativar miss?es de ca?a
+	
+	// Delay de Miss?es (em segundos)
+	// Exemplo: 24 horas = 86400 segundos
+	set .quest_delay, 1; // Configurado para 24 horas
+
+	// Ativar/Desativar repeti??o de miss?es (1 - ativado, 0 - desativado)
+	set .quest_repeat, 1;  // Ativar miss?es repet?veis
+
+	// Ativar/Desativar suporte a grupo (1 - ativado, 0 - desativado)
+	set .party_support, 1; // Ativar suporte a grupo
+	
+	// Alcance m?ximo para o suporte a grupo (em coordenadas x & y)
+	set .party_range, 25;  // Definido para 25 c?lulas de alcance
+	
+	//Add Missão de Coleta here (You can add as many required items as you want)
+	//AddCollection("<Quest Name>",<Min Lvl>,<Max Lvl>,<Reward|Item ID>,<Reward|Item Amount>,<Zeny Reward>,<Base EXP>,<Job EXP>,<Item ID>,<Item Amount>,...);
+			AddCollection4("25x Felpas",2,20,0,0,0,481,38,914,25);
+			AddCollection4("25x Crisálida",2,20,0,0,0,481,38,915,25);
+			AddCollection4("25x Pó de Borboleta",15,45,0,0,0,3688,1406,924,25);
+			AddCollection4("25x Espinhos de Porco Espinho",24,60,0,0,0,13031,7840,1027,25);
+			AddCollection4("25x Coração de Pedra",25,60,0,0,0,17500,11250,953,25);
+			AddCollection4("25x Pele de Minhoca",25,60,0,0,0,19719,14060,1055,25);
+			AddCollection4("50x Chifre de Dokebi",35,70,0,0,0,52500,45000,1021,50);
+			AddCollection4("50x Folha Gigante",36,65,0,0,0,32175,39390,7198,50);
+			AddCollection4("20x Pele de Anolian",45,80,0,0,0,86188,54125,7003,20);
+			AddCollection4("50x Bactéria",60,74,0,0,0,312833,180565,7119,50);
+			AddCollection4("50x Folha Afiada",60,85,0,2,0,293569,158631,7100,50);
+			AddCollection4("50x Chifre de Bode",70,85,0,2,0,323111,193944,7106,50);
+
+	//Add Hunting Quests here (You can add as many required mobs as you want)
+	//AddHunting("<Quest Name>",<Min Lvl>,<Max Lvl>,<Reward|Item ID>,<Reward|Item Amount>,<Zeny Reward>,<Base EXP>,<Job EXP>,<Monster ID>,<Monster Amount>,...);
+	end;
+	
+
+function AddCollection4{
+	set .collectionquestcount,.collectionquestcount+1;
+	setd ("." +.collectionquestcount+"_collectionname$", getarg(0));
+	setd ("." +.collectionquestcount+"_collectionmin", getarg(1));
+	setd ("." +.collectionquestcount+"_collectionmax", getarg(2));
+	setd ("." +.collectionquestcount+"_collectionprize", getarg(3));
+	setd ("." +.collectionquestcount+"_collectionamount", getarg(4));
+	setd ("." +.collectionquestcount+"_collectionzeny", getarg(5));
+	set .@argcount, 6;
+	set .@size, getarraysize(getd("."+ .collectionquestcount + "_collectionexp"));
+	setd ("." +.collectionquestcount+"_collectionexp["+.@size+"]",getarg(.@argcount)); 
+	setd ("." +.collectionquestcount+"_collectionexp["+(.@size+1)+"]",getarg(.@argcount+1)); 
+	set .@argcount, .@argcount+2;
+	while(getarg(.@argcount,-1)!=-1 && getarg(.@argcount+1,-1)!=-1){
+		set .@size, getarraysize(getd("."+ .collectionquestcount + "_collectionitem"));
+		setd ("."+.collectionquestcount+"_collectionitem["+.@size+"]",getarg(.@argcount)); 
+		setd ("."+.collectionquestcount+"_collectionitem["+(.@size+1)+"]",getarg(.@argcount+1));
+		set .@argcount,.@argcount+2;
+	}
+	return;
+}
+
+function AddHunting4{
+	set .huntingquestcount,.huntingquestcount+1;
+	setd ("." +.huntingquestcount+"_huntingname$", getarg(0));
+	setd ("." +.huntingquestcount+"_huntingmin", getarg(1));
+	setd ("." +.huntingquestcount+"_huntingmax", getarg(2));
+	setd ("." +.huntingquestcount+"_huntingprize", getarg(3));
+	setd ("." +.huntingquestcount+"_huntingamount", getarg(4));
+	setd ("." +.huntingquestcount+"_huntingzeny", getarg(5));
+	set .@size, getarraysize(getd("."+ .huntingquestcount + "_huntingexp"));
+	set .@argcount, 6;
+	setd ("." +.huntingquestcount+"_huntingexp["+.@size+"]",getarg(.@argcount));
+	setd ("." +.huntingquestcount+"_huntingexp["+(.@size+1)+"]",getarg(.@argcount+1)); 
+	set .@argcount, .@argcount+2;
+	while(getarg(.@argcount,-1)!=-1 && getarg(.@argcount+1,-1)!=-1){
+		set .@size, getarraysize(getd("."+ .huntingquestcount + "_huntingmob"));
+		setd ("."+.huntingquestcount+"_huntingmob["+.@size+"]",getarg(.@argcount)); 
+		setd ("."+.huntingquestcount+"_huntingmob["+(.@size+1)+"]",getarg(.@argcount+1));
+		set .@argcount, .@argcount+2;
+	}
+	return;
+}
+}

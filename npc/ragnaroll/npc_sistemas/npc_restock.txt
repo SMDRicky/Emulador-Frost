@@ -1,0 +1,328 @@
+/*.---------------------------------------------------------------------.
+  .		 ____                          __                          		.
+  .		/\  _`\                       /\ \__  __                   		.
+  .		\ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __   		.
+  .		 \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\ 		.
+  .		  \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/ 		.
+  .		   \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\		.
+  .		    \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/		.
+  .																		.
+  .            2014~2021 © Creative Services and Development            .
+  .						  www.creativesd.com.br							.
+  .---------------------------------------------------------------------.
+  . Script:													            .
+  .	   Sistema de Reabastecimento                                       .
+  .---------------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                                 Versão: 2.1	.
+  .                                                                     .
+  . Compatível:	rAthena e derivações.                    	            .
+  .---------------------------------------------------------------------.
+  . Descrição:															.
+  .	   Reabastecimento de itens usáveis do Armazém para o Inventário.   .
+  *---------------------------------------------------------------------*/
+// ! Atenção !
+// Caso deseja alterar ou adicionar coordenadas no NPC, procure no arquivo: NPC's Coordenadas
+-	script	Restock#main	-1,{
+	if( !getbattleflag("restock_enable") ) {
+		mes "^4B0082[Sistema de Reabastecimento]^000000";
+		mes "Me desculpe, mais o Sistema de Reabastecimento não está operando no momento, por favor, tente mais tarde.";
+		close;
+	}
+	
+	.@VIP_TYPE = getbattleflag("restock_vip_type");
+	.@VIP_GROUPLEVEL = getbattleflag("restock_group_level");
+	if( (.@VIP_TYPE == 0 && vip_status(VIP_STATUS_ACTIVE)) || (.@VIP_TYPE == 1 && getgroupid() >= .@VIP_GROUPLEVEL) || (.@VIP_TYPE == 2 && getgmlevel() >= .@VIP_GROUPLEVEL) ) {
+		.@Cost = getbattleflag("restock_vip_zeny_cost") ? getbattleflag("restock_vip_zeny_cost") : 0;
+		.@MaxItems = getbattleflag("restock_vip_max_items");
+	}
+	else {
+		.@Cost = getbattleflag("restock_regular_zeny_cost") ? getbattleflag("restock_regular_zeny_cost") : 0;
+		.@MaxItems = getbattleflag("restock_regular_max_items");
+	}
+	
+	.@loop_1 = 1;
+	while(.@loop_1) {
+		mes "^4B0082[Sistema de Reabastecimento]^000000";
+		mes "Bem-vindo ao Sistema de Reabastecimento, em que posso ajudar?";
+		next;
+		switch( select("^0000FF- Configurar um item para Reabastecimento.^000000",  "- Remover um item do Reabastecimento.", "^FFA500- Sobre o Sistema de Reabastecimento.^000000", "^FF0000- Saír.^000000") ) {
+			case 1:
+				getrestocklist;
+				if( .@Cost && Zeny < .@Cost ) {
+					mes "^4B0082[Sistema de Reabastecimento]^000000";
+					mes "Para utilizar o Sistema de Reabastecimento é necessário de " + .@Cost + " Zenys.";
+					next;
+					break;
+				}
+				
+				if( @restock_count >= .@MaxItems ) {
+					mes "^4B0082[Sistema de Reabastecimento]^000000";
+					mes "Você tem muitos itens no Reabastecimento Automático, remova alguns.";
+					next;
+					break;
+				}
+				
+				.@loop_2 = 1;
+				while(.@loop_2) {
+					// Build Menu
+					getinventorylist;
+					deletearray .@item_id;
+					.@build_menu$ = "^0000FF- Digitar ID do Item.^000000:";
+					for( .@i=0; .@i < @inventorylist_count; .@i++ ) {
+						.@type = getiteminfo(@inventorylist_id[.@i],2);
+						if( .@type == IT_HEALING || .@type == IT_USABLE || .@type == IT_ETC || .@type == IT_AMMO || .@type == IT_DELAYCONSUME ) {
+							if( inarray(.@item_id, @inventorylist_id[.@i]) == -1 ) {
+								.@item_id[getarraysize(.@item_id)] = @inventorylist_id[.@i];
+								.@build_menu$ += "- " + getitemname(@inventorylist_id[.@i]) + (inarray(@restock_nameid,@inventorylist_id[.@i])!=-1?" ^0000FF[Reabastecendo]^000000":"") + ".:";
+							}
+						}
+					}
+					
+					mes "^4B0082[Sistema de Reabastecimento]^000000";
+					mes "Por favor, selecione um item no qual deseja configurar no Sistema de Reabastecimento.";
+					next;
+					.@choose = select(.@build_menu$+"^FFA500- Voltar.^000000:^FF0000- Saír.^000000")-2;
+					
+					if( .@choose == -1 ) {
+						.@loop_3 = 1;
+						while(.@loop_3) {
+							mes "^4B0082[Sistema de Reabastecimento]^000000";
+							mes "Por favor, digite o ID ou Nome do Item.";
+							mes "^ff0000Digite 0 ou 'cancelar' para retornar ao menu de opções.^000000";
+							next;
+							input .@nameID$;
+							if( .@nameID$ == "0" || strtolower(.@nameID$) == "cancelar" ) {
+								.@itemID = -1;
+								break;
+							}
+
+							.@itemID = getiteminfo(.@nameID$, ITEMINFO_ID);
+							if( .@itemID == -1 )
+								.@itemID = getiteminfo(atoi(.@nameID$), ITEMINFO_ID);
+
+							if( .@itemID == -1 ) {
+								mes "^4B0082[Sistema de Reabastecimento]^000000";
+								mes "Este item não existe.";
+								next;
+								continue;
+							}
+							break;
+						}
+						
+						if( .@itemID == -1 )
+							continue;
+					}
+					
+					if( .@choose == getarraysize(.@item_id) )
+						break;
+					if( .@choose > getarraysize(.@item_id) ) {
+						.@loop_2 = 0;
+						.@loop_1 = 0;
+						break;
+					}
+					
+					if( .@choose >= 0 )
+						.@itemID = .@item_id[.@choose];
+						
+					.@loop_3 = 1;
+					while(.@loop_3) {
+						mes "^4B0082[Sistema de Reabastecimento]^000000";
+						mes "Digite a quantidade de ^0000FF" + getitemname(.@itemID) + "^000000 que deseja configurar para o reabastecimento?";
+						mes "^FF0000Se você digitar 0 irá abortar esta operação.^000000.";
+						next;
+						input .@amount;
+						if( !.@amount )
+							break;
+							
+						if( .@amount > getbattleflag("restock_max_stack") ) {
+							mes "^4B0082[Sistema de Reabastecimento]^000000";
+							mes "Você deve informar uma quantidade válida entre 1 à " + getbattleflag("restock_max_stack") + ".";
+							next;
+							continue;
+						}
+						
+						.@loop_4 = 1;
+						while(.@loop_4) {
+							mes "^4B0082[Sistema de Reabastecimento]^000000";
+							mes "Você optou por ^0000FF" + .@amount + "x " + getitemname(.@itemID) + "^000000 de reabastecimento automático.";
+							if( .@Cost )
+								mes "Para configurar este item é necessário de ^FF0000" + .@Cost + " Zenys^000000.";
+							mes "Tem certeza que deseja configurar este item para reabastecimento automático?";
+							next;
+							switch( select("- Sim, por favor.", "^FFA500- Voltar.^000000", "^FF0000- Saír.^000000") )
+							{
+								case 1:
+									if( .@Cost && Zeny < .@Cost ) {
+										mes "^4B0082[Sistema de Reabastecimento]^000000";
+										mes "Para utilizar o Sistema de Reabastecimento é necessário de ^0000FF" + .@Cost + " Zenys^000000.";
+										next;
+										.@loop_1 = 0;
+										.@loop_2 = 0;
+										.@loop_3 = 0;
+										.@loop_4 = 0;
+									}
+									else if( addrestock(.@itemID,.@amount) )
+									{
+										if( .@Cost )
+											Zeny -= .@Cost;
+										mes "^4B0082[Sistema de Reabastecimento]^000000";
+										mes "A Operação foi um sucesso! ^0000FF" + .@amount + "x " + getitemname(.@itemID) + "^000000 foram configurado para reabastecimento automático.";
+										next;
+										.@loop_2 = 0;
+										.@loop_3 = 0;
+										.@loop_4 = 0;
+									}
+									else {
+										mes "^4B0082[Sistema de Reabastecimento]^000000";
+										mes "Houve um erro ao fazer o cadastro, reporte ao Administrador.";
+										next;
+										.@loop_1 = 0;
+										.@loop_2 = 0;
+										.@loop_3 = 0;
+										.@loop_4 = 0;
+									}
+									break;
+								case 2:
+									.@loop_2 = 0;
+									.@loop_3 = 0;
+									.@loop_4 = 0;
+									break;
+								case 3:
+									.@loop_1 = 0;
+									.@loop_2 = 0;
+									.@loop_3 = 0;
+									.@loop_4 = 0;
+									break;
+							}
+						}
+					}
+				}
+				break;
+			case 2:
+				getrestocklist;
+				.@build_menu$ = "^0000FF- Digitar ID do Item.^000000:";
+				deletearray .@item_id;
+				for( .@i=0; .@i < @restock_count; .@i++ ) {
+					if( inarray(.@item_id, @restock_nameid[.@i]) == -1 ) {
+						.@item_id[getarraysize(.@item_id)] = @restock_nameid[.@i];
+						.@build_menu$ += "- " + getitemname(@restock_nameid[.@i]) + ".:";
+					}
+				}
+				
+				.@loop_2 = 1;
+				while(.@loop_2) {
+					mes "^4B0082[Sistema de Reabastecimento]^000000";
+					mes "Por favor, selecione um item no qual deseja remover do Sistema de Reabastecimento.";
+					next;
+					.@choose = select(.@build_menu$+"^FFA500- Voltar.^000000:^FF0000- Saír.^000000")-2;
+					
+					if( .@choose == -1 ) {
+						.@loop_3 = 1;
+						while(.@loop_3) {
+							mes "^4B0082[Sistema de Reabastecimento]^000000";
+							mes "Por favor, digite o ID ou Nome do Item.";
+							mes "^ff0000Digite 0 ou 'cancelar' para retornar ao menu de opções.^000000";
+							next;
+							input .@nameID$;
+							if( .@nameID$ == "0" || strtolower(.@nameID$) == "cancelar" ) {
+								.@itemID = -1;
+								break;
+							}
+
+							.@itemID = getiteminfo(.@nameID$, ITEMINFO_ID);
+							if( .@itemID == -1 )
+								.@itemID = getiteminfo(atoi(.@nameID$), ITEMINFO_ID);
+
+							if( .@itemID == -1 ) {
+								mes "^4B0082[Sistema de Reabastecimento]^000000";
+								mes "Este item não existe.";
+								next;
+								continue;
+							}
+							else if( inarray(@restock_nameid,.@itemID) == -1 ) {
+								mes "^4B0082[Sistema de Reabastecimento]^000000";
+								mes "Este item não está configurado no sistema, por favor tente outro.";
+								next;
+								continue;
+							}
+							break;
+						}
+						
+						if( .@itemID == -1 )
+							continue;
+					}
+					
+					if( .@choose == getarraysize(.@item_id) )
+						break;
+					if( .@choose > getarraysize(.@item_id) ) {
+						.@loop_2 = 0;
+						.@loop_1 = 0;
+						break;
+					}
+					
+					if( .@choose >= 0 )
+						.@itemID = .@item_id[.@choose];
+						
+					.@loop_3 = 1;
+					while(.@loop_3) {
+						mes "^4B0082[Sistema de Reabastecimento]^000000";
+						mes "Tem certeza que deseja remover ^0000FF" + getitemname(.@itemID) + "^000000 do reabastecimento automático?";
+						next;
+						switch( select("- Sim, por favor.", "^FFA500- Voltar.^000000", "^FF0000- Saír.^000000") ) {
+							case 1:
+								if( delrestock(.@itemID) )
+								{
+									mes "^4B0082[Sistema de Reabastecimento]^000000";
+									mes "A Operação foi um sucesso! ^0000FF" + getitemname(.@itemID) + "^000000 foi removido do reabastecimento automático.";
+									next;
+									.@loop_3 = 0;
+									.@loop_2 = 0;
+								}
+								else {
+									mes "^4B0082[Sistema de Reabastecimento]^000000";
+									mes "Houve um erro ao fazer a remoção, reporte ao Administrador.";
+									next;
+									.@loop_1 = 0;
+									.@loop_2 = 0;
+									.@loop_3 = 0;
+								}
+								break;
+							case 2:
+								.@loop_2 = 0;
+								.@loop_3 = 0;
+								break;
+							case 3:
+								.@loop_1 = 0;
+								.@loop_2 = 0;
+								.@loop_3 = 0;
+								break;
+						}
+					}
+				}
+				break;
+			case 3:
+				mes "^4B0082[Sistema de Reabastecimento]^000000";
+				mes "O Sistema de Reabastecimento permite que você configure itens usáveis e que guarde maior parte dele no Armazém para ser reabastecido automaticamente.";
+				next;
+				break;
+			case 4:
+				.@loop_1 = 0;
+				break;
+				
+		}
+	}
+	mes "^4B0082[Sistema de Reabastecimento]^000000";
+	mes "Volte assim que necessitar utilizar o Sistema.";
+	close;
+
+	OnInit:
+
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 25;
+	setunittitle getnpcid(0), "[Reabastecimento]";
+end;
+	
+	}
+
+
+// NPC's Coordenadas
+prontera,127,194,5	duplicate(Restock#main)	Restock#npc	4_M_HUMERCHANT

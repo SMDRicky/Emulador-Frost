@@ -1,0 +1,172 @@
+###########################################################################
+# Laphine Creation Database
+###########################################################################
+#
+# Laphine Creation Settings
+#
+###########################################################################
+# - Skill                      Skill id that will triggers Laphine Creation.
+#   TargetItems:               List available items to produce
+#     - Item                   Item name of the produceable item
+###########################################################################
+
+Header:
+  Type: LAPHINE_OPTIONS_DB
+  Version: 1
+
+Body:
+  - Skill: BS_DAGGER
+    TargetItems:
+      - Item: Knife
+      - Item: Main_Gauche
+      - Item: Cutter
+      - Item: Dagger
+      - Item: Dirk
+      - Item: Stiletto
+      - Item: Cinquedea
+      - Item: Coward
+      - Item: Damascus
+      - Item: Gladius
+      - Item: Assasin_Dagger
+      - Item: Bazerald
+      - Item: Dragon_Killer
+      - Item: Forturn_Sword
+      - Item: Mamas_Knife
+      - Item: Moonlight_Sword
+      - Item: Sucsamad
+  - Skill: BS_SWORD
+    TargetItems:
+      - Item: Blade
+      - Item: Falchion
+      - Item: Sword
+      - Item: Lapier #1110
+      - Item: Ring_Pommel_Saber #1122
+      - Item: Scimiter #1113
+      - Item: Flamberge #1129
+      - Item: Haedonggum #1123
+      - Item: Saber #1126
+      - Item: Town_Sword #1146
+      - Item: Tsurugi #1119
+      - Item: Byeorrun_Gum #1140
+      - Item: Cutlas #1135
+      - Item: Mysteltainn_ #1138
+      - Item: Nagan #1130
+      - Item: Star_Dust_Blade #1148
+  - Skill: BS_TWOHANDSWORD
+    TargetItems:
+      - Item: Katana #1116
+      - Item: Bastard_Sword #1154
+      - Item: Slayer #1151
+      - Item: Broad_Sword #1160
+      - Item: Claymore #1163
+      - Item: Two_Hand_Sword #1157
+      - Item: Dragon_Slayer #1166
+      - Item: Katzbalger #1170
+      - Item: Masamune #1165
+      - Item: Muramasa #1164
+      - Item: Schweizersabel #1167
+      - Item: Zweihander #1168
+  - Skill: BS_AXE
+    TargetItems:
+      - Item: Axe #1301
+      - Item: Orcish_Axe #1304
+      - Item: War_Axe #1306
+  - Skill: BS_TWOHANDAXE
+    TargetItems:
+      - Item: Battle_Axe #1351
+      - Item: Hammer #1354
+      - Item: Buster #1357
+      - Item: Two_Handed_Axe #1360
+      - Item: Brood_Axe #1363
+      - Item: Doom_Slayer #1370
+      - Item: Great_Axe #1364
+      - Item: Guillotine #1369
+  - Skill: BS_MACE
+    TargetItems:
+      - Item: Club #1501
+      - Item: Mace #1504
+      - Item: Chain #1519
+      - Item: Flail #1510
+      - Item: Smasher #1507
+      - Item: Iron_Driver #1529
+      - Item: Morning_Star #1513
+      - Item: Stunner #1522
+      - Item: Sword_Mace #1516
+      - Item: Spanner #1531
+      - Item: Golden_Mace #1524
+      - Item: Long_Mace #1525
+      - Item: Quadrille #1527
+      - Item: Spike #1523
+  - Skill: BS_KNUCKLE
+    TargetItems:
+      - Item: Waghnakh #1801
+      - Item: Knuckle_Duster #1803]
+      - Item: Claw #1809
+      - Item: Finger #1811
+      - Item: Fist #1807
+      - Item: Berserk #1814
+      - Item: Claw_Of_Garm #1815
+      - Item: Kaiser_Knuckle #1813
+  - Skill: BS_SPEAR
+    TargetItems:
+      - Item: Javelin #1401
+      - Item: Pike #1407
+      - Item: Spear #1404
+      - Item: Pole_Axe #1417
+      - Item: Gungnir #1413
+  - Skill: BS_TWOHANDSPEAR
+    TargetItems:
+      - Item: Glaive #1454 
+      - Item: Guisarme #1451 
+      - Item: Partizan #1457
+      - Item: Halberd #1463
+      - Item: Lance #1410
+      - Item: Trident #1460
+      - Item: Brionac #1470 
+      - Item: Crescent_Scythe #1466
+      - Item: Gae_Bolg #1474
+      - Item: Longinus_Spear #1469
+      - Item: Skewer #1415
+  - Skill: BS_BOW
+    TargetItems:
+      - Item: Bow #1701 
+      - Item: Composite_Bow #1704
+      - Item: CrossBow #1710
+      - Item: Great_Bow #1707
+      - Item: Arbalest #1713
+      - Item: Kakkung #1714
+      - Item: Hunter_Bow #1718
+      - Item: Luna_Bow #1723
+      - Item: Balistar #1722
+      - Item: Dragon_Wing #1724
+      - Item: Bow_Of_Rudra #1720
+  - Skill: BS_MUSICINSTRUMENT
+    TargetItems:
+      - Item: Violin #1901
+      - Item: Lute #1905
+      - Item: Mandolin #1903
+      - Item: Guitar #1907
+      - Item: Guh_Moon_Goh #1911
+      - Item: Harp #1909
+      - Item: Guitar_Of_Blue_Solo #1915
+      - Item: Oriental_Lute #1918
+  - Skill: BS_WHIP
+    TargetItems:
+      - Item: Rope #1950
+      - Item: Wire #1954
+      - Item: Rante #1956  
+      - Item: Jump_Rope #1968 
+      - Item: Tail #1958
+      - Item: Whip #1960
+      - Item: Lariat #1962
+      - Item: Chemeti #1964
+      - Item: Bladed_Whip #1969
+      - Item: Queens_Whip #1970
+  - Skill: BS_KATAR
+    TargetItems:
+      - Item: Jur #1250
+      - Item: Jamadhar #1254  
+      - Item: Katar #1252  
+      - Item: Nail_Of_Loki #1262
+      - Item: Infiltrator #1261
+      - Item: Bloody_Roar #1265

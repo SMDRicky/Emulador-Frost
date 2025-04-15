@@ -1,0 +1,671 @@
+-	script	Warper	-1,{
+
+function Go; function Disp; function Pick; function Restrict;
+		mes "^FF0000[Teletransportadora]^000000";
+		mes "Olá ^0000FF"+strcharinfo(0)+"^000000,";
+		mes "Selecione um local para se teleportar!";
+// --------------------------------------------------
+//	Main Menu:
+// --------------------------------------------------
+
+menu	"[»] Utimo Mapa ^777777["+lastwarp$+"]^000000",-,
+		"^3CB371[»]^000000 Cidades",Cidades,
+		"^880808[»]^000000 Campos",Campos,
+		"^0000FF[»]^000000 Cavernas",Cavernas,
+		"[»] Mapa Especiais ^777777",Especiais;
+
+	if (lastwarp$ == "")
+		message strcharinfo(0),"você não tem nenhum mapa salvo.";
+	else
+		warp lastwarp$,lastwarpx,lastwarpy;
+	end;
+
+// ------------------- Functions -------------------
+// * Go("<map>",<x>,<y>);
+//	~ Warps directly to a map.
+//
+// * Disp("<Menu Option>",<first option>,<last option>);
+// * Pick("<map_prefix>"{,<index offset>});
+//	~ Dynamic menu and map selection (auto-numbered).
+//
+// * Disp("<Option 1>:<Option 2>:<etc.>");
+// * Pick("","<map1>","<map2>","<etc.>");
+//	~ Manual menu and map selection (listed).
+//
+// * Restrict("<RE | Pre-RE>"{,<menu option numbers>});
+//	~ Only allows map for Renewal or Pre-Renewal modes.
+//     If menu option numbers are given, only those maps
+//     will be restricted (i.e. not for "Go").
+//
+// Other notes:
+//   ~ Array @c[] holds all (x,y) coordinates.
+//   ~ Use @c[2] EXCEPT when maps begin dynamically
+//	  at 0: use @c[0] and Pick() offset 1.
+// --------------------------------------------------
+
+function Go {
+	lastwarp$ = getarg(0);
+	lastwarpx = getarg(1,0);
+	lastwarpy = getarg(2,0);
+	warp getarg(0),getarg(1,0),getarg(2,0);
+	end;
+}
+function Disp {
+	if (getargcount() < 3)
+		@menu$ = getarg(0);
+	else {
+		@menu$ = "";
+		for (.@i = getarg(1); .@i <= getarg(2); .@i++)
+			@menu$ = @menu$+getarg(0)+" "+.@i+":";
+	}
+	return;
+}
+function Pick {
+	.@warp_block = @warp_block;
+	@warp_block = 0;
+	.@select = select(@menu$);
+	if (getarg(0) == "") {
+		.@i = .@select;
+		.@map$ = getarg(.@i);
+	} else {
+		.@i = .@select-getarg(1,0);
+		.@map$ = getarg(0)+((.@i<10)?"0":"")+.@i;
+	}
+	if (.@warp_block & (1<<.@select)) {
+		message strcharinfo(0),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
+		end;
+	}
+	.@x = @c[.@i*2];
+	.@y = @c[.@i*2+1];
+	deletearray @c[0],getarraysize(@c);
+	Go(.@map$,.@x,.@y);
+}
+function Restrict {
+	if ((getarg(0) == "RE" && !RENEWAL) || (getarg(0) == "Pre-RE" && RENEWAL)) {
+		if (getarg(1,0)) {
+			@warp_block = 0;
+			for (.@i = 1; .@i < getargcount(); .@i++)
+				@warp_block = @warp_block | (1<<getarg(.@i));
+		} else {
+			message strcharinfo(0),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
+			end;
+		}
+	}
+	return;
+}
+
+// --------------------------------------------------
+	Cidades:
+// --------------------------------------------------
+menu	"^880808[»]^000000 Cidade de Prontera",T1,
+        "^880808[»]^000000 Cidade de Alberta",T2,
+        "^880808[»]^000000 Cidade de Aldebaran",T3,
+        "^880808[»]^000000 Cidade de Amatsu",T4,
+        "^880808[»]^000000 Cidade de Ayothaya",T5,
+        "^880808[»]^000000 Cidade de Brasilis",T6,
+        "^880808[»]^000000 Cidade de Comodo",T7,
+//        "^880808[»]^000000 Cidade de Dewata",T8,
+//        "^880808[»]^000000 Cidade de Eclage",T9, 
+        "^880808[»]^000000 Cidade de Einbech",T10, 
+        "^880808[»]^000000 Cidade de Einbroch",T11, 
+//        "^880808[»]^000000 Cidade de El Dicastes",T12, 
+        "^880808[»]^000000 Cidade de Geffen",T13, 
+        "^880808[»]^000000 Cidade de Gonryun",T14, 
+        "^880808[»]^000000 Cidade de Hugel",T15,
+        "^880808[»]^000000 Cidade de Izlude",T16, 
+		"^880808[»]^000000 Cidade de Jawaii",T17, 
+//		"^880808[»]^000000 Cidade de Lasagna",T18, 
+		"^880808[»]^000000 Cidade de Lighthalzen",T19, 
+		"^880808[»]^000000 Cidade de Louyang",T20,
+        "^880808[»]^000000 Cidade de Lutie",T21, 
+//		"^880808[»]^000000 Cidade de Malangdo",T22, 
+//		"^880808[»]^000000 Cidade de Malaya",T23, 
+		"^880808[»]^000000 Cidade de Manuk",T24,
+        "^880808[»]^000000 Cidade de Midgarts Expedition Camp",T25, 
+//		"^880808[»]^000000 Cidade de Mora",T26, 
+		"^880808[»]^000000 Cidade de Morroc",T27, 
+		"^880808[»]^000000 Cidade de Moscovia",T28,
+        "^880808[»]^000000 Cidade de Nameless Island",T29, 
+		"^880808[»]^000000 Cidade de Niflheim",T30, 
+		"^880808[»]^000000 Cidade de Payon",T31, 
+		"^880808[»]^000000 Cidade de Rachel",T32, 
+		"^880808[»]^000000 Cidade de Splendide",T33,
+        "^880808[»]^000000 Cidade de Thor Camp",T34, 
+		"^880808[»]^000000 Cidade de Umbala",T35, 
+		"^880808[»]^000000 Cidade de Veins",T36, 
+		"^880808[»]^000000 Cidade de Yuno",T37;
+
+T1: Go("prontera",155,183);
+T2: Go("alberta",28,234);
+T3: Go("aldebaran",140,131);
+T4: Go("amatsu",198,84);
+T5: Go("ayothaya",208,166);
+T6: Go("brasilis",196,217);
+    Go("brasilis",196,217);
+T7: Go("comodo",209,143);
+//T8: Restrict("RE");
+//    Go("dewata",200,180);
+//T9: Restrict("RE");
+    Go("ecl_in01",48,53);
+T10: Go("einbech",63,35);
+T11: Go("einbroch",64,200);
+//T12: Restrict("RE");
+//     Go("dicastes01",198,187);
+T13: Go("geffen",119,59);
+T14: Go("gonryun",160,120);
+T15: Go("hugel",96,145);
+T16: Go("izlude",128,(checkre(3)?146:114));
+T17: Go("jawaii",251,132);
+//T18: Restrict("RE");
+//     Go("lasagna",193,182);
+T19: Go("lighthalzen",158,92);
+T20: Go("louyang",217,100);
+T21: Go("xmas",147,134);
+//T22: Restrict("RE");
+//     Go("malangdo",140,114);
+//T23: Restrict("RE");
+//     Go("malaya",231,200);
+T24: Go("manuk",282,138);
+T25: Go("mid_camp",210,288);
+//T26: Restrict("RE");
+//     Go("mora",55,146);
+T27: Go("morocc",156,93);
+T28: Go("moscovia",223,184);
+T29: Go("nameless_n",256,215);
+T30: Go("niflheim",202,174);
+T31: Go("payon",179,100);
+T32: Go("rachel",130,110);
+T33: Go("splendide",201,147);
+T34: Go("thor_camp",246,68);
+T35: Go("umbala",97,153);
+T36: Go("veins",216,123);
+T37: Go("yuno",157,51);
+
+// --------------------------------------------------
+	Campos:
+// --------------------------------------------------
+menu		"^880808[»]^000000 Campos de Amatsu",F1,
+
+		"^880808[»]^000000 Campos de Amatsu",F1, 
+		"^880808[»]^000000 Campos de Ayothaya",F2, 
+		"^880808[»]^000000 Campos de Bifrost", F3,
+        "^880808[»]^000000 Campos de Brasilis",F4, 
+		"^880808[»]^000000 Campos de Comodo",F5, 
+//		"^880808[»]^000000 Campos de Dewata",F6,
+//        "^880808[»]^000000 Campos de Eclage",F7, 
+		"^880808[»]^000000 Campos de Einbroch",F8, 
+//		"^880808[»]^000000 Campos de El Dicastes",F9,
+        "^880808[»]^000000 Campos de Geffen",F10, 
+		"^880808[»]^000000 Campos de Gonryun",F11, 
+		"^880808[»]^000000 Campos de Hugel",F12,
+//        "^880808[»]^000000 Campos de Lasagna",F13, 
+		"^880808[»]^000000 Campos de Lighthalzen",F14, 
+		"^880808[»]^000000 Campos de Louyang",F15, 
+        "^880808[»]^000000 Campos de Lutie",F16, 
+//		"^880808[»]^000000 Campos de Malaya",F17, 
+		"^880808[»]^000000 Campos de Manuk",F18, 
+        "^880808[»]^000000 Campos de Mjolnir",F19, 
+		"^880808[»]^000000 Campos de Moscovia",F20, 
+		"^880808[»]^000000 Campos de Niflheim",F21, 
+        "^880808[»]^000000 Campos de Payon",F22, 
+		"^880808[»]^000000 Campos de Prontera",F23, 
+		"^880808[»]^000000 Campos de Rachel",F24, 
+        "^880808[»]^000000 Campos de Sograt",F25, 
+		"^880808[»]^000000 Campos de Splendide",F26, 
+		"^880808[»]^000000 Campos de Umbala",F27, 
+        "^880808[»]^000000 Campos de Veins",F28, 
+		"^880808[»]^000000 Campos de Yuno",F29;
+
+F1: setarray @c[2],190,197;
+    Disp("Amatsu Field",1,1); Pick("ama_fild");
+F2: setarray @c[2],173,134,212,150;
+    Disp("Ayothaya Field",1,2); Pick("ayo_fild");
+F3: Restrict("RE");
+    setarray @c[2],193,220,220,187;
+    Disp("Bifrost Field",1,2); Pick("bif_fild");
+F4: Restrict("RE");
+    setarray @c[2],74,32;
+    Disp("Brasilis Field",1,1); Pick("bra_fild");
+F5: Restrict("Pre-RE",5);
+    setarray @c[2],180,178,231,160,191,172,228,194,224,203,190,223,234,177,194,175,172,172;
+    Disp("Comodo Field",1,9); Pick("cmd_fild");
+//F6: Restrict("RE");
+//    setarray @c[2],371,212;
+//    Disp("Dewata Field",1,1); Pick("dew_fild");
+//F7: Restrict("RE");
+//    setarray @c[2],97,314;
+//    Disp("Eclage Field",1,1); Pick("ecl_fild");
+F8: Restrict("Pre-RE",2,10);
+    setarray @c[2],142,225,182,141,187,228,185,173,216,173,195,148,272,220,173,214,207,174,196,200;
+    Disp("Einbroch Field",1,10); Pick("ein_fild");
+//F9: Restrict("RE");
+//    setarray @c[2],143,132,143,217;
+//    Disp("El Dicastes Field",1,2); Pick("dic_fild");
+F10: Restrict("Pre-RE",13,15);
+     setarray @c[0],46,199,213,204,195,212,257,192,188,171,166,263,248,158,195,191,186,183,221,117,178,218,136,328,240,181,235,235,211,185;
+     Disp("Geffen Field",0,14); Pick("gef_fild",1);
+F11: setarray @c[2],220,227;
+     Disp("Gonryun Field",1,1); Pick("gon_fild");
+F12: Restrict("Pre-RE",3,7);
+     setarray @c[2],268,101,222,193,232,185,252,189,196,106,216,220,227,197;
+     Disp("Hugel Field",1,7); Pick("hu_fild");
+//F13: Restrict("RE");
+//     setarray @c[2],344,371,20,98;
+//     Disp("Lasagna Field",1,2); Pick("lasa_fild");     
+F14: setarray @c[2],240,179,185,235,240,226;
+     Disp("Lighthalzen Field",1,3); Pick("lhz_fild");
+F15: setarray @c[2],229,187;
+     Disp("Louyang Field",1,1); Pick("lou_fild");
+F16: setarray @c[2],115,145;
+     Disp("Lutie Field",1,1); Pick("xmas_fild");
+//F17: Restrict("RE");
+//     setarray @c[2],40,272,207,180;
+//     Disp("Malaya Field",1,2); Pick("ma_fild");
+F18: setarray @c[2],35,236,35,262,84,365;
+     Disp("Manuk Field",1,3); Pick("man_fild");
+F19: setarray @c[2],204,120,175,193,208,213,179,180,181,240,195,270,235,202,188,215,205,144,245,223,180,206,196,208;
+     Disp("Mjolnir Field",1,12); Pick("mjolnir_");
+F20: setarray @c[2],82,104,131,147;
+     Disp("Moscovia Field",1,2); Pick("mosk_fild");
+F21: setarray @c[2],215,229,167,234;
+     Disp("Niflheim Field",1,2); Pick("nif_fild");
+F22: Restrict("Pre-RE",5,11);
+     setarray @c[2],158,206,151,219,205,148,186,247,134,204,193,235,200,177,137,189,201,224,160,205,194,150;
+     Disp("Payon Forest",1,11); Pick("pay_fild");
+F23: setarray @c[0],208,227,190,206,240,206,190,143,307,252,239,213,185,188,193,194,187,218,210,183,195,149,198,164;
+     Disp("Prontera Field",0,11); Pick("prt_fild",1);
+F24: Restrict("Pre-RE",2,7,9,10,11,13);
+     setarray @c[2],192,162,235,166,202,206,202,208,225,202,202,214,263,196,217,201,87,121,277,181,221,185,175,200,174,197;
+     Disp("Rachel Field",1,13); Pick("ra_fild");
+F25: if(.Satan_Morroc){
+     setarray @c[2],219,205,177,206,194,182,224,170,198,216,156,187,185,263,206,228,208,238,209,223,85,97,207,202,31,195,38,195;
+     Disp("Sograt Desert 1:Sograt Desert 2:Sograt Desert 3:Sograt Desert 7:Sograt Desert 11:Sograt Desert 12:Sograt Desert 13:Sograt Desert 16:Sograt Desert 17:Sograt Desert 18:Sograt Desert 19:Sograt Desert 20:Sograt Desert 21:Sograt Desert 22");
+     Pick("","moc_fild01","moc_fild02","moc_fild03","moc_fild07","moc_fild11","moc_fild12","moc_fild13","moc_fild16","moc_fild17","moc_fild18","moc_fild19","moc_fild20","moc_fild21","moc_fild22");
+     }else{
+     setarray @c[2],219,205,177,206,194,182,146,297,204,197,275,302,224,170,139,123,101,110,341,39,198,216,156,187,185,263,223,222,170,257,206,228,208,238,209,223,85,97;
+     Disp("Sograt Desert",1,19); Pick("moc_fild");
+     }
+F26: setarray @c[2],175,186,236,184,188,204;
+     Disp("Splendide Field",1,3); Pick("spl_fild");
+F27: setarray @c[2],217,206,223,221,237,215,202,197;
+     Disp("Umbala Field",1,4); Pick("um_fild");
+F28: Restrict("Pre-RE",5);
+     setarray @c[2],186,175,196,370,222,45,51,250,202,324,150,223,149,307;
+     Disp("Veins Field",1,7); Pick("ve_fild");
+F29: Restrict("Pre-RE",5,10);
+     setarray @c[2],189,224,192,207,221,157,226,199,223,177,187,232,231,174,196,203,183,214,200,124,195,226,210,304;
+     Disp("Yuno Field",1,12); Pick("yuno_fild");
+
+// --------------------------------------------------
+	Especiais:
+	menu
+// --------------------------------------------------
+"^0000FF[»]^000000 Instancias",B1,
+"^0000FF[»]^000000 Cheffenia",B2,
+"^0000FF[»]^000000 BIO 4 & 5",B3;
+
+B1:
+Go("firstcity",218,262);
+
+B2:
+Go("que_temsky",100,140);
+
+B3:
+Go("gl_dun02",224,274);
+
+// --------------------------------------------------
+	Cavernas:
+// --------------------------------------------------
+menu	 	"^0000FF[»]^000000 Caverna de Amatsu",D2,
+"^0000FF[»]^000000 Caverna de Ayothaya",D4,
+"^0000FF[»]^000000 Caverna de Comodo",D5,
+"^0000FF[»]^000000 Caverna de Einbroch",D14,
+"^0000FF[»]^000000 Caverna de Geffen",D16,
+"^0000FF[»]^000000 Caverna de Gelo",D47,
+"^0000FF[»]^000000 Caverna de Gonryun",D18, 
+"^0000FF[»]^000000 Caverna de Louyang",D23,
+"^0000FF[»]^000000 Caverna de Magma",D24, 
+"^0000FF[»]^000000 Caverna de Payon",D30, 
+"^0000FF[»]^000000 Caverna de Umbala",D40, 
+"^0000FF[»]^000000 Caverna dos Orc",D29,
+"^0000FF[»]^000000 Esgoto de Prontera",D42,
+"^0000FF[»]^000000 Esfinge",D34, 
+"^0000FF[»]^000000 Fábrica de Brinquedo",D38,
+"^0000FF[»]^000000 Fábrica de Robôs - ^FF0000Quest^000000",D46,
+"^0000FF[»]^000000 Formigueiro Infernal",D41, 
+"^0000FF[»]^000000 Gefenia - ^FF0000Quest^000000",D15,
+"^0000FF[»]^000000 Glast Heim",D17,
+"^0000FF[»]^000000 Ilha das Tartarugas",D39,
+"^0000FF[»]^000000 Ilha Esquecida",D50,
+"^0000FF[»]^000000 Juperos",D21,
+"^0000FF[»]^000000 Labirinto da Floresta",D19,
+"^0000FF[»]^000000 Laboratório de Somatologia - ^FF0000Quest^000000",D1,
+"^0000FF[»]^000000 Lago do Abismo",D44,
+"^0000FF[»]^000000 Mina Abandonada de Mjolnir",D10,
+"^0000FF[»]^000000 Navio Fantasma",D35,
+"^0000FF[»]^000000 Piramide",D31,
+"^0000FF[»]^000000 Santuário de Rachel",D49,
+"^0000FF[»]^000000 Templo de Odin",D45,
+"^0000FF[»]^000000 Torre de Thanatos",D36,
+"^0000FF[»]^000000 Torre do Relogio",D9,
+"^0000FF[»]^000000 Túnel Submarino",D43,
+"^0000FF[»]^000000 Vulcão de Thor",D48;
+
+
+D1:
+next;
+if(countitem(2657) < 1) {mes "Para ter acesso a lighthalzen você precisa ter o item ^FF0000Passe do Laboratório.^000000 <URL>Como conseguir!!!<INFO>https://browiki.org/wiki/Infiltrando_na_Rekenber</INFO></URL>"; end;}
+		Go("lhz_dun01",149,287);
+	
+
+D2: setarray @c[2],228,11,34,41,119,14;
+		Disp("Amatsu Dungeon",1,2); Pick("","ama_dun01","ama_dun02");
+D3: setarray @c[2],35,262,168,170;
+	Disp("Anthell",1,1); Pick("anthell");
+D4:
+next;
+switch(select("Andar 1:Sair")) {
+    case 1:
+		Go("ayo_dun01",275,19);
+    case 2:
+        close2;
+        end;
+}
+
+D5:
+	menu "Karu a Caverna Oeste",BEACH1,"Ruande a Caverna Norte",BEACH2,"Mao a Caverna Leste",BEACH3;
+BEACH1: Go("beach_dun",268,68);
+BEACH2: Go("beach_dun2",154,25);
+BEACH3: Go("beach_dun3",23,260);
+
+D6: Restrict("RE",4);
+	setarray @c[2],150,288,150,18,140,134,244,52;
+	Disp("Bio Lab",1,1); Pick("lhz_dun");
+D7: Restrict("RE");
+	setarray @c[2],87,47,262,262;
+	Disp("Brasilis Dungeon",1,1); Pick("bra_dun");
+D8: Restrict("RE",6);
+	setarray @c[0],168,168,253,252,236,204,32,63,26,27,141,187;
+	Disp("Byalan Dungeon",1,1); Pick("iz_dun",1);
+D9: setarray @c[2],199,159,148,283,65,147,56,155,297,25,127,169,277,178,268,74;
+	Disp("Clock Tower 1");
+	Pick("","c_tower1");
+D10: setarray @c[2],52,17;
+	 Disp("Coal Mines",1,1); Pick("mjo_dun");
+D11: setarray @c[2],131,247,19,19,180,169,100,92;
+	 Disp("Culvert",1,1); Pick("","prt_sewb1","prt_sewb2","prt_sewb3","prt_sewb4");
+D12: setarray @c[2],51,14,150,11,120,10;
+	 Disp("Cursed Abbey",1,1); Pick("abbey");
+//D13: Restrict("RE");
+//	 setarray @c[2],285,160,299,29;
+//	 Disp("Dewata Dungeon",1,1); Pick("dew_dun");
+D14: setarray @c[2],22,14,292,290;
+	 Disp("Einbroch Dungeon",1,1); Pick("ein_dun");
+D15:
+next;
+if(countitem(7025) < 1) {mes "Para ter acesso a Gefenia você precisa ter o item ^FF0000Lamento de Lúcifer.^000000 <URL>Como conseguir!!!<INFO>https://browiki.org/wiki/O_Sinal</INFO></URL>"; end;}
+	setarray @c[2],00,00;
+	 Disp("Gefenia",1,1); Pick("gefenia");
+	 
+D16: setarray @c[0],104,99,115,236,106,132,203,200;
+	 Disp("Geffen Dungeon",1,1); Pick("gef_dun",1);
+D17: setarray @c[2],370,304,199,29,104,25,150,15,157,287,147,15,258,255,108,291,171,283,68,277,156,7,12,7,133,271,224,274,14,70,150,14;
+	 Disp("Entrance");
+	 Pick("","glast_01");
+D18: setarray @c[2],153,53,28,113,68,16;
+	 Disp("Gonryun Dungeon",1,1); Pick("gon_dun");
+D19: setarray @c[2],176,7,93,20,23,8;
+	 Disp("Hidden Dungeon",1,1); Pick("prt_maze");
+D20: setarray @c[2],157,14,151,155,149,22,33,158;
+	 Disp("Ice Dungeon",1,1); Pick("ice_dun");
+D21: setarray @c[2],140,51,53,247,37,63,150,285;
+	 Disp("Entrada");
+	 Pick("","jupe_cave");
+D22: setarray @c[2],28,226;
+	 Disp("Kiel Dungeon",1,1); Pick("kh_dun");
+D23: setarray @c[2],218,196,282,20,165,38;
+	 Disp("A Tumba Real"); Pick("lou_dun");
+D24: setarray @c[2],126,68;
+	 Disp("Magma Dungeon",1,1); Pick("mag_dun");
+//D25: Restrict("RE");
+//	 setarray @c[2],33,230;
+//	 Disp("Malangdo Dungeon",1,1); Pick("mal_dun");
+D26: setarray @c[2],189,48,165,30,32,135;
+	 Disp("Moscovia Dungeon",1,1); Pick("mosk_dun");
+D27: setarray @c[2],61,239,60,271;
+	 Disp("Nidhogg's Dungeon",1,1); Pick("nyd_dun");
+D28: setarray @c[2],298,167,224,149,266,280;
+	 Disp("Odin Temple",1,1); Pick("odin_tem");
+D29: setarray @c[2],32,170,21,185;
+	 Disp("Orc Dungeon",1,1); Pick("orcsdun");
+D30: setarray @c[0],21,183,19,33,19,63,155,159,201,204;
+	 Disp("Payon Dungeon",1,1); Pick("pay_dun",1);
+D31: Restrict("RE",7,8);
+	 setarray @c[2],192,9,10,192,100,92,181,11,94,96,192,8,94,96,192,8;
+	 Disp("Pyramids 1");
+	 Pick("","moc_pryd01");
+D32: setarray @c[2],140,11;
+	 Disp("Rachel Sanctuary",1,1); Pick("ra_san");
+D33: Restrict("RE");
+	 setarray @c[2],364,44,101,141;
+	 Disp("Scaraba Hole",1,1); Pick("dic_dun");
+D34: setarray @c[2],288,9,149,81,210,54,10,222,100,99;
+	 Disp("Sphinx",1,1); Pick("","in_sphinx1","in_sphinx2","in_sphinx3","in_sphinx4","in_sphinx5");
+D35: setarray @c[2],69,24,102,27;
+	 Disp("Sunken Ship",1,1); Pick("treasure");
+D36:
+setarray @c[2],150,39,150,136,220,158,59,143,62,11,89,221,35,166,93,148,29,107,159,138,19,20,130,52;
+	 Disp("Torre Thanatos",1,1); Pick("tha_t");
+
+D37: setarray @c[2],21,228,75,205,34,272;
+	 Disp("Thor Volcano",1,1); Pick("thor_v");
+D38: setarray @c[2],205,15,129,133;
+	 Disp("Toy Factory",1,1); Pick("xmas_dun");
+
+D39: 
+next;
+setarray @c[2],154,49;
+	 Disp("Entrance"); Pick("tur_dun");
+
+D40: Restrict("Pre-RE",1,1);
+	 setarray @c[2],42,31,48,30,204,78;
+	 Disp("Carpenter's Shop in the Tree");
+	 Pick("","um_dun01");
+D41: setarray @c[2],37,262,275,270,116,27;
+	Disp("Formigueiro Infernal",1,1); Pick("anthell");
+D42: setarray @c[2],132,248;
+	Disp("Esgoto de Prontera");
+	Pick("","prt_sewb1");
+D43: setarray @c[2],168,168;
+	 Disp("Túnel Submarino");
+	 Pick("","iz_dun00");
+D44:
+next;
+setarray @c[2],260,269;
+	 Disp("Lago do Abismo",1,1); Pick("abyss_");
+
+D45:
+next;
+setarray @c[2],93,146;
+	 Disp("Templo de Odin",1,1); Pick("odin_tem");
+   
+   D46:
+next;
+if(countitem(7509) < 1) {mes "Para ter acesso a Fábrica de Robôs você precisa ter o item ^FF0000Cartão de Acesso Exuberente.^000000 <URL>Como conseguir!!!<INFO>https://browiki.org/wiki/Academia_Kiel_Hyre</INFO></URL>"; end;}
+switch(select("Nível 1:Nível 2:Sair")) {
+    case 1:
+		Go("kh_dun01",3,231);
+    case 2:
+	Go("kh_dun02",43,199);
+    case 3:
+        close2;
+        end;
+}
+
+D47: setarray @c[2],158,20;
+	 Disp("Caverna de Gelo");
+	 Pick("","ice_dun01");
+
+D48: setarray @c[2],168,235;
+	 Disp("Vulcão de Thor");
+	 Pick("","ve_fild03");
+
+D49: setarray @c[2],139,133;
+	 Disp("Santuário de Rachel");
+	 Pick("","ra_san01");
+
+D50: setarray @c[2],160,184;
+	 Disp("Ilha esquecida");
+	 Pick("","nameless_n");
+
+D51: setarray @c[2],189,46;
+	 Disp("Floresta Encantada");
+	 Pick("","mosk_dun01");
+
+// --------------------------------------------------
+	Castelo:
+// --------------------------------------------------
+menu	"Aldebaran Castles",C1, "Geffen Castles",C2, "Payon Castles",C3,
+		"Prontera Castles",C4, "Arunafeltz Castles",C5, "Schwaltzvalt Castles",C6;
+
+//C1: setarray @c[2],48,83,95,249,142,85,239,242,264,90;
+	Disp("Neuschwanstein:Hohenschwangau:Nuenberg:Wuerzburg:Rothenburg");
+	Pick("","alde_gld","alde_gld","alde_gld","alde_gld","alde_gld");
+//C2: setarray @c[2],214,75,308,240,143,240,193,278,305,87;
+	Disp("Repherion:Eeyolbriggar:Yesnelph:Bergel:Mersetzdeitz");
+	Pick("","gef_fild13","gef_fild13","gef_fild13","gef_fild13","gef_fild13");
+//C3: setarray @c[2],121,233,295,116,317,293,140,160,204,266;
+	Disp("Bright Arbor:Scarlet Palace:Holy Shadow:Sacred Altar:Bamboo Grove Hill");
+	Pick("","pay_gld","pay_gld","pay_gld","pay_gld","pay_gld");
+//C4: setarray @c[2],134,65,240,128,153,137,111,240,208,240;
+	Disp("Kriemhild:Swanhild:Fadhgridh:Skoegul:Gondul");
+	Pick("","prt_gld","prt_gld","prt_gld","prt_gld","prt_gld");
+//C5: setarray @c[2],158,272,83,47,68,155,299,345,292,107;
+	Disp("Mardol:Cyr:Horn:Gefn:Banadis");
+	Pick("","aru_gld","aru_gld","aru_gld","aru_gld","aru_gld");
+//C6: setarray @c[2],293,100,288,252,97,196,137,90,71,315;
+	Disp("Himinn:Andlangr:Viblainn:Hljod:Skidbladnir");
+	Pick("","sch_gld","sch_gld","sch_gld","sch_gld","sch_gld");
+
+// --------------------------------------------------
+	Guild_Cavernas:
+// --------------------------------------------------
+menu	"Baldur",G1, "Luina",G2, "Valkyrie",G3, "Britoniah",G4,
+		"Arunafeltz",G5, "Schwaltzvalt",G6;
+
+//G1: Restrict("RE",2,3);
+	setarray @c[2],119,93,119,93,120,130;
+	Disp("Baldur F1:Baldur F2:Hall of Abyss");
+	Pick("","gld_dun01","gld_dun01_2","gld2_pay");
+//G2: Restrict("RE",2,3);
+	setarray @c[2],39,161,39,161,147,155;
+	Disp("Luina F1:Luina F2:Hall of Abyss");
+	Pick("","gld_dun02","gld_dun02_2","gld2_ald");
+//G3: Restrict("RE",2,3);
+	setarray @c[2],50,44,50,44,140,132;
+	Disp("Valkyrie F1:Valkyrie F2:Hall of Abyss");
+	Pick("","gld_dun03","gld_dun03_2","gld2_prt");
+//G4: Restrict("RE",2,3);
+	setarray @c[2],116,45,116,45,152,118;
+	Disp("Britoniah F1:Britoniah F2:Hall of Abyss");
+	Pick("","gld_dun04","gld_dun04_2","gld2_gef");
+//G5: Go("arug_dun01",199,195);
+//G6: Go("schg_dun01",200,124);
+
+// --------------------------------------------------
+//	Instances:
+// --------------------------------------------------
+//menu	/*"Santuario",I1, "Santuario de Dewata",I2, "Navio de Malangdo",I3,*/
+//		"Ilha de Brasilis",I4, /*"Floresta da Neve",I5, "Ilha Esquecida",I6,*/ "Ponte da Morte",I7,
+//		/*"Deseto de Veis",I8, "Castelo de glast",I9,*/ "Jawaii Festa",I10, /*"Floresta de Hugel",I11,*/ 
+//		"Casa de Tatishume",I12;
+//
+//I1: Restrict("RE");
+//	Go("pay_dun03",89,143);
+//I2: Restrict("RE");
+//	Go("dew_fild01",181,307);
+//I3: Restrict("RE");
+//	Go("malangdo",172,159);
+//I4: Go("bra_fild01",78,35);
+//I5: Restrict("RE");
+//	Go("xmas_fild01",112,86);
+//I6: Restrict("RE");
+//	Go("gon_fild01",220,226);
+//I7: Go("ayo_fild01",170,133);
+//I8: Restrict("RE");
+//	Go("ve_fild07",155,304);
+//I9: Restrict("RE");
+//	Go("glast_01",204,268);
+//I10: Go("jawaii",153,117);
+//I11: Restrict("RE");
+//	Go("hu_fild02",207,106);
+//I12: Go("ama_fild01",336,135);
+
+
+// --------------------------------------------------
+	Sagradas:
+// --------------------------------------------------
+menu	"Prontera Arvore",S1, "Battlegrounds",S2, "Casino",S3, /*"Grupo de Eden",S4,*/
+		"Brasilis Calsadão",S5, "Prisão",S7, "Estatua de Gonryun",S8;
+
+//S1: Go("prontera",270,152);
+//S2: Go("bat_room",154,150);
+//S3: Go("cmd_in02",179,129);
+//S4: Restrict("RE");
+	Go("moc_para01",31,14);
+//S5: Go("brasilis",184,146);
+//S6: Go("dewata",88,202);
+//S7: Go("sec_pri",23,61);
+//S8: Go("gonryun",162,130);
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 51;
+	setunittitle getnpcid(0), "[Analia Warper]";
+    end;
+
+}
+
+// --------------------------------------------------
+//	Duplicates:
+// --------------------------------------------------
+que_temsky,105,139,4	duplicate(Warper)	Teletransportadora #cheffenia1	4_f_fairy1
+alb2trea,57,70,6	duplicate(Warper)	Teletransportadora #tre	4_f_fairy1
+alberta,187,148,4	duplicate(Warper)	Teletransportadora #alb	4_f_fairy1
+aldebaran,143,123,4	duplicate(Warper)	Teletransportadora #alde	4_f_fairy1
+amatsu,203,84,4	duplicate(Warper)	Teletransportadora #ama	4_f_fairy1
+ayothaya,145,116,6	duplicate(Warper)	Teletransportadora #ayo	4_f_fairy1
+comodo,214,148,4	duplicate(Warper)	Teletransportadora #com	4_f_fairy1
+einbech,74,100,6	duplicate(Warper)	Teletransportadora #einbe	4_f_fairy1
+einbroch,69,202,4	duplicate(Warper)	Teletransportadora #einbr	4_f_fairy1
+gef_fild10,71,339,4	duplicate(Warper)	Teletransportadora #orc	4_f_fairy1
+geffen,127,63,4	duplicate(Warper)	Teletransportadora #gef	4_f_fairy1
+glast_01,372,308,4	duplicate(Warper)	Teletransportadora #glh	4_f_fairy1
+gonryun,154,128,4	duplicate(Warper)	Teletransportadora #gon	4_f_fairy1
+hugel,101,142,4	duplicate(Warper)	Teletransportadora #hug	4_f_fairy1
+izlu2dun,110,92,4	duplicate(Warper)	Teletransportadora #izd	4_f_fairy1
+izlude,130,118,4	duplicate(Warper)	Teletransportadora #izl	4_f_fairy1	//Pre-RE: (132,120)
+jawaii,250,139,4	duplicate(Warper)	Teletransportadora #jaw	4_f_fairy1
+lighthalzen,162,102,4	duplicate(Warper)	Teletransportadora #lhz	4_f_fairy1
+louyang,212,47,6	duplicate(Warper)	Teletransportadora #lou	4_f_fairy1
+manuk,274,146,6	duplicate(Warper)	Teletransportadora #man	4_f_fairy1
+mid_camp,216,288,4	duplicate(Warper)	Teletransportadora #mid	4_f_fairy1
+mjolnir_02,85,364,4	duplicate(Warper)	Teletransportadora #mjo	4_f_fairy1
+moc_ruins,64,164,4	duplicate(Warper)	Teletransportadora #moc	4_f_fairy1
+morocc,159,97,4	duplicate(Warper)	Teletransportadora #mor	4_f_fairy1
+moscovia,229,191,4	duplicate(Warper)	Teletransportadora #mos	4_f_fairy1
+nameless_n,259,213,4	duplicate(Warper)	Teletransportadora #nam	4_f_fairy1
+niflheim,205,179,4	duplicate(Warper)	Teletransportadora #nif	4_f_fairy1
+niflheim,20,159,4	duplicate(Warper)	Teletransportadora #nifs	4_f_fairy1
+pay_arche,38,136,4	duplicate(Warper)	Teletransportadora #arc	4_f_fairy1
+payon,166,235,4	duplicate(Warper)	Teletransportadora #pay	4_f_fairy1
+prontera,162,189,3	duplicate(Warper)	Teletransportadora #prt	4_f_fairy1
+prt_fild05,279,223,6	duplicate(Warper)	Teletransportadora #cul	4_f_fairy1
+rachel,135,116,4	duplicate(Warper)	Teletransportadora #rac	4_f_fairy1
+splendide,205,153,4	duplicate(Warper)	Teletransportadora #spl	4_f_fairy1
+thor_camp,249,76,4	duplicate(Warper)	Teletransportadora #thor	4_f_fairy1
+umbala,98,159,3	duplicate(Warper)	Teletransportadora #umb	4_f_fairy1
+veins,214,123,4	duplicate(Warper)	Teletransportadora #ve	4_f_fairy1
+xmas,151,134,6	duplicate(Warper)	Teletransportadora #xmas	4_f_fairy1
+yuno,162,47,4	duplicate(Warper)	Teletransportadora #yuno	4_f_fairy1
+mainhall,88,162,5	duplicate(Warper)	Teletransportadora #novovip	4_f_fairy1
+moc_para01,40,53,3	duplicate(Warper)	Teletransportadora #eden	4_f_fairy1

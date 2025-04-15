@@ -1,0 +1,86 @@
+// Localização do NPC: Prontera (150, 150)
+prontera,150,150,5	script	Quest NPC ROPs	123,{
+    mes "[Quest NPC]";
+    mes "Olá aventureiro!";
+    mes "Eu tenho algumas quests especiais para você.";
+    mes "Cada quest requer diferentes itens e uma certa quantidade de ROPs.";
+    next;
+    mes "[Quest NPC]";
+    mes "Qual quest você gostaria de aceitar?";
+    next;
+    menu "Quest 1", QUEST1, "Quest 2", QUEST2, "Quest 3", QUEST3, "Sair", EXIT;
+
+QUEST1:
+    mes "[Quest NPC]";
+    mes "Para completar a Quest 1, você precisa dos seguintes itens e ROPs:";
+    mes "1x Visual Item (ID: 5420)";
+    mes "1x Visual Item (ID: 5293)";
+    mes "E 100 ROPs.";
+    next;
+    if (countitem(5420) >= 1 && countitem(5293) >= 1 && #CASHPOINTS >= 100) {
+        delitem 5420,1;
+        delitem 5293,1;
+        set #CASHPOINTS, #CASHPOINTS - 100;
+        mes "[Quest NPC]";
+        mes "Parabéns! Você completou a Quest 1.";
+        // Adicione a recompensa aqui, por exemplo:
+        getitem2 501,1,1,0,0,0,0,0,0,0,0,0,strcharinfo(0); // Potion Vermelha como recompensa com o nome do proprietário
+        announce strcharinfo(0) + " completou a Quest ^0000FF1^000000 e recebeu uma ^FF0000Potion Vermelha^000000!", bc_all;
+        close;
+    } else {
+        mes "[Quest NPC]";
+        mes "Você ainda não possui todos os itens ou ROPs necessários.";
+        close;
+    }
+
+QUEST2:
+    mes "[Quest NPC]";
+    mes "Para completar a Quest 2, você precisa dos seguintes itens e ROPs:";
+    mes "1x Visual Item (ID: 5531)";
+    mes "1x Visual Item (ID: 5777)";
+    mes "E 200 ROPs.";
+    next;
+    if (countitem(5531) >= 1 && countitem(5777) >= 1 && #CASHPOINTS >= 200) {
+        delitem 5531,1;
+        delitem 5777,1;
+        set #CASHPOINTS, #CASHPOINTS - 200;
+        mes "[Quest NPC]";
+        mes "Parabéns! Você completou a Quest 2.";
+        // Adicione a recompensa aqui, por exemplo:
+        getitem2 502,1,1,0,0,0,0,0,0,0,0,0,strcharinfo(0); // Potion Azul como recompensa com o nome do proprietário
+        announce strcharinfo(0) + " completou a Quest ^0000FF2^000000 e recebeu uma ^0000FFPotion Azul^000000!", bc_all;
+        close;
+    } else {
+        mes "[Quest NPC]";
+        mes "Você ainda não possui todos os itens ou ROPs necessários.";
+        close;
+    }
+
+QUEST3:
+    mes "[Quest NPC]";
+    mes "Para completar a Quest 3, você precisa dos seguintes itens e ROPs:";
+    mes "1x Visual Item (ID: 18534)";
+    mes "1x Visual Item (ID: 5506)";
+    mes "E 300 ROPs.";
+    next;
+    if (countitem(18534) >= 1 && countitem(5506) >= 1 && #CASHPOINTS >= 300) {
+        delitem 18534,1;
+        delitem 5506,1;
+        set #CASHPOINTS, #CASHPOINTS - 300;
+        mes "[Quest NPC]";
+        mes "Parabéns! Você completou a Quest 3.";
+        // Adicione a recompensa aqui, por exemplo:
+        getitem2 503,1,1,0,0,0,0,0,0,0,0,0,strcharinfo(0); // Potion Amarela como recompensa com o nome do proprietário
+        announce strcharinfo(0) + " completou a Quest ^0000FF3^000000 e recebeu uma ^FFFF00Potion Amarela^000000!", bc_all;
+        close;
+    } else {
+        mes "[Quest NPC]";
+        mes "Você ainda não possui todos os itens ou ROPs necessários.";
+        close;
+    }
+
+EXIT:
+    mes "[Quest NPC]";
+    mes "Tudo bem, volte quando estiver pronto.";
+    close;
+}

@@ -1,0 +1,573 @@
+prontera,147,202,5	script	Leiloeiro	10301,{
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Sistema de Leilão ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "Como posso ajudar você hoje?";
+	next;
+	
+	menu 
+		"^339966[»]^000000 Criar um leilão",M_CreateAuction,
+		"^A020F0[»]^000000 Ver meus leilões ativos",M_MyAuctions,
+		"^00B2EE[»]^000000 Histórico de leilões",M_AuctionHistory,
+		"^FF0000[»]^000000 Cancelar",-;
+	close;
+
+M_MyAuctions:
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Meus Leilões ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	next;
+	
+	query_sql("SELECT item_id, FLOOR(min_bid) as min_bid_int, FLOOR((min_bid - FLOOR(min_bid)) * 100) as min_bid_dec, FLOOR(current_bid) as current_bid_int, FLOOR((current_bid - FLOOR(current_bid)) * 100) as current_bid_dec, refine, FROM_UNIXTIME(end_date, '%d/%m/%Y %H:%i') as end_date FROM auction_items WHERE seller_id = " + getcharid(3) + " AND status = 'active'", .@item_id, .@min_bid_int, .@min_bid_dec, .@current_bid_int, .@current_bid_dec, .@refine, .@end_date$);
+	
+	if (!.@item_id) {
+		mes "^777777Você não tem nenhum item em leilão no momento.^000000";
+		close;
+	}
+	
+	for (set .@i, 0; .@i < getarraysize(.@item_id); set .@i, .@i + 1) {
+		if (.@i == 0) mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+		
+		// Debug dos valores
+		logmes "Debug - Item ID: " + .@item_id[.@i];
+		logmes "Debug - Min Bid Int: " + .@min_bid_int[.@i];
+		logmes "Debug - Min Bid Dec: " + .@min_bid_dec[.@i];
+		logmes "Debug - Current Bid Int: " + .@current_bid_int[.@i];
+		logmes "Debug - Current Bid Dec: " + .@current_bid_dec[.@i];
+		
+		if (.@refine[.@i] > 0) {
+			mes "^0075E9[»]^000000 ^FF0000+" + .@refine[.@i] + " ^0075E9" + getitemname(.@item_id[.@i]) + "^000000";
+		} else {
+			mes "^0075E9[»]^000000 ^0075E9" + getitemname(.@item_id[.@i]) + "^000000";
+		}
+		mes "^777777•^000000 ^0075E9ID:^000000 " + .@item_id[.@i];
+		
+		// Formata o lance mínimo
+		if (.@min_bid_dec[.@i] < 10) {
+			mes "^777777•^000000 ^0075E9Lance Mínimo:^000000 ^00B200R$ " + .@min_bid_int[.@i] + ".0" + .@min_bid_dec[.@i] + "^000000";
+		} else {
+			mes "^777777•^000000 ^0075E9Lance Mínimo:^000000 ^00B200R$ " + .@min_bid_int[.@i] + "." + .@min_bid_dec[.@i] + "^000000";
+		}
+		
+		// Formata o lance atual
+		if (.@current_bid_int[.@i] > 0 || .@current_bid_dec[.@i] > 0) {
+			if (.@current_bid_dec[.@i] < 10) {
+				mes "^777777•^000000 ^0075E9Lance Atual:^000000 ^00B200R$ " + .@current_bid_int[.@i] + ".0" + .@current_bid_dec[.@i] + "^000000";
+			} else {
+				mes "^777777•^000000 ^0075E9Lance Atual:^000000 ^00B200R$ " + .@current_bid_int[.@i] + "." + .@current_bid_dec[.@i] + "^000000";
+			}
+		} else {
+			mes "^777777•^000000 ^0075E9Lance Atual:^000000 ^777777Nenhum lance ainda^000000";
+		}
+		
+		mes "^777777•^000000 ^0075E9Término:^000000 " + .@end_date$[.@i];
+		mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	}
+	close;
+
+M_AuctionHistory:
+	if (!.@auction_history_page) set .@auction_history_page, 0;
+	
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Histórico de Leilões ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	next;
+	
+	query_sql("SELECT COUNT(*) as total FROM auction_items WHERE status != 'active'", .@total);
+	set .@max_pages, (.@total[0] - 1) / 10;
+	
+	query_sql("SELECT item_id, FLOOR(min_bid) as min_bid_int, FLOOR((min_bid - FLOOR(min_bid)) * 100) as min_bid_dec, FLOOR(current_bid) as current_bid_int, FLOOR((current_bid - FLOOR(current_bid)) * 100) as current_bid_dec, refine, seller_name, winner_id, FROM_UNIXTIME(end_date, '%d/%m/%Y %H:%i') as end_date FROM auction_items WHERE status != 'active' ORDER BY end_date DESC LIMIT 10 OFFSET " + .@offset, .@item_id, .@min_bid_int, .@min_bid_dec, .@current_bid_int, .@current_bid_dec, .@refine, .@seller_name$, .@winner_id, .@end_date$);
+	
+	if (!.@item_id) {
+		mes "^777777Nenhum leilão finalizado encontrado.^000000";
+		close;
+	}
+	
+	for (set .@i, 0; .@i < getarraysize(.@item_id); set .@i, .@i + 1) {
+		if (.@i == 0) mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+		
+		if (.@refine[.@i] > 0) {
+			mes "^0075E9[»]^000000 ^FF0000+" + .@refine[.@i] + " ^0075E9" + getitemname(.@item_id[.@i]) + "^000000";
+		} else {
+			mes "^0075E9[»]^000000 ^0075E9" + getitemname(.@item_id[.@i]) + "^000000";
+		}
+		mes "^777777•^000000 ^0075E9ID:^000000 " + .@item_id[.@i];
+		mes "^777777•^000000 ^0075E9Vendedor:^000000 " + .@seller_name$[.@i];
+		
+		// Formata o lance mínimo
+		if (.@min_bid_dec[.@i] < 10) {
+			mes "^777777•^000000 ^0075E9Lance Mínimo:^000000 ^00B200R$ " + .@min_bid_int[.@i] + ".0" + .@min_bid_dec[.@i] + "^000000";
+		} else {
+			mes "^777777•^000000 ^0075E9Lance Mínimo:^000000 ^00B200R$ " + .@min_bid_int[.@i] + "." + .@min_bid_dec[.@i] + "^000000";
+		}
+		
+		// Formata o lance final
+		if (.@current_bid_int[.@i] > 0 || .@current_bid_dec[.@i] > 0) {
+			if (.@current_bid_dec[.@i] < 10) {
+				mes "^777777•^000000 ^0075E9Lance Final:^000000 ^00B200R$ " + .@current_bid_int[.@i] + ".0" + .@current_bid_dec[.@i] + "^000000";
+			} else {
+				mes "^777777•^000000 ^0075E9Lance Final:^000000 ^00B200R$ " + .@current_bid_int[.@i] + "." + .@current_bid_dec[.@i] + "^000000";
+			}
+			if (.@winner_id[.@i]) {
+				query_sql("SELECT name FROM `char` WHERE char_id = " + .@winner_id[.@i], .@winner_name$);
+				mes "^777777•^000000 ^0075E9Vencedor:^000000 " + .@winner_name$;
+			}
+		} else {
+			mes "^777777•^000000 ^0075E9Lance Final:^000000 ^777777Nenhum lance^000000";
+		}
+		
+		mes "^777777•^000000 ^0075E9Término:^000000 " + .@end_date$[.@i];
+		mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	}
+	
+	if (.@max_pages > 0) {
+		mes "Página " + (.@auction_history_page + 1) + " de " + (.@max_pages + 1);
+		mes " ";
+		mes "^0075E9[1]^000000 Próxima Página";
+		mes "^0075E9[2]^000000 Página Anterior";
+		mes "^0075E9[3]^000000 Sair";
+		
+		next;
+		switch(select("Próxima Página:Página Anterior:Sair")) {
+			case 1:
+				if (.@auction_history_page < .@max_pages) {
+					set .@auction_history_page, .@auction_history_page + 1;
+					goto M_AuctionHistory;
+				}
+				mes "^FF0000Você já está na última página.^000000";
+				close;
+			case 2:
+				if (.@auction_history_page > 0) {
+					set .@auction_history_page, .@auction_history_page - 1;
+					goto M_AuctionHistory;
+				}
+				mes "^FF0000Você já está na primeira página.^000000";
+				close;
+			case 3:
+				close;
+		}
+	}
+	close;
+
+M_CreateAuction:
+	// Verifica se já passou o tempo de delay
+	if (#auction_delay > gettimetick(2)) {
+		mes "[^FF8400Leiloeiro^000000]";
+		mes "^FF0000Aguarde " + (#auction_delay - gettimetick(2)) + " segundos";
+		mes "antes de criar outro leilão.^000000";
+		close;
+	}
+	
+	// Variável para controlar a página atual
+	if (!.@page) set .@page, 0;
+	
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Criar Leilão ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "Selecione o item que deseja leiloar:";
+	next;
+	
+	// Lista os itens do inventário
+	getinventorylist getcharid(0);
+	if (@inventorylist_count == 0) {
+		mes "^FF0000Você não possui nenhum item no inventário.^000000";
+		close;
+	}
+	
+	// Obtém as configurações do mercado
+	query_sql("SELECT allow_expired_items, allow_bound_items FROM market_settings WHERE id = 1", .@allow_expired, .@allow_bound);
+	
+	// Obtém a lista de itens bloqueados
+	query_sql("SELECT item_id FROM item_blacklist", .@blacklist_id);
+	
+	// Debug do inventário
+	logmes "Debug - Total de itens no inventário: " + @inventorylist_count;
+	
+	// Inicializa arrays para o menu
+	setarray .@valid_items$[0], "";
+	setarray .@valid_index[0], 0;
+	set .@menu_size, 0;
+	
+	// Percorre todos os itens do inventário
+	for(set .@i,0; .@i<@inventorylist_count; set .@i,.@i+1) {
+		// Debug de cada item
+		logmes "Debug - Item " + .@i + ": ID=" + @inventorylist_id[.@i] + ", Nome=" + getitemname(@inventorylist_id[.@i]);
+		
+		// Verifica se o item é válido
+		if (@inventorylist_id[.@i] > 0 && 
+			@inventorylist_amount[.@i] > 0 && 
+			@inventorylist_equip[.@i] == 0 && 
+			@inventorylist_identify[.@i] == 1) {
+			
+			// Verifica se o item está na blacklist
+			set .@can_sell, 1;
+			for (set .@j, 0; .@j < getarraysize(.@blacklist_id); set .@j, .@j + 1) {
+				if (@inventorylist_id[.@i] == .@blacklist_id[.@j]) {
+					set .@can_sell, 0;
+					break;
+				}
+			}
+			if (!.@can_sell) continue;
+			
+			// Verifica regras de expire_time e bound
+			if (@inventorylist_expire_time[.@i] > 0 && .@allow_expired != 1) continue;
+			if (@inventorylist_bound[.@i] > 0 && .@allow_bound != 1) continue;
+			
+			// Debug do item válido
+			logmes "Debug - Item válido adicionado ao menu: " + getitemname(@inventorylist_id[.@i]);
+			
+			// Monta a string do item
+			set .@item_str$, "";
+			
+			// Adiciona refinamento se houver
+			if (@inventorylist_refine[.@i] > 0) {
+				set .@item_str$, "^FF0000+" + @inventorylist_refine[.@i] + " ";
+			}
+			
+			// Adiciona nome do item e quantidade
+			set .@item_str$, .@item_str$ + "^0075E9" + getitemname(@inventorylist_id[.@i]) + "^000000";
+			set .@item_str$, .@item_str$ + " ^777777(x" + @inventorylist_amount[.@i] + ")^000000";
+			
+			// Adiciona cards se houver
+			if (@inventorylist_card1[.@i] > 0) {
+				set .@item_str$, .@item_str$ + " [";
+				if (@inventorylist_card1[.@i] > 0) set .@item_str$, .@item_str$ + getitemname(@inventorylist_card1[.@i]);
+				if (@inventorylist_card2[.@i] > 0) set .@item_str$, .@item_str$ + "," + getitemname(@inventorylist_card2[.@i]);
+				if (@inventorylist_card3[.@i] > 0) set .@item_str$, .@item_str$ + "," + getitemname(@inventorylist_card3[.@i]);
+				if (@inventorylist_card4[.@i] > 0) set .@item_str$, .@item_str$ + "," + getitemname(@inventorylist_card4[.@i]);
+				set .@item_str$, .@item_str$ + "]";
+			}
+			
+			// Adiciona o item ao array
+			set .@valid_items$[.@menu_size], .@item_str$;
+			set .@valid_index[.@menu_size], .@i;
+			set .@menu_size, .@menu_size + 1;
+		}
+	}
+	
+	// Debug do menu
+	logmes "Debug - Total de itens no menu: " + .@menu_size;
+	
+	if (.@menu_size == 0) {
+		mes "^FF0000Você não possui nenhum item que possa ser leiloado.^000000";
+		mes "^777777Possíveis motivos:^000000";
+		mes "^777777• Item na lista negra^000000";
+		if (.@allow_expired != 1) mes "^777777• Item com tempo de expiração^000000";
+		if (.@allow_bound != 1) mes "^777777• Item vinculado^000000";
+		close;
+	}
+	
+	// Configuração da paginação
+	set .@items_per_page, 12;
+	set .@total_pages, (.@menu_size + .@items_per_page - 1) / .@items_per_page;
+	set .@start_idx, .@page * .@items_per_page;
+	set .@end_idx, min(.@start_idx + .@items_per_page - 1, .@menu_size - 1);
+	
+	// Exibe informação da página atual
+	if (.@total_pages > 1) {
+		mes "^777777Página " + (.@page + 1) + " de " + .@total_pages + "^000000";
+	}
+	
+	// Monta o menu da página atual
+	set .@menu$, "";
+	set .@current_page_size, 0;
+	
+	for (set .@i, .@start_idx; .@i <= .@end_idx; set .@i, .@i + 1) {
+		if (.@menu$ != "") set .@menu$, .@menu$ + ":";
+		set .@menu$, .@menu$ + .@valid_items$[.@i];
+		set .@current_page_size, .@current_page_size + 1;
+	}
+	
+	// Adiciona opções de navegação
+	if (.@total_pages > 1) {
+		if (.@page > 0) {
+			if (.@menu$ != "") set .@menu$, .@menu$ + ":";
+			set .@menu$, .@menu$ + "^0075E9[»]^000000 Página Anterior";
+		}
+		if (.@page < .@total_pages - 1) {
+			if (.@menu$ != "") set .@menu$, .@menu$ + ":";
+			set .@menu$, .@menu$ + "^0075E9[»]^000000 Próxima Página";
+		}
+	}
+	
+	// Adiciona opção de cancelar
+	if (.@menu$ != "") set .@menu$, .@menu$ + ":";
+	set .@menu$, .@menu$ + "^777777[»] Cancelar^000000";
+	
+	// Mostra o menu e pega a seleção do usuário
+	set .@selected, select(.@menu$);
+	
+	// Processa a seleção
+	if (.@selected > .@current_page_size) {
+		if (.@selected == .@current_page_size + 1 && .@page > 0) {
+			set .@page, .@page - 1;
+			goto M_CreateAuction;
+		}
+		if (.@selected == .@current_page_size + 2 && .@page < .@total_pages - 1) {
+			set .@page, .@page + 1;
+			goto M_CreateAuction;
+		}
+		close;
+	}
+	
+	// Seleciona o item
+	set .@index, .@valid_index[.@start_idx + .@selected - 1];
+	set .@item_id, @inventorylist_id[.@index];
+	
+	// Debug da seleção
+	logmes "Debug - Item selecionado: index=" + .@index + ", id=" + .@item_id + ", nome=" + getitemname(.@item_id);
+	
+	// Se tiver mais de 1 item, pergunta a quantidade
+	if (@inventorylist_amount[.@index] > 1) {
+		mes "[^FF8400Leiloeiro^000000]";
+		mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+		mes "^0075E9|^000000 Quantidade ^0075E9|^000000";
+		mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+		mes "Você possui " + @inventorylist_amount[.@index] + " unidades deste item.";
+		mes "Digite a quantidade que deseja leiloar:";
+		input .@auction_amount;
+		next;
+		
+		if (.@auction_amount <= 0) {
+			mes "[^FF8400Leiloeiro^000000]";
+			mes "^FF0000A quantidade deve ser maior que zero.^000000";
+			close;
+		}
+		
+		if (.@auction_amount > @inventorylist_amount[.@index]) {
+			mes "[^FF8400Leiloeiro^000000]";
+			mes "^FF0000Você não possui essa quantidade.^000000";
+			close;
+		}
+	} else {
+		set .@auction_amount, 1;
+	}
+	
+	// Continua para a confirmação
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Lance Mínimo ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	
+	mes "Digite o valor do lance mínimo:";
+	mes "^777777Digite o valor em centavos. Ex: 123 para R$ 1,23^000000";
+	input .@price_raw;
+	next;
+	
+	if (.@price_raw <= 0) {
+		mes "[^FF8400Leiloeiro^000000]";
+		mes "^FF0000O lance mínimo deve ser maior que zero.^000000";
+		close;
+	}
+	
+	// Separa reais e centavos para exibição
+	set .@reais, .@price_raw / 100;
+	set .@centavos, .@price_raw % 100;
+	
+	// Escolha da duração
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "Escolha a unidade de tempo para duração do leilão:";
+	next;
+	
+	menu
+		"Minutos",M_Minutes,
+		"Horas",M_Hours,
+		"Dias",M_Days,
+		"Cancelar",-;
+	close;
+
+M_Minutes:
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "Digite a duração do leilão em minutos (1-60):";
+	input .@duration;
+	
+	if (.@duration < 1 || .@duration > 60) {
+		mes "^FF0000A duração deve ser entre 1 e 60 minutos.^000000";
+		close;
+	}
+	
+	set .@start_date, gettimetick(2);
+	set .@end_date, .@start_date + (.@duration * 60);
+	set .@duration_display$, .@duration + " minutos";
+	
+	goto M_ShowConfirmation;
+
+M_Hours:
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "Digite a duração do leilão em horas (1-24):";
+	input .@duration;
+	
+	if (.@duration < 1 || .@duration > 24) {
+		mes "^FF0000A duração deve ser entre 1 e 24 horas.^000000";
+		close;
+	}
+	
+	set .@start_date, gettimetick(2);
+	set .@end_date, .@start_date + (.@duration * 3600);
+	set .@duration_display$, .@duration + " horas";
+	
+	goto M_ShowConfirmation;
+
+M_Days:
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "Digite a duração do leilão em dias (1-7):";
+	input .@duration;
+	
+	if (.@duration < 1 || .@duration > 7) {
+		mes "^FF0000A duração deve ser entre 1 e 7 dias.^000000";
+		close;
+	}
+	
+	set .@start_date, gettimetick(2);
+	set .@end_date, .@start_date + (.@duration * 86400);
+	set .@duration_display$, .@duration + " dias";
+	
+	goto M_ShowConfirmation;
+
+M_ShowConfirmation:
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Confirmação ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "Você está prestes a criar um leilão com:";
+	
+	// Mostra informações do item
+	if (@inventorylist_refine[.@index] > 0) {
+		mes "^0075E9[»]^000000 ^FF0000+" + @inventorylist_refine[.@index] + " ^0075E9" + getitemname(.@item_id) + "^000000";
+	} else {
+		mes "^0075E9[»]^000000 ^0075E9" + getitemname(.@item_id) + "^000000";
+	}
+	
+	// Mostra informações de cards se houver
+	if (@inventorylist_card1[.@index] > 0) {
+		mes "^777777•^000000 ^0075E9Cards:^000000";
+		if (@inventorylist_card1[.@index] > 0) mes "  - " + getitemname(@inventorylist_card1[.@index]);
+		if (@inventorylist_card2[.@index] > 0) mes "  - " + getitemname(@inventorylist_card2[.@index]);
+		if (@inventorylist_card3[.@index] > 0) mes "  - " + getitemname(@inventorylist_card3[.@index]);
+		if (@inventorylist_card4[.@index] > 0) mes "  - " + getitemname(@inventorylist_card4[.@index]);
+	}
+	
+	mes "^777777•^000000 ^0075E9ID:^000000 " + .@item_id;
+	
+	// Mostra quantidade se for mais que 1
+	if (@inventorylist_amount[.@index] > 1) {
+		mes "^777777•^000000 ^0075E9Quantidade:^000000 " + .@auction_amount + " unidades";
+	}
+	
+	// Mostra preço formatado
+	if (.@centavos < 10) {
+		mes "^777777•^000000 ^0075E9Lance Mínimo:^000000 ^00B200R$ " + .@reais + ",0" + .@centavos + "^000000";
+	} else {
+		mes "^777777•^000000 ^0075E9Lance Mínimo:^000000 ^00B200R$ " + .@reais + "," + .@centavos + "^000000";
+	}
+	
+	// Mostra duração
+	mes "^777777•^000000 ^0075E9Duração:^000000 " + .@duration_display$;
+	mes "Deseja continuar?";
+	next;
+	
+	if (select("Sim:Não") == 2) {
+		mes "[^FF8400Leiloeiro^000000]";
+		mes "Operação cancelada.";
+		close;
+	}
+	
+	// Prepara os dados do item
+	set .@itemID, @inventorylist_id[.@index];
+	set .@refine, @inventorylist_refine[.@index];
+	set .@enchantgrade, @inventorylist_enchantgrade[.@index];
+	set .@card0, @inventorylist_card1[.@index];
+	set .@card1, @inventorylist_card2[.@index];
+	set .@card2, @inventorylist_card3[.@index];
+	set .@card3, @inventorylist_card4[.@index];
+	
+	// Random Options
+	set .@option_id0, @inventorylist_option_id1[.@index];
+	set .@option_val0, @inventorylist_option_value1[.@index];
+	set .@option_parm0, @inventorylist_option_parameter1[.@index];
+	
+	set .@option_id1, @inventorylist_option_id2[.@index];
+	set .@option_val1, @inventorylist_option_value2[.@index];
+	set .@option_parm1, @inventorylist_option_parameter2[.@index];
+	
+	set .@option_id2, @inventorylist_option_id3[.@index];
+	set .@option_val2, @inventorylist_option_value3[.@index];
+	set .@option_parm2, @inventorylist_option_parameter3[.@index];
+	
+	set .@option_id3, @inventorylist_option_id4[.@index];
+	set .@option_val3, @inventorylist_option_value4[.@index];
+	set .@option_parm3, @inventorylist_option_parameter4[.@index];
+	
+	set .@option_id4, @inventorylist_option_id5[.@index];
+	set .@option_val4, @inventorylist_option_value5[.@index];
+	set .@option_parm4, @inventorylist_option_parameter5[.@index];
+	
+	// Gera os textos dos Random Options
+	set .@option_text0$, "";
+	if (.@option_id0 > 0) set .@option_text0$, callfunc("F_GetRDMOPT_Name", .@option_id0) + " " + callfunc("F_GetRDMOPT_Value", .@option_id0, .@option_val0);
+	
+	set .@option_text1$, "";
+	if (.@option_id1 > 0) set .@option_text1$, callfunc("F_GetRDMOPT_Name", .@option_id1) + " " + callfunc("F_GetRDMOPT_Value", .@option_id1, .@option_val1);
+	
+	set .@option_text2$, "";
+	if (.@option_id2 > 0) set .@option_text2$, callfunc("F_GetRDMOPT_Name", .@option_id2) + " " + callfunc("F_GetRDMOPT_Value", .@option_id2, .@option_val2);
+	
+	set .@option_text3$, "";
+	if (.@option_id3 > 0) set .@option_text3$, callfunc("F_GetRDMOPT_Name", .@option_id3) + " " + callfunc("F_GetRDMOPT_Value", .@option_id3, .@option_val3);
+	
+	set .@option_text4$, "";
+	if (.@option_id4 > 0) set .@option_text4$, callfunc("F_GetRDMOPT_Name", .@option_id4) + " " + callfunc("F_GetRDMOPT_Value", .@option_id4, .@option_val4);
+	
+	// Insere o leilão no banco de dados
+	query_sql("INSERT INTO auction_items (item_id, seller_id, seller_name, min_bid, current_price, current_bid, " +
+		"current_bidder_id, amount, refine, card0, card1, card2, card3, " +
+		"option_id0, option_val0, option_parm0, option_id1, option_val1, option_parm1, " +
+		"option_id2, option_val2, option_parm2, option_id3, option_val3, option_parm3, " +
+		"option_id4, option_val4, option_parm4, unique_id, bound, attribute, identify, " +
+		"enchantgrade, status, winner_id, claimed, start_date, end_date) VALUES (" +
+		.@itemID + ", " +  // item_id
+		getcharid(3) + ", '" +  // seller_id
+		escape_sql(strcharinfo(0)) + "', " +  // seller_name
+		(.@price_raw / 100) + "." + (.@price_raw % 100) + "," +  // Separando em reais e centavos
+		"0, " +  // current_price
+		"0, " +  // current_bid
+		"0, " +  // current_bidder_id
+		.@auction_amount + ", " +  // amount
+		.@refine + ", " +  // refine
+		.@card0 + ", " + .@card1 + ", " + .@card2 + ", " + .@card3 + ", " +  // cards
+		.@option_id0 + ", " + .@option_val0 + ", " + .@option_parm0 + ", " +  // option0
+		.@option_id1 + ", " + .@option_val1 + ", " + .@option_parm1 + ", " +  // option1
+		.@option_id2 + ", " + .@option_val2 + ", " + .@option_parm2 + ", " +  // option2
+		.@option_id3 + ", " + .@option_val3 + ", " + .@option_parm3 + ", " +  // option3
+		.@option_id4 + ", " + .@option_val4 + ", " + .@option_parm4 + ", " +  // option4
+		.@unique_id + "," +  // unique_id
+		@inventorylist_bound[.@index] + ", " +  // bound
+		@inventorylist_attribute[.@index] + ", " +  // attribute
+		@inventorylist_identify[.@index] + ", " +  // identify
+		.@enchantgrade + ", " +  // enchantgrade
+		"'active', " +  // status
+		"NULL, " +  // winner_id
+		"0, " +  // claimed
+		.@start_date + ", " +  // start_date
+		.@end_date + ");");  // end_date
+	
+	// Remove o item do inventário usando o índice exato
+	delitemidx @inventorylist_idx[.@index], .@auction_amount;
+	
+	// Define o delay de 30 segundos
+	set #auction_delay, gettimetick(2) + 30;
+	
+	mes "[^FF8400Leiloeiro^000000]";
+	mes "^00B200Leilão criado com sucesso!^000000";
+	close;
+
+OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 66;
+    setunittitle getnpcid(0), "[Leilão Ragna Frost]";
+end;
+
+}

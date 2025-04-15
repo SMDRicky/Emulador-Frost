@@ -1,0 +1,5 @@
+function	script	caixa_naruto	{
+	setarray .@items[0], 50167,50168,50169,50170,50171,50172,50173,50240,50241,50242,50243;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

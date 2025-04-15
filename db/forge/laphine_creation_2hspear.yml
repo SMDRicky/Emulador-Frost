@@ -1,0 +1,537 @@
+Header:
+  Type: LAPHINE_CREATE_DB
+  Version: 1
+
+Body:
+  # ===============
+  # Lanças de duas maos
+  # ===============
+  - Item: Glaive #1454 
+    RequiredRequirementsCount: 4
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_2
+      - Option: MELEE_GROUP_B_2
+      - Option: MELEE_GROUP_C_2
+      - Option: MELEE_GROUP_A_2
+    Requirements:
+      - Item: Diagrama_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Steel #999
+        Amount: 40
+        Type: 1
+  - Item: Guisarme #1451 
+    RequiredRequirementsCount: 4
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_2
+      - Option: MELEE_GROUP_B_2
+      - Option: MELEE_GROUP_C_2
+      - Option: MELEE_GROUP_A_2
+    Requirements:
+      - Item: Diagrama_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Steel #999
+        Amount: 25
+        Type: 1
+  - Item: Partizan #1457
+    RequiredRequirementsCount: 4
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_2
+      - Option: MELEE_GROUP_B_2
+      - Option: MELEE_GROUP_C_2
+      - Option: MELEE_GROUP_A_2
+    Requirements:
+      - Item: Diagrama_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Steel #999
+        Amount: 55
+        Type: 1
+  - Item: Halberd #1463
+    RequiredRequirementsCount: 5
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_3
+      - Option: MELEE_GROUP_B_3
+      - Option: MELEE_GROUP_C_3
+      - Option: MELEE_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 12
+        Type: 1
+      - Item: Steel #999
+        Amount: 10
+        Type: 1
+  - Item: Lance #1410
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_3
+      - Option: MELEE_GROUP_B_3
+      - Option: MELEE_GROUP_C_3
+      - Option: MELEE_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 12
+        Type: 1
+      - Item: Evil_Horn #923
+        Amount: 2
+        Type: 1
+      - Item: Cardinal_Jewel #723
+        Amount: 3
+        Type: 1
+  - Item: Trident #1460
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_3
+      - Option: MELEE_GROUP_B_3
+      - Option: MELEE_GROUP_C_3
+      - Option: MELEE_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 8
+        Type: 1
+      - Item: Steel #999
+        Amount: 10
+        Type: 1
+      - Item: Skyblue_Jewel #720
+        Amount: 5
+        Type: 1
+  - Item: Brionac #1470 
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_4
+      - Option: MELEE_GROUP_B_4
+      - Option: MELEE_GROUP_C_4
+      - Option: MELEE_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 15
+        Type: 1
+      - Item: Steel #999
+        Amount: 50
+        Type: 1
+      - Item: Old_Portrait #7014
+        Amount: 5
+        Type: 1
+  - Item: Skewer #1415
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_4
+      - Option: MELEE_GROUP_B_4
+      - Option: MELEE_GROUP_C_4
+      - Option: MELEE_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 35
+        Type: 1
+      - Item: Steel #999
+        Amount: 80
+        Type: 1
+      - Item: Crystal_Jewel___
+        Amount: 10
+        Type: 1
+  - Item: Crescent_Scythe #1466
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_4
+      - Option: MELEE_GROUP_B_4
+      - Option: MELEE_GROUP_C_4
+      - Option: MELEE_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 22
+        Type: 1
+      - Item: Steel #999
+        Amount: 80
+        Type: 1
+      - Item: Blade_Lost_In_Darkness #7023
+        Amount: 1
+        Type: 1
+  - Item: Gae_Bolg #1474
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_4
+      - Option: MELEE_GROUP_B_4
+      - Option: MELEE_GROUP_C_4
+      - Option: MELEE_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 20
+        Type: 1
+      - Item: Steel #999
+        Amount: 75
+        Type: 1
+      - Item: Executioner's_Mitten #7017 
+        Amount: 1
+        Type: 1
+  - Item: Longinus_Spear #1469
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_4
+      - Option: MELEE_GROUP_B_4
+      - Option: MELEE_GROUP_C_4
+      - Option: MELEE_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 22
+        Type: 1
+      - Item: Steel #999
+        Amount: 72
+        Type: 1
+      - Item: Contracts_In_Shadow #641
+        Amount: 3
+        Type: 1

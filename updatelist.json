@@ -1,0 +1,27 @@
+[
+    {
+        "id": 0,
+        "atype": "grf",
+        "mainGrf": "ragnafrost.grf",
+        "gfile": "050425171345.grf",
+        "fileSize": 41966,
+        "dateFile": "2025-04-05T17:13:48.240Z",
+        "engine": 0
+    },
+    {
+        "id": 1,
+        "atype": "folder",
+        "gfile": "070425054215.odin",
+        "fileSize": 1293620,
+        "dateFile": "2025-04-07T05:42:23.382Z",
+        "engine": 0
+    },
+    {
+        "id": 2,
+        "atype": "folder",
+        "gfile": "070425054835.odin",
+        "fileSize": 1808949,
+        "dateFile": "2025-04-07T05:48:42.636Z",
+        "engine": 0
+    }
+]

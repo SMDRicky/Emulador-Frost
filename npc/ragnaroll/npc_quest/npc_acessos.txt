@@ -1,0 +1,174 @@
+moc_para01,40,44,5	script	Quest de Acessos	100,{
+    mes "[ Quests de Acessos ]";
+    mes "Olá, aventureiro!";
+    next;
+    mes "[ Quests de Acessos ]";
+    mes "Eu posso ajudar você a concluir uma das quests rapidamente.";
+    mes "Escolha a quest que você deseja acelerar:";
+    next;
+
+    menu "Acesso LHZ", LHZQuest,
+         "Acesso Geffenia", GeffeniaQuest;
+
+    LHZQuest:
+    mes "[ Quest LHZ ]";
+    mes "Para isso, você deve trazer os seguintes itens e zeny como doação:";
+    next;
+    mes "1kk de zeny";
+    if (countitem(909) < 35)
+        mes "35x Jellopys (Você possui: " + countitem(909) + "/35)";
+    else
+        mes "35x Jellopys";
+    next;
+
+    if (Zeny < 1000000) { mes "Você não tem zenys suficientes."; close; }
+    if (countitem(909) < 35) {
+        mes "Você não possui todos os itens necessários para a quest.";
+        close;
+    }
+
+    delitem 909,35;
+    set Zeny, Zeny - 1000000;
+    getitem 2657,1;
+
+    mes "[ Quest LHZ ]";
+    mes "Como agradecimento, você recebeu 1x Passe do Laboratório.";
+    close;
+
+    GeffeniaQuest:
+    mes "[ Quest Geffenia ]";
+    mes "Para isso, você deve trazer os seguintes itens e zeny como doação:";
+    next;
+    mes "2.5kk de zeny";
+    if (countitem(2278) < 1)
+        mes "1x Máscara Feliz (Você possui: " + countitem(2278) + "/1)";
+    else
+        mes "1x Máscara Feliz";
+    if (countitem(914) < 100)
+        mes "100x Felpa (Você possui: " + countitem(914) + "/100)";
+    else
+        mes "100x Felpa";
+    if (countitem(7033) < 50)
+        mes "50x Esporo Venenoso (Você possui: " + countitem(7033) + "/50)";
+    else
+        mes "50x Esporo Venenoso";
+    if (countitem(904) < 30)
+        mes "30x Cauda de Escorpião (Você possui: " + countitem(904) + "/30)";
+    else
+        mes "30x Cauda de Escorpião";
+    if (countitem(930) < 20)
+        mes "20x Bandagem Estragada (Você possui: " + countitem(930) + "/20)";
+    else
+        mes "20x Bandagem Estragada";
+    if (countitem(1038) < 15)
+        mes "15x Pequeno Chifre Maligno (Você possui: " + countitem(1038) + "/15)";
+    else
+        mes "15x Pequeno Chifre Maligno";
+    if (countitem(1092) < 10)
+        mes "10x Tubo de Ensaio (Você possui: " + countitem(1092) + "/10)";
+    else
+        mes "10x Tubo de Ensaio";
+    if (countitem(610) < 2)
+        mes "2x Folha de Yggdrasil (Você possui: " + countitem(610) + "/2)";
+    else
+        mes "2x Folha de Yggdrasil";
+    if (countitem(511) < 10)
+        mes "10x Erva Verde (Você possui: " + countitem(511) + "/10)";
+    else
+        mes "10x Erva Verde";
+    if (countitem(526) < 10)
+        mes "10x Geleia Real (Você possui: " + countitem(526) + "/10)";
+    else
+        mes "10x Geleia Real";
+    if (countitem(518) < 20)
+        mes "20x Mel (Você possui: " + countitem(518) + "/20)";
+    else
+        mes "20x Mel";
+    if (countitem(948) < 30)
+        mes "30x Pata de Urso (Você possui: " + countitem(948) + "/30)";
+    else
+        mes "30x Pata de Urso";
+    if (countitem(520) < 1)
+        mes "1x Folha de Hinalle (Você possui: " + countitem(520) + "/1)";
+    else
+        mes "1x Folha de Hinalle";
+    if (countitem(708) < 1)
+        mes "1x Menta (Você possui: " + countitem(708) + "/1)";
+    else
+        mes "1x Menta";
+    if (countitem(713) < 1)
+        mes "1x Garrafa Vazia (Você possui: " + countitem(713) + "/1)";
+    else
+        mes "1x Garrafa Vazia";
+    if (countitem(612) < 5)
+        mes "5x Mini-fornalha (Você possui: " + countitem(612) + "/5)";
+    else
+        mes "5x Mini-fornalha";
+    if (countitem(615) < 2)
+        mes "2x Martelo de Oridecon (Você possui: " + countitem(615) + "/2)";
+    else
+        mes "2x Martelo de Oridecon";
+    if (countitem(988) < 1)
+        mes "1x Bigorna de Ouro (Você possui: " + countitem(988) + "/1)";
+    else
+        mes "1x Bigorna de Ouro";
+    if (countitem(1097) < 10)
+        mes "10x Página Deteriorada (Você possui: " + countitem(1097) + "/10)";
+    else
+        mes "10x Página Deteriorada";
+    if (countitem(2203) < 1)
+        mes "1x Óculos (Você possui: " + countitem(2203) + "/1)";
+    else
+        mes "1x Óculos";
+    if (countitem(907) < 4)
+        mes "4x Resina (Você possui: " + countitem(907) + "/4)";
+    else
+        mes "4x Resina";
+    if (countitem(953) < 12)
+        mes "12x Coração de Pedra (Você possui: " + countitem(953) + "/12)";
+    else
+        mes "12x Coração de Pedra";
+    if (countitem(7013) < 375)
+        mes "375x Coral (Você possui: " + countitem(7013) + "/375)";
+    else
+        mes "375x Coral";
+    next;
+
+    if (Zeny < 2500000) { mes "Você não tem zenys suficientes."; close; }
+    if (countitem(2278) < 1 || countitem(914) < 100 || countitem(7033) < 50 || countitem(904) < 30 || countitem(930) < 20 || countitem(1038) < 15 || countitem(1092) < 10 || countitem(610) < 2 || countitem(511) < 10 || countitem(526) < 10 || countitem(518) < 20 || countitem(948) < 30 || countitem(520) < 1 || countitem(708) < 1 || countitem(713) < 1 || countitem(612) < 5 || countitem(615) < 2 || countitem(988) < 1 || countitem(1097) < 10 || countitem(2203) < 1 || countitem(907) < 4 || countitem(953) < 12 || countitem(7013) < 375) {
+        mes "Você não possui todos os itens necessários para a quest.";
+        close;
+    }
+
+    delitem 2278,1;
+    delitem 914,100;
+    delitem 7033,50;
+    delitem 904,30;
+    delitem 930,20;
+    delitem 1038,15;
+    delitem 1092,10;
+    delitem 610,2;
+    delitem 511,10;
+    delitem 526,10;
+    delitem 518,20;
+    delitem 948,30;
+    delitem 520,1;
+    delitem 708,1;
+    delitem 713,1;
+    delitem 612,5;
+    delitem 615,2;
+    delitem 988,1;
+    delitem 1097,10;
+    delitem 2203,1;
+    delitem 907,4;
+    delitem 953,12;
+    delitem 7013,375;
+    set Zeny, Zeny - 2500000;
+    getitem 7025,1; // Lamento de Lúcifer
+    getitem 2644,1; // O Sinal
+
+    mes "[ Quest Geffenia ]";
+    mes "Como agradecimento, você recebeu 1x Lamento de Lúcifer e 1x O Sinal.";
+    close;
+}
+

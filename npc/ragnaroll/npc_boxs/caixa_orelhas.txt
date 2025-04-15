@@ -1,0 +1,123 @@
+function	script	caixaorelhas	{
+	// Definição dos arrays de itens
+	setarray .i1[0], 19879, 19625, 19532, 31139, 19643, 31151, 20298, 19769, 19617; // Itens Comuns
+	setarray .i2[0], 20270, 31027, 31250, 31310, 20198, 19649, 19776; // Itens Raros
+	setarray .i3[0], 19810, 31191, 31384, 20010, 20018, 31475, 20262, 20269; // Itens Super Raros
+
+	// Sorteio do item
+	set .chance, rand(1, 100);
+	
+	// Super Rare Item (10% de chance)
+	if (.chance <= 10) {
+		set .index, rand(0, getarraysize(.i3) - 1);
+		getitem .i3[.index], 1;
+		announce "O jogador [" + strcharinfo(0) + "] ganhou [" + getitemname(.i3[.index]) + "] da Caixa de Orelhas.", 0;
+		end;
+	} 
+	
+	// Rare Item (30% de chance)
+	else if (.chance <= 40) {
+		set .index, rand(0, getarraysize(.i2) - 1);
+		getitem .i2[.index], 1;
+		announce "O jogador [" + strcharinfo(0) + "] ganhou [" + getitemname(.i2[.index]) + "] da Caixa de Orelhas.", 0;
+		end;
+	} 
+	
+	// Common Item (60% de chance)
+	else {
+		set .index, rand(0, getarraysize(.i1) - 1);
+		getitem .i1[.index], 1;
+		end;
+	}
+}
+
+function	script	caixa_alucard	{
+setarray .@items[0], 50000,50001,50002;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_aura_abyss	{
+setarray .@items[0], 50003,50004,50005,50006,50007,50008,50009,50010,50011,50012;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_auraascension	{
+setarray .@items[0], 50013,50014,50015,50016,50017,50018,50019,50020,50021,50022;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_aurablazing	{
+setarray .@items[0], 50023,50024,50025,50026,50027,50028,50029,50030,50031,50032;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_auranature	{
+setarray .@items[0], 50033,50034,50035,50036;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_auraritual	{
+setarray .@items[0], 50037,50038,50039,50040,50041,50042,50043,50044,50045,50046;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_aurasealed	{
+setarray .@items[0], 50047,50048,50049,50050,50051,50052,50053,50054,50055,50056;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_aurasupercharge	{
+setarray .@items[0], 50057,50058,50059,50060,50061,50062,50063,50064,50065,50066;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_awkgrace	{
+setarray .@items[0], 50067,50068,50069,50070,50071,50072,50073,50074,50075,50076,50077;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_awkinstinct	{
+setarray .@items[0], 50078,50079,50080,50081,50082,50083,50084,50085,50086,50087,50088;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_awkmight	{
+setarray .@items[0], 50089,50090,50091,50092,50093,50094,50095,50096,50097,50098;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_awkobliv	{
+setarray .@items[0], 50099,50100,50101,50102,50103,50104,50105,50106,50107,50108,50109;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_blazmyst	{
+setarray .@items[0], 50110,50111,50112,50113,50114,50115,50116,50117,50118,50119,50120;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_blazplat	{
+setarray .@items[0], 50121,50122,50123,50124,50125,50126,50127,50128,50129,50130;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+
+function	script	caixa_blazskul	{
+setarray .@items[0], 50131,50132,50133,50134,50135,50136,50137,50138,50139,50140;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}
+

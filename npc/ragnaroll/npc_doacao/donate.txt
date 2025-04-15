@@ -1,0 +1,212 @@
+bombring,117,92,3	script	Doação#KW	10187,{
+
+OnDoar:
+
+    //===== Configurações do NPC =================================
+    .npc$ = "^0000ff[Sistema de Doação]^000000"; // Nome do NPC.
+    set .@valor_minimo_cupom,20; //valor mínimo para utilizar cupom
+    set .@valor_minimo_doar,1; //valor mínimo para doar
+    
+    mes .npc$;
+    mes "Escolha o tipo de moeda que deseja.";
+    switch(select("^006400[>>]^000000 Cash Points")) {
+        case 1:
+            set .@tipo_doacao$, "Cash Points";
+            set .@tipo_api$, "CASH";
+            set .@tipo_doacao, 0;
+            break;
+    }
+
+    clear;
+    mes .npc$;
+    mes "Escolha a forma de pagamento que deseja.";
+    mes "^FF0000Qualquer tipo de ilegalidade na transação, em quaisquer formas de pagamento, estará sujeita a punições sem aviso prévio.";
+
+    switch(select("^008080[>>]^000000 Pix:^FF0000[>>]^000000 Sair")){
+
+        case 1:
+            set .@forma_pagamento$, "Pix";
+            break;
+        case 2:
+            goto Desistir_Donate;
+            break;
+
+
+    }
+
+    clear;
+
+    while(.@valor < .@valor_minimo_doar){
+        clear;
+        mes .npc$;
+        mes "Insira o valor da doação:";
+        mes "^ff0000[>>] Valor Mínimo: ^000000R$"+.@valor_minimo_doar+",00";
+        input .@valor; 
+    }
+        
+    if(.@valor >= .@valor_minimo_cupom && .@tipo_doacao$ == "Cash Points"){
+        clear;
+        mes .npc$;
+        mes "Deseja utilizar cupom de streamer?";
+        if(select("^006400[>>]^000000Sim:^ff0000[>>]^000000Não") == 1){
+            clear;
+
+            mes .npc$;
+            .@count = 3;
+
+            while(.@count > 0){
+                mes "Insira o cupom:";
+                input .@cupom$;
+
+                query_sql "SELECT `cupom`, `percentual` FROM `cupom_donate` WHERE `cupom` = '" + .@cupom$ + "' AND `status` = 1 AND `validade` >= NOW()",.@cupom_sql$,.@cupom_desconto_sql;
+                
+                if (.@cupom_sql$ != "") {
+                    clear;
+                    mes .npc$;
+                    mes "^006400Cupom aplicado com sucesso.^000000";
+                    next;
+                    break;
+                } else {
+                    clear;
+                    .@count --;
+                    mes .npc$;
+                    mes "^FF0000Cupom inválido ou expirado. Tente novamente.^000000";
+                    if (.@count > 0) {
+                        mes "^FF0000"+.@count+" tentativas restantes.^000000";
+                    } else {
+                        clear;
+                        mes .npc$;
+                        mes "^FF0000Falha ao adicionar o cupom.^000000";
+                        mes "^FF0000Nennhum cupom aplicado.^000000";
+                        next;
+                    }
+                }
+            }
+        }
+    }
+
+        if ( 1 & 1 ) .@string_list$ = .@string_list$ + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if ( 2 & 2 ) .@string_list$ = .@string_list$ + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if ( 4 & 4 ) .@string_list$ = .@string_list$ + "0123456789";
+                
+        if ( .@string_list$ != "" ) {
+            .@total_length = getstrlen( .@string_list$ );
+            while ( getstrlen( .@rand_string$ ) < 20 )
+                .@rand_string$ = .@rand_string$ + charat( .@string_list$,rand( .@total_length ) );
+        }
+
+
+        clear;
+        mes .npc$;
+        mes "Confirme as informações:";
+        mes "Codigo da transação: ^0000ff"+.@rand_string$+"^000000";
+        mes "Moeda: ^0000ff"+.@tipo_doacao$+"^000000";
+        mes "Forma de Pagamento: ^0000ff"+.@forma_pagamento$+"^000000";
+        mes "Valor: ^0000ffR$"+.@valor+",00^000000";
+        if (.@cupom_sql$ != "" && .@tipo_doacao$ == "Cash Points") mes "Cupom Aplicado:^0000ff "+.@cupom_sql$+"^000000", "Bônus:^0000ff "+.@cupom_desconto_sql+"%^000000";
+        if(select("^006400[>>]^000000 Confirmar Doação:^FF0000[>>]^000000 Sair") == 2){goto Desistir_Donate;}
+
+
+
+
+        if (.@cupom_sql$ != "" && .@tipo_doacao$ == "Cash Points") query_sql "INSERT INTO `logs_cupom_donate` (`account_id`, `char_name`, `cupom_utilizado`, `valor`, `codigo_transacao`) VALUES ('"+getcharid(3)+"', '"+strcharinfo(0)+"', '"+.@cupom_sql$+"', '"+.@valor+"', '"+.@rand_string$+"')";
+        
+        clear;
+        mes .npc$;
+        mes "Obrigado por ajudar o Servidor, efetue o pagamento e aguarde a aprovação.";
+        mes "<URL>Efetuar Pagamento<INFO>https://renovategames.com/mp/"+.@tipo_api$+"/api/"+strtolower(.@forma_pagamento$)+".php?id_transacao="+.@rand_string$+"&vl=" + .@valor + "&user_id=" + getcharid(3) + "&tipo=" + .@tipo_doacao + "</INFO></URL>";
+
+    close2;
+    callfunc "delivery_donate";
+
+
+
+
+Desistir_Donate:
+        clear;
+        mes .npc$;
+        mes "Tudo bem, sabe onde me encontrar.";
+        mes "Tenha "+(gettime(3)>= 6&&gettime(3)<= 12?"um ótimo dia...":(gettime(3)>=13&&gettime(3)<=18?"uma ótima tarde...":"uma ótima noite..."));
+        close;
+
+OnInit:
+bindatcmd "doar",strnpcinfo(3)+"::OnDoar";
+end;
+}
+
+
+
+-	script	delivery	-1,{
+    
+OnPCLoginEvent:    
+    
+    query_sql "SELECT `valor`, `tipo` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@valor_donate, @tipo;
+    if(@valor_donate >= 1 && @valor_donate <= 1000)
+    {
+        
+        if (@tipo == 1) {
+
+            query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+            query_sql "INSERT INTO `logs_donates` (`acc_id`, `valor`, `resgatou`, `moeda`) VALUES (" + getcharid(3) + "," + (@valor_donate) + "," + (@valor_donate) + ", 'RMT')";
+            getitem 50100, @valor_donate;
+                
+            message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+@valor_donate+" Moedas RMT";
+            end;
+            
+        } else if (@tipo == 0) {
+
+            .@retorno = query_sql ("SELECT `cupom_utilizado` FROM `logs_cupom_donate` WHERE `account_id`='"+getcharid(3)+"' AND `status_pag` = 1 ORDER BY `id` DESC LIMIT 1", @cupom$);
+            query_sql "SELECT `percentual` FROM `cupom_donate` WHERE `cupom` = '"+@cupom$+"'", @percentual;
+
+            if(.@retorno == 1){
+                .@cash_total = (@valor_donate * 1000 * @percentual / 100) + @valor_donate * 1000;
+                query_sql "UPDATE `logs_cupom_donate` SET `status_pag` = 0 WHERE `account_id`='"+getcharid(3)+"'";
+            }else{
+                .@cash_total = @valor_donate * 1000;
+            }
+
+            query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+            query_sql "INSERT INTO `logs_donates` (`acc_id`, `valor`, `resgatou`, `moeda`) VALUES (" + getcharid(3) + "," + (@valor_donate) + "," + .@cash_total + ", 'CASH')";
+            set #CASHPOINTS, #CASHPOINTS + .@cash_total;
+            message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+.@cash_total+" ROP's + (Possui agora: "+#CASHPOINTS+" ROP'S)";
+            end;
+        }
+    } 
+}
+
+function	script	delivery_donate	{
+    
+    
+    query_sql "SELECT `valor`, `tipo` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@valor_donate, @tipo;
+    if(@valor_donate >= 1 && @valor_donate <= 1000)
+    {
+        
+        if (@tipo == 1) {
+
+            query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+            query_sql "INSERT INTO `logs_donates` (`acc_id`, `valor`, `resgatou`, `moeda`) VALUES (" + getcharid(3) + "," + (@valor_donate) + "," + (@valor_donate) + ", 'RMT')";
+            getitem 810, @valor_donate;
+                
+            message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+@valor_donate+" Moedas RMT";
+            end;
+            
+        } else if (@tipo == 0) {
+
+            .@retorno = query_sql ("SELECT `cupom_utilizado` FROM `logs_cupom_donate` WHERE `account_id`='"+getcharid(3)+"' AND `status_pag` = 1 ORDER BY `id` DESC LIMIT 1", @cupom$);
+            query_sql "SELECT `percentual` FROM `cupom_donate` WHERE `cupom` = '"+@cupom$+"'", @percentual;
+
+            if(.@retorno == 1){
+                .@cash_total = (@valor_donate * 1000 * @percentual / 100) + @valor_donate * 1000;
+                query_sql "UPDATE `logs_cupom_donate` SET `status_pag` = 0 WHERE `account_id`='"+getcharid(3)+"'";
+            }else{
+                .@cash_total = @valor_donate * 1000;
+            }
+
+            query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+            query_sql "INSERT INTO `logs_donates` (`acc_id`, `valor`, `resgatou`, `moeda`) VALUES (" + getcharid(3) + "," + (@valor_donate) + "," + .@cash_total + ", 'CASH')";
+            set #CASHPOINTS, #CASHPOINTS + .@cash_total;
+            message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+.@cash_total+" ROP's + (Possui agora: "+#CASHPOINTS+" ROP'S)";
+            end;
+        }
+    } 
+}

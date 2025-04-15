@@ -1,0 +1,590 @@
+moc_para01,106,87,5	script	passeiniciante	710,{
+
+	mes "[Battle Pass]";
+
+	if(getgroupid() >= 99 && select("Menu Player:Menu GM")==2)
+	{
+		switch(select("Create Key:Activate Key:View All Keys:Create Prize List:View List of Awards:Sair"))
+		{
+			case 1:
+				next;
+				mes "[Battle Pass]";
+				mes "Choose the year:";
+				set .@ano,select(""+gettime(DT_YEAR)+":"+(gettime(DT_YEAR)+1)+"");
+				
+				next;
+				mes "[Battle Pass]";
+				mes "Choose the month:";
+				setarray .@mes$[0],"January","February","March","April","May","June","July","August","September","October","November","December";
+				set .@mes,select(implode(.@mes$,":"));
+				
+				next;
+				mes "[Battle Pass]";
+				set .@chave_tmp_iniciante$,(.@ano<2?gettime(DT_YEAR):gettime(DT_YEAR)+1)+""+(.@mes<10?"0"+.@mes:.@mes);
+				
+				query_sql "SELECT `id`,`chave` FROM `battle_pass_iniciante_config` WHERE `chave`='"+.@chave_tmp_iniciante$+"'",.@id,.@chave$;
+
+				if(.@id){ mes "There is already a registered key for that year/month!"; close; }
+				
+				mes "Year: "+(.@ano<2?gettime(DT_YEAR):gettime(DT_YEAR)+1)+"";
+				mes "Month: "+.@mes$[(.@mes-1)]+"";
+				mes "Key: "+.@chave_tmp_iniciante$+"";
+				if(select("Cancel:Create Key")==1) close;
+				
+				next;
+				mes "[Battle Pass]";
+				query_sql "INSERT INTO `battle_pass_iniciante_config` VALUES (NULL,'"+.@chave_tmp_iniciante$+"',CURRENT_TIMESTAMP,'"+strcharinfo(0)+"')";
+				mes "Key created successfully!";
+				close;
+		
+			case 2:
+				next;
+				mes "[Battle Pass]";
+				
+				query_sql "SELECT `id`,`chave` FROM `battle_pass_iniciante_config` ORDER BY `chave` ASC",.@id,.@chave$;
+				if(!getarraysize(.@id)){ mes "You must create a key first!"; close; }
+				
+				mes "Choose the key you want to activate.";
+				set .@chave_actv_iniciante,select(implode(.@chave$,":"))-1;
+				
+				//Check Key x Reward
+				//==
+				query_sql "SELECT `chave` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+.@chave$[.@chave_actv_iniciante]+"'",.@rst$;
+				if(.@rst$ == ""){ mes "^FF0000Before activating the key, you need to create the prize list for this key!^000000"; close; }
+				
+				next;
+				mes "[Battle Pass]";
+				
+				if($BP_CHAVE_INICIANTE >= 1) mes "Chave Atual: "+$BP_CHAVE_INICIANTE+"";
+				mes "Chave: "+.@chave$[.@chave_actv_iniciante]+"";
+				if(select("Cancel:Activate Key")==1) close;
+				
+				if($BP_CHAVE_INICIANTE >= 1)
+				{
+					next;
+					mes "[Battle Pass]";
+					mes "Are you sure you want to change the key "+$BP_CHAVE_INICIANTE+" by the key "+.@chave$[.@chave_actv_iniciante]+"?";
+					if(select("Cancel:Confirm")==1) close;
+				}
+				
+				set $BP_CHAVE_INICIANTE,atoi(.@chave$[.@chave_actv_iniciante]);
+				
+				//Load/Set the Bonus Item
+				query_sql "SELECT `bitem`,`bqtd` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+$BP_CHAVE_INICIANTE+"'",.@bItem,.@bQtd;
+				set getvariableofnpc(.bItem,"Battle_Pass_CTRL_INI"),.@bItem;
+				set getvariableofnpc(.bQtd,"Battle_Pass_CTRL_INI"),.@bQtd;
+				
+				mes "Key "+$BP_CHAVE_INICIANTE+" Activated.";
+				close;
+
+			case 3:
+				next;
+				query_sql "SELECT `id`,`chave`,`logdate`,`char_name` FROM `battle_pass_iniciante_config` ORDER BY `chave` DESC",.@id,.@chave$,.@date$,.@nick$;
+				if(!getarraysize(.@id)){ mes "[Battle Pass]"; mes "You must create a key first!"; close; }
+				
+				for(set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+				{
+					mes "[Battle Pass]";
+					mes "";
+					mes "ID OR: "+.@id[.@i]+"";
+					mes "Key: "+.@chave$[.@i]+"";
+					mes "Created: "+.@date$[.@i]+"";
+					mes "By: "+.@nick$[.@i]+"";
+					if((.@i+1) < getarraysize(.@id)) next;				
+				}
+				close;
+
+			case 4:
+				next;
+				mes "[Battle Pass]";
+				
+				query_sql "SELECT `id`,`chave` FROM `battle_pass_iniciante_config` ORDER BY `chave` ASC",.@id,.@chave$;				
+				if(!getarraysize(.@id)){ mes "You must create a key first!"; close; }
+				
+				mes "Choose the key that will be linked to the award list.";
+				set .@chave_actv_iniciante,select(implode(.@chave$,":"))-1;
+				
+				query_sql "SELECT `chave` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+.@chave$[.@chave_actv_iniciante]+"'",.@opt$;
+				
+				if(.@opt$ != "")
+				{
+					next;
+					mes "[Battle Pass]";
+					mes "^FF0000There is already a configuration for this key, if you make a change remember to repeat everything including what will change!^000000";
+				}
+				
+                next;
+                mes "[Passe de Batalha]";
+                mes "";
+                mes "Siga este exemplo: item,qtd,item,qtd...";
+                mes "";
+                mes "^0080ff607,5^000000,^4c79ff608,9^000000,^ff8000609,1^000000,^d9006c610,4^000000,^d93600611,1^000000";
+                mes "";
+                mes "(obrigatório 5 itens de cada vez!)";
+                next;
+                
+                while(.@list <4)
+                {
+                    mes "[Passe de Batalha]";
+                    mes "1: "+(.@list<1?"?":"OK")+"";
+                    mes "2: "+(.@list<2?"?":"OK")+"";
+                    mes "3: "+(.@list<3?"?":"OK")+"";
+                                        
+                    if(.@list < 4)
+                    {
+                        input .@str$;
+                        explode(.@str_r$,.@str$,",");
+                        if(getarraysize(.@str_r$) > 10){ mes "^FF0000* O limite foi excedido (limite 5)^000000"; deletearray .@str_r$[0],getarraysize(.@str_r$); }
+                        else
+                        {
+                            dispbottom "===========["+(.@list+1)+"]:===========";
+                            callfunc("F_Battle_Passe_Iniciante",2,.@str$);
+                            copyarray .@itemlist$[getarraysize(.@itemlist$)],.@str_r$[0],getarraysize(.@str_r$);
+                            set .@list,.@list+1;
+                            deletearray .@str_r$[0],getarraysize(.@str_r$);
+                        }
+                    }
+                    else if(select("Confirmar:Refazer")==2){ set .@list,0; deletearray .@itemlist$[0],getarraysize(.@itemlist$); } else set .@list,.@list+1;
+                    next;                    
+                }
+				
+				mes "[Battle Pass]";
+				mes "Enter the bonus item id.";
+				input .@ibonus;
+				mes "Enter the amount of the bonus item.";
+				input .@qbonus;
+				
+				next;
+				mes "[Battle Pass]";
+				mes "Please now check the list in your chat and confirm, if you want to change you can overwrite the values normally.";
+				
+				for(set .@i,0; .@i<getarraysize(.@itemlist$); set .@i,.@i+2)
+				{
+					set .@ord,.@ord+1;
+					dispbottom "["+.@ord+"]: "+.@itemlist$[.@i+1]+"x "+getitemname(atoi(.@itemlist$[.@i]))+" ("+.@itemlist$[.@i]+")";
+					set .@sqlITM$,.@sqlITM$+"'"+.@itemlist$[.@i]+"'"+((.@i+2)==getarraysize(.@itemlist$)?"":",")+"";
+					set .@sqlQTD$,.@sqlQTD$+"'"+.@itemlist$[.@i+1]+"'"+((.@i+2)==getarraysize(.@itemlist$)?"":",")+"";
+				}
+				
+				dispbottom "==== Bonus Item: ====";
+				dispbottom ""+.@qbonus+"x "+getitemname(.@ibonus)+" ("+.@ibonus+")";
+				
+				if(select("Cancel:Confirm")==1) close;
+								
+				query_sql ""+(.@opt$ != ""?"REPLACE":"INSERT")+" INTO `battle_pass_iniciante_reward` VALUES ('"+.@chave$[.@chave_actv_iniciante]+"',"+.@sqlITM$+","+.@sqlQTD$+","+.@ibonus+",'"+.@qbonus+"',CURRENT_TIMESTAMP,'"+strcharinfo(0)+"')";
+				mes "Done!";
+				close;
+			
+			case 5:					
+				next;
+				mes "[Battle Pass]";
+				
+				query_sql "SELECT `id`,`chave` FROM `battle_pass_iniciante_config` ORDER BY `chave` ASC",.@id,.@chave$;				
+				if(!getarraysize(.@id)){ mes "You must create a key first!"; close; }
+				
+				mes "Choose the key to which the prize list is linked!";
+				set .@chave_actv_iniciante,select(implode(.@chave$,":"))-1;
+				
+				query_sql "SELECT `chave` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+.@chave$[.@chave_actv_iniciante]+"'",.@opt$;
+				
+				if(.@opt$ == "")
+				{ mes "^FF0000No prize list is linked to this key!^000000"; close; }
+				
+				next;
+				mes "[Battle Pass]";
+				mes "Check the list in your chat!";
+				close2;
+								
+				for(set .@i,1; .@i<26; set .@i,.@i+1)
+				{ set .@sqlITM$,.@sqlITM$+"`item"+.@i+"`"+((.@i+1)>25?"":",")+""; set .@sqlQTD$,.@sqlQTD$+"`qtd"+.@i+"`"+((.@i+1)>25?"":",")+""; }
+				
+				query_sql "SELECT "+.@sqlITM$+","+.@sqlQTD$+",`bitem`,`bqtd`,`logdate`,`char_name` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+.@chave$[.@chave_actv_iniciante]+"'",
+				.@it1,.@it2,.@it3,.@it4,.@it5,.@it6,.@it7,.@it8,.@it9,.@it10,.@it11,.@it12,
+				.@qt1,.@qt2,.@qt3,.@qt4,.@qt5,.@qt6,.@qt7,.@qt8,.@qt9,.@qt10,.@qt11,.@qt12,
+				.@bit,.@qit,.@logdate$,.@name$;
+
+				dispbottom "==== KEY["+.@chave$[.@chave_actv_iniciante]+"] ====";
+				
+				for(set .@i,1; .@i<26; set .@i,.@i+1)
+					dispbottom "["+.@i+"]: "+getd(".@qt"+.@i+"")+"x "+getitemname(getd(".@it"+.@i+""))+" ("+getd(".@it"+.@i+"")+")";
+					
+				dispbottom "==== Bonus Item: ====";
+				dispbottom ""+.@qit+"x "+getitemname(.@bit)+" ("+.@bit+")";
+				dispbottom "==== Other Data: ====";
+				dispbottom "Created/Modified: "+.@logdate$+"";
+				dispbottom "By: "+.@name$+"";
+				dispbottom "======================";
+				end;
+				
+			case 6: close;
+		}
+	}
+
+	mes "How can I help you adventurer?";
+	next;
+	switch(select("What is the Battle Pass?:Where to buy the Battle Pass"))
+	{
+		case 1:
+			next;
+			mes "[Battle Pass]";
+			mes "It is a system that has 25 levels to be unlocked, with each level released you will receive rewards and a window will appear.";
+			
+			next;
+			mes "[Battle Pass]";
+			mes "In order to unlock the levels, you need to kill monsters, do Eden group quests and also use the battle vigor that will give you pass progress.";
+			
+			next;
+			mes "[Battle Pass]";
+			mes "To level up you will need to get 25,000 progress points from the pass, you can only level up 2 levels per day and at 00:00 (midnight) the limit is reset.";
+			
+			next;
+			mes "[Battle Pass]";
+			mes "Battle Vigor has no limit when used.";
+			
+			next;
+			mes "[Battle Pass]";
+			mes "Monsters with higher levels will give you more experience, if you have a group the points will be divided by the amount of players, but you will have an increase of 2 points per person in the group but that are on the same map!";
+			
+			next;
+			mes "[Battle Pass]";
+			mes "The Battle Pass will last until the end of the month (it will have an expiration time) after being activated!";
+			close;			
+			
+		case 2:
+			next;
+			mes "[Battle Pass]";
+			mes "Both Battle Pass and Battle Vigor can be purchased from the cash/rops shop";
+			close;
+	}
+}
+
+//Main Func Battle_Pass
+//==
+function	script	F_Battle_Passe_Iniciante	{
+
+	if(!getargcount()) return;
+	set .@opt,getarg(0);
+	
+	switch(.@opt)
+	{
+		case 1:
+			if(#BP_CHAVE_INICIANTE == $BP_CHAVE_INICIANTE && $BP_CHAVE_INICIANTE >= 1){ cutin "passe_iniciante_"+#BP_LEVEL_INICIANTE+"",4; end; }
+			
+			mes "[Passe Iniciante]";
+			
+			if($BP_CHAVE_INICIANTE < 1){ mes "O sistema está em manutenção!"; close; }
+			
+			mes "Você está prestes a ativar o Passe Iniciante.";
+			mes "Lembrando que você só pode realizar um nível por dia.";
+			if(select("Cancelar:Ativar Passe")==1) close;
+			if(countitem(880) || rentalcountitem(880)) delitem 880,1;
+			
+			set .@d,($BP_MES_INICIANTE[gettime(DT_MONTH)]-gettime(DT_DAYOFMONTH))*86400;
+			set .@h,(23-gettime(DT_HOUR))*3600;
+			set .@m,(59-gettime(DT_MINUTE))*60;
+			set .@s,(59-gettime(DT_SECOND));
+			set .@tExpire,(.@d+.@h+.@m+.@s);
+			rentitem 880,.@tExpire;
+			
+			mes "^4ca6ff* Passe Iniciante ativado!^000000";
+			set #BP_LEVEL_INICIANTE,0;
+			set #BP_EXP_INICIANTE,0;
+			set #BP_EXP_INICIANTE_LIMIT,0;
+			set #BP_TIME_INICIANTE,0;
+			set #BP_msgSHOW_INICIANTE,0;
+			set #BP_EXP_INICIANTEIRE,gettimetick(2)+.@tExpire;
+			set #BP_CHAVE_INICIANTE,$BP_CHAVE_INICIANTE;
+			close;
+			
+		case 2:
+				explode(.@str$,getarg(1),",");
+				for(set .@i,0; .@i<getarraysize(.@str$); set .@i,.@i+2)
+					dispbottom ""+.@str$[(.@i+1)]+"x "+getitemname(atoi(.@str$[.@i]))+" ("+.@str$[.@i]+")";					
+				dispbottom "======================";
+				return;
+				
+		case 3:
+				//Champion Mob identifier
+				setarray .@idnames$[0],"Swift","Solid","Ringleader","Furious","Elusive";			//1
+				//setarray .@idnames$[0],"Precioso","Batedor","Ringleader","Furioso","Experiente";	//2
+				setarray .@BP_poit$[0],    250,    250,           0,      500,     5000;
+				for(set .@i,0; .@i<getarraysize(.@idnames$); set .@i,.@i+1)
+					if(compare(getarg(1),.@idnames$[.@i]))
+						set .@int,.@BP_poit$[.@i];
+				return .@int;
+				
+		case 4:
+				//OBS: To add points to a group of players use this way: callfunc("F_Battle_Passe_Iniciante",4,getcharid(1),value_in_points,extra_points_per_player)
+				//==
+				// (change the value_in_points by the amount of points to be added).
+				// (change the extra_points_per_player by the amount of points that will be multiplied by the number of players in the group (on the same map as who is interacting) that will be added to the total points.
+				
+				if($BP_CHAVE_INICIANTE < 1){ dispbottom "[Passe Iniciante]: O sistema está em manutenção.",0x4ca6ff; end; }
+				if(!getarg(1)){ dispbottom "[Passe Iniciante]: Grupo não especificado!"; return; }
+				if(!getarg(2)){ dispbottom "[Passe Iniciante]: Pontos nulos ou negativos!"; return; }
+				getpartymember getarg(1),1,.@cid;
+				getpartymember getarg(1),2,.@accid;
+				set .@players,getarraysize(.@accid);
+				set .@map$,strcharinfo(3);								
+				set .@points,getarg(2)/.@players;
+				
+				for(set .@i,0; .@i<.@players; set .@i,.@i+1)
+					if(isloggedin(.@accid[.@i],.@cid[.@i]))
+					{
+						attachrid(.@accid[.@i]);
+						if(strcharinfo(3) == .@map$ && #BP_CHAVE_INICIANTE == $BP_CHAVE_INICIANTE)
+							callfunc("F_Battle_Passe_Iniciante",5,(.@players>1?.@points+getarg(3):.@points));
+						detachrid;
+					}
+				
+				return;
+				
+		case 5:
+				//OBS: To add points for a player use like this:  callfunc("F_Battle_Passe_Iniciante",5,value_in_points) (change the value_in_points by the amount of points to be added).
+				//==
+				if($BP_CHAVE_INICIANTE < 1){ dispbottom "[Passe Iniciante]: O sistema está em manutenção.",0x4ca6ff; end; }				
+				if(gettimetick(2) > #BP_EXP_INICIANTEIRE || #BP_CHAVE_INICIANTE != $BP_CHAVE_INICIANTE) return;
+				
+				if(gettimetick(2)>#BP_TIME_INICIANTE)
+				{
+					set .@h,(23-gettime(DT_HOUR))*3600;
+					set .@m,(59-gettime(DT_MINUTE))*60;
+					set .@s,(59-gettime(DT_SECOND));
+					set #BP_TIME_INICIANTE,gettimetick(2)+(.@d+.@h+.@m+.@s);
+					set #BP_EXP_INICIANTE_LIMIT,0;
+				}
+				
+				if(#BP_EXP_INICIANTE_LIMIT >= 50000 && getargcount() < 3)
+				{
+					if(!#BP_msgSHOW_INICIANTE) dispbottom "[Passe Iniciante]: Você atingiu o limite diário!";
+					return;
+				}
+				else if(#BP_LEVEL_INICIANTE >= 12)
+				{
+					if(!#BP_msgSHOW_INICIANTE) dispbottom "[Passe Iniciante]: Você completou o Passe Iniciante";
+					return;
+				}
+				
+				if((#BP_EXP_INICIANTE_LIMIT+getarg(1)) > 15000 && getargcount() < 3)
+					set .@redun,(15000-#BP_EXP_INICIANTE_LIMIT);
+					
+				set #BP_EXP_INICIANTE,#BP_EXP_INICIANTE+(.@redun?.@redun:getarg(1));
+
+				if(getargcount() < 3)
+					set #BP_EXP_INICIANTE_LIMIT,#BP_EXP_INICIANTE_LIMIT+(.@redun?.@redun:getarg(1));				
+				
+				if(!#BP_msgSHOW_INICIANTE)
+				{
+					dispbottom "[Passe Iniciante]: Experiência recebida ("+callfunc("F_InsertComma",getarg(1))+") <TOTAL: "+callfunc("F_InsertComma",#BP_EXP_INICIANTE)+" / "+callfunc("F_InsertComma",((#BP_LEVEL_INICIANTE+1)*15000))+">",0x008000;
+					if(getargcount() < 3)
+						dispbottom "[>] Limite Diário: "+callfunc("F_InsertComma",#BP_EXP_INICIANTE_LIMIT)+" / 15,000",0x008000;
+				}
+				
+				if(getargcount() >= 3)
+					delitem getarg(2),1;
+					
+				if(#BP_LEVEL_INICIANTE < (#BP_EXP_INICIANTE/15000) && #BP_LEVEL_INICIANTE < 12)
+				{
+					
+					specialeffect2 244;
+					specialeffect2 338;
+					soundeffect "complete.wav",0;
+					set #BP_LEVEL_INICIANTE,#BP_LEVEL_INICIANTE+1;
+					cutin "passe_iniciante_"+#BP_LEVEL_INICIANTE+"",4;
+					
+					query_sql "SELECT `item"+#BP_LEVEL_INICIANTE+"`,`qtd"+#BP_LEVEL_INICIANTE+"` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+#BP_CHAVE_INICIANTE+"'",.@item,.@qtd;
+					
+					set .@sender$,"Recompensa Nv."+#BP_LEVEL_INICIANTE+"";
+					set .@title$,"Passe Iniciante";
+					set .@body$,"Você recebeu a recompensa do Passe Iniciante para o nível "+#BP_LEVEL_INICIANTE+", aproveite sua recompensa!:)";
+					set .@zeny,0;
+					setarray .@mailitem[0],.@item;
+					setarray .@mailamount[0],.@qtd;
+					setarray .@mailrefine[0],0;
+					setarray .@mailbound[0],0;
+					setarray .@mailcard0[0],0;
+					setarray .@mailcard1[0],0;
+					setarray .@mailcard2[0],0;
+					mail getcharid(0),.@sender$,.@title$,.@body$,.@zeny,.@mailitem,.@mailamount,.@mailrefine,.@mailbound,.@mailcard0,.@mailcard1,.@mailcard2;					
+					
+					if(rand(1,10000) <= 50)
+					{
+						set .@sender$,"Recompensa Extra";
+						set .@title$,"Passe Iniciante";
+						set .@body$,"Você teve sorte de conseguir "+getvariableofnpc(.bQtd,"Battle_Pass_CTRL_INI")+"x "+getitemname(getvariableofnpc(.bItem,"Battle_Pass_CTRL_INI"))+"! (0,5% of chance), aproveite sua recompensa! :)";
+						set .@zeny,0;
+						setarray .@mitem[0],getvariableofnpc(.bItem,"Battle_Pass_CTRL_INI");
+						setarray .@mamount[0],getvariableofnpc(.bQtd,"Battle_Pass_CTRL_INI");
+						setarray .@mrefine[0],0;
+						setarray .@mbound[0],0;
+						setarray .@mcard0[0],0;
+						setarray .@mcard1[0],0;
+						setarray .@mcard2[0],0;
+						mail getcharid(0),.@sender$,.@title$,.@body$,.@zeny,.@mitem,.@mamount,.@mrefine,.@mbound,.@mcard0,.@mcard1,.@mcard2;
+					}
+				}
+				
+				return;
+	}
+}
+
+
+//Main Core Script
+//==
+-	script	Battle_Pass_CTRL_INI	FAKE_NPC,{
+OnInit:
+
+	//========= Configura  es =========\\
+	//==							 ==\\
+	
+	//Number of days of each month of the year (keep up to date!)
+	//== (January, February...)
+	setarray $BP_MES_INICIANTE[1],31,28,31,30,31,30,30,31,30,31,30,31;
+	
+	//Create player/gm access command: @bp
+	//==
+	bindatcmd "bpiniciante",strnpcinfo(3)+"::OnBP_CMD";
+	
+	//Create sql table 1
+	//==
+	query_sql "CREATE TABLE IF NOT EXISTS `battle_pass_iniciante_config` (`id` int(11) NOT NULL AUTO_INCREMENT,`chave` varchar(10) NOT NULL,`logdate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,`char_name` varchar(30) NOT NULL,PRIMARY KEY (`id`))";
+	
+	//Create sql table 2
+	//==
+   //Criar tabela SQL 2
+    //==
+    setarray .@tableschm$[0],
+          "CREATE TABLE IF NOT EXISTS `battle_pass_iniciante_reward` (",
+          "`chave` varchar(10) NOT NULL,",
+          "`item1` mediumint(9) DEFAULT NULL,",
+          "`item2` mediumint(9) DEFAULT NULL,",
+          "`item3` mediumint(9) DEFAULT NULL,",
+          "`item4` mediumint(9) DEFAULT NULL,",
+          "`item5` mediumint(9) DEFAULT NULL,",
+          "`item6` mediumint(9) DEFAULT NULL,",
+          "`item7` mediumint(9) DEFAULT NULL,",
+          "`item8` mediumint(9) DEFAULT NULL,",
+          "`item9` mediumint(9) DEFAULT NULL,",
+          "`item10` mediumint(9) DEFAULT NULL,",
+          "`item11` mediumint(9) DEFAULT NULL,",
+          "`item12` mediumint(9) DEFAULT NULL,",
+          "`qtd1` smallint(6) DEFAULT NULL,",
+          "`qtd2` smallint(6) DEFAULT NULL,",
+          "`qtd3` smallint(6) DEFAULT NULL,",
+          "`qtd4` smallint(6) DEFAULT NULL,",
+          "`qtd5` smallint(6) DEFAULT NULL,",
+          "`qtd6` smallint(6) DEFAULT NULL,",
+          "`qtd7` smallint(6) DEFAULT NULL,",
+          "`qtd8` smallint(6) DEFAULT NULL,",
+          "`qtd9` smallint(6) DEFAULT NULL,",
+          "`qtd10` smallint(6) DEFAULT NULL,",
+          "`qtd11` smallint(6) DEFAULT NULL,",
+          "`qtd12` smallint(6) DEFAULT NULL,",
+          "`bitem` mediumint(9) DEFAULT NULL,",
+          "`bqtd` smallint(6) DEFAULT NULL,",
+          "`logdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,",
+          "`char_name` varchar(30) NOT NULL,",
+          "UNIQUE(`chave`))";
+          query_sql implode(.@tableschm$,"");
+          
+    //Carregar o Item Bônus
+    if($BP_CHAVE >= 1)
+        query_sql "SELECT `bitem`,`bqtd` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+$BP_CHAVE+"'",.bItem,.bQtd;
+    
+	
+	//Check Key x Reward
+	//==
+	if($BP_CHAVE_INICIANTE >= 1)
+	{
+		query_sql "SELECT `chave` FROM `battle_pass_iniciante_reward` WHERE `chave`='"+$BP_CHAVE_INICIANTE+"'",.@rst$;
+		if(.@rst$ == "") set $BP_CHAVE_INICIANTE,-1;
+	}
+	else set $BP_CHAVE_INICIANTE,-1;
+	
+	end;
+
+
+OnBP_CMD:
+
+	if(getgroupid() >= 99 && strtolower(.@atcmd_parameters$[0]) != "")
+	{
+		if(strtolower(.@atcmd_parameters$[0]) == strtolower("att")){ set $BP_CHAVE_INICIANTE_tmp_iniciante,$BP_CHAVE_INICIANTE; set $BP_CHAVE_INICIANTE,-1; dispbottom "[Passe Iniciante]: O sistema está em manutenção!",0x4ca6ff; }
+		if(strtolower(.@atcmd_parameters$[0]) == strtolower("up")){ set $BP_CHAVE_INICIANTE,$BP_CHAVE_INICIANTE_tmp_iniciante; dispbottom "[Passe Iniciante]: O sistema está funcionando!"; }		
+		end;		
+	}
+	
+	if(#BP_CHAVE_INICIANTE != $BP_CHAVE_INICIANTE || $BP_CHAVE_INICIANTE < 1) end;
+
+	mes "[Passe Iniciante]";
+	mes "Como posso ajudar o Sr."+strcharinfo(0)+"?";
+	if(select(""+(#BP_msgSHOW_INICIANTE?"Ativar":"Desativar")+" as mensagens no chat:Abra a janela do Passe iniciante")==2){ close2; cutin "passe_iniciante_"+#BP_LEVEL_INICIANTE+"",4; end; }
+	else set #BP_msgSHOW_INICIANTE,(#BP_msgSHOW_INICIANTE?0:1);	
+	mes "Done!";
+	close;
+
+//Check / reset limit
+//==
+OnPCLoginEvent:
+
+	if(gettimetick(2)>#BP_TIME_INICIANTE && #BP_EXP_INICIANTE_LIMIT)
+	{
+		set .@h,(23-gettime(DT_HOUR))*3600;
+		set .@m,(59-gettime(DT_MINUTE))*60;
+		set .@s,(59-gettime(DT_SECOND));
+		set #BP_TIME_INICIANTE,gettimetick(2)+(.@d+.@h+.@m+.@s);
+		set #BP_EXP_INICIANTE_LIMIT,0;
+	}
+	end;
+	
+//Set maintenance mode 1st of the month
+//==
+OnHour00:
+	if(gettime(DT_DAYOFMONTH) == 1) set $BP_CHAVE_INICIANTE,-1;
+	end;
+
+OnNPCKillEvent:
+	if (!playerattached())
+		end;
+	
+	sleep2 500;
+	
+	if($BP_CHAVE_INICIANTE < 1){ dispbottom "[Passe Iniciante]: O sistema está em manutenção!"; end; }
+	if(gettimetick(2) > #BP_EXP_INICIANTEIRE || #BP_CHAVE_INICIANTE != $BP_CHAVE_INICIANTE) end;
+
+    if(#BP_LEVEL_INICIANTE >= 12)
+    {
+        if(!#BP_msgSHOW_INICIANTE) dispbottom "[Passe Iniciante]: Você completou o Iniciante!";
+        end;
+    }
+		
+	//Champion Mob
+	set .@mnm$,getmonsterinfo(killedrid,MOB_NAME);
+	if(.@cMob=callfunc("F_Battle_Passe_Iniciante",3,.@mnm$))
+	{
+		set .@BP_EXP_INICIANTE,.@cMob;		
+		if(getcharid(1)) callfunc("F_Battle_Passe_Iniciante",4,getcharid(1),.@BP_EXP_INICIANTE,2);
+		else callfunc("F_Battle_Passe_Iniciante",5,.@BP_EXP_INICIANTE);
+		end;
+	}
+	
+	//Mvp e normal mob
+	set .@mlv,getmonsterinfo(killedrid,MOB_LV);
+	if(getmonsterinfo(killedrid, MOB_MVPEXP))
+	{
+		set .@BP_EXP_INICIANTE,5000;
+		if(getcharid(1))
+			callfunc("F_Battle_Passe_Iniciante",4,getcharid(1),.@BP_EXP_INICIANTE,2);
+		else
+			callfunc("F_Battle_Passe_Iniciante",5,.@BP_EXP_INICIANTE);
+		end;
+	}
+	else
+	{
+		set .@BP_EXP_INICIANTE,(.@mlv<21?6:.@mlv<41?12:.@mlv<61?18:.@mlv<81?24:30) * 2;		
+		if(getcharid(1))
+			callfunc("F_Battle_Passe_Iniciante",4,getcharid(1),.@BP_EXP_INICIANTE,2);
+		else
+			callfunc("F_Battle_Passe_Iniciante",5,.@BP_EXP_INICIANTE);
+		end;
+	}
+}

@@ -1,0 +1,175 @@
+//===== rAthena Script ======================================
+//= Anúncio das 3 Primeiras Classes Transcendidas 99/70
+//===== By: ================================================
+//= v0
+//===== Description: =======================================
+//= Anuncia no chat global quando as 3 primeiras classes
+//= transcendidas atingirem nível 99/70.
+//= Salva os dados no SQL para persistência.
+//= Ranking visível para todos os jogadores.
+//============================================================
+
+prontera,155,185,5	script	Contador Trans	-1,{
+	end;
+
+OnInit:
+	// Inicializa o sistema e cria a tabela SQL se não existir
+	query_sql("CREATE TABLE IF NOT EXISTS `first_trans_99_70` (`id` INT NOT NULL AUTO_INCREMENT, `char_id` INT NOT NULL, `account_id` INT NOT NULL, `char_name` VARCHAR(30) NOT NULL, `class` INT NOT NULL, `class_name` VARCHAR(30) NOT NULL, `rank` INT NOT NULL, `timestamp` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`), UNIQUE INDEX `rank_UNIQUE` (`rank`))");
+	
+	// Verifica quantos jogadores já foram registrados
+	query_sql("SELECT COUNT(*) FROM `first_trans_99_70`", .count);
+	set .max_anuncios, 3;
+	end;
+
+OnPCStatCalcEvent:
+	// Verifica se o jogador é transcendido
+	// Lista de classes transcendidas conforme documentação rAthena
+	// Lord Knight (4008), Paladin (4015), 
+	// High Wizard (4010), Professor/Scholar (4017), 
+	// Sniper (4012), Clown/Gypsy (4020/4021), 
+	// Assassin Cross (4013), Stalker (4019), 
+	// High Priest (4009), Champion (4016), 
+	// Whitesmith (4011), Creator/Biochemist (4018)
+	
+	if (Class != 4008 && Class != 4015 && 
+		Class != 4010 && Class != 4017 && 
+		Class != 4012 && Class != 4020 && Class != 4021 && 
+		Class != 4013 && Class != 4019 && 
+		Class != 4009 && Class != 4016 && 
+		Class != 4011 && Class != 4018) {
+		end;
+	}
+	
+	// Verifica se o jogador atingiu 99/70
+	if (BaseLevel != 99 || JobLevel != 70) end;
+	
+	// Verifica se já temos 3 jogadores registrados
+	query_sql("SELECT COUNT(*) FROM `first_trans_99_70`", .count);
+	if (.count[0] >= .max_anuncios) end;
+	
+	// Verifica se o jogador já foi registrado
+	query_sql("SELECT COUNT(*) FROM `first_trans_99_70` WHERE `char_id` = " + getcharid(0), .exists);
+	if (.exists[0] > 0) end;
+	
+	// Obtém o nome da classe
+	set .@class_name$, jobname(Class);
+	
+	// Registra o jogador no banco de dados
+	set .@rank, .count[0] + 1;
+	query_sql("INSERT INTO `first_trans_99_70` (`char_id`, `account_id`, `char_name`, `class`, `class_name`, `rank`) VALUES (" + getcharid(0) + ", " + getcharid(3) + ", '" + escape_sql(strcharinfo(0)) + "', " + Class + ", '" + escape_sql(.@class_name$) + "', " + .@rank + ")");
+	
+	// Anuncia no chat global
+	announce "Parabéns a " + strcharinfo(0) + " por ser o " + .@rank + "º jogador a atingir 99/70 como " + .@class_name$ + "!", bc_all;
+	
+	// Se atingiu o máximo de anúncios, faz um anúncio final
+	if (.@rank == .max_anuncios) {
+		sleep 3000;
+		announce "Os 3 primeiros jogadores a atingirem 99/70 em classes transcendidas foram:", bc_all;
+		sleep 1000;
+		
+		// Busca todos os jogadores registrados em ordem de rank
+		query_sql("SELECT `char_name`, `class_name`, `rank` FROM `first_trans_99_70` ORDER BY `rank` ASC", .names$, .classes$, .ranks);
+		
+		for (set .@i, 0; .@i < .max_anuncios; set .@i, .@i + 1) {
+			announce (.ranks[.@i]) + "º lugar: " + .names$[.@i] + " como " + .classes$[.@i], bc_all;
+			sleep 1000;
+		}
+	}
+	end;
+
+OnPCLoginEvent:
+	// Verifica se o jogador está na lista e se já atingiu 99/70
+	if (BaseLevel == 99 && JobLevel == 70) {
+		// Verifica se é uma classe transcendida
+		if (Class == 4008 || Class == 4015 || 
+			Class == 4010 || Class == 4017 || 
+			Class == 4012 || Class == 4020 || Class == 4021 || 
+			Class == 4013 || Class == 4019 || 
+			Class == 4009 || Class == 4016 || 
+			Class == 4011 || Class == 4018) {
+			
+			// Verifica se já temos 3 jogadores registrados
+			query_sql("SELECT COUNT(*) FROM `first_trans_99_70`", .count);
+			if (.count[0] >= .max_anuncios) end;
+			
+			// Verifica se o jogador já foi registrado
+			query_sql("SELECT COUNT(*) FROM `first_trans_99_70` WHERE `char_id` = " + getcharid(0), .exists);
+			if (.exists[0] > 0) end;
+			
+			// Obtém o nome da classe
+			set .@class_name$, jobname(Class);
+			
+			// Registra o jogador no banco de dados
+			set .@rank, .count[0] + 1;
+			query_sql("INSERT INTO `first_trans_99_70` (`char_id`, `account_id`, `char_name`, `class`, `class_name`, `rank`) VALUES (" + getcharid(0) + ", " + getcharid(3) + ", '" + escape_sql(strcharinfo(0)) + "', " + Class + ", '" + escape_sql(.@class_name$) + "', " + .@rank + ")");
+			
+			// Anuncia no chat global
+			announce "Parabéns a " + strcharinfo(0) + " por ser o " + .@rank + "º jogador a atingir 99/70 como " + .@class_name$ + "!", bc_all;
+			
+			// Se atingiu o máximo de anúncios, faz um anúncio final
+			if (.@rank == .max_anuncios) {
+				sleep 3000;
+				announce "Os 3 primeiros jogadores a atingirem 99/70 em classes transcendidas foram:", bc_all;
+				sleep 1000;
+				
+				// Busca todos os jogadores registrados em ordem de rank
+				query_sql("SELECT `char_name`, `class_name`, `rank` FROM `first_trans_99_70` ORDER BY `rank` ASC", .names$, .classes$, .ranks);
+				
+				for (set .@i, 0; .@i < .max_anuncios; set .@i, .@i + 1) {
+					announce (.ranks[.@i]) + "º lugar: " + .names$[.@i] + " como " + .classes$[.@i], bc_all;
+					sleep 1000;
+				}
+			}
+		}
+	}
+	end;
+}
+
+// Comando para todos os jogadores visualizarem o ranking
+prontera,166,173,5	script	Rank	4_F_KAFRA1,{
+	mes "[Ranking de Transcendidos 99/70]";
+	mes "Lista dos jogadores que atingiram 99/70 em classes transcendidas:";
+	mes " ";
+	
+	if (query_sql("SELECT `char_name`, `class_name`, `rank`, `timestamp` FROM `first_trans_99_70` ORDER BY `rank` ASC", .names$, .classes$, .ranks, .timestamps$) == -1) {
+		mes "Erro ao acessar o banco de dados.";
+		close;
+	}
+	
+	set .@count, getarraysize(.names$);
+	
+	if (.@count == 0) {
+		mes "Nenhum jogador registrado ainda.";
+	} else {
+		for (set .@i, 0; .@i < .@count; set .@i, .@i + 1) {
+			mes (.ranks[.@i]) + "º lugar: " + .names$[.@i] + " como " + .classes$[.@i];
+			mes "   Data: " + .timestamps$[.@i];
+			mes " ";
+		}
+	}
+	
+	close;
+}
+
+// Comando para administradores resetarem o ranking
+prontera,192,174,5	script	Reset Rank	4_F_KAFRA1,{
+	if (getgmlevel() < 99) {
+		mes "Apenas administradores podem usar este comando.";
+		close;
+	}
+	
+	mes "[Reset de Ranking]";
+	mes "Você deseja resetar o ranking de transcendidos 99/70?";
+	mes "Esta ação não pode ser desfeita!";
+	next;
+	
+	if (select("Não:Sim") == 1) {
+		mes "Operação cancelada.";
+		close;
+	}
+	
+	query_sql("TRUNCATE TABLE `first_trans_99_70`");
+	mes "Ranking resetado com sucesso!";
+	close;
+}
+

@@ -1,0 +1,139 @@
+# This file is a part of rAthena RSM Mod, redistribution prohibited.
+# Copyright (c) RomuloSM
+# Email: romulodevel@gmail.com
+# Facebook: https://www.facebook.com/RomuloDevel
+#
+###########################################################################
+# Battleground Queue Database
+###########################################################################
+#
+# Battleground Queue Settings
+#
+###########################################################################
+# - Id                Unique ID for the battleground type.
+#   Name              Name of the battleground. Must be the exact same as in the client for players to be able to join.
+#   MinPlayers        Minimum number of players required on each team. (Default: 1)
+#   MaxPlayers        Maximum number of players on each team. (Default: MAX_BG_MEMBERS / 2)
+#   MinLevel          Minimum level required to join the battleground. (Default: 1)
+#   MaxLevel          Maximum level to join the battleground. (Default: MAX_LEVEL value)
+#   Deserter          Amount of time in seconds a player is marked deserter. (Default: 600)
+#   StartDelay        Amount of time in seconds once a queue is filled before players are warped. (Default: 0)
+#   Join:             Which application type is accepted. The entryqueuelist.lub can visually disable these options.
+#     Solo            Able to join a queue as an individual. (Default: true)
+#     Party           Able to join a queue as a party. (Default: true)
+#     Guild           Able to join a queue as a guild. (Default: true)
+#   JobRestrictions   List of jobs that are unable to join the battleground.
+#   Locations:        Battleground location settings.
+#     - Map           The map on which the battleground will be played.
+#       StartEvent    NPC event triggered when the battleground starts.
+#       TeamA:        TeamA settings.
+#         Team        Team Guillaume or Croix.
+#         RespawnX    X coordinate for warping on death.
+#         RespawnY    Y coordinate for warping on death.
+#         DeathEvent  NPC event triggered when a player dies.
+#         QuitEvent   NPC event triggered when a player quits.
+#         ActiveEvent NPC event triggered when a player joints an active battleground.
+#         Variable    Name of BG ID variable used in the battleground script.
+#       TeamB:        TeamB settings.
+#         Team        Team Guillaume or Croix.
+#         RespawnX    X coordinate for warping on death.
+#         RespawnY    Y coordinate for warping on death.
+#         DeathEvent  NPC event triggered when a player dies.
+#         QuitEvent   NPC event triggered when a player quits.
+#         ActiveEvent NPC event triggered when a player joints an active battleground.
+#         Variable    Name of BG ID variable used in the battleground script.
+###########################################################################
+
+Header:
+  Type: BATTLEGROUND_DB
+  Version: 1
+
+Body:
+  - Id: 9
+    Name: Valfreyja Normal
+    DisplayName: 1  Valfreyja
+    MinPlayers: 1
+    Locations:
+      - Map: bat_v01
+        StartEvent: start#bat_v01::OnReadyCheck
+        TeamA:
+          Team: Guillaume
+          RespawnX: 41
+          RespawnY: 48
+          DeathEvent: start#bat_v01::OnGuillaumeDie
+          QuitEvent: start#bat_v01::OnGuillaumeQuit
+          ActiveEvent: start#bat_v01::OnGuillaumeActive
+          Variable: $@ValfreyjaBG1_id1
+        TeamB:
+          Team: Croix
+          RespawnX: 357
+          RespawnY: 48
+          DeathEvent: start#bat_v01::OnCroixDie
+          QuitEvent: start#bat_v01::OnCroixQuit
+          ActiveEvent: start#bat_v01::OnCroixActive
+          Variable: $@ValfreyjaBG1_id2
+  - Id: 10
+    Name: Valfreyja Hard
+    DisplayName: 2  Valfreyja
+    MinPlayers: 1
+    Locations:
+      - Map: bat_v02
+        StartEvent: start#bat_v02::OnReadyCheck
+        TeamA:
+          Team: Guillaume
+          RespawnX: 41
+          RespawnY: 48
+          DeathEvent: start#bat_v02::OnGuillaumeDie
+          QuitEvent: start#bat_v02::OnGuillaumeQuit
+          ActiveEvent: start#bat_v02::OnGuillaumeActive
+          Variable: $@ValfreyjaBG2_id1
+        TeamB:
+          Team: Croix
+          RespawnX: 357
+          RespawnY: 48
+          DeathEvent: start#bat_v02::OnCroixDie
+          QuitEvent: start#bat_v02::OnCroixQuit
+          ActiveEvent: start#bat_v02::OnCroixActive
+          Variable: $@ValfreyjaBG2_id2
+  - Id: 11
+    Name: Kingdom Kriemhild
+    DisplayName: Kingdom Kriemhild
+    MinPlayers: 7
+    Locations:
+      - Map: bat_g01
+        StartEvent: start#bat_g01::OnReadyCheck
+        TeamA:
+          Team: Guillaume
+          RespawnX: 26
+          RespawnY: 130
+          QuitEvent: start#bat_g01::OnGuillaumeQuit
+          ActiveEvent: start#bat_g01::OnGuillaumeActive
+          Variable: $@KingdomBG1_id1
+        TeamB:
+          Team: Croix
+          RespawnX: 187
+          RespawnY: 14
+          QuitEvent: start#bat_g01::OnCroixQuit
+          ActiveEvent: start#bat_g01::OnCroixActive
+          Variable: $@KingdomBG1_id2
+  - Id: 12
+    Name: Kingdom Arbor
+    DisplayName: Kingdom Arbor
+    MinPlayers: 5
+    Locations:
+      - Map: bat_g02
+        StartEvent: start#bat_g02::OnReadyCheck
+        TeamA:
+          Team: Guillaume
+          RespawnX: 26
+          RespawnY: 130
+          QuitEvent: start#bat_g02::OnGuillaumeQuit
+          ActiveEvent: start#bat_g02::OnGuillaumeActive
+          Variable: $@KingdomBG2_id1
+        TeamB:
+          Team: Croix
+          RespawnX: 187
+          RespawnY: 14
+          QuitEvent: start#bat_g02::OnCroixQuit
+          ActiveEvent: start#bat_g02::OnCroixActive
+          Variable: $@KingdomBG2_id2

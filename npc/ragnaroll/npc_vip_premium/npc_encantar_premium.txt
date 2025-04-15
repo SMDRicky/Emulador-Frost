@@ -1,0 +1,68 @@
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado por: Douglas Santos
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Nome do Npc: Encantador de Armas
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Versão atual: 1.0
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado em: 25/01/2016
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Compatível com eAmod
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+mainhall,112,161,4	script	Encantador Premium	743,{
+	
+set .@npcencantador$,"^339966[ Encantador Premium ]^000000";
+set @PrecoEncantar,20000;	// Preço para encantar a arma
+	mes .@npcencantador$;
+	mes (gettime(3)>= 6&&gettime(3)<= 12?"Bom-dia":(gettime(3)>=13&&gettime(3)<=18?"Boa-tarde":"Boa-noite"))+", ^008aff"+strcharinfo(0)+"^000000 !";
+	mes "Para encantar sua arma irei cobrar uma taxa de: "+@PrecoEncantar+"z.";
+	next;
+	if(select("^0084ff[»]^000000 Sim:^ff0000[»]^000000 Não")==2){
+	mes .@npcencantador$;
+	mes "Volte quando precisar.";
+	close;
+	
+}
+	if(zeny < @PrecoEncantar){
+	mes .@npcencantador$;
+	mes "Você não tem o dinheiro suficiente.";
+	close;
+}
+	mes .@npcencantador$;
+	mes "Qual elemento você quer?";
+	next;
+	switch(select("^0084ff[»]^000000 Geada:^0084ff[»]^000000 Chama:^0084ff[»]^000000 Terremoto:^0084ff[»]^000000 Ventania:^ff0000[»]^000000 Sair")){
+	case 1:
+		mes .@npcencantador$;
+		sc_start SC_WATERWEAPON,1200000,5;			// Encantar com Geada, Duração: 10 Minutos, Level 5
+		set zeny,zeny-@PrecoEncantar;
+		npctalk "Sua arma foi encantada com sucesso";
+		close;
+	case 2:
+		mes .@npcencantador$;
+		sc_start SC_FIREWEAPON,1200000,5;			// Encantar com Chama, Duração: 10 Minutos, Level 5
+		set zeny,zeny-@PrecoEncantar;
+		npctalk "Sua arma foi encantada com sucesso";
+		close;
+	case 3:
+		mes .@npcencantador$;
+		sc_start SC_EARTHWEAPON,1200000,5;			// Encantar com Terremoto, Duração: 10 Minutos, Level 5
+		set zeny,zeny-@PrecoEncantar;
+		npctalk "Sua arma foi encantada com sucesso";
+		close;
+	case 4:
+		mes .@npcencantador$;
+		sc_start SC_WINDWEAPON,1200000,5;			// Encantar com Ventania, Duração: 10 Minutos, Level 5
+		set zeny,zeny-@PrecoEncantar;
+		npctalk "Sua arma foi encantada com sucesso";
+		close;
+	case 5:
+		close;
+	}
+	OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 52;
+	setunittitle getnpcid(0), "[VIP RAGNAFROST]";
+	end;
+}
+
+malangdo,229,265,3	duplicate(Encantador Premium)	Encantador Test	743

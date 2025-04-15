@@ -1,0 +1,429 @@
+# This file is a part of rAthena RSM Mod, redistribution prohibited.
+# Copyright (c) RomuloSM
+# Email: romulodevel@gmail.com
+# Facebook: https://www.facebook.com/RomuloDevel
+#
+###########################################################################
+# Battleground Reward Database
+###########################################################################
+#
+# Battleground Reward Settings
+#
+###########################################################################
+# - Id                       Unique ID for the Battleground Script.
+#   Items:                   Items Rewards List.
+#     - Type:                Reward Type. (Winner, Loser, Draw)
+#       Item:                Item Aegis Name.
+#       MaxAmount:           Maximum that the player can have in the inventory, the system will calculate for him never to exceed. (Default: 0 unlimited)
+#       Amount:              Amount for Normal Players.
+#       Rate:                Chance for Normal Players. (Default: 100) (min: 1 / max: 100)
+#       HappyAmount:         Amount for Normal Players at HappyHour.
+#       HappyRate:           Chance for Normal Players at HappyHour. (Default: 100) (min: 1 / max: 100)
+#       PremiumMaxAmount:    Maximum that the player premium can have in the inventory, the system will calculate for him never to exceed. (Default: 0 unlimited)
+#       PremiumAmount:       Amount for Premium Players.
+#       PremiumRate:         Chance for Premium Players. (Default: 100) (min: 1 / max: 100)
+#       PremiumHappyAmount:  Amount for Premium Players at HappyHour.
+#       PremiumHappyRate:    Chance for Premium Players at HappyHour. (Default: 100) (min: 1 / max: 100)
+#   Variables:               Variables Rewards List.
+#     - Type:                Reward Type. (Winner, Loser, Draw)
+#       Name:                Variable Name, only type integers. (Sample: Zeny, #CASHPOINTS, kvm_points)
+#       Description:         Variable Description.
+#       MaxAmount:           Maximum that the player can have, the system will calculate for him never to exceed. (Default: 0 unlimited)
+#       Amount:              Amount for Normal Players.
+#       Rate:                Chance for Normal Players. (Default: 100) (min: 1 / max: 100)
+#       HappyAmount:         Amount for Normal Players at HappyHour.
+#       HappyRate:           Chance for Normal Players at HappyHour. (Default: 100) (min: 1 / max: 100)
+#       PremiumMaxAmount:    Maximum that the player premium can have, the system will calculate for him never to exceed. (Default: 0 unlimited)
+#       PremiumAmount:       Amount for Premium Players.
+#       PremiumRate:         Chance for Premium Players. (Default: 100) (min: 1 / max: 100)
+#       PremiumHappyAmount:  Amount for Premium Players at HappyHour.
+#       PremiumHappyRate:    Chance for Premium Players at HappyHour. (Default: 100) (min: 1 / max: 100)
+###########################################################################
+
+Header:
+  Type: BATTLEGROUND_REWARD_DB
+  Version: 1
+
+Body:
+# Tierra Gorge (bat_a01)
+  - Id: 1
+    Items:
+      - Type: Winner
+        Item: BF_Badge1
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+      - Type: Winner
+        Item: Red_Potion
+        MaxAmount: 30000
+        Amount: 9
+        Rate: 100
+        HappyAmount: 18
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 11
+        PremiumRate: 100
+        PremiumHappyAmount: 22
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: BF_Badge1
+        MaxAmount: 30000
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 3
+        PremiumRate: 100
+        PremiumHappyAmount: 6
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: BF_Badge1
+        MaxAmount: 30000
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 3
+        PremiumRate: 100
+        PremiumHappyAmount: 6
+        PremiumHappyRate: 100
+# Tierra Gorge (bat_a02)
+  - Id: 2
+    Items:
+      - Type: Winner
+        Item: BF_Badge1
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: BF_Badge1
+        MaxAmount: 30000
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 3
+        PremiumRate: 100
+        PremiumHappyAmount: 6
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: BF_Badge1
+        MaxAmount: 30000
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 3
+        PremiumRate: 100
+        PremiumHappyAmount: 6
+        PremiumHappyRate: 100
+#Flavius (bat_b01)
+  - Id: 3
+    Items:
+      - Type: Winner
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 30
+        Rate: 100
+        HappyAmount: 60
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 11
+        PremiumRate: 100
+        PremiumHappyAmount: 22
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 15
+        Rate: 100
+        HappyAmount: 30
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+#Flavius (bat_b02)
+  - Id: 4
+    Items:
+      - Type: Winner
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 9
+        Rate: 100
+        HappyAmount: 18
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 11
+        PremiumRate: 100
+        PremiumHappyAmount: 22
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+# KvM (bat_c01)
+  - Id: 5
+    Variables:
+      - Type: Winner
+        Name: kvm_point
+        Description: Pontos KvM
+        Amount: 5
+        Rate: 100
+        HappyAmount: 10
+        HappyRate: 100
+      - Type: Loser
+        Name: kvm_point
+        Description: Pontos KvM
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+      - Type: Draw
+        Name: kvm_point
+        Description: Pontos KvM
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+# KvM (bat_c02)
+  - Id: 6
+    Variables:
+      - Type: Winner
+        Name: kvm_point
+        Description: Pontos KvM
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+# KvM (bat_c03)
+  - Id: 7
+    Variables:
+      - Type: Winner
+        Name: kvm_point
+        Description: Pontos KvM
+        Amount: 2
+        Rate: 100
+        HappyAmount: 4
+        HappyRate: 100
+      - Type: Loser
+        Name: kvm_point
+        Description: Pontos KvM
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+      - Type: Draw
+        Name: kvm_point
+        Description: Pontos KvM
+        Amount: 1
+        Rate: 100
+        HappyAmount: 2
+        HappyRate: 100
+#1� Valfreyja (bat_v01)
+  - Id: 9
+    Items:
+      - Type: Winner
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 7
+        Rate: 100
+        HappyAmount: 14
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 9
+        PremiumRate: 100
+        PremiumHappyAmount: 18
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 5
+        Rate: 100
+        HappyAmount: 10
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 7
+        PremiumRate: 100
+        PremiumHappyAmount: 14
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 5
+        Rate: 100
+        HappyAmount: 10
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 7
+        PremiumRate: 100
+        PremiumHappyAmount: 14
+        PremiumHappyRate: 100
+#2� Valfreyja (bat_v02)
+  - Id: 9
+    Items:
+      - Type: Winner
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 5
+        Rate: 100
+        HappyAmount: 10
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 7
+        PremiumRate: 100
+        PremiumHappyAmount: 14
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+# Kingdom Kriemhild (bat_g01)
+  - Id: 11
+    Items:
+      - Type: Winner
+        Item: War_Badge
+        MaxAmount: 30000
+        Amount: 9
+        Rate: 100
+        HappyAmount: 18
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 11
+        PremiumRate: 100
+        PremiumHappyAmount: 22
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: War_Badge
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: War_Badge
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100
+# Kingdom Arbor (bat_g02)
+  - Id: 12
+    Items:
+      - Type: Winner
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 30
+        Rate: 100
+        HappyAmount: 60
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 30
+        PremiumRate: 100
+        PremiumHappyAmount: 60
+        PremiumHappyRate: 100
+      - Type: Loser
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 15
+        Rate: 100
+        HappyAmount: 30
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 15
+        PremiumRate: 100
+        PremiumHappyAmount: 30
+        PremiumHappyRate: 100
+      - Type: Draw
+        Item: BF_Badge2
+        MaxAmount: 30000
+        Amount: 3
+        Rate: 100
+        HappyAmount: 6
+        HappyRate: 100
+        PremiumMaxAmount: 30000
+        PremiumAmount: 5
+        PremiumRate: 100
+        PremiumHappyAmount: 10
+        PremiumHappyRate: 100

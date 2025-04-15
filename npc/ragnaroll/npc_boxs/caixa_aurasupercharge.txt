@@ -1,0 +1,5 @@
+function	script	caixa_aurasupercharge#1	{
+setarray .@items[0], 50057,50058,50059,50060,50061,50062,50063,50064,50065,50066;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

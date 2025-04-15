@@ -1,0 +1,195 @@
+-	script	Doom	-1,{
+	mes .NPCName$;
+	mes sprintf("Olá %s, sou o ferreiro do Odin e estou encarregado de ajudar a melhorar seus itens, o que deseja fazer hoje?", strcharinfo(0));
+	next;
+	menu    "^ea6443» Refinar até o limite seguro ^000000",-,
+			"» Abrir Interface de Refino",Refine_Ui;
+	mes .NPCName$;
+	mes "Você pode escolher refinar ^ff0000todos os equipamentos do seu inventário^000000 até o limite seguro";
+	next;
+	menu    "^ea6443» Refinar meu inventário ^000000",Inventory_Safe_Refine;
+	end;
+
+Refine_Ui:
+	close2;
+	refineui();
+	end;
+
+Inventory_Safe_Refine:
+	mes .NPCName$;
+	mes "É importante saber que ^ff0000todos^000000 os equipamentos identificados do seu inventário, que não possuam restrição, serão refinados até o limite seguro.";
+	close2;
+	.@refitemscnt = saferefcnt;
+
+	if(.@refitemscnt <= 0){
+		mes .NPCName$;
+		mes "Você não possui itens no inventário que são possíveis de refinar.";
+		close;
+	}
+
+	if(!callfunc("F_RefineParseCosts", .@refitemscnt, .NPCName$)){
+		goto CloseDialog;		
+	};
+
+	mes .NPCName$;
+	mes "Ai está, conforme o combinado!";
+	mes "Volte sempre!";
+	close;
+
+Safe_Refine:
+	.@part = callfunc("F_SafeRefine", .NPCName$);
+	.@refinerycnt = getequiprefinerycnt(.@part); 
+	.@refineitemid = getequipid(.@part);
+	.@itemtype = getiteminfo( .@refineitemid, ITEMINFO_TYPE );
+
+	mes .NPCName$;
+
+	if(!getequipisenableref(.@part)) {
+		mes "Hmmm parece-me que";
+		mes "eu não posso refinar este item...";
+		close;
+	}
+
+	.@safe = callfunc("F_GetSafeRefine", .@itemtype, getequipweaponlv( .@part ));
+	if(.@refinerycnt >= .@safe) {
+		mes "Esste item ja foi refinado";
+		mes "até do limite seguro";
+		close;
+	}
+
+	.@refinecnt = .@safe - .@refinerycnt;
+	.@price = getequiprefinecost(.@part, REFINE_COST_NORMAL, REFINE_ZENY_COST);
+	.@fullprice = .@price * .@refinecnt;
+	.@material = getequiprefinecost(.@part, REFINE_COST_NORMAL, REFINE_MATERIAL_ID);
+	
+	mes "Este item ainda pode ser";
+	mes sprintf("refinado ^ff0000%d^000000 vezes.", .@refinecnt);
+	mes sprintf("Isto vai te custar %dx ^ff0000%s^000000 e ^FF0000%d^000000 Zeny. Pretende continuar?", .@refinecnt, getitemname(.@material), .@fullprice);
+	next;
+	if(select("» Prossiga!","» Acho melhor não...") == 2){
+		goto CloseDialog;
+	}
+
+	if(countitem(.@material) < .@refinecnt || Zeny < .@fullprice) {
+		mes .NPCName$;
+		mes "Eu não trabalho de graça!";
+		mes "Volte quando tiver todos os itens.";
+		close;
+	}
+
+	Zeny -= .@fullprice;
+	delitem .@material, .@refinecnt;
+	successrefitem .@part, .@refinecnt;
+	emotion ET_BEST;
+
+	mes .NPCName$;
+	mes "Ai está, conforme o combinado!";
+	mes "Volte sempre!";
+	close;
+
+CloseDialog:
+	mes .NPCName$;
+	mes "Pois bem! Volte sempre";
+	close;
+
+OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 52;
+	setunittitle getnpcid(0), "[VIP RAGNAFROST]";
+	end;
+}
+
+function	script	F_RefineParseCosts	{
+	.@NPCName$ = getarg(1);
+	.@refcost_zeny = saferefitemscost(REFINECOST_ZENY);
+
+	setarray .@materials[0], 984, 985, 1010, 1011;
+	setarray .@refcost_material[0], saferefitemscost(REFINECOST_ORIDECON), saferefitemscost(REFINECOST_ELUNIUM), saferefitemscost(REFINECOST_PHRACON), saferefitemscost(REFINECOST_EMVERETARCON);
+	
+	.@nofunds = 0;
+	next;
+	mes .@NPCName$;
+	mes sprintf("Você possui %d items para serem refinados e isto vai te custar:", getarg(0));
+	mes sprintf("^ff0000%d^000000 Zeny", .@refcost_zeny);
+
+	for(.@i = 0; .@i < getarraysize(.@refcost_material); .@i++){
+		if(.@refcost_material[.@i] > 0){
+			if(countitem(.@materials[.@i]) < .@refcost_material[.@i]){
+				.@nofunds = 1;
+			}
+			mes sprintf("^ff0000%d^000000x ^ff0000%s^000000", .@refcost_material[.@i], getitemname(.@materials[.@i]));
+		}
+	}
+
+	mes "Deseja prosseguir?";
+	next;
+	if(select("» Prossiga!","» Acho melhor não...") == 2){
+		return 0;
+	}
+
+	if(Zeny < .@refcost_zeny || .@nofunds){
+		mes .@NPCName$;
+		mes "Eu não trabalho de graça!";
+		mes "Volte quando tiver todos os itens.";
+		close;
+	}
+
+	Zeny -= .@refcost_zeny;
+	delitem .@materials[0],.@refcost_material[0];
+	delitem .@materials[1],.@refcost_material[1];
+	delitem .@materials[2],.@refcost_material[2];
+	delitem .@materials[3],.@refcost_material[3];
+	saferefitems;
+
+	return 1;
+}
+
+function	script	F_SafeRefine	{
+	next;
+	.@NPCName$ = getarg(0);
+
+	setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES;
+	.@menu$ = "";
+	for(.@i = 1; .@i < getarraysize(.@indices); ++.@i) {
+		if(getequipisequiped(.@indices[.@i])) {
+			.@menu$ += "» "+ F_getpositionname(.@indices[.@i]) + " (^3355FF"+ getequipname(.@indices[.@i]) + "^000000)";
+			.@equipped = 1;
+		}
+		.@menu$ += ":";
+	}
+
+	if (.@equipped == 0) {
+		mes .@NPCName$;
+		mes "Você não possui nenhum item equipado...";
+		close;
+	}
+
+	mes .@NPCName$;
+	mes "Pois bem, escolha qual item você deseja refinar";
+	next;
+	return .@indices[select(.@menu$)];
+}
+
+function	script	F_GetSafeRefine	{
+	.@itemtype = getarg(0);
+	.@wlvl = getarg(1);
+
+	if( .@itemtype == IT_WEAPON ){
+		.@equip_lv = .@wlvl;
+
+		switch( .@equip_lv ){
+			case 1:
+				return 7;
+			case 2:
+				return 6;
+			case 3:
+				return 5;
+			case 4:
+				return 4;
+			default:
+				return 0;
+		}
+	}
+	return 4;
+}
+
+mainhall,107,163,4	duplicate(Doom)	Refinador Seguro#VIPPREMIUM	813

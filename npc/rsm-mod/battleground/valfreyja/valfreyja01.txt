@@ -1,0 +1,1328 @@
+//===== RSM Mod ==============================================
+//= BattleGround Expansion - Valfreyja
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= As equipes devem capturar as bandeiras do adversário.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+bat_room02,86,227,4	script	Tenente Ari	418,{
+	end;
+OnStart:
+	.@MaxPlayer = $@ValfreyjaBG1_MaxPlayer + 1;
+	.@MinBaseLevel = $@ValfreyjaBG1_MinBaseLevel;
+	.@MaxBaseLevel = $@ValfreyjaBG1_MaxBaseLevel;
+	waitingroom "Estação de Batalha",.@MaxPlayer,"start#bat_v01::OnReadyCheck",1,0,.@MinBaseLevel,.@MaxBaseLevel;
+	end;
+	
+OnEnterBG:
+	set $@ValfreyjaBG1_id1, waitingroom2bg(BG_TEAM_A,"bat_v01",50,374,"start#bat_v01::OnGuillaumeQuit","");
+	end;
+}
+
+bat_room02,85,204,0	script	Tenente Brendo	414,{
+	end;
+OnStart:
+	.@MaxPlayer = $@ValfreyjaBG1_MaxPlayer + 1;
+	.@MinBaseLevel = $@ValfreyjaBG1_MinBaseLevel;
+	.@MaxBaseLevel = $@ValfreyjaBG1_MaxBaseLevel;
+	waitingroom "Estação de Batalha",.@MaxPlayer,"start#bat_v01::OnReadyCheck",1,0,.@MinBaseLevel,.@MaxBaseLevel;
+	end;
+	
+OnEnterBG:
+	set $@ValfreyjaBG1_id2, waitingroom2bg(BG_TEAM_B,"bat_v01",50,374,"start#bat_v01::OnCroixQuit","");
+	end;
+}
+
+bat_room02,85,220,0	warp	back_bgroomv01a	1,1,bat_room02,154,150
+bat_room02,85,211,0	warp	back_bgroomv01b	1,1,bat_room02,154,150
+
+bat_room02,1,151,3	script	#bat_v01_timer	844,{
+	end;
+
+OnInit:
+	if (getbattleflag("feature.bgqueue")) {
+		bg_unbook "bat_v01";
+		end;
+	}
+OnEnable:
+	initnpctimer;
+	end;
+
+OnStop:
+	stopnpctimer;
+	end;
+
+OnTimer1000:
+	stopnpctimer;
+	if (bg_get_data($@ValfreyjaBG1_id1, 0) == 0 && bg_get_data($@ValfreyjaBG1_id2, 0) == 0) {
+		donpcevent "countdown#bat_v01::OnStop";
+		donpcevent "time_out#bat_v01::OnStop";
+		if (getbattleflag("feature.bgqueue"))
+			bg_reserve "bat_v01", true;
+		$@ValfreyjaBG1 = 0; $@ValfreyjaBG1_Victory = 0; $@ValfreyjaBG1_Guill = 0; $@ValfreyjaBG1_Croix = 0;
+		bg_updatescore "bat_v01", 0, 0;
+		if( $@ValfreyjaBG1_id1 ) { bg_destroy $@ValfreyjaBG1_id1; $@ValfreyjaBG1_id1 = 0; }
+		if( $@ValfreyjaBG1_id2 ) { bg_destroy $@ValfreyjaBG1_id2; $@ValfreyjaBG1_id2 = 0; }
+		if (getbattleflag("feature.bgqueue"))
+			bg_unbook "bat_v01";
+		end;
+	}
+	initnpctimer;
+	end;
+}
+
+// Valfreyja Battleground Engine
+//============================================================
+bat_v01,1,1,3	script	start#bat_v01	844,{
+OnInit:
+	mapwarp "bat_v01","bat_room",154,150;
+	setcell "bat_v01", 36, 53, 47, 42, cell_nobgskillcall, ($@ValfreyjaBG1_NoSkillCall ? 1 : 0);
+	setcell "bat_v01", 352, 53, 363, 42, cell_nobgskillcall, ($@ValfreyjaBG1_NoSkillCall ? 1 : 0);
+	end;
+
+OnEnable:
+	disablenpc "Tenente#bat_v01_a";
+	disablenpc "Tenente#bat_v01_b";
+	donpcevent "Guillaume Base#bat_v01::OnStopTimer";
+	donpcevent "Croix Base#bat_v01::OnStopTimer";
+	donpcevent "Guillaume Base#bat_v01::OnDisable";
+	donpcevent "Croix Base#bat_v01::OnDisable";
+	donpcevent "Guillaume Flag#bat_v01::OnEnable";
+	donpcevent "Croix Flag#bat_v01::OnEnable";
+	enablenpc "Base de Guillaume#bat_v01";
+	enablenpc "Base de Croix#bat_v01";
+	donpcevent "::OnBatV01Emblem";
+	donpcevent "viewpoint#bat_v01::OnStart";
+	donpcevent "guardian#bat_v01::OnEnable";
+	donpcevent "time#bat_v01::OnEnable";
+	bg_setcountdown $@ValFreyjaBG1_id1, $@ValfreyjaBG1_BattleTimer*60;
+	bg_setcountdown $@ValFreyjaBG1_id2, $@ValfreyjaBG1_BattleTimer*60;
+	donpcevent "countdown#bat_v01::OnEnable";
+	bg_updatescore "bat_v01", 0, 0;
+	end;
+
+OnGuillaumeActive:
+	warp "bat_v01",41,48;
+	end;
+
+OnCroixActive:
+	warp "bat_v01",357,48;
+	end;
+
+OnGuillaumeQuit:
+	// Ranking
+	callfunc "F_BG_RANKING", 9, getcharid(0), 0, 1, $@ValfreyjaBG1_Guill, $@ValfreyjaBG1_Croix;
+	// Drop Guillaume Flag
+	callfunc "F_BG_DropFlag", 1, "bat_v01", 0, true;
+	// Drop Croix Flag
+	callfunc "F_BG_DropFlag", 1, "bat_v01", 1, true;
+	
+	if (getbattleflag("feature.bgqueue"))
+		bg_desert;
+	else
+		bg_leave;
+	end;
+	
+OnCroixQuit:
+	// Ranking
+	callfunc "F_BG_RANKING", 9, getcharid(0), 1, 1, $@ValfreyjaBG1_Guill, $@ValfreyjaBG1_Croix;
+	// Drop Guillaume Flag
+	callfunc "F_BG_DropFlag", 1, "bat_v01", 0, true;
+	// Drop Croix Flag
+	callfunc "F_BG_DropFlag", 1, "bat_v01", 1, true;
+	
+	if (getbattleflag("feature.bgqueue"))
+		bg_desert;
+	else
+		bg_leave;
+	end;
+	
+OnGuillaumeDie:
+OnCroixDie:
+	// Drop Guillaume Flag
+	callfunc "F_BG_DropFlag", 1, "bat_v01", 0, true;
+	// Drop Croix Flag
+	callfunc "F_BG_DropFlag", 1, "bat_v01", 1, true;
+	end;
+
+OnReadyCheck:
+	if( $@ValfreyjaBG1 )
+		end;
+	
+	if (!getbattleflag("feature.bgqueue")) {
+		set .@MaxPlayer, $@ValfreyjaBG1_MaxPlayer;
+		set .@Guillaume, getwaitingroomstate(0,"Tenente Ari");
+		set .@Croix, getwaitingroomstate(0,"Tenente Brendo");
+		if( !.@Guillaume && !.@Croix ) {
+			donpcevent "#bat_v01_timer::OnStop";
+			end;
+		}
+		else if( .@Guillaume < .@MaxPlayer || .@Croix < .@MaxPlayer )
+			end;
+	}
+	set $@TierraBG1,1;
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Ari::OnEnterBG";
+		donpcevent "Tenente Brendo::OnEnterBG";
+	}
+	donpcevent "start#bat_v01::OnEnable";
+	bg_warp $@ValfreyjaBG1_id1,"bat_v01",97,167;
+	bg_warp $@ValfreyjaBG1_id2,"bat_v01",310,168;
+	initnpctimer;
+	end;
+
+OnTimer10000:
+	stopnpctimer;																																																																
+	donpcevent "#bat_v01_timer::OnEnable";				
+	end;																		
+}
+
+// Bases de Guillaume
+//============================================================
+bat_v01,97,168,0	script	Base de Guillaume#bat_v01	CLEAR_NPC,1,1,{
+OnTouch:
+	if( getcharid(4) != $@ValFreyjaBG1_id1 )
+		end;
+	
+	getmapxy .@mapname$, .@x, .@y, BL_PC;
+	.@dist = distance(.@x,.@y,97,168);
+	if( .@dist <= 1 ) {
+		.@n = callfunc("F_BG_CheckFlag", 1, 1, getcharid(0), true);
+		if( .@n <= 0 )
+			end;
+			
+		setd "$@valfreyja_1f"+.@n+"b[7]", 2;
+		setd "$@valfreyja_1f"+.@n+"b[8]", 0;
+		stopnpctimer .@n+"ª Base de Croix#bat_v01";
+		disablenpc .@n+"ª Base de Croix#bat_v01";
+		mapannounce "bat_v01", strcharinfo(0)+" conquistou a " + .@n + "ª Bandeira de Croix para o Exército de Guillaume!",bc_map,"0x99CC00";
+		$@ValfreyjaBG1_Guill++;
+		bg_updatescore "bat_v01",$@ValfreyjaBG1_Guill,$@ValfreyjaBG1_Croix;
+		callfunc "F_BG_ClearViewPoint_Unit", $@ValFreyjaBG1_id1, .@n+5, true;
+		callfunc "F_BG_ClearViewPoint_Unit", $@ValFreyjaBG1_id2, .@n+5, true;
+		
+		// Set Score
+		bg_ranking_set BGS_FLAG_CAPTURE, bg_ranking_get(BGS_FLAG_CAPTURE) + 1;
+		bg_ranking_set2 BGS_FLAG_CAPTURE, bg_ranking_get2(BGS_FLAG_CAPTURE) + 1;
+			
+		if( $@ValfreyjaBG1_Guill >= 5 ) {
+			$@ValfreyjaBG1_Victory = 1;
+			callfunc "F_BG_ClearViewPoint", $@ValfreyjaBG1_id1, true;
+			callfunc "F_BG_ClearViewPoint", $@ValfreyjaBG1_id2, true;
+			callfunc "F_BG_RANKING_TEAM", 9, $@ValFreyjaBG1_id1, $@ValFreyjaBG1_id2, 0, $@ValfreyjaBG1_Guill, $@ValfreyjaBG1_Croix, true;
+			enablenpc "Tenente#bat_v01_a";
+			enablenpc "Tenente#bat_v01_b";
+			donpcevent "time#bat_v01::OnStop";
+			donpcevent "guardian#bat_v01::OnDisable";
+			donpcevent "viewpoint#bat_v01::OnStop";
+			donpcevent "Guillaume Base#bat_v01::OnStopTimer";
+			donpcevent "Croix Base#bat_v01::OnStopTimer";
+			donpcevent "Guillaume Base#bat_v01::OnDisable";
+			donpcevent "Croix Base#bat_v01::OnDisable";
+			donpcevent "Guillaume Flag#bat_v01::OnDisable";
+			donpcevent "Croix Flag#bat_v01::OnDisable";
+			donpcevent "countdown#bat_v01::OnStop";
+			bg_warp $@ValFreyjaBG1_id1,"bat_v01",41,48;
+			bg_warp $@ValFreyjaBG1_id2,"bat_v01",357,48;
+			if (getbattleflag("feature.bgqueue"))
+				bg_reserve "bat_v01", true;
+			sleep 3000;
+			donpcevent "time_out#bat_v01::OnStart";
+			mapannounce "bat_v01", "Tenente Axl Rose : Boa! Cconquistamos todas Bandeiras do Exército de Croix. Vencemos!!",bc_map,"0xFFCE00";
+		}
+	}
+	end;
+	
+OnStart:
+	initnpctimer;
+	end;
+	
+OnStop:
+	stopnpctimer;
+	end;
+	
+OnTimer3000:
+	specialeffect EF_LOCKON;
+	end;
+	
+OnTimer7000:
+	setnpctimer 0;
+	specialeffect EF_CHANGEPOISON;
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(0);
+	end;
+}
+
+bat_v01,1,2,3	script	Guillaume Base#bat_v01	CLEAR_NPC,{
+OnTouch:
+	if( getcharid(4) != $@ValFreyjaBG1_id1 )
+		end;
+
+	getmapxy .@mapname$, .@x1, .@y1, BL_PC;
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+	.@x2 = getd("$@valfreyja_1f"+.@n+"a[1]");
+	.@y2 = getd("$@valfreyja_1f"+.@n+"a[2]");
+	.@dist = distance(.@x1,.@y1,.@x2,.@y2);
+	if( .@dist <= 1 ) {
+		.@status = getd("$@valfreyja_1f"+.@n+"a[7]");
+		.@CID = getd("$@valfreyja_1f"+.@n+"a[8]");
+		if( .@status == 1 && .@CID == getcharid(0) ) {
+			stopnpctimer;
+			.@dir = getd("$@valfreyja_1f"+.@n+"a[3]");
+			enablenpc .@n+"ª Bandeira de Guillaume#bat_v01";
+			movenpc .@n+"ª Bandeira de Guillaume#bat_v01", .@x2, .@y2, .@dir;
+			setd "$@valfreyja_1f"+.@n+"a[4]", .@x2;
+			setd "$@valfreyja_1f"+.@n+"a[5]", .@y2;
+			setd "$@valfreyja_1f"+.@n+"a[6]", .@dir;
+			setd "$@valfreyja_1f"+.@n+"a[7]", 0;
+			setd "$@valfreyja_1f"+.@n+"a[8]", 0;
+			mapannounce "bat_v01", strcharinfo(0)+" colocou a " + .@n + "ª Bandeira de Guillaume em seu mastro principal!",bc_map,"0xFFCE00";
+			
+			// Set Score
+			bg_ranking_set BGS_FLAG_RECAPTURE, bg_ranking_get(BGS_FLAG_RECAPTURE) + 1;
+			bg_ranking_set2 BGS_FLAG_RECAPTURE, bg_ranking_get2(BGS_FLAG_RECAPTURE) + 1;
+		}
+	}
+	end;
+	
+OnInit:
+	if( strnpcinfo(1) == "Guillaume Base" )
+		end;
+		
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+		
+	.@UID = getnpcid(0);
+	getunitdata .@UID, .@unitdata;
+	
+	// 0: Unitid / 1: Unit X / 2: Unit Y / 3: Unit Dir
+	// 4: Spawn X / 5: Spawn Y / 6: Spawn Dir / 7: Status
+	// 8: Player CID
+	setarray getd("$@valfreyja_1f"+.@n+"a[0]"), .@UID, .@unitdata[UNPC_X], .@unitdata[UNPC_Y], .@unitdata[UNPC_LOOKDIR], .@unitdata[UNPC_X], .@unitdata[UNPC_Y], .@unitdata[UNPC_LOOKDIR], 0, 0;
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnEnable:
+	enablenpc "Base de Guillaume#bat_v01";
+	enablenpc "1ª Base de Guillaume#bat_v01";
+	enablenpc "2ª Base de Guillaume#bat_v01";
+	enablenpc "3ª Base de Guillaume#bat_v01";
+	enablenpc "4ª Base de Guillaume#bat_v01";
+	enablenpc "5ª Base de Guillaume#bat_v01";
+	end;
+
+OnDisable:
+	disablenpc "Base de Guillaume#bat_v01";
+	disablenpc "1ª Base de Guillaume#bat_v01";
+	disablenpc "2ª Base de Guillaume#bat_v01";
+	disablenpc "3ª Base de Guillaume#bat_v01";
+	disablenpc "4ª Base de Guillaume#bat_v01";
+	disablenpc "5ª Base de Guillaume#bat_v01";
+	end;
+	
+OnStopTimer:
+	stopnpctimer "Base de Guillaume#bat_v01";
+	stopnpctimer "1ª Base de Guilaume#bat_v01";
+	stopnpctimer "2ª Base de Guilaume#bat_v01";
+	stopnpctimer "3ª Base de Guilaume#bat_v01";
+	stopnpctimer "4ª Base de Guilaume#bat_v01";
+	stopnpctimer "5ª Base de Guilaume#bat_v01";
+	end;
+	
+OnStart:
+	initnpctimer;
+	end;
+	
+OnStop:
+	stopnpctimer;
+	end;
+
+OnTimer5000:
+	setnpctimer 0;
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+	.@status = getd("$@valfreyja_1f"+.@n+"a[7]");
+	
+	// A Bandeira foi capturada, porém não parou o tempo de checagem.
+	if( .@status == 2 ) {
+		stopnpctimer;
+		end;
+	}
+	
+	.@CID = getd("$@valfreyja_1f"+.@n+"a[8]");
+	if( .@CID <= 0 || strcharinfo(3,.@CID) != "bat_v01" ) {
+		.@x = getd("$@valfreyja_1f"+.@n_+"a[4]");
+		.@y = getd("$@valfreyja_1f"+.@n_+"a[5]");
+		.@d = getd("$@valfreyja_1f"+.@n_+"a[6]");
+		
+		if( .@x == 0 && .@y == 0 ) {
+			.@x = getd("$@valfreyja_1f"+.@n_+"a[1]");
+			.@y = getd("$@valfreyja_1f"+.@n_+"a[2]");
+			.@d = getd("$@valfreyja_1f"+.@n_+"a[3]");
+		}
+		enablenpc .@n+"ª Bandeira de Guillaume#bat_v01";
+		movenpc .@n+"ª Bandeira de Guillaume#bat_v01", .@x, .@y, .@d;
+		setd "$@valfreyja_1f"+.@n+"a[4]", .@x;
+		setd "$@valfreyja_1f"+.@n+"a[5]", .@y;
+		setd "$@valfreyja_1f"+.@n+"a[6]", .@d;
+		setd "$@valfreyja_1f"+.@n+"a[7]", 0;
+		setd "$@valfreyja_1f"+.@n+"a[8]", 0;
+	}
+	else {
+		.@Player$ = strcharinfo(0,.@CID);
+		getmapxy .@mapname$, .@x, .@y, BL_PC, .@Player$;
+		.@d = getchardir(.@Player$);
+		.@ib = callfunc("F_BG_CheckRespawn", .@x, .@y);
+		
+		if( !.@ib ) {
+			setd "$@valfreyja_1f"+.@n+"a[4]", .@x;
+			setd "$@valfreyja_1f"+.@n+"a[5]", .@y;
+			setd "$@valfreyja_1f"+.@n+"a[6]", .@d;
+			if( $@ValfreyjaBG1_ShowTarget )
+				specialeffect2 EF_LOCKON, AREA, .@Player$;
+		}
+	}
+	end;
+}
+
+bat_v01,186,74,7	duplicate(Guillaume Base#bat_v01)	1ª Base de Guillaume#bat_v01	CLEAR_NPC,1,1
+bat_v01,182,215,4	duplicate(Guillaume Base#bat_v01)	2ª Base de Guillaume#bat_v01	CLEAR_NPC,1,1
+bat_v01,120,275,6	duplicate(Guillaume Base#bat_v01)	3ª Base de Guillaume#bat_v01	CLEAR_NPC,1,1
+bat_v01,172,301,4	duplicate(Guillaume Base#bat_v01)	4ª Base de Guillaume#bat_v01	CLEAR_NPC,1,1
+bat_v01,68,330,6	duplicate(Guillaume Base#bat_v01)	5ª Base de Guillaume#bat_v01	CLEAR_NPC,1,1
+
+// Bandeiras de Guillaume
+//============================================================
+bat_v01,1,3,0	script	Guillaume Flag#bat_v01	CLEAR_NPC,{
+OnTouch:
+	if( getcharid(4) != $@ValFreyjaBG1_id1 && getcharid(4) != $@ValfreyjaBG1_id2 )
+		end;
+
+	.@count = callfunc("F_BG_CheckFlag", 1, 0, getcharid(0), true) + callfunc("F_BG_CheckFlag", 1, 1, getcharid(0), true);
+	if( .@count )
+		end;
+	
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+	.@x1 = getd("$@valfreyja_1f"+.@n+"a[1]");
+	.@y1 = getd("$@valfreyja_1f"+.@n+"a[2]");
+	getmapxy .@mapname$, .@x2, .@y2, BL_NPC;
+	.@status = getd("$@valfreyja_1f"+.@n+"a[7]");
+	
+	if( .@status == 0 && getcharid(4) == $@ValFreyjaBG1_id1 && .@x1 == .@x2 && .@y1 == .@y2 )
+		end;
+
+	getmapxy .@mapname$, .@x1, .@y1, BL_PC;
+	.@dist = distance(.@x1,.@y1,.@x2,.@y2);
+	if( .@dist <= 3 ) {
+		if( .@status == 0 ) {
+			// Capturou a Bandeira
+			setd "$@valfreyja_1f"+.@n+"a[7]", 1;
+			setd "$@valfreyja_1f"+.@n+"a[8]", getcharid(0);
+			disablenpc .@n+"ª Bandeira de Guillaume#bat_v01";
+			enablenpc .@n+"ª Base de Guillaume#bat_v01";
+			initnpctimer .@n+"ª Base de Guillaume#bat_v01";
+			if( getcharid(4) == $@ValFreyjaBG1_id1 )
+				mapannounce "bat_v01", strcharinfo(0)+" recapturou a " + .@n + "ª Bandeira de Guillaume!",bc_map,"0xFFCE00";
+			else
+				mapannounce "bat_v01", strcharinfo(0)+" capturou a " + .@n + "ª Bandeira de Guillaume!",bc_map,"0xFFCE00";
+		}
+	}
+	end;
+	
+OnInit:
+	if( strnpcinfo(1) != "Guillaume Flag" )
+		disablenpc strnpcinfo(0);
+	end;
+	
+OnEnable:
+	if( strnpcinfo(1) == "Guillaume Flag" ) {
+		for( .@i=1; .@i <= 5; .@i++ ) {
+			.@x = getd("$@valfreyja_1f"+.@i+"a[1]");
+			.@y = getd("$@valfreyja_1f"+.@i+"a[2]");
+			.@d = getd("$@valfreyja_1f"+.@i+"a[3]");
+			setarray getd("$@valfreyja_1f"+.@i+"a[4]"), .@x, .@y, .@d, 0, 0;
+
+			enablenpc .@i+"ª Bandeira de Guillaume#bat_v01";
+			movenpc .@i+"ª Bandeira de Guillaume#bat_v01", .@x, .@y, .@d;
+		}
+	}
+	end;
+	
+OnDisable:
+	if( strnpcinfo(1) == "Guillaume Flag" ) {
+		for( .@i=1; .@i <= 5; .@i++ ) {
+			.@x = getd("$@valfreyja_1f"+.@i+"a[1]");
+			.@y = getd("$@valfreyja_1f"+.@i+"a[2]");
+			.@d = getd("$@valfreyja_1f"+.@i+"a[3]");
+			setarray getd("$@valfreyja_1f"+.@i+"a[4]"), .@x, .@y, .@d, 0, 0;
+			
+			enablenpc .@i+"ª Bandeira de Guillaume#bat_v01";
+			movenpc .@i+"ª Bandeira de Guillaume#bat_v01", .@x, .@y, .@d;
+			disablenpc .@i+"ª Bandeira de Guillaume#bat_v01";
+		}
+	}
+	end;
+	
+OnBatV01Emblem:
+	bg_flagemblem $@ValFreyjaBG1_id1;
+	end;
+}
+
+bat_v01,186,74,7	duplicate(Guillaume Flag#bat_v01)	1ª Bandeira de Guillaume#bat_v01	GUILD_FLAG,3,3
+bat_v01,182,215,4	duplicate(Guillaume Flag#bat_v01)	2ª Bandeira de Guillaume#bat_v01	GUILD_FLAG,3,3
+bat_v01,120,275,6	duplicate(Guillaume Flag#bat_v01)	3ª Bandeira de Guillaume#bat_v01	GUILD_FLAG,3,3
+bat_v01,172,301,4	duplicate(Guillaume Flag#bat_v01)	4ª Bandeira de Guillaume#bat_v01	GUILD_FLAG,3,3
+bat_v01,68,330,6	duplicate(Guillaume Flag#bat_v01)	5ª Bandeira de Guillaume#bat_v01	GUILD_FLAG,3,3
+
+bat_v01,92,162,6	script	Base de Guillaume#bat_v01_1	GUILD_FLAG,{
+	mes "^0000FF[ Exército de Guillaume ]^000000";
+	mes "1. Capture as Bandeiras inimigas e traga em segurança a esta base.";
+	if( $@ValfreyjaBG1_EnableGuardian ) {
+		.@n = 4;
+		mes "2. Guardiões protegem as Bandeiras inimigas.";
+		mes "3. Inimigos e guardiões podem interceptar a captura da Bandeira.";
+	}
+	else {
+		.@n = 3;
+		mes "2. Inimigos podem interceptar a captura da Bandeira.";
+	}
+	mes .@n+". Vence quem trazer mais Bandeiras inimigas.";
+	close;
+
+OnBatV01Emblem:
+	bg_flagemblem $@ValFreyjaBG1_id1;
+	end;
+}
+
+bat_v01,92,173,6	duplicate(Base de Guillaume#bat_v01_1)	Base de Guillaume#bat_v01_2	GUILD_FLAG
+bat_v01,103,173,6	duplicate(Base de Guillaume#bat_v01_1)	Base de Guillaume#bat_v01_3	GUILD_FLAG
+bat_v01,103,162,6	duplicate(Base de Guillaume#bat_v01_1)	Base de Guillaume#bat_v01_4	GUILD_FLAG
+bat_v01,46,52,3	duplicate(Base de Guillaume#bat_v01_1)	Base de Guillaume#bat_v01_5	GUILD_FLAG
+
+// Bases de Croix
+//============================================================
+bat_v01,310,168,0	script	Base de Croix#bat_v01	CLEAR_NPC,1,1,{
+OnTouch:
+	if( getcharid(4) != $@ValFreyjaBG1_id2 )
+		end;
+	
+	getmapxy .@mapname$, .@x, .@y, BL_PC;
+	.@dist = distance(.@x,.@y,310,168);
+	if( .@dist <= 1 ) {
+		.@n = callfunc("F_BG_CheckFlag", 1, 0, getcharid(0), true);
+		if( .@n <= 0 )
+			end;
+			
+		setd "$@valfreyja_1f"+.@n+"a[7]", 2;
+		setd "$@valfreyja_1f"+.@n+"a[8]", 0;
+		stopnpctimer .@n+"ª Base de Guillaume#bat_v01";
+		disablenpc .@n+"ª Base de Guillaume#bat_v01";
+		mapannounce "bat_v01", strcharinfo(0)+" conquistou a " + .@n + "ª Bandeira de Guillaume para o Exército de Croix!",bc_map,"0x99CC00";
+		$@ValfreyjaBG1_Croix++;
+		bg_updatescore "bat_v01",$@ValfreyjaBG1_Guill,$@ValfreyjaBG1_Croix;
+		callfunc "F_BG_ClearViewPoint_Unit", $@ValFreyjaBG1_id1, .@n, true;
+		callfunc "F_BG_ClearViewPoint_Unit", $@ValFreyjaBG1_id2, .@n, true;
+		
+		// Set Score
+		bg_ranking_set BGS_FLAG_CAPTURE, bg_ranking_get(BGS_FLAG_CAPTURE) + 1;
+		bg_ranking_set2 BGS_FLAG_CAPTURE, bg_ranking_get2(BGS_FLAG_CAPTURE) + 1;
+			
+		if( $@ValfreyjaBG1_Croix >= 5 ) {
+			$@ValfreyjaBG1_Victory = 2;
+			callfunc "F_BG_ClearViewPoint", $@ValfreyjaBG1_id1, true;
+			callfunc "F_BG_ClearViewPoint", $@ValfreyjaBG1_id2, true;
+			callfunc "F_BG_RANKING_TEAM", 9, $@ValFreyjaBG1_id1, $@ValFreyjaBG1_id2, 1, $@ValfreyjaBG1_Guill, $@ValfreyjaBG1_Croix, true;
+			enablenpc "Tenente#bat_v01_a";
+			enablenpc "Tenente#bat_v01_b";
+			donpcevent "time#bat_v01::OnStop";
+			donpcevent "guardian#bat_v01::OnDisable";
+			donpcevent "viewpoint#bat_v01::OnStop";
+			donpcevent "Guillaume Base#bat_v01::OnStopTimer";
+			donpcevent "Croix Base#bat_v01::OnStopTimer";
+			donpcevent "Guillaume Base#bat_v01::OnDisable";
+			donpcevent "Croix Base#bat_v01::OnDisable";
+			donpcevent "Guillaume Flag#bat_v01::OnDisable";
+			donpcevent "Croix Flag#bat_v01::OnDisable";
+			donpcevent "countdown#bat_v01::OnStop";
+			bg_warp $@ValFreyjaBG1_id1,"bat_v01",41,48;
+			bg_warp $@ValFreyjaBG1_id2,"bat_v01",357,48;
+			if (getbattleflag("feature.bgqueue"))
+				bg_reserve "bat_v01", true;
+			sleep 3000;
+			donpcevent "time_out#bat_v01::OnStart";
+			mapannounce "bat_v01", "Tenente Swandery : Boa! Cconquistamos todas Bandeiras do Exército de Guillaume. Vencemos!!",bc_map,"0xFFCE00";
+		}
+	}
+	end;
+	
+OnStart:
+	initnpctimer;
+	end;
+	
+OnStop:
+	stopnpctimer;
+	end;
+	
+OnTimer3000:
+	specialeffect EF_LOCKON;
+	end;
+	
+OnTimer7000:
+	setnpctimer 0;
+	specialeffect EF_CHANGEFIRE;
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(0);
+	end;
+}
+
+bat_v01,1,4,0	script	Croix Base#bat_v01	CLEAR_NPC,{
+OnTouch:
+	if( getcharid(4) != $@ValFreyjaBG1_id2 )
+		end;
+
+	getmapxy .@mapname$, .@x1, .@y1, BL_PC;
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+	.@x2 = getd("$@valfreyja_1f"+.@n+"b[1]");
+	.@y2 = getd("$@valfreyja_1f"+.@n+"b[2]");
+	.@dist = distance(.@x1,.@y1,.@x2,.@y2);
+	if( .@dist <= 1 ) {
+		.@status = getd("$@valfreyja_1f"+.@n+"b[7]");
+		.@CID = getd("$@valfreyja_1f"+.@n+"b[8]");
+		if( .@status == 1 && .@CID == getcharid(0) ) {
+			stopnpctimer;
+			.@dir = getd("$@valfreyja_1f"+.@n+"b[3]");
+			enablenpc .@n+"ª Bandeira de Croix#bat_v01";
+			movenpc .@n+"ª Bandeira de Croix#bat_v01", .@x2, .@y2, .@dir;
+			setd "$@valfreyja_1f"+.@n+"b[4]", .@x2;
+			setd "$@valfreyja_1f"+.@n+"b[5]", .@y2;
+			setd "$@valfreyja_1f"+.@n+"b[6]", .@dir;
+			setd "$@valfreyja_1f"+.@n+"b[7]", 0;
+			setd "$@valfreyja_1f"+.@n+"b[8]", 0;
+			mapannounce "bat_v01", strcharinfo(0)+" colocou a " + .@n + "ª Bandeira de Croix em seu mastro principal!",bc_map,"0xFFCE00";
+		
+			// Set Score
+			bg_ranking_set BGS_FLAG_RECAPTURE, bg_ranking_get(BGS_FLAG_RECAPTURE) + 1;
+			bg_ranking_set2 BGS_FLAG_RECAPTURE, bg_ranking_get2(BGS_FLAG_RECAPTURE) + 1;
+		}
+	}
+	end;
+	
+OnInit:
+	if( strnpcinfo(1) == "Croix Base" )
+		end;
+		
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+		
+	.@UID = getnpcid(0);
+	getunitdata .@UID, .@unitdata;
+	
+	// 0: Unitid / 1: Unit X / 2: Unit Y / 3: Unit Dir
+	// 4: Spawn X / 5: Spawn Y / 6: Spawn Dir / 7: Status
+	// 8: Player CID
+	setarray getd("$@valfreyja_1f"+.@n+"b[0]"), .@UID, .@unitdata[UNPC_X], .@unitdata[UNPC_Y], .@unitdata[UNPC_LOOKDIR], .@unitdata[UNPC_X], .@unitdata[UNPC_Y], .@unitdata[UNPC_LOOKDIR], 0, 0;
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnEnable:
+	enablenpc "Base de Croix#bat_v01";
+	enablenpc "1ª Base de Croix#bat_v01";
+	enablenpc "2ª Base de Croix#bat_v01";
+	enablenpc "3ª Base de Croix#bat_v01";
+	enablenpc "4ª Base de Croix#bat_v01";
+	enablenpc "5ª Base de Croix#bat_v01";
+	end;
+
+OnDisable:
+	disablenpc "Base de Croix#bat_v01";
+	disablenpc "1ª Base de Croix#bat_v01";
+	disablenpc "2ª Base de Croix#bat_v01";
+	disablenpc "3ª Base de Croix#bat_v01";
+	disablenpc "4ª Base de Croix#bat_v01";
+	disablenpc "5ª Base de Croix#bat_v01";
+	end;
+	
+OnStopTimer:
+	stopnpctimer "Base de Croix#bat_v01";
+	stopnpctimer "1ª Base de Croix#bat_v01";
+	stopnpctimer "2ª Base de Croix#bat_v01";
+	stopnpctimer "3ª Base de Croix#bat_v01";
+	stopnpctimer "4ª Base de Croix#bat_v01";
+	stopnpctimer "5ª Base de Croix#bat_v01";
+	end;
+	
+OnStart:
+	initnpctimer;
+	end;
+	
+OnStop:
+	stopnpctimer;
+	end;
+
+OnTimer5000:
+	setnpctimer 0;
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+	.@status = getd("$@valfreyja_1f"+.@n+"b[7]");
+	
+	// A Bandeira foi capturada, porém não parou o tempo de checagem.
+	if( .@status == 2 ) {
+		stopnpctimer;
+		end;
+	}
+	
+	.@CID = getd("$@valfreyja_1f"+.@n+"b[8]");
+	if( .@CID <= 0 || strcharinfo(3,.@CID) != "bat_v01" ) {
+		.@x = getd("$@valfreyja_1f"+.@n_+"b[4]");
+		.@y = getd("$@valfreyja_1f"+.@n_+"b[5]");
+		.@d = getd("$@valfreyja_1f"+.@n_+"b[6]");
+		
+		if( .@x == 0 && .@y == 0 ) {
+			.@x = getd("$@valfreyja_1f"+.@n_+"b[1]");
+			.@y = getd("$@valfreyja_1f"+.@n_+"b[2]");
+			.@d = getd("$@valfreyja_1f"+.@n_+"b[3]");
+		}
+		enablenpc .@n+"ª Bandeira de Croix#bat_v01";
+		movenpc .@n+"ª Bandeira de Croix#bat_v01", .@x, .@y, .@d;
+		setd "$@valfreyja_1f"+.@n+"b[4]", .@x;
+		setd "$@valfreyja_1f"+.@n+"b[5]", .@y;
+		setd "$@valfreyja_1f"+.@n+"b[6]", .@d;
+		setd "$@valfreyja_1f"+.@n+"b[7]", 0;
+		setd "$@valfreyja_1f"+.@n+"b[8]", 0;
+	}
+	else {
+		.@Player$ = strcharinfo(0,.@CID);
+		getmapxy .@mapname$, .@x, .@y, BL_PC, .@Player$;
+		.@d = getchardir(.@Player$);
+		.@ib = callfunc("F_BG_CheckRespawn", .@x, .@y);
+		
+		if( !.@ib ) {
+			setd "$@valfreyja_1f"+.@n+"b[4]", .@x;
+			setd "$@valfreyja_1f"+.@n+"b[5]", .@y;
+			setd "$@valfreyja_1f"+.@n+"b[6]", .@d;
+			if( $@ValfreyjaBG1_ShowTarget )
+				specialeffect2 EF_LOCKON, AREA, .@Player$;
+		}
+	}
+	end;
+}
+
+bat_v01,221,74,1	duplicate(Croix Base#bat_v01)	1ª Base de Croix#bat_v01	CLEAR_NPC,1,1
+bat_v01,225,215,4	duplicate(Croix Base#bat_v01)	2ª Base de Croix#bat_v01	CLEAR_NPC,1,1
+bat_v01,287,275,2	duplicate(Croix Base#bat_v01)	3ª Base de Croix#bat_v01	CLEAR_NPC,1,1
+bat_v01,235,301,4	duplicate(Croix Base#bat_v01)	4ª Base de Croix#bat_v01	CLEAR_NPC,1,1
+bat_v01,339,331,2	duplicate(Croix Base#bat_v01)	5ª Base de Croix#bat_v01	CLEAR_NPC,1,1
+
+// Bandeiras de Croix
+//============================================================
+bat_v01,1,5,0	script	Croix Flag#bat_v01	CLEAR_NPC,{
+OnTouch:
+	if( getcharid(4) != $@ValFreyjaBG1_id1 && getcharid(4) != $@ValfreyjaBG1_id2 )
+		end;
+
+	.@count = callfunc("F_BG_CheckFlag", 1, 0, getcharid(0), true) + callfunc("F_BG_CheckFlag", 1, 1, getcharid(0), true);
+	if( .@count )
+		end;
+		
+	.@n = atoi(substr(strnpcinfo(1),0,0));
+	.@x1 = getd("$@valfreyja_1f"+.@n+"b[1]");
+	.@y1 = getd("$@valfreyja_1f"+.@n+"b[2]");
+	getmapxy .@mapname$, .@x2, .@y2, BL_NPC;
+	.@status = getd("$@valfreyja_1f"+.@n+"b[7]");
+	
+	if( .@status == 0 && getcharid(4) == $@ValFreyjaBG1_id2 && .@x1 == .@x2 && .@y1 == .@y2 )
+		end;
+
+	getmapxy .@mapname$, .@x1, .@y1, BL_PC;
+	.@x2 = getd("$@valfreyja_1f"+.@n+"b[4]");
+	.@y2 = getd("$@valfreyja_1f"+.@n+"b[5]");
+	.@dist = distance(.@x1,.@y1,.@x2,.@y2);
+	if( .@dist <= 3 ) {
+		if( .@status == 0 ) {
+			// Capturou a Bandeira
+			setd "$@valfreyja_1f"+.@n+"b[7]", 1;
+			setd "$@valfreyja_1f"+.@n+"b[8]", getcharid(0);
+			disablenpc .@n+"ª Bandeira de Croix#bat_v01";
+			enablenpc .@n+"ª Base de Croix#bat_v01";
+			initnpctimer .@n+"ª Base de Croix#bat_v01";
+			if( getcharid(4) == $@ValFreyjaBG1_id2 )
+				mapannounce "bat_v01", strcharinfo(0)+" recapturou a " + .@n + "ª Bandeira de Croix!",bc_map,"0xFFCE00";
+			else
+				mapannounce "bat_v01", strcharinfo(0)+" capturou a " + .@n + "ª Bandeira de Croix!",bc_map,"0xFFCE00";
+		}
+	}
+	end;
+	
+OnInit:
+	if( strnpcinfo(1) != "Croix Flag" )
+		disablenpc strnpcinfo(0);
+	end;
+	
+OnEnable:
+	if( strnpcinfo(1) == "Croix Flag" ) {
+		for( .@i=1; .@i <= 5; .@i++ ) {
+			.@x = getd("$@valfreyja_1f"+.@i+"b[1]");
+			.@y = getd("$@valfreyja_1f"+.@i+"b[2]");
+			.@d = getd("$@valfreyja_1f"+.@i+"b[3]");
+			setarray getd("$@valfreyja_1f"+.@i+"b[4]"), .@x, .@y, .@d, 0, 0;
+			
+			enablenpc .@i+"ª Bandeira de Croix#bat_v01";
+			movenpc .@i+"ª Bandeira de Croix#bat_v01", .@x, .@y, .@d;
+		}
+	}
+	end;
+	
+OnDisable:
+	if( strnpcinfo(1) == "Croix Flag" ) {
+		for( .@i=1; .@i <= 5; .@i++ ) {
+			.@x = getd("$@valfreyja_1f"+.@i+"b[1]");
+			.@y = getd("$@valfreyja_1f"+.@i+"b[2]");
+			.@d = getd("$@valfreyja_1f"+.@i+"b[3]");
+			setarray getd("$@valfreyja_1f"+.@i+"b[4]"), .@x, .@y, .@d, 0, 0;
+			
+			enablenpc .@i+"ª Bandeira de Croix#bat_v01";
+			movenpc .@i+"ª Bandeira de Croix#bat_v01", .@x, .@y, .@d;
+			disablenpc .@i+"ª Bandeira de Croix#bat_v01";
+		}
+	}
+	end;
+	
+OnBatV01Emblem:
+	bg_flagemblem $@ValFreyjaBG1_id2;
+	end;
+}
+
+bat_v01,221,74,1	duplicate(Croix Flag#bat_v01)	1ª Bandeira de Croix#bat_v01	GUILD_FLAG,3,3
+bat_v01,225,215,4	duplicate(Croix Flag#bat_v01)	2ª Bandeira de Croix#bat_v01	GUILD_FLAG,3,3
+bat_v01,287,275,2	duplicate(Croix Flag#bat_v01)	3ª Bandeira de Croix#bat_v01	GUILD_FLAG,3,3
+bat_v01,235,301,4	duplicate(Croix Flag#bat_v01)	4ª Bandeira de Croix#bat_v01	GUILD_FLAG,3,3
+bat_v01,339,331,2	duplicate(Croix Flag#bat_v01)	5ª Bandeira de Croix#bat_v01	GUILD_FLAG,3,3
+
+bat_v01,315,173,2	script	Base de Croix#bat_v01_1	GUILD_FLAG,{
+	mes "^0000FF[ Exército de Croix ]^000000";
+	mes "1. Capture as Bandeiras inimigas e traga em segurança a esta base.";
+	if( $@ValfreyjaBG1_EnableGuardian ) {
+		.@n = 4;
+		mes "2. Guardiões protegem as Bandeiras inimigas.";
+		mes "3. Inimigos e guardiões podem interceptar a captura da Bandeira.";
+	}
+	else {
+		.@n = 3;
+		mes "2. Inimigos podem interceptar a captura da Bandeira.";
+	}
+	mes .@n+". Vence quem trazer mais Bandeiras inimigas.";
+	close;
+
+OnBatV01Emblem:
+	bg_flagemblem $@ValFreyjaBG1_id2;
+	end;
+}
+
+bat_v01,315,162,2	duplicate(Base de Croix#bat_v01_1)	Base de Croix#bat_v01_2	GUILD_FLAG
+bat_v01,304,173,2	duplicate(Base de Croix#bat_v01_1)	Base de Croix#bat_v01_3	GUILD_FLAG
+bat_v01,304,162,2	duplicate(Base de Croix#bat_v01_1)	Base de Croix#bat_v01_4	GUILD_FLAG
+bat_v01,362,52,3	duplicate(Base de Croix#bat_v01_1)	Base de Croix#bat_v01_5	GUILD_FLAG
+
+// View Points
+//============================================================
+bat_v01,1,6,0	script	viewpoint#bat_v01	CLEAR_NPC,{
+OnStart:
+	if( !$@ValfreyjaBG1_ViewPoint )
+		end;
+
+	initnpctimer;
+	end;
+	
+OnStop:
+	stopnpctimer;
+	end;
+	
+OnTimer5000:
+	.@t = 1;
+	freeloop(1);
+	while(.@t <= 2) {
+		.@TeamID = getd("$@ValFreyjaBG1_id"+.@t);
+		deletearray $@arenamembers;
+		bg_get_data .@TeamID, 1;
+		
+		for( .@i=0; .@i < $@arenamemberscount; .@i++ ) {
+			.@Name$ = rid2name($@arenamembers[.@i]);
+			.@CID = getcharid(0,.@Name$);
+			
+			// Bandeiras de Guillaume
+			for( .@n=1; .@n <= 5; .@n++ ) {
+				.@type = 0;
+				.@status = getd("$@valfreyja_1f"+.@n+"a[7]");
+				.@charid = getd("$@valfreyja_1f"+.@n+"a[8]");
+				
+				if( .@status == 2 )
+					continue;
+				
+				// Jogador está com a Bandeira de Guillaume.
+				if( .@charid == .@CID ) {
+					// O Jogador é membro do Exército de Guillaume.
+					if( .@t == 1 ) {
+						.@x = getd("$@valfreyja_1f"+.@n+"a[1]");
+						.@y = getd("$@valfreyja_1f"+.@n+"a[2]");
+					}
+					else {
+						.@x = 310;
+						.@y = 168;
+					}
+				}
+				else { // Jogador não está com a bandeira
+					.@type = 1;
+					.@x = getd("$@valfreyja_1f"+.@n+"a[4]");
+					.@y = getd("$@valfreyja_1f"+.@n+"a[5]");
+				}
+				
+				viewpoint 1,.@x,.@y,.@n,.@type ? 0x0000FF : 0xFFFF00,.@CID;
+			}
+			
+			// Bandeiras de Croix
+			for( .@n=1; .@n <= 5; .@n++ ) {
+				.@type = 0;
+				.@status = getd("$@valfreyja_1f"+.@n+"b[7]");
+				.@charid = getd("$@valfreyja_1f"+.@n+"b[8]");
+				
+				if( .@status == 2 )
+					continue;
+				
+				// Jogador está com a Bandeira de Croix.
+				if( .@charid == .@CID ) {
+					// O Jogador é membro do Exército de Croix.
+					if( .@t == 2 ) {
+						.@x = getd("$@valfreyja_1f"+.@n+"b[1]");
+						.@y = getd("$@valfreyja_1f"+.@n+"b[2]");
+					}
+					else {
+						.@x = 97;
+						.@y = 168;
+					}
+				}
+				else { // Jogador não está com a bandeira
+					.@type = 1;
+					.@x = getd("$@valfreyja_1f"+.@n+"b[4]");
+					.@y = getd("$@valfreyja_1f"+.@n+"b[5]");
+				}
+				
+				viewpoint 1,.@x,.@y,5+.@n,.@type ? 0xFF0000 : 0xFFFF00,.@CID;
+			}
+		}
+		.@t++;
+	}
+	freeloop(0);
+	setnpctimer 0;
+	end;
+}
+
+// Guardiões
+//============================================================
+bat_v01,1,6,0	script	guardian#bat_v01	CLEAR_NPC,{
+OnEnable:
+	// Desativado pelas configurações
+	if( !$@ValfreyjaBG1_EnableGuardian )
+		end;
+		
+	// Guillaume Guardians
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 182, 80, "Guardião de Guillaume", 1949, "guardian#bat_v01::OnMobDead01A");
+	bg_setmobdesc .@UID, "Guardião da 1ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 191, 80, "Guardião de Guillaume", 1950, "guardian#bat_v01::OnMobDead01A");
+	bg_setmobdesc .@UID, "Guardião da 1ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 178, 209, "Guardião de Guillaume", 1949, "guardian#bat_v01::OnMobDead02A");
+	bg_setmobdesc .@UID, "Guardião da 2ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 187, 209, "Guardião de Guillaume", 1950, "guardian#bat_v01::OnMobDead02A");
+	bg_setmobdesc .@UID, "Guardião da 2ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 131, 268, "Guardião de Guillaume", 1949, "guardian#bat_v01::OnMobDead03A");
+	bg_setmobdesc .@UID, "Guardião da 3ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 131, 281, "Guardião de Guillaume", 1950, "guardian#bat_v01::OnMobDead03A");
+	bg_setmobdesc .@UID, "Guardião da 3ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 168, 295, "Guardião de Guillaume", 1949, "guardian#bat_v01::OnMobDead04A");
+	bg_setmobdesc .@UID, "Guardião da 4ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 177, 295, "Guardião de Guillaume", 1950, "guardian#bat_v01::OnMobDead04A");
+	bg_setmobdesc .@UID, "Guardião da 4ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 79, 337, "Guardião de Guillaume", 1949, "guardian#bat_v01::OnMobDead05A");
+	bg_setmobdesc .@UID, "Guardião da 5ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 79, 324, "Guardião de Guillaume", 1950, "guardian#bat_v01::OnMobDead05A");
+	bg_setmobdesc .@UID, "Guardião da 5ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 112, 158, "Guardião de Guillaume", 1949, "guardian#bat_v01::OnMobDead06A");
+	bg_setmobdesc .@UID, "Guardião da Base";
+	.@UID = bg_monster($@ValFreyjaBG1_id1, "bat_v01", 112, 177, "Guardião de Guillaume", 1950, "guardian#bat_v01::OnMobDead06A");
+	bg_setmobdesc .@UID, "Guardião da Base";
+	
+	// Croix Guardians
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 216, 80, "Guardião de Croix", 1949, "guardian#bat_v01::OnMobDead01B");
+	bg_setmobdesc .@UID, "Guardião da 1ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 225, 80, "Guardião de Croix", 1950, "guardian#bat_v01::OnMobDead01B");
+	bg_setmobdesc .@UID, "Guardião da 1ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 220, 209, "Guardião de Croix", 1949, "guardian#bat_v01::OnMobDead02B");
+	bg_setmobdesc .@UID, "Guardião da 2ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 229, 209, "Guardião de Croix", 1950, "guardian#bat_v01::OnMobDead02B");
+	bg_setmobdesc .@UID, "Guardião da 2ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 276, 281, "Guardião de Croix", 1949, "guardian#bat_v01::OnMobDead03B");
+	bg_setmobdesc .@UID, "Guardião da 3ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 276, 267, "Guardião de Croix", 1950, "guardian#bat_v01::OnMobDead03B");
+	bg_setmobdesc .@UID, "Guardião da 3ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 230, 295, "Guardião de Croix", 1949, "guardian#bat_v01::OnMobDead04B");
+	bg_setmobdesc .@UID, "Guardião da 4ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 239, 295, "Guardião de Croix", 1950, "guardian#bat_v01::OnMobDead04B");
+	bg_setmobdesc .@UID, "Guardião da 4ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 328, 337, "Guardião de Croix", 1949, "guardian#bat_v01::OnMobDead05B");
+	bg_setmobdesc .@UID, "Guardião da 5ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 328, 324, "Guardião de Croix", 1950, "guardian#bat_v01::OnMobDead05B");
+	bg_setmobdesc .@UID, "Guardião da 5ª Bandeira";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 294, 177, "Guardião de Croix", 1949, "guardian#bat_v01::OnMobDead06B");
+	bg_setmobdesc .@UID, "Guardião da Base";
+	.@UID = bg_monster($@ValFreyjaBG1_id2, "bat_v01", 294, 158, "Guardião de Croix", 1950, "guardian#bat_v01::OnMobDead06B");
+	bg_setmobdesc .@UID, "Guardião da Base";
+	end;
+	
+OnDisable:
+	for( .@i=1; .@i <= 6; .@i++ ) {
+		killmonster "bat_v01","guardian#bat_v01::OnMobDead0"+.@i+"A";
+		killmonster "bat_v01","guardian#bat_v01::OnMobDead0"+.@i+"B";
+	}
+	end;
+
+OnMobDead01A:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead01A") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 1ª Bandeira de Guillaume foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead02A:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead02A") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 2ª Bandeira de Guillaume foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead03A:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead03A") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 3ª Bandeira de Guillaume foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead04A:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead04A") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 4ª Bandeira de Guillaume foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead05A:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead05A") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 5ª Bandeira de Guillaume foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead06A:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead06A") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base de Guillaume foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead01B:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead01B") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 1ª Bandeira de Croix foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead02B:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead02B") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 2ª Bandeira de Croix foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead03B:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead03B") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 3ª Bandeira de Croix foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead04B:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead04B") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 4ª Bandeira de Croix foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead05B:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead05B") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base da 5ª Bandeira de Croix foi destruído.",bc_map,"0xFFCE00";
+	end;
+
+OnMobDead06B:
+	if (mobcount("bat_v01","guardian#bat_v01::OnMobDead06B") < 1)
+		mapannounce "bat_v01", "O Guardião que protegia a Base de Croix foi destruído.",bc_map,"0xFFCE00";
+	end;
+}
+
+// Terapeura
+//============================================================
+bat_v01,1,7,1	script	time#bat_v01	CLEAR_NPC,{
+OnEnable:
+	donpcevent "Terapeuta da Batalha#bat_v01_a::OnEnable";
+	donpcevent "Terapeuta da Batalha#bat_v01_b::OnEnable";
+	end;
+
+OnStop:
+	donpcevent "Terapeuta da Batalha#bat_v01_a::OnStop";
+	donpcevent "Terapeuta da Batalha#bat_v01_b::OnStop";
+	end;
+}
+
+bat_v01,44,51,3	script	Terapeuta da Batalha#bat_v01_a	4_F_SISTER,{
+	specialeffect2 EF_HEAL;
+	mes "[Terapeuta da Batalha]";
+	mes "Apenas feche seus olhos";
+	mes "e respire fundo.";
+	mes "Você pode se libertar da dor.";
+	close;
+
+OnTimer25000:
+	specialeffect EF_SANCTUARY;
+	areapercentheal "bat_v01",36,53,47,42,100,100;
+	areawarp "bat_v01",36,53,47,42,"bat_v01",71,167;
+	end;
+
+OnTimer26500:
+	stopnpctimer;
+	donpcevent "Terapeuta da Batalha#bat_v01_a::OnEnable";
+	end;
+
+OnEnable:
+	initnpctimer;
+	enablenpc "Terapeuta da Batalha#bat_v01_a";
+	end;
+
+OnStop:
+	disablenpc "Terapeuta da Batalha#bat_v01_a";
+	stopnpctimer;
+	end;
+}
+
+bat_v01,360,51,3	script	Terapeuta da Batalha#bat_v01_b	4_F_SISTER,{
+	specialeffect2 EF_HEAL;
+	mes "[Terapeuta da Batalha]";
+	mes "Apenas feche seus olhos";
+	mes "e respire fundo.";
+	mes "Você pode se libertar da dor.";
+	close;
+
+OnTimer25000:
+	specialeffect EF_SANCTUARY;
+	areapercentheal "bat_v01",352,53,363,42,100,100;
+	areawarp "bat_v01",352,53,363,42,"bat_v01",336,166;
+	end;
+
+OnTimer26500:
+	stopnpctimer;
+	donpcevent "Terapeuta da Batalha#bat_v01_b::OnEnable";
+	end;
+
+OnEnable:
+	initnpctimer;
+	enablenpc "Terapeuta da Batalha#bat_v01_b";
+	end;
+
+OnStop:
+	disablenpc "Terapeuta da Batalha#bat_v01_b";
+	stopnpctimer;
+	end;
+}
+
+// Countdown
+//============================================================
+bat_v01,1,8,3	script	countdown#bat_v01	CLEAR_NPC,{
+OnEnable:
+	.TimerCount = 0;
+	stopnpctimer;
+	initnpctimer;
+	sleep 7000;
+	mapannounce "bat_v01", "Tenente de Guillaume Axl Rose : Vamos capturar as bandeiras inimigas!",bc_map,"0xFF9900";
+	sleep 1000;
+	mapannounce "bat_v01", "Tenente de Croix Swandery : Mesmo que Guillaume se esforce para nos derrotar, a vitória será nossa. Vamos mostrar a eles nosso poder.",bc_map,"0xFF99CC";
+	end;
+
+OnStop:
+	stopnpctimer;
+	end;
+	
+OnTimer60000:
+	.TimerCount++;
+	.@BattleTimer = $@ValfreyjaBG1_BattleTimer;
+	if( (.TimerCount+1) >= .@BattleTimer )
+		mapannounce "bat_v01", "Marollo VII : Guillaume Marollo, Croix Marollo! E seus seguidores!",bc_map,"0x99CC00";
+	else {
+		stopnpctimer;
+		initnpctimer;
+	}
+	end;
+
+OnTimer93000:
+	mapannounce "bat_v01", "Marollo VII : Ambos Exércitos são muito competitivos, por isso é difícil julgar qual grupamento é superior.",bc_map,"0x99CC00";
+	end;
+
+OnTimer98000:
+	mapannounce "bat_v01", "Marollo VII : Grandiosa disputa em Valfreyja. Difícil decidir a quem pertence a vitória.",bc_map,"0x99CC00";
+	end;
+
+OnTimer112000:
+	mapannounce "bat_v01", "Marollo VII : Se vocês não aceitarem esse resultado, tentem a sorte em outra batalha!",bc_map,"0x99CC00";
+	end;
+
+OnTimer117000:
+	mapannounce "bat_v01", "Axl Rose, Swandery : Sim, senhor.",bc_map,"0x99CC00";
+	end;
+
+OnTimer120000:
+	if( $@ValfreyjaBG1_Guill > $@ValfreyjaBG1_Croix ) {
+		$@ValfreyjaBG1_Victory = 1;
+		mapannounce "bat_v01", "Marollo VII : O Exército de Guillaume foi o vencedor!",bc_map,"0x99CC00";
+	}
+	else if( $@ValfreyjaBG1_Croix > $@ValfreyjaBG1_Guill ) {
+		$@ValfreyjaBG1_Victory = 2;
+		mapannounce "bat_v01", "Marollo VII : O Exército de Croix foi o vencedor!",bc_map,"0x99CC00";
+	}
+	else {
+		$@ValfreyjaBG1_Victory = 3;
+		mapannounce "bat_v01", "Marollo VII: Esta batalha terminou em empate.",bc_map,"0x99CC00";
+	}
+	callfunc "F_BG_ClearViewPoint", $@ValfreyjaBG1_id1, true;
+	callfunc "F_BG_ClearViewPoint", $@ValfreyjaBG1_id2, true;
+	callfunc "F_BG_RANKING_TEAM", 9, $@ValFreyjaBG1_id1, $@ValFreyjaBG1_id2, ($@ValfreyjaBG1_Victory-1), $@ValfreyjaBG1_Guill, $@ValfreyjaBG1_Croix, true;
+	donpcevent "time#bat_v01::OnStop";
+	donpcevent "Guillaume Base#bat_v01::OnStopTimer";
+	donpcevent "Croix Base#bat_v01::OnStopTimer";
+	donpcevent "Guillaume Base#bat_v01::OnDisable";
+	donpcevent "Croix Base#bat_v01::OnDisable";
+	donpcevent "Guillaume Flag#bat_v01::OnDisable";
+	donpcevent "Croix Flag#bat_v01::OnDisable";
+	donpcevent "guardian#bat_v01::OnDisable";
+	donpcevent "viewpoint#bat_v01::OnStop";
+	donpcevent "time_out#bat_v01::OnStart";
+	enablenpc "Tenente#bat_v01_a";
+	enablenpc "Tenente#bat_v01_b";
+	bg_warp $@ValFreyjaBG1_id1,"bat_v01",41,48;
+	bg_warp $@ValFreyjaBG1_id2,"bat_v01",357,48;
+	end;
+}
+
+bat_v01,1,9,3	script	time_out#bat_v01	CLEAR_NPC,{
+OnStart:
+	bg_setcountdown $@ValFreyjaBG1_id1, 20;
+	bg_setcountdown $@ValFreyjaBG1_id2, 20;
+	initnpctimer;
+	end;
+	
+OnStop:
+	stopnpctimer;
+	end;
+
+OnTimer5000:
+	mapannounce "bat_v01", "Marollo VII: Em 15 segundos o Campo de Batalha será esvaziado, fale com o Tenente para pegar sua recompensa!",bc_map,"0x99CC00";
+	end;
+	
+OnTimer10000:
+	mapannounce "bat_v01", "Marollo VII: Em 10 segundos o Campo de Batalha será esvaziado, fale com o Tenente para pegar sua recompensa!",bc_map,"0x99CC00";
+	end;
+	
+OnTimer15000:
+	mapannounce "bat_v01", "Marollo VII: Em 5 segundos o Campo de Batalha será esvaziado, fale com o Tenente para pegar sua recompensa!",bc_map,"0x99CC00";
+	end;
+	
+OnTimer20000:
+	if( getbattleflag("feature.bgqueue") )
+		bg_reserve "bat_v01", true;
+	donpcevent "countdown#bat_v01::OnStop";
+	mapwarp "bat_v01","bat_room",154,150;
+	end;
+}
+
+// Rewards
+//============================================================
+bat_v01,44,51,3	script	Tenente#bat_v01_a	419,{
+	if ($@ValfreyjaBG1_id1 == getcharid(4)) {
+		if ($@ValfreyjaBG1_Victory == 1)
+			callfunc "F_BG_Badge",1,"Guillaume","Valfreyja",9; //Guillaume wins
+		else if ($@ValfreyjaBG1_Victory == 2)
+			callfunc "F_BG_Badge",0,"Guillaume","Valfreyja",9; //Croix wins
+		else
+			callfunc "F_BG_Badge",2,"Guillaume","Valreyja",9; //Tie
+	}
+	else {
+		mes "[Axl Rose]";
+		mes "Por que você está aqui, mercenário de Croix? Tenho certeza de uma vitória contra os tolos de Croix. Ha!";
+		close;
+	}
+	bg_leave;
+	if (!getbattleflag("feature.bgqueue"))
+		warp "bat_room",154,150;
+	end;
+
+OnInit:
+	disablenpc "Tenente#bat_v01_a";
+	end;
+}
+
+bat_v01,360,51,3	script	Tenente#bat_v01_b	415,{
+	if ($@ValfreyjaBG1_id2 == getcharid(4)) {
+		if ($@ValfreyjaBG1_Victory == 1)
+			callfunc "F_BG_Badge",0,"Croix","Valfreyja",9; //Guillaume wins
+		else if ($@ValfreyjaBG1_Victory == 2)
+			callfunc "F_BG_Badge",1,"Croix","Valfreyja",9; //Croix wins
+		else
+			callfunc "F_BG_Badge",2,"Croix","Valfreyja",9; //Tie
+	}
+	else {
+		mes "[Swandery]";
+		mes "Por que você veio aqui como um Guillaume? Você será enviado para onde deveria estar!";
+		close;
+	}
+	bg_leave;
+	if (!getbattleflag("feature.bgqueue"))
+		warp "bat_room",154,150;
+	end;
+
+OnInit:
+	disablenpc "Tenente#bat_v01_b";
+	end;
+}
+
+// Release
+//============================================================
+bat_v01,1,10,3	script	Release all#bat_v01	81,{
+	set .@i, callfunc("F_GM_NPC",1854,0);
+	if (.@i == -1) {
+		mes "Cancelado.";
+		close;
+	} else if (.@i == 0) {
+		end;
+	} else {
+		mes "Posso ajudá-lo?";
+		next;
+		switch(select("Liberar Campo de Batalha.:Cancelar.")) {
+		case 1:
+			mes "Tchau.";
+			close2;
+			mapwarp "bat_v01","bat_room",154,150;
+			end;
+		case 2:
+			mes "Cancelado.";
+			close;
+		}
+	}
+}
+
+// BG Queue makes these scripts useless
+//============================================================
+-	script	BGQueueInit#valfreyja01	-1,{
+	end;
+
+OnInit:
+	if (getbattleflag("feature.bgqueue")) {
+		unloadnpc "Tenente Ari";
+		unloadnpc "Tenente Brendo";
+		unloadnpc "back_bgroomv01a";
+		unloadnpc "back_bgroomv01b";
+	}
+	end;
+}

@@ -1,0 +1,45 @@
+-	script	CustomMonsters	-1,{
+OnInit:
+
+    // IDs dos monstros
+    set .@poporing_id, 1002; // ID do Poporing
+    set .@drops_id, 1113;    // ID do Drops
+
+    // Quantidade de monstros
+    set .@poporing_count, 10; // 10 Poporings
+    set .@drops_count, 10;    // 10 Drops
+
+    // Spawn dos monstros
+    monster .@map$, 0, 0, "Poporing", .@poporing_id, .@poporing_count, "CustomMonsters::OnMobSpawn";
+    monster .@map$, 0, 0, "Drops", .@drops_id, .@drops_count, "CustomMonsters::OnMobSpawn";
+
+    end;
+
+OnMobSpawn:
+    // Obtém o GID do monstro que acabou de spawnar
+    set .@gid, @mob_gid;
+
+    // Verifica se o GID é válido
+    if (.@gid == -1) end;
+
+    // Obtém os dados do monstro
+    getunitdata .@gid, .@data;
+
+    // Aumenta os atributos do monstro
+    set .@data[UMOB_MAXHP], .@data[UMOB_MAXHP] * 2; // Dobra o HP máximo
+    set .@data[UMOB_HP], .@data[UMOB_MAXHP];        // Define o HP atual como o máximo
+    set .@data[UMOB_DEF], .@data[UMOB_DEF] + 50;   // Aumenta a DEF em 50
+    set .@data[UMOB_MDEF], .@data[UMOB_MDEF] + 50; // Aumenta a MDEF em 50
+    set .@data[UMOB_ATKMIN], .@data[UMOB_ATKMIN] * 2; // Dobra o ATK mínimo
+    set .@data[UMOB_ATKMAX], .@data[UMOB_ATKMAX] * 2; // Dobra o ATK máximo
+
+    // Aplica as mudanças no monstro
+    setunitdata .@gid, UMOB_MAXHP, .@data[UMOB_MAXHP];
+    setunitdata .@gid, UMOB_HP, .@data[UMOB_HP];
+    setunitdata .@gid, UMOB_DEF, .@data[UMOB_DEF];
+    setunitdata .@gid, UMOB_MDEF, .@data[UMOB_MDEF];
+    setunitdata .@gid, UMOB_ATKMIN, .@data[UMOB_ATKMIN];
+    setunitdata .@gid, UMOB_ATKMAX, .@data[UMOB_ATKMAX];
+
+    end;
+}

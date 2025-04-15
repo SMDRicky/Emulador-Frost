@@ -1,0 +1,5 @@
+function	script	caixa_legionna	{
+	setarray .@items[0], 50205,50206,50207,50208,50209,50210,50211;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

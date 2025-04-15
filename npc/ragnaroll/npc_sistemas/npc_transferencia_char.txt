@@ -1,0 +1,163 @@
+//===== rAthena Script ======================================= 
+//= transfer_char
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena Project
+//===== Description: ========================================= 
+//= [Official Conversion]
+//= Allow to transfer a char from account A to account B
+//= Statut 1, char id registered
+//= Statut 2, char transfered
+//===== Additional Comments: ================================= 
+//= 1.0 Initial script
+//============================================================ 
+
+function	script	transfer_char	{
+
+.@allow_change_char = 0; //Allow to change the char registered on ticket if he s on same account
+.@allow_delete_registration = 1; //Allow to change the char registered on ticket if he s on same account
+.@allow_online_registration = 0; //Allow the char to be online after registration on a ticket
+.@sign_item = 1; // Allow the book to be signed if there is a char bound to it
+.@name_id = 23817; //id of item
+
+.@unique_id = getticketuniqueid();
+
+mes "[Transferir caractere]";
+mes "Este recurso permite transferir um char de uma conta para outra.";
+mes "Lembre-se que você precisa cadastrar um caracter da sua conta antes de poder transferir o ticket para outra pessoa.";
+next;
+
+set .@counta,query_sql("SELECT `origin_accountid`,`origin_charid`,`status` FROM `transfer_char` WHERE `unique_id` = " + .@unique_id + "",.@origin_accountid,.@origin_charid,.@status);
+if(.@counta == 0){
+	mes "Você quer anexar seu char " + strcharinfo(0) + " para que o ticket seja transferido para outra conta?";
+	next;
+	menu"Sim",suscribe,"Não",exit;
+} else {
+	if(.@origin_accountid == getcharid(3) && .@origin_charid != getcharid(0)){
+		query_sql("SELECT `name` FROM `char` WHERE char_id = "+.@origin_charid+"" ,@char_name$);
+		if(.@allow_change_char || .@allow_delete_registration){
+			if(.@allow_change_char && .@allow_delete_registration)
+				menu "Anexe O Selo a " +strcharinfo(0),suscribe," Remova o anexo para "+@char_name$,delete," Nada",exit;
+			else if(.@allow_change_char && !.@allow_delete_registration)
+				menu "Anexe O Selo a " +strcharinfo(0),suscribe,"Não",exit;
+			else if(!.@allow_change_char && .@allow_delete_registration)
+				menu "Remova o anexo para"+@char_name$,delete,"Nada",exit;
+		} else {
+			mes "O personagem " + @char_name$ + " já está cadastrado no ticket, você não pode mais alterá-lo";
+			close;
+		}
+	} else if(.@origin_accountid == getcharid(3) && .@origin_charid == getcharid(0)){
+		mes "Você é " + strcharinfo(0) + " e já está vinculado ao ticket.";
+		close;
+	} else if (.@origin_accountid != getcharid(3) ){
+		query_sql("SELECT `name` FROM `char` WHERE char_id = "+.@origin_charid+"" ,@char_name$);
+		mes "Você quer transferir o char " + @char_name$ + " para sua conta?";
+		menu"Sim",transfer,"Não",exit;
+	}
+	end;
+}
+
+exit:
+	mes "Ok, talvez mais tarde";
+	close;
+	
+delete:
+	if(.@sign_item){
+		mes "Você será desconectado durante este processo";
+		next;
+	}
+	query_sql("DELETE FROM `transfer_char` WHERE `unique_id` = "+.@unique_id);
+	mes "O Selo não está mais anexado a um char ";
+	if(.@sign_item){
+		kickplayer(getcharid(0));
+		sleep(2);
+		query_sql("UPDATE `inventory` SET `card0` = 0, `card2` = 0, `card3` = 0 WHERE `unique_id` = "+.@unique_id);	
+	} else
+		close;
+	end;
+
+suscribe:
+	//Check if char is already registred to book with status 1 (in process)
+	set .@countsell,query_sql("SELECT `origin_charid` FROM `transfer_char` WHERE `status` = 1 AND `origin_charid` = " + getcharid(0) + "",.@lorigin_charid);
+	if(.@countsell > 0){
+		mes "Seu char já está vinculado a um ticket, você não pode se cadastrar em mais de um";
+		close;
+	}
+
+	if(!.@allow_online_registration || .@sign_item){
+		mes "Você será desconectado durante este processo";
+		next;
+	}
+
+	if(.@counta == 0)
+		query_sql("INSERT INTO `transfer_char` (`unique_id`,`origin_accountid`,`origin_charid`,`status`) VALUES("+.@unique_id+","+getcharid(3)+","+getcharid(0)+",1)");
+	else
+		query_sql("UPDATE `transfer_char` SET `origin_charid` = "+getcharid(0)+" WHERE `unique_id` = "+.@unique_id);
+
+	mes "Está tudo bem, seu char aparecerá agora no mercado ao vivo";
+	mes "Seu ingresso será armazenado em sua Kafra.";
+	if(!.@allow_online_registration || .@sign_item){
+		.@char_id_temp = getcharid(3);
+		.@card2 = getcharid(0)&0xffff;
+		.@card3 = (getcharid(0)>>16)&0xffff;
+		kickplayer(getcharid(0));
+		sleep(2);
+		query_sql("DELETE FROM `inventory` WHERE `unique_id` = "+.@unique_id);
+		if(.@sign_item)
+			query_sql("INSERT INTO `storage` (`account_id`,`nameid`,`amount`,`identify`,`unique_id`,`card0`,`card2`,`card3`) VALUES("+.@char_id_temp+","+.@name_id+",1,1,"+.@unique_id+",254,"+.@card2+","+.@card3+")");
+		else
+			query_sql("INSERT INTO `storage` (`account_id`,`nameid`,`amount`,`identify`,`unique_id`) VALUES("+.@char_id_temp+","+.@name_id+",1,1,"+.@unique_id+")");
+				
+	} else {
+		query_sql("INSERT INTO `storage` (`account_id`,`nameid`,`amount`,`identify`,`unique_id`) VALUES("+.@char_id_temp+","+.@name_id+",1,1,"+.@unique_id+")");
+		close;
+	}
+	end;
+
+transfer:
+	set .@countslot,query_sql("SELECT `char_num` FROM `char` WHERE `account_id` = " + getcharid(3) + "",.@slots);
+	if(.@countslot == 15){
+		mes "Não há mais espaço livre em sua conta, a transferência não é possível";
+		close;
+	}
+
+	// Check if there is a free slot on destination
+	for(.@i = 0; .@i < 15; .@i++){
+		.@busy = 0;
+		for(.@j = 0; .@j < .@countslot; .@j++){
+			if(.@slots[.@j] == .@i)
+				.@busy = 1;
+		}
+		if(.@busy == 0){
+			.@free = .@i;
+			break;
+		}
+	}
+
+	query_sql("UPDATE `transfer_char` SET `destination_accountid` = "+getcharid(3)+", `transfert_date` = "+gettimetick(2)+", `status` = 2 WHERE `unique_id` = "+.@unique_id);
+	if(isloggedin(.@origin_accountid,.@origin_charid)){
+		@char_name$ = strcharinfo(0,.@origin_charid);
+		kickplayer(.@origin_charid);
+	} else {
+		query_sql("SELECT `name` FROM `char` WHERE char_id = "+.@origin_charid+"" ,@char_name$);
+	}
+	mes "Volte para a seleção de personagens para ver seu novo personagem " + @char_name$;
+
+	kickplayer(getcharid(0));
+	query_sql("DELETE FROM `inventory` WHERE `unique_id` = "+.@unique_id);	
+	query_sql("UPDATE `char` SET `account_id` = "+getcharid(3)+", `char_num` = "+.@free+" WHERE `char_id` = "+.@origin_charid);
+
+end;
+
+}
+
+-	script	ticket_check_login	-1,{
+	OnPCLoginEvent:
+	set .@countsell,query_sql("SELECT `origin_charid` FROM `transfer_char` WHERE `status` = 1 AND `origin_charid` = " + getcharid(0) + "",.@lorigin_charid);
+	if(.@countsell > 0 && !.@allow_online_registration){
+		mes "Você não pode fazer login enquanto seu char não for vendido";
+		kickplayer(getcharid(0));
+	}
+	end;
+}

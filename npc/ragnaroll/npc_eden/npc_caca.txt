@@ -1,0 +1,265 @@
+moc_para01,27,35,3	script	Missão de Caça	635,{
+    function Ac;
+    mes "[Missão de Caça]";
+    mes "Bem-vindo, caçador!";
+    mes "Aqui está o progresso da sua missão:";
+    for(.@i=0;.@i<getarraysize(.CataName$);.@i++){
+        if(getd(Ac() + "COM_" + .@i)){
+            mes .CataName$[.@i] + ": ^00FF00Completo^000000";
+            getitem 35022, .CataRP[.@i];
+            if(.ExpServerRate){
+                getexp .CataBXP[.@i],.CataJXP[.@i];
+            }else{
+                getexp2 .CataBXP[.@i],.CataJXP[.@i];
+            }
+            if(getd(".IRD_" + .@i)){
+                for(.@j=0;.@j<getarraysize(getd(".IRD_" + .@i));.@j++){
+                    getitem(getd(".IRD_" + .@i + "[" + .@j + "]"),getd(".CRD_" + .@i + "[" + .@j + "]"));
+                }
+            }
+            setd(Ac() + "CD_" + .@i,gettimetick(2) + (.CataCD[.@i] * 60 * 60));
+            setd(Ac() + "COM_" + .@i,false);
+            setd(Ac() + "ID_" + .@i,0);
+            setd(Ac() + "C_" + .@i,0);
+            setd(Ac() + "CC_" + .@i,0);
+            continue;
+        }
+        .@CD = getd(Ac() + "CD_" + .@i);
+        if(.@CD > gettimetick(2)){
+            mes .CataName$[.@i] + ": " + gettimestr("%Y-%m/%d %H:%M:%S",21,.@CD);
+            continue;
+        }
+        if(getd(Ac() + "ID_" + .@i)){
+            mes .CataName$[.@i] + "(" + getd(Ac() + "CC_" + .@i) + "/" + getd(Ac() + "C_" + .@i) + ") " + strmobinfo(1,getd(Ac() + "ID_" + .@i));
+            continue;
+        }
+        mes .CataName$[.@i] + ": ^FF0000Nenhum^000000";
+    }
+    .@s1 = select("[»] Abrir Loja:" + implode(.CataName$,":") + ":Visualizar Missões em Andamento") - 2;
+    clear;
+    if(.@s1 == -1){
+        callshop "moeda_caca", 1;
+        end;
+    }
+    if(.@s1 == getarraysize(.CataName$)){
+        callsub ViewActiveQuests;
+        end;
+    }
+    .@CD = getd(Ac() + "CD_" + .@s1);
+    if(.@CD > gettimetick(2)){
+        mes "Você está sob o efeito de resfriamento.";
+        mes "Tente novamente depois " + gettimestr("%Y-%m/%d %H:%M:%S",21,.@CD);
+        end;
+    }
+    if(getd(Ac() + "ID_" + .@s1)){
+        mes "O progresso da sua missão:";
+        mes "(" + getd(Ac() + "CC_" + .@s1) + "/" + getd(Ac() + "C_" + .@s1) + ") " + strmobinfo(1,getd(Ac() + "ID_" + .@s1));
+        if(.AllowDeleteQuest){
+            mes "Você gostaria de excluir a missão?";
+            if(select("Sim:Não") == 2)
+                end;
+            mes "Ao excluir a missão você não receberá nenhuma recompensa.";
+            if(.ApplyCoolDownOnDelete) mes "E o cooldown será aplicado!";
+            mes "Tem certeza!?";
+            if(select("Sim:Não") == 2)
+                end;
+            clear;
+            if(.ApplyCoolDownOnDelete){
+                setd(Ac() + "CD_" + .@s1,gettimetick(2) + (.CataCD[.@s1] * 60 * 60));
+            }
+            setd(Ac() + "ID_" + .@s1,0);
+            setd(Ac() + "C_" + .@s1,0);
+            setd(Ac() + "CC_" + .@s1,0);
+            mes "Sua missão foi excluída!";
+            end;
+        }
+        end;
+    }
+    if(BaseLevel < .CataMN_L[.@s1] || BaseLevel > .CataMX_L[.@s1]){
+        mes "Você precisa estar entre os níveis " + .CataMN_L[.@s1] + " e " + .CataMX_L[.@s1] + " para conseguir essa missão!";
+        end;
+    }
+    mes "Você gostaria de receber uma missão?";
+    if(select("Sim:Não") == 2)
+        end;
+    copyarray(.@mid,getd(".m_id_" + .@s1),getarraysize(getd(".m_id_" + .@s1)));
+    .@r = rand(getarraysize(.@mid));
+    copyarray(.@mmn,getd(".m_mn_" + .@s1),getarraysize(getd(".m_mn_" + .@s1)));
+    copyarray(.@mmx,getd(".m_mx_" + .@s1),getarraysize(getd(".m_mx_" + .@s1)));
+    setd(Ac() + "ID_" + .@s1,.@mid[.@r]);
+    setd(Ac() + "C_" + .@s1,rand(getd(".m_mn_" + .@s1 + "[" + .@r + "]"),getd(".m_mx_" + .@s1 + "[" + .@r + "]")));
+    setd(Ac() + "CC_" + .@s1,0);
+    mes "Por favor mate:";
+    mes "(" + getd(Ac() + "CC_" + .@s1) + "/" + getd(Ac() + "C_" + .@s1) + ") " + strmobinfo(1,getd(Ac() + "ID_" + .@s1));
+end;
+
+OnNPCKillEvent:
+    for(.@i=0;.@i<getarraysize(.CataName$);.@i++){
+        if(getd(Ac() + "ID_" + .@i) == killedrid && !getd(Ac() + "COM_" + .@i)){
+            setd(Ac() + "CC_" + .@i,getd(Ac() + "CC_" + .@i) + 1);
+            dispbottom "Missão de Caça [" + .CataName$[.@i] + "]: (" + getd(Ac() + "CC_" + .@i) + "/" + getd(Ac() + "C_" + .@i) + ") " + strmobinfo( 1,getd(Ac() + "ID_" + .@i));
+            if(getd(Ac() + "CC_" + .@i) >= getd(Ac() + "C_" + .@i)){
+                dispbottom "Sua missão de caça " + .CataName$[.@i] + " está concluída. ^FF00FFParabéns!^000000";
+                specialeffect2 EF_FLOWERPETAL;
+                setd(Ac() + "COM_" + .@i,true);
+            }
+        }
+    }
+end;
+
+OnHuntingCheck:
+    dispbottom "Progresso da sua missão de caça:";
+    for(.@i=0;.@i<getarraysize(.CataName$);.@i++){
+        if(getd(Ac() + "COM_" + .@i)){
+            dispbottom .CataName$[.@i] + ": ^00FF00Completo^000000";
+            continue;
+        }
+        .@CD = getd(Ac() + "CD_" + .@i);
+        if(.@CD > gettimetick(2)){
+            dispbottom .CataName$[.@i] + ": " + gettimestr("%Y-%m/%d %H:%M:%S",21,.@CD);
+            continue;
+        }
+        if(getd(Ac() + "ID_" + .@i)){
+            dispbottom .CataName$[.@i] + "(" + getd(Ac() + "CC_" + .@i) + "/" + getd(Ac() + "C_" + .@i) + ") " + strmobinfo(1,getd(Ac() + "ID_" + .@i));
+            continue;
+        }
+        dispbottom .CataName$[.@i] + ": Nenhum";
+    }
+end;
+
+function	Ac	{
+    if(.AccountBase)
+        return "#" + .variable_name$;
+    return .variable_name$;
+}
+
+function	AddCata	{
+    .@s = getarraysize(.CataName$);
+    set getarg(1),.@s;
+    .CataName$[.@s] = getarg(0);
+    .CataMN_L[.@s] = getarg(2);
+    .CataMX_L[.@s] = getarg(3);
+    .CataCD[.@s] = getarg(4);
+    .CataBXP[.@s] = getarg(5);
+    .CataJXP[.@s] = getarg(6);
+    .CataRP[.@s] = getarg(7);
+    for(.@i=8;.@i<getargcount();.@i+=2){
+        .@s2 = getarraysize(getd(".IRD_" + .@s));
+        setd ".IRD_" + .@s + "[" + .@s2 + "]",getarg(.@i);
+        setd ".CRD_" + .@s + "[" + .@s2 + "]",getarg(.@i+1);
+    }
+    return;
+}
+
+function	AddMob	{
+    .@s = getarraysize(getd(".m_id_" + getarg(0)));
+    setd ".m_id_" + getarg(0) + "[" + .@s + "]",getarg(1);
+    setd ".m_mn_" + getarg(0) + "[" + .@s + "]",getarg(2);
+    setd ".m_mx_" + getarg(0) + "[" + .@s + "]",getarg(3);
+    return;
+}
+
+function	ViewActiveQuests	{
+    mes "Aqui estão suas missões ativas:";
+    for(.@i=0;.@i<getarraysize(.CataName$);.@i++){
+        if(getd(Ac() + "ID_" + .@i)){
+            mes .CataName$[.@i] + " (" + getd(Ac() + "CC_" + .@i) + "/" + getd(Ac() + "C_" + .@i) + "): " + strmobinfo(1,getd(Ac() + "ID_" + .@i));
+        }
+    }
+    close;
+}
+
+OnInit:
+    .AccountBase = true;//with whether or not the quests are on account or on character
+    .ExpServerRate = false;//get exp according to the server rate?
+    .AllowDeleteQuest = true;//allow player to delete his quest without getting the reward
+    .ApplyCoolDownOnDelete = true;//whether or not apply cooldown on deleting the quest.
+    .variable_name$ = "HUNT_Q_";    //keep in mind if you changed this you need to change the points in the shop!
+    bindatcmd("MyQuest",strnpcinfo(3)+"::OnHuntingCheck",0,99);
+    freeloop(1);
+    //You can add as many categories as you want!
+    //recommended not more than 25!
+    //AddCata(<"name">,<.var>,<mini level>,<max level>,<cooldown in hours>,<base exp reward>,<job exp reward>,<point reward>,<ITEM ID>,<COUNT>{,<ITEM ID>,<COUNT>{,<ITEM ID>,<COUNT>}})
+    AddCata("^339966[»]^000000 Missão Facil ",.Easy,1,50,1,5000,250,2);
+    AddCata("^339966[»]^000000 Missão Normal ",.Normal,25,75,2,10000,1000,6);
+    AddCata("^339966[»]^000000 Missão Dificil ",.Hard,50,99,6,25000,5000,25);
+    AddCata("^339966[»]^000000 Missão Pesadelo ",.Indeterminate,75,99,8,50000,10000,50);    
+
+    //You can add as many mobs as you want!
+    //AddMob(<.var>,<mob id>,<min count>,<max count>);
+
+    AddMob(.Easy,1010,50,100); //salgueiro
+    AddMob(.Easy,1002,50,100); //poring
+    AddMob(.Easy,1007,50,100); //fabre
+    AddMob(.Easy,1008,50,100); //pupa
+    AddMob(.Easy,1004,50,100); //zangao
+    AddMob(.Easy,1011,50,100); //chonchon
+    AddMob(.Easy,1063,50,100); //luntico
+    AddMob(.Easy,1024,50,100); //talo de verme
+    AddMob(.Easy,1014,50,100); //esporo
+    AddMob(.Easy,1068,100,175); //hidra
+    AddMob(.Easy,1034,150,200); //sapo de thara
+    AddMob(.Easy,1070,100,175); //kukre
+    
+    AddMob(.Normal,1152,125,175); //ORC_SKELETON
+    AddMob(.Normal,1153,125,175); //orc zumbi
+    AddMob(.Normal,1023,125,175); //orc guerreiro
+    AddMob(.Normal,1177,125,175); //zenorc
+    AddMob(.Normal,1271,125,175); //crocodilo
+    AddMob(.Normal,1026,125,175); //munak
+    AddMob(.Normal,1188,125,175); //bongun
+    AddMob(.Normal,1178,150,250); //zerom
+    AddMob(.Normal,1164,125,200); //requiem
+    AddMob(.Normal,1686,125,175); //orc baby
+    AddMob(.Normal,1117,150,250); //duida maligno
+    AddMob(.Normal,1140,125,200); //marduk
+    AddMob(.Normal,1170,150,250); //sohee
+    AddMob(.Normal,1617,75,125); //fornalha velha
+
+    AddMob(.Hard,1316,150,200); //soldado
+    AddMob(.Hard,1319,150,200); //congelador
+    AddMob(.Hard,1314,150,200); //batedor
+    AddMob(.Hard,1318,150,200); //aquecedor
+    AddMob(.Hard,1109,150,200); //deviruchi
+    AddMob(.Hard,1061,150,200); //pesadelo
+    AddMob(.Hard,1192,150,200); //alma penada
+    AddMob(.Hard,1197,150,200); //zumbi prisioneiro
+    AddMob(.Hard,1682,150,200); //remover
+    AddMob(.Hard,1148,200,275); //medusa
+    AddMob(.Hard,1163,200,275); //raydric
+    AddMob(.Hard,1276,200,275); //anolian
+    AddMob(.Hard,1276,150,200); //raydric arqueiro
+    AddMob(.Hard,1195,175,225); //rideword
+    AddMob(.Hard,1656,100,150); //kavac
+    AddMob(.Hard,1655,100,150); //errende
+    AddMob(.Hard,1657,100,150); //laurell
+    AddMob(.Hard,1653,100,150); //wickebine
+    AddMob(.Hard,1654,100,150); //armeyer
+    AddMob(.Hard,1652,85,125); //Egnigem
+    AddMob(.Hard,1681,11,33); //Gemini
+    AddMob(.Hard,1207,200,275); //sting
+    AddMob(.Hard,1207,100,150); //sting
+    AddMob(.Hard,1154,175,225); //pasana
+    AddMob(.Hard,1412,150,156); //EVIL_CLOUD_HERMIT
+
+    AddMob(.Indeterminate,1833,70,75); //KASA 
+    AddMob(.Indeterminate,1831,40,45); //SALAMANDER
+    AddMob(.Indeterminate,1830,20,30); //BOW_GUARDIAN
+    AddMob(.Indeterminate,1829,20,30); //SWORD_GUARDIAN
+    AddMob(.Indeterminate,1839,15,20); //BYORGUE
+    AddMob(.Indeterminate,1870,50,70); //NECROMANCER
+    AddMob(.Indeterminate,1867,70,90); //BANSHEE
+    AddMob(.Indeterminate,1869,80,90); //FLAME_SKULL
+    AddMob(.Indeterminate,1864,79,90); //ZOMBIE_SLAUGHTER
+    AddMob(.Indeterminate,1865,79,90); //RAGGED_ZOMBIE
+    AddMob(.Indeterminate,1638,30,35); //cecil
+    AddMob(.Indeterminate,1637,30,35); //margareth
+    AddMob(.Indeterminate,1636,30,35); //howard
+    AddMob(.Indeterminate,1635,30,35); //eremes
+    AddMob(.Indeterminate,1634,30,35); //seyren
+    AddMob(.Indeterminate,1638,30,35); //Kathryne
+    AddMob(.Indeterminate,1777,90,100); //ICE_TITAN
+
+	waitingroom "Missão de Caça",0;
+end;
+}

@@ -1,0 +1,5 @@
+function	script	caixa_legionble	{
+	setarray .@items[0], 50174,50175,50176,50177,50178,50179,50180;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

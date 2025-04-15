@@ -1,0 +1,93 @@
+// Skill Damage Adjustment Database
+//
+// Structure of Database:
+// SkillName,Caster,Map,Damage against Players{,Damage against Mobs{,Damage against Bosses{,Damage against Other}}}
+//
+// Caster: The groups for which the adjustment takes effect. (bitmask)
+//		BL_PC = Player
+//		BL_MOB = Monster
+//		BL_PET = Pet
+//		BL_HOM = Homunculus
+//		BL_MER = Mercenary
+//		BL_ELEM = Elemental
+//
+// Map:
+// 		1    - Normal (the maps that aren't classified as these maps below)
+// 		2    - PVP
+// 		4    - GVG
+// 		8    - Battlegrounds
+// 		16   - 'skill_damage' mapflag
+// Restricted zones - they're configured by 'restricted <number>' mapflag
+// 		32   - Zone 1
+// 		64   - Zone 2
+// 		128  - Zone 3
+// 		256  - Zone 4
+// 		512  - Zone 5
+// 		1024 - Zone 6
+// 		2048 - Zone 7
+//
+// Notes:
+//  	Damage is a percentage between -100 and 100000.
+//  	Negative values decrease damage and positive values increase it (0 = no change).
+//
+// Examples:
+// MC_MAMMONITE,BL_PC,1,50 // In normal maps, players deal +50% damage to other players with Mammonite.
+// MO_EXTREMITYFIST,BL_PC,6,-50 // In PVP and GVG, players deal -50% (half) damage to other players with Asura Strike.
+// AB_ADORAMUS,BL_PC,6,50,0,10,15 // In PVP and GVG, players deal +50% damage to other players, +0% to mobs, +10% to bosses, and +15% to other with Adoramus.
+
+//RG_BACKSTAP,BL_PC,7,0,-20,-25,0
+NPC_EARTHQUAKE,BL_MOB,7,-40,-40,-40,-40
+MG_FIREBALL,BL_PC,1,400,400,400,400
+MG_THUNDERSTORM,BL_PC,1,50,50,50,50
+MG_FROSTDIVER,BL_PC,1,400,400,400,400
+MG_NAPALMBEAT,BL_PC,1,300,300,300,300
+MG_SOULSTRIKE,BL_PC,1,150,150,150,150
+HW_NAPALMVULCAN,BL_PC,1,100,100,100,100
+NJ_HYOUSENSOU,BL_PC,1,50,50,50,50
+NJ_KOUENKA,BL_PC,1,60,60,60,60
+NJ_RAIGEKISAI,BL_PC,1,120,120,120,120
+NJ_HYOUSYOURAKU,BL_PC,1,100,100,100,100
+GS_FULLBUSTER,BL_PC,1,100,100,100,100
+GS_TRACKING,BL_PC,1,200,200,200,200
+GS_RAPIDSHOWER,BL_PC,1,50,50,50,50
+BA_MUSICALSTRIKE,BL_PC,1,100,100,100,100
+DC_THROWARROW,BL_PC,1,100,100,100,100
+ASC_METEORASSAULT,BL_PC,1,100,100,100,100
+GS_DUST,BL_PC,1,100,100,100,100
+GS_SPREADATTACK,BL_PC,1,100,100,100,100
+NJ_HUUMA,BL_PC,1,30,30,30,30
+NJ_KUNAI,BL_PC,1,150,150,150,150
+NJ_SYURIKEN,BL_PC,1,150,150,150,150
+NJ_HUUJIN,BL_PC,1,40,40,40,40
+NJ_BAKUENRYU,BL_PC,1,100,100,100,100
+NJ_KASUMIKIRI,BL_PC,1,200,200,200,200
+NJ_KIRIKAGE,BL_PC,1,200,200,200,200
+KN_BRANDISHSPEAR,BL_PC,1,100,100,100,100
+KN_BOWLINGBASH,BL_PC,1,50,50,50,50
+KN_SPEARSTAB,BL_PC,1,100,100,100,100
+KN_SPEARBOOMERANG,BL_PC,1,100,100,100,100
+KN_PIERCE,BL_PC,1,100,100,100,100
+LK_SPIRALPIERCE,BL_PC,1,60,60,60,60
+CR_HOLYCROSS,BL_PC,1,200,200,200,200
+NPC_DARKCROSS,BL_PC,1,200,200,200,200
+AL_HOLYLIGHT,BL_PC,1,200,200,200,200
+AM_ACIDTERROR,BL_PC,1,30,30,30,30
+AM_DEMONSTRATION,BL_PC,1,600,600,600,600
+NPC_DARKSTRIKE,BL_PC,1,50,50,50,50
+MG_COLDBOLT,BL_PC,1,30,30,30,30
+MG_FIREBOLT,BL_PC,1,30,30,30,30
+MG_LIGHTNINGBOLT,BL_PC,1,30,30,30,30
+//WZ_JUPITEL,BL_PC,1,-40,-40,-40,-40
+WZ_EARTHSPIKE,BL_PC,1,100,100,100,100
+WZ_HEAVENDRIVE,BL_PC,1,100,100,100,100
+RG_RAID,BL_PC,1,100,100,100,100
+RG_BACKSTAP,BL_PC,1,-40,-40,-40,-40
+WZ_SIGHTRASHER,BL_PC,1,400,400,400,400
+WZ_WATERBALL,BL_PC,1,50,50,50,50
+NJ_KAMAITACHI,BL_PC,1,60,60,60,60
+SG_SUN_WARM,BL_PC,1,-50,-50,-50,-50
+WZ_VERMILION,BL_PC,1,100,100,100,100
+ASC_BREAKER,BL_PC,1,-30,-30,-30,-30
+MC_MAMMONITE,BL_PC,1,-20,-20,-20,-20
+SN_SHARPSHOOTING,BL_PC,1,50,50,50,50
+PR_MAGNUS,BL_PC,1,15,15,15,15

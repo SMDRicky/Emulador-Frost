@@ -1,0 +1,28 @@
+prontera,139,179,5	script	Teste de Dano	953,{
+
+mes "^339966[ Teste de Dano ]^000000";
+mes "Olá , aventureiro! Está pronto para testar seu dano? Escolha a arena para começar.";
+menu "^3CB371[>]^000000 Arena 1",L_Arena1,"^3CB371[>]^000000 Arena Area",L_Arena2,"^ff0000[>]^000000 Não, obrigado",L_Nao;
+
+L_Arena1:
+mes "^339966[ Teste de Dano ]^000000";
+mes "Você escolheu a Arena 1. Boa sorte!";
+warp "malangdo",221,263;
+close;
+
+L_Arena2:
+mes "^339966[ Teste de Dano ]^000000";
+mes "Você escolheu a Arena de teste de area. Boa sorte!";
+warp "malangdo",134,272;
+close;
+
+L_Nao:
+mes "^339966[ Teste de Dano ]^000000";
+mes "Tudo bem, se mudar de ideia, estarei aqui.";
+close;
+
+OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 13;
+	setunittitle getnpcid(0), "[Campo de Treinamento]";
+end;
+}

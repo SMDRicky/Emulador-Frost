@@ -1,0 +1,648 @@
+//===== rAthena Script =======================================
+//= Dynamic Intelligent Vending Area
+//===== By: ==================================================
+//= Vykimo (Paid script - Forbidden to resale)
+//===== Current Version: =====================================
+//= 2.1
+//===== Description: =========================================
+//= Number of cases :
+//= a : 131
+//= b : 122
+//= c : 98
+//= d : 91
+//= Total : 1768
+//= BE CAREFULL - @load should not be usable by merchants.
+//===== Functionnality: ======================================
+//= Choose empty case for merchants - OK
+//= Cases are filled following a defined order - OK
+//= Warp into concentrated point - OK
+//= Shop state (empty cells) are checked every night - OK
+//= Steward/Stewardess are walking on the map and propose
+//=   to warp to the center of the map (Organizador) - OK
+//============================================================
+
+// Usefull function
+//============================================================
+function	script	TrouverIndice	{	
+	for(.@i=0;.@i<getarraysize(getarg(0));.@i++)
+		if(getelementofarray(getarg(0),.@i) == getarg(1)) break;
+		
+	if(.@i == getarraysize(getarg(0)) && getelementofarray(getarg(0),.@i) != getarg(1)) 
+		return -1;
+	else return .@i;
+}
+function	script	getLocationAccId	{
+	.@accid = getarg(0);
+	freeloop(1);
+	.@m = 0;
+	for(.@m=0;.@m<getarraysize(getvariableofnpc(.EndColumn,"Organizador#vendarea"));.@m++) {
+		for(.@l=0;.@l<getarraysize(getvariableofnpc(.Letters$,"Organizador#vendarea"));.@l++) {
+			.@L$ = getvariableofnpc(.Letters$[.@l],"Organizador#vendarea");
+			for(.@k=0;.@k<getarraysize(getd("$MatriceCharId"+.@L$+""+.@m));.@k++) {
+				if(getd("$MatriceCharId"+.@L$+""+.@m+"["+.@k+"]") == .@accid)
+					return getvariableofnpc(getd(".Matrice"+.@L$+""+.@m+"$["+.@k+"]"),"Organizador#vendarea") + "_" + .@L$ + "_" + .@m + "_" + .@k;
+			}
+		}
+	}
+	freeloop(0);
+	return "";
+}
+function	script	instrcharinfo	{	
+	.@nb = query_sql("SELECT name FROM `char` WHERE char_id = "+ getarg(0), .@name$);
+	if(.@nb == 0)
+		return "";
+	return .@name$[0];
+}
+
+// Warper
+//============================================================
+prontera,161,176,5	script	Centro Comerciante	857,{
+
+    .@mapa$ = "vendarea"; // Alterado para o nome do mapa desejado
+    .@playerCount = getmapusers(.@mapa$); // Conta os jogadores no mapa
+
+.@npc$ = "^2c3571[ Centro Comerciante ]^000000";
+mes .@npc$;
+mes "Você quer ir para a área de vendas?";
+mes "Atualmente, há ^f01d0e" + .@playerCount + "^000000 mercador(es) em Vendarea.";
+next;
+if(select("Sim!:Não") == 2) close;
+OnMercado:
+.@current$ = $@CurrentVendarea$;
+setarray .@possibles$[0], getvariableofnpc(.DefaultWarpingPoint$,"Organizador#vendarea");
+.@max = TrouverIndice(getvariableofnpc(.FillOrder$,"Organizador#vendarea"),.@current$); 
+if(.@current$ != "" && .@max != -1) {
+	for(.@f=0;.@f<.@max;.@f++) {
+		copyarray .@possibles$[getarraysize(.@possibles$)], 
+		getelementofarray(getvariableofnpc(getd(".WarpingPoints_"+ getelementofarray(getvariableofnpc(.FillOrder$,"Organizador#vendarea"),.@f) +"$"),"Organizador#vendarea"),0),
+		getarraysize(getvariableofnpc(	getd(".WarpingPoints_"+getvariableofnpc(.FillOrder$,"Organizador#vendarea")+"$")	,"Organizador#vendarea"));
+	}
+}
+.@dest = rand(getarraysize(.@possibles$));
+explode(.@dest_final$, .@possibles$[.@dest], "_");
+	
+warp "vendarea",atoi(.@dest_final$[0]),atoi(.@dest_final$[1]);
+//close;
+end;//close;
+
+end;
+OnTimer1:
+delwaitingroom;
+waitingroom "Centro Comerciante", 0;
+//emotion "5e_an",0;
+end;
+OnTimer3000:
+delwaitingroom;
+waitingroom "Sala dos Mercadores", 0;
+end;
+
+OnTimer5000:
+delwaitingroom;
+waitingroom "Acesso: @market", 0;
+end;
+
+OnTimer7000:
+delwaitingroom;
+//waitingroom "@market", 0;
+stopnpctimer;
+setnpctimer 0;
+//delwaitingroom;
+startnpctimer;
+
+end;
+OnInit:
+setcell "prontera",0,0,300,300,cell_novending,1;
+	initnpctimer;
+end;
+}
+
+// Engine + Organizador
+//============================================================
+vendarea,96,99,3	script	Organizador#vendarea	10180,{
+function getEmptyCase;
+donpcevent "Organizador#vendarea::OnCheckState";
+mes "[" + strnpcinfo(1) + "]";
+if(.StateCheckedVendarea) {
+	mes "Aguarde, estou recebendo informações sobre vagas livres... Volte em alguns segundos~";
+	close;
+}
+if((checkcart() && getskilllv(41) > 0 && BaseClass == Job_Merchant || BaseJob == Job_Super_Novice) || countitem(12548) > 0) {
+	if(callfunc ("getLocationAccId", getcharid(0)) == "") {
+		mes "Você quer abrir sua própria loja de venda/compra?";
+		switch(select("~ Sim, por favor, me dê uma vaga grátis.:~ Voltar para Prontera:~ Não, obrigado")) {
+		case 1:
+			mes "Vamos! Que o sucesso e a riqueza estejam com você.";
+			close2;
+			specialeffect 12;
+			explode(.@T$, getEmptyCase(), "_");
+			warp "vendarea", atoi(.@T$[0]),atoi(.@T$[1]);
+			set getd("$MatriceCharId"+ .@T$[2] + "" + .@T$[3] + "["+.@T$[4]+"]"), getcharid(0);
+			end;
+		case 2:
+			close2;
+			warp "prontera",160,185;
+			end;
+		case 3:
+			close;
+		}
+	} else {
+		mes "Você já está localizado em uma cela.";
+	}
+} else {
+	mes "Você tem que ser um comerciante, ter um carrinho e ter habilidade em vendas para lidar comigo.";
+	switch(select("~ Voltar para Prontera:~ Ok, obrigado")) {
+		case 1:
+			close2;
+			warp "prontera",160,185;
+			end;
+		case 2:
+			close;		
+	}
+}
+//close;
+end;
+
+OnPCLogoutEvent:
+if(strcharinfo(3) == "vendarea") {
+	explode(.@T$, callfunc ("getLocationAccId", getcharid(0)), "_");
+	if(.@T$[0] != "") {
+		set getd("$MatriceCharId"+ .@T$[2] + "" + .@T$[3] + "["+.@T$[4]+"]"), 0;
+		set getd("$Matrice"+ .@T$[2] + "" + .@T$[3] + "["+.@T$[4]+"]"), 1;
+	}	
+	//warp "SavePoint",0,0;
+}
+end;
+
+OnInit:
+// Areas :
+//   c3    b3  | c2    b2
+//	     3           2
+//	 a3	   d3   | a2    d2 
+//  ----------------------
+//   c0    b0  | c1    b1
+//	     0           1
+//	 a0	   d0   | a1    d1 
+setarray .FillOrder$[0], "d3", "a2", "b0", "c1", "b3", "c2", "d0", "a1", "a3", "c0", "d2", "b1", "c3", "a0", "b2", "d1";
+// Shop spawn at the nearest point around mapcenter 
+setarray .MapCenter[0],	100,	100;
+//
+// Below this line :
+// Do not touch if you don't know what you do
+// ============================================
+// Available warping points for each area :
+.DefaultWarpingPoint$ = "94_97";	// x_y
+setarray .WarpingPoints_d3$[0], 	"74_100", "94_125";
+setarray .WarpingPoints_a2$[0], 	"118_100", "99_125";
+setarray .WarpingPoints_b0$[0], 	"75_98", "94_73";
+setarray .WarpingPoints_c1$[0], 	"118_98", "99_73";
+setarray .WarpingPoints_b3$[0], 	"94_173", "67_150";
+setarray .WarpingPoints_c2$[0], 	"99_173", "126_150";
+setarray .WarpingPoints_d0$[0], 	"94_26", "67_49";
+setarray .WarpingPoints_a1$[0], 	"99_26", "126_49";
+setarray .WarpingPoints_a3$[0], 	"19_101", "25_149";
+setarray .WarpingPoints_c0$[0], 	"19_97", "25_50";
+setarray .WarpingPoints_d2$[0], 	"168_149", "175_101";
+setarray .WarpingPoints_b1$[0], 	"168_49", "175_98";
+setarray .WarpingPoints_c3$[0], 	"25_150";
+setarray .WarpingPoints_a0$[0], 	"25_49";
+setarray .WarpingPoints_b2$[0], 	"168_150";
+setarray .WarpingPoints_d1$[0], 	"168_49";
+// Coordinates
+setarray .StartColumn[0],	7,		107,	107,	7;
+setarray .StartRow[0], 		6,		6,		106,	106;
+setarray .EndColumn[0], 	85,		185,	185,	85;
+setarray .EndRow[0],		93,		93,		193,	193;
+.ColumnSeparator = 3;
+.RowSeparator = 2;
+setarray .Letters$[0], "a","b","c","d";
+//
+function getEmptyCaseArea;
+function getLocalisation;
+setcell "vendarea",0,0,300,300,CELL_NOVENDING,1;
+freeloop(1);
+// Area
+for(.@m=0;.@m<getarraysize(.EndColumn);.@m++) {
+	
+	// SubArea
+	for(.@l=0;.@l<getarraysize(.Letters$);.@l++) {
+		.@k = 0;	
+		.@L$ = .Letters$[.@l];
+		.@counter = 0;
+		.@moly = 0;
+		// Column
+		for(.@x=.StartColumn[.@m];.@x<=.EndColumn[.@m];.@x+=.ColumnSeparator) {
+
+			// Row
+			for(.@y=.StartRow[.@m];.@y<=.EndRow[.@m];.@y+=.RowSeparator) {
+				
+				.@ok = 0;
+				if(.@L$ == .Letters$[0]) {
+					if(.@x<.StartColumn[.@m]+37 && .@y<.StartRow[.@m]+40) {
+						if((.@y>.StartRow[.@m]-26+.@moly-6 && .@y<.StartRow[.@m]-16+.@moly-1-6) || (.@y>.StartRow[.@m]-10+.@moly-6 && .@y<.StartRow[.@m]+0+.@moly-1-6) || (.@y>.StartRow[.@m]+6+.@moly-6 && .@y<.StartRow[.@m]+16+.@moly-1-6) || (.@y>.StartRow[.@m]+22+.@moly-6 && .@y<.StartRow[.@m]+32+.@moly-1-6) || .@y>.StartRow[.@m]+38+.@moly-6) {
+							.@ok = 1;
+						}
+					}
+				}
+				else if(.@L$ == .Letters$[1]) {
+					if(.@x>.StartColumn[.@m]+42 && .@y>.StartRow[.@m]+47) {
+						if((.@y>.StartRow[.@m]-26+.@moly-6-2 && .@y<.StartRow[.@m]-16+.@moly-3-6) || (.@y>.StartRow[.@m]-10+.@moly-6-2 && .@y<.StartRow[.@m]+0+.@moly-3-6) || (.@y>.StartRow[.@m]+6+.@moly-6-2 && .@y<.StartRow[.@m]+16+.@moly-3-6) || (.@y>.StartRow[.@m]+22+.@moly-6-2 && .@y<.StartRow[.@m]+32+.@moly-3-6) || (.@y>.StartRow[.@m]+38+.@moly-6-2 && .@y<.StartRow[.@m]+48+.@moly-3-6)) {
+							.@ok = 1;
+						}
+					}
+				}
+				else if(.@L$ == .Letters$[2]) {
+					if(.@x<.StartColumn[.@m]+37 && .@y>.StartRow[.@m]+47) {
+						if(.@y<.StartRow[.@m]+59-.@moly-6 || (.@y>68-.@moly+.StartRow[.@m]-6 && .@y<75-.@moly+.StartRow[.@m]-6) || (.@y>84-.@moly+.StartRow[.@m]-6 && .@y<91-.@moly+.StartRow[.@m]-6) || (.@y>100-.@moly+.StartRow[.@m]-6 && .@y<107-.@moly+.StartRow[.@m]-6) || (.@y>116-.@moly+.StartRow[.@m]-6 && .@y<123-.@moly+.StartRow[.@m]-6)) {
+							.@ok = 1;
+						}
+					}
+				}
+				else if(.@L$ == .Letters$[3]) {
+					if(.@x>.StartColumn[.@m]+42 && .@y<.StartRow[.@m]+40) {
+						if((.@y>54-.@moly+.StartRow[.@m]-6 && .@y<61-.@moly+.StartRow[.@m]-6) || (.@y>70-.@moly+.StartRow[.@m]-6 && .@y<77-.@moly+.StartRow[.@m]-6) || (.@y>86-.@moly+.StartRow[.@m]-6 && .@y<93-.@moly+.StartRow[.@m]-6) || (.@y>102-.@moly+.StartRow[.@m]-6 && .@y<109-.@moly+.StartRow[.@m]-6) || (.@y>118-.@moly+.StartRow[.@m]-6 && .@y<125-.@moly+.StartRow[.@m]-6)) {
+							.@ok = 1;
+						}
+					}
+				}
+				
+				if(.@ok == 1) {
+					setcell "vendarea",.@x,(.@y+(.@k%2)),.@x,(.@y+(.@k%2)),CELL_NOVENDING,0;
+					// Set coordinate matrix
+					set getd(".Matrice"+.@L$+""+.@m+"$["+.@counter+"]"), .@x+"_"+(.@y+(.@k%2));
+					// Set availability matrix
+					// set getd("$Matrice"+.@L$+""+.@m+"["+.@counter+"]"), 1;
+					//monster "vendarea",.@x,(.@y+(.@k%2)),"Poring",1002,1;	
+					.@counter++;
+				}
+			}
+			.@k++;
+			.@moly+=.ColumnSeparator;
+		}
+	}
+}
+freeloop(0);
+end;
+
+// Check shops state
+OnCheckState:
+if(.StateCheckedVendarea)	 end;
+.StateCheckedVendarea = 1;
+freeloop(1);
+.@m = 0;
+for(.@m=0;.@m<getarraysize(.EndColumn);.@m++) {
+	for(.@l=0;.@l<getarraysize(.Letters$);.@l++) {
+		.@L$ = .Letters$[.@l];
+		for(.@k=0;.@k<getarraysize(getd(".Matrice"+.@L$+""+.@m+"$"));.@k++) {
+		
+			explode(.@location$, getLocalisation(.@L$, .@m, .@k), "_");
+			.@x = atoi(.@location$[0]);
+			.@y = atoi(.@location$[1]);
+			
+			// Verify if cell is maybe occupied
+			deletearray .@array$[0], getarraysize(.@array$);
+			.@num = getareaunits(BL_PC,"vendarea",.@x,.@y,.@x,.@y,.@array$[0]);
+			.@one_seller = 0;
+			
+			// A player should be here
+			if(getd("$MatriceCharId"+.@L$+""+.@m+"["+.@k+"]") != 0) {
+				
+				// name and acid
+				.@name$ = instrcharinfo(getd("$MatriceCharId"+.@L$+""+.@m+"["+.@k+"]"));
+				//.@acid = getcharid(3,.@name$);
+				
+				// Search it in the list of players here
+				.@foundid = TrouverIndice(.@array$,.@name$);
+				
+				// found !
+				if(.@foundid != -1) {
+				
+					set getd("$Matrice"+.@L$+""+.@m+"["+.@k+"]"), 2;
+					set getd("$MatriceCharId"+.@L$+""+.@m+"["+.@k+"]"), getcharid(0,.@array$[.@foundid]);
+					
+					.@one_seller = 1;
+					deletearray .@array$[.@foundid],1;
+				}
+			}
+			
+			// Process other players located on the cell
+			for(.@i=0;.@i<.@num;.@i++) {
+				
+				if(.@array$[.@i] == "")
+					continue;
+				
+				// If he is vending quietly, add it to list
+				if(.@one_seller == 0 && checkvending(.@array$[.@i]) > 0) {
+					
+						set getd("$Matrice"+.@L$+""+.@m+"["+.@k+"]"), 2;
+						set getd("$MatriceCharId"+.@L$+""+.@m+"["+.@k+"]"), getcharid(0,.@array$[.@i]);
+						
+						.@one_seller = 1;
+						
+				// else remove it and warp out
+				} else {
+				
+					if(checkvending(.@array$[.@i]) > 0)
+						atcommand "@kick " + .@array$[.@i];
+					else
+						warp "SavePoint",0,0,getcharid(0,.@array$[.@i]);
+					
+				}
+				
+			}
+			
+			// If no player here, reset vars cell
+			if(.@one_seller == 0) {
+			
+				set getd("$Matrice"+.@L$+""+.@m+"["+.@k+"]"), 1;
+				set getd("$MatriceCharId"+.@L$+""+.@m+"["+.@k+"]"), 0;	
+				
+			}			
+			
+		}
+	}
+}
+// Calculate last vending area
+.@L$ = charat(.FillOrder$[0],0);
+.@m = atoi(charat(.FillOrder$[0],1));
+$@CurrentVendarea$ = .@L$+""+.@m;
+for(.@f=0;.@f<getarraysize(.FillOrder$);.@f++) {
+	.@L$ = charat(.FillOrder$[.@f],0);
+	.@m = atoi(charat(.FillOrder$[.@f],1));
+	if(getEmptyCaseArea(.@m, .@L$)==-1)
+		$@CurrentVendarea$ = .@L$+""+.@m;
+}
+freeloop(0);
+.StateCheckedVendarea = 0;
+end;
+
+
+function getLocalisation {
+	return getd(".Matrice"+getarg(0)+""+getarg(1)+"$["+getarg(2)+"]");
+}
+function isEmpty {
+	return ((getd("$Matrice"+getarg(0)+""+getarg(1)+"["+getarg(2)+"]")) == 1);
+}
+function getNextBestCaseInArea {
+	.@m = getarg(0);
+	.@L$ = getarg(1);
+	.@first_k = getarg(2);
+	.@empty = getarg(3);
+	.@max = getarraysize(getd("$Matrice"+.@L$+""+.@m));
+	.@best_k = -1;
+	.@nearest_x = -1;
+	.@nearest_y = -1;
+	for(.@k=.@first_k;.@k<.@max;.@k++) {
+		explode(.@location$, getLocalisation(.@L$, .@m, .@k), "_");
+		.@x = atoi(.@location$[0]);
+		.@y = atoi(.@location$[1]);
+		if(((!.@empty && .@k != .@first_k) || (.@empty && isEmpty(.@L$, .@m, .@k))) && distance(.MapCenter[0],.MapCenter[1],.@x,.@y) < distance(.MapCenter[0],.MapCenter[1],.@nearest_x,.@nearest_y)) {
+			.@nearest_x = .@x;
+			.@nearest_y = .@y;
+			.@best_k = .@k;
+		}
+	}
+	return .@best_k;
+}
+function getEmptyCaseArea {
+	return getNextBestCaseInArea(getarg(0),getarg(1),0,1);
+}
+function getEmptyCase {
+	
+	for(.@f=0;.@f<getarraysize(.FillOrder$);.@f++) {
+		.@L$ = charat(.FillOrder$[.@f],0);
+		.@m = atoi(charat(.FillOrder$[.@f],1));
+		.@r = getEmptyCaseArea(.@m, .@L$);
+		if(.@r>=0) {
+			explode(.@T$, getLocalisation(.@L$, .@m, .@r), "_");
+			if(atoi(.@T$[0]) != 0 && atoi(.@T$[1]) != 0) {
+				set getd("$Matrice"+.@L$+""+.@m+"["+.@r+"]"), 2;
+				$@CurrentVendarea$ = .@L$+""+.@m;
+				return getLocalisation(.@L$, .@m, .@r) + "_" + .@L$ + "_" + .@m + "_" + .@r;
+			}
+		}
+	}
+	return "";
+}
+}
+
+// Stewards
+//============================================================
+vendarea,41,152,3	script	Stewardess#vasts0	10013,{
+	mes "[" + strnpcinfo(1) + "]";
+	if(callfunc ("getLocationAccId", getcharid(0)) == "") {
+		mes "Você quer abrir uma loja?";
+		mes "Você tem que falar com o grande Organizador no centro do mapa. Ele lhe dará uma cela vazia para abrir sua loja.";
+		next;
+		if(select("Warp para Organizador: Cancelar") == 1) {
+			if(callfunc ("getLocationAccId", getcharid(0)) == "") 
+				warp "vendarea",93,97;
+		}
+	} else 
+		mes "Se você não gostar do seu celular, você pode desconectar e falar novamente com o Organizador para tentar conseguir um celular vazio melhor...";
+	close;
+	
+	OnInit:
+	// Reset position on night
+	OnHour04:
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	moveNPC strnpcinfo(0),.@x,.@y;
+	npcspeed 200;
+	initnpctimer;
+	end; 
+	
+	OnTimer10000:
+	npcstop;
+	stopnpctimer;
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	getfreecell("vendarea",.@toX,.@toY,.@x,.@y,7,3);
+	npcwalkto .@toX,.@toY;
+	initnpctimer;
+	end;
+}
+vendarea,39,104,3	script	Stewardess#vasts1	10013,{
+	mes "[" + strnpcinfo(1) + "]";
+	if(callfunc ("getLocationAccId", getcharid(0)) == "") {
+		mes "Você quer abrir uma loja?";
+		mes "Você tem que falar com o grande Organizador no centro do mapa. Ele lhe dará uma cela vazia para abrir sua loja.";
+		next;
+		if(select("Warp para Organizador: Cancelar") == 1) {
+			if(callfunc ("getLocationAccId", getcharid(0)) == "") 
+				warp "vendarea",93,97;
+		}
+	} else 
+		mes "Se você não gostar do seu celular, você pode desconectar e falar novamente com o Organizador para tentar conseguir um celular vazio melhor...";
+	close;
+	
+	OnInit:
+	// Reset position on night
+	OnHour04:
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	moveNPC strnpcinfo(0),.@x,.@y;
+	npcspeed 200;
+	initnpctimer;
+	end; 
+	
+	OnTimer10000:
+	npcstop;
+	stopnpctimer;
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	getfreecell("vendarea",.@toX,.@toY,.@x,.@y,7,3);
+	npcwalkto .@toX,.@toY;
+	initnpctimer;
+	end;
+}
+vendarea,41,52,3	script	Stewardess#vasts2	10013,{
+	mes "[" + strnpcinfo(1) + "]";
+	if(callfunc ("getLocationAccId", getcharid(0)) == "") {
+		mes "Você quer abrir uma loja?";
+		mes "Você tem que falar com o grande Organizador no centro do mapa. Ele lhe dará uma cela vazia para abrir sua loja.";
+		next;
+		if(select("Warp para Organizador: Cancelar") == 1) {
+			if(callfunc ("getLocationAccId", getcharid(0)) == "") 
+				warp "vendarea",93,97;
+		}
+	} else 
+		mes "Se você não gostar do seu celular, você pode desconectar e falar novamente com o Organizador para tentar conseguir um celular vazio melhor...";
+	close;
+	
+	OnInit:
+	// Reset position on night
+	OnHour04:
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	moveNPC strnpcinfo(0),.@x,.@y;
+	npcspeed 200;
+	initnpctimer;
+	end; 
+	
+	OnTimer10000:
+	npcstop;
+	stopnpctimer;
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	getfreecell("vendarea",.@toX,.@toY,.@x,.@y,7,3);
+	npcwalkto .@toX,.@toY;
+	initnpctimer;
+	end;
+}
+vendarea,152,52,3	script	Stewardess#vasts3	10013,{
+	mes "[" + strnpcinfo(1) + "]";
+	if(callfunc ("getLocationAccId", getcharid(0)) == "") {
+mes "Você quer abrir uma loja ?";
+mes "Você tem que falar com o grande Organizador no centro do mapa. Ele lhe dará uma cela vazia para abrir sua loja.";
+		next;
+		if(select("Warp para Organizador: Cancelar") == 1) {
+			if(callfunc ("getLocationAccId", getcharid(0)) == "") 
+				warp "vendarea",93,97;
+		}
+	} else 
+		mes "Se você não gostar do seu celular, você pode desconectar e falar novamente com o Organizador para tentar conseguir um celular vazio melhor...";
+	close;
+	
+	OnInit:
+	// Reset position on night
+	OnHour04:
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	moveNPC strnpcinfo(0),.@x,.@y;
+	npcspeed 200;
+	initnpctimer;
+	end; 
+	
+	OnTimer10000:
+	npcstop;
+	stopnpctimer;
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	getfreecell("vendarea",.@toX,.@toY,.@x,.@y,7,3);
+	npcwalkto .@toX,.@toY;
+	initnpctimer;
+	end;
+}
+vendarea,154,96,3	script	Stewardess#vasts4	10013,{
+	mes "[" + strnpcinfo(1) + "]";
+	if(callfunc ("getLocationAccId", getcharid(0)) == "") {
+
+mes "Você quer abrir uma loja ?";
+mes "Você tem que falar com o grande Organizador no centro do mapa. Ele lhe dará uma cela vazia para abrir sua loja.";
+next;
+		if(select("Warp to Organizador:Cancel") == 1) {
+			if(callfunc ("getLocationAccId", getcharid(0)) == "") 
+				warp "vendarea",93,97;
+		}
+	} else 
+		mes "Se você não gostar do seu celular, você pode desconectar e falar novamente com o Organizador para tentar conseguir um celular vazio melhor...";
+	close;
+	
+	OnInit:
+	// Reset position on night
+	OnHour04:
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	moveNPC strnpcinfo(0),.@x,.@y;
+	npcspeed 200;
+	initnpctimer;
+	end; 
+	
+	OnTimer10000:
+	npcstop;
+	stopnpctimer;
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	getfreecell("vendarea",.@toX,.@toY,.@x,.@y,7,3);
+	npcwalkto .@toX,.@toY;
+	initnpctimer;
+	end;
+}
+vendarea,165,151,3	script	Stewardess#vasts5	10013,{
+	mes "[" + strnpcinfo(1) + "]";
+	if(callfunc ("getLocationAccId", getcharid(0)) == "") {
+
+mes "Você quer abrir uma loja ?";
+mes "Você tem que falar com o grande Organizador no centro do mapa. Ele lhe dará uma cela vazia para abrir sua loja.";
+next;
+		if(select("Warp para Organizador: Cancelar") == 1) {
+			if(callfunc ("getLocationAccId", getcharid(0)) == "") 
+				warp "vendarea",93,97;
+		}
+	} else 
+		mes "Se você não gostar do seu celular, você pode desconectar e falar novamente com o Organizador para tentar conseguir um celular vazio melhor...";
+	close;
+	
+	OnInit:
+	// Reset position on night
+	OnHour04:
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	moveNPC strnpcinfo(0),.@x,.@y;
+	npcspeed 200;
+	initnpctimer;
+	end; 
+	
+	OnTimer10000:
+	npcstop;
+	stopnpctimer;
+	getmapxy(.@mapname$, .@x, .@y, BL_NPC, strnpcinfo(0));
+	getfreecell("vendarea",.@toX,.@toY,.@x,.@y,7,3);
+	npcwalkto .@toX,.@toY;
+	initnpctimer;
+	end;
+}
+vendarea,11,193,6	duplicate(Stewardess#vasts0)	Steward#vast0	10084
+vendarea,4,150,6	duplicate(Stewardess#vasts0)	Steward#vast1	10084
+vendarea,5,100,6	duplicate(Stewardess#vasts0)	Steward#vast2	10084
+vendarea,96,192,4	duplicate(Stewardess#vasts0)	Steward#vast3	10084
+vendarea,96,150,3	duplicate(Stewardess#vasts0)	Steward#vast4	10084
+vendarea,96,49,3	duplicate(Stewardess#vasts0)	Steward#vast5	10084
+vendarea,4,50,3	duplicate(Stewardess#vasts0)	Steward#vast6	10084
+vendarea,11,7,6	duplicate(Stewardess#vasts0)	Steward#vast7	10084
+vendarea,193,24,3	duplicate(Stewardess#vasts0)	Steward#vast8	10084
+vendarea,193,48,3	duplicate(Stewardess#vasts0)	Steward#vast9	10084
+vendarea,193,100,3	duplicate(Stewardess#vasts0)	Steward#vast10	10084
+vendarea,193,150,3	duplicate(Stewardess#vasts0)	Steward#vast11	10084
+vendarea,182,192,3	duplicate(Stewardess#vasts0)	Steward#vast12	10084
+vendarea,113,9,7	duplicate(Stewardess#vasts0)	Steward#vast13	10084
+
+//vendarea	mapflag	nosave
+vendarea	mapflag	noreturn
+vendarea	mapflag	monster_noteleport
+vendarea	mapflag	nomemo
+vendarea	mapflag	noicewall
+vendarea	mapflag	nobranch
+vendarea	mapflag	pvp	off
+vendarea	mapflag	hidemobhpbar
+vendarea	mapflag	nopenalty
+vendarea	mapflag	nightenabled

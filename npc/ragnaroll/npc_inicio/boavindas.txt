@@ -1,0 +1,58 @@
+welcome,50,54,5	script	Guardião RagnaFrost	653,{
+	// Diálogo inicial
+	mes "[Guia RagnaFrost]";
+	mes "Olá, aventureiro(a)! Seja bem-vindo ao ^0000FFRagnaFrost^000000, o mundo onde heróis são forjados e lendas nascem!";
+	mes "Gostaria de ir para:";
+	mes "1: ^FF0000Prontera^000000, a cidade principal, onde grandes aventuras te aguardam?";
+	mes "2: ^00FF00Campo de Treinamento^000000, para aprender o básico e se preparar para os desafios que virão?";
+	next;
+	
+	// Escolha do jogador
+	mes "[Guia RagnaFrost]";
+	mes "Faça sua escolha, e eu irei te levar!";
+	// Apresenta as opções
+	switch(select("Ir para Prontera:Ir para o Campo de Treinamento")) {
+		case 1:
+			// Opção 1 - Warp para Prontera
+			mes "[Guia RagnaFrost]";
+			mes "Excelente escolha! Prontera é o coração deste mundo, repleta de lojas, pessoas e aventuras. Aproveite sua estadia e boa sorte!";
+			close2;
+			// Comandos para teleportar e salvar o mapa de forma aleatória
+			warp "prontera",156,186;
+			savepoint "prontera",156,186; // Salva o ponto de retorno aleatoriamente dentro da área 148,148 a 152,152
+			end;
+		
+		case 2:
+			// Opção 2 - Warp para Campo de Treinamento
+			mes "[Guia RagnaFrost]";
+			mes "Preparação é a chave para o sucesso! No Campo de Treinamento, você aprenderá habilidades essenciais e ganhará experiência para enfrentar o desconhecido. Vamos lá!";
+			close2;
+			// Comandos para teleportar e salvar o mapa de forma aleatória
+			warp "new_1-3",93,69;
+			savepoint "new_1",93,72; // Salva o ponto de retorno aleatoriamente dentro da área 148,148 a 152,152
+			end;
+	}
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 1009;
+	setunittitle getnpcid(0), "[Seja Bem-Vindo]";
+    end;
+}
+
+
+
+welcome,57,54,4	duplicate(Guardião RagnaFrost)	Guia RagnaFrost#2	653
+
+
+
+welcome,0,0,0,0	monster	Poring	1002,45,1000,1500
+welcome,0,0,0,0	monster	Lunático	1063,45,1000,1500
+welcome,0,0,0,0	monster	Esporo	1014,20,1000,1500
+welcome,0,0,0,0	monster	Fabre	1007,20,1000,1500
+
+
+new_1-3,0,0,0,0	monster	Sapo de Roda	1012,60,1000,1500
+new_1-3,0,0,0,0	monster	Drops	1113,60,1000,1500
+new_1-3,0,0,0,0	monster	Lunático	1063,60,1000,1500
+new_1-3,0,0,0,0	monster	Esporo	1014,60,1000,1500
+new_1-3,0,0,0,0	monster	Fabre	1007,60,1000,1500
+new_1-3,0,0,0,0	monster	Poring	1002,70,1000,1500

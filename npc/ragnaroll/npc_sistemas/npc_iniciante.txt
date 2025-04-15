@@ -1,0 +1,120 @@
+function	script	iniciante	{
+
+		mes "Conforme você avança, pode abrir a Caixa de Benefícios.";
+		if (BaseLevel >= 1 && ##AuxilioFrost_Nivel1 != 1) {
+			// Recompensas de Nível 1
+			getitem 20316,1; //1 Elmo Visual Iniciante
+			getitem 35000,3;  // 3 Dias de VIP
+			getitem 569,300; //300 Poção do Aprendiz
+			getitem 23818,1; //1 Painel de Farm
+			rentitem 12622,259200; //3 dias de Redeas
+			rentitem 23029,259200; //3 dias de Asa de Mosca
+			rentitem 18514,259200; //3 dias de Elmo Eden
+			getitem 23820,1;  //1 Chip Farm AFK
+			##AuxilioFrost_Nivel1 = 1;
+			mes "Recompensa do nível 1 coletada!";
+		} else if (BaseLevel >= 10 && ##AuxilioFrost_Nivel10 != 1) {
+			// Recompensas de Nível 10
+			getitem 12208, 1; //1 Manual de Combate
+			getitem 514, 20; //20 Poção Azul
+			getitem 502, 50; //50 Poção Larança
+			getitem 20448, 1; //1 Aura iniciante
+			getitem 23820,1;  //1Chip Farm AFK
+			##AuxilioFrost_Nivel10 = 1;
+			mes "Recompensa do nível 10 coletada!";
+		} else if (BaseLevel >= 20 && ##AuxilioFrost_Nivel20 != 1) {
+			// Recompensas de Nível 20
+			getitem 12914, 1; //1 Caixa de Agilidade
+			getitem 514, 20; //20 Uva
+			getitem 502, 50; //50 Poção Laranja
+			getitem 23820,1;  //1 Chip Farm AFK
+			getitem 33071, 1; //1 Goma de Mascar
+			##AuxilioFrost_Nivel20 = 1;
+			mes "Recompensa do nível 20 coletada!";
+		} else if (BaseLevel >= 30 && ##AuxilioFrost_Nivel30 != 1) {
+			// Recompensas de Nível 30
+			getitem 12913, 1; //1 Caixa de Bença
+			getitem 514, 20; //20 Uva
+			getitem 502, 50; //50 Poção Laranja
+			getitem 23820,1;  //1 Chip Farm AFK
+			getitem 12208, 1; //1 Manual de Combate
+			##AuxilioFrost_Nivel30 = 1;
+			mes "Recompensa do nível 30 coletada!";
+		} else if (BaseLevel >= 40 && ##AuxilioFrost_Nivel40 != 1) {
+			// Recompensas de Nível 40
+			getitem 12375, 2; //2 Acaraje
+			getitem 514, 20; //20 Uva
+			getitem 502, 50; //50 Poção Laranja
+			getitem 23820,1;  //1Chip Farm AFK
+			getitem 33071, 1; //1 Goma de Mascar
+			##AuxilioFrost_Nivel40 = 1;
+			mes "Recompensa do nível 40 coletada!";
+		} else if (BaseLevel >= 50 && ##AuxilioFrost_Nivel50 != 1) {
+			// Recompensas de Nível 50
+			getitem 656, 10; //10 Despertar
+			getitem 505, 20; //20 Poção Azul
+			getitem 503, 50; //50 Poção Amarela
+			getitem 23820,1;  //1 Chip Farm AFK
+			getitem 12208, 1; //1 Manual de Combate
+			##AuxilioFrost_Nivel50 = 1;
+			mes "Recompensa do nível 50 coletada!";
+		} else if (BaseLevel >= 60 && ##AuxilioFrost_Nivel60 != 1) {
+			// Recompensas de Nível 60
+			getitem 505, 50; //50 Poção Azul
+			getitem 504, 60; //60 Poção Branca
+			getitem 12028, 20; //20 Caixa do trovão
+			getitem 12437, 5; //5 Suco Celular
+			getitem 23820,1;  //1 Chip Farm AFK
+			getitem 33071, 1; //1 Goma de Mascar
+			##AuxilioFrost_Nivel60 = 1;
+			mes "Recompensa do nível 60 coletada!";
+		} else if (BaseLevel >= 70 && ##AuxilioFrost_Nivel70 != 1) {
+			// Recompensas de Nível 70
+			getitem 13516, 1; //1 Caixa Geleia Real
+			getitem 12531, 1; //1 Cx Poção Branca
+			getitem 14536, 2; //2 Abrasivo
+			getitem 23820,1;  //1 Chip Farm AFK
+			getitem 12208, 1; //1 Manual de Combate
+			##AuxilioFrost_Nivel70 = 1;
+			mes "Recompensa do nível 70 coletada!";
+		} else if (BaseLevel >= 80 && ##AuxilioFrost_Nivel80 != 1) {
+			// Recompensas de Nível 80
+			getitem 13516, 1; //1 Caixa Geleia Real
+			getitem 12914, 1; //1 Caixa de Agilidade
+			getitem 12913, 1; //1 Caixa de Bença
+			getitem 12531, 1; //1 Cx Poção Branca
+			getitem 12319, 10; //10 Bolo de Morango de Rune-Midgard
+			getitem 23820,1;  //1 Chip Farm AFK
+			getitem 33071, 1; //1 Goma de Mascar
+			##AuxilioFrost_Nivel80 = 1;
+			mes "Recompensa do nível 80 coletada!";
+		} else if (BaseLevel >= 90 && ##AuxilioFrost_Nivel90 != 1) {
+			// Recompensas de Nível 90
+			getitem 13516, 2; //2 Caixa Geleia Real
+			getitem 12531, 1; //1 Cx Poção Branca
+			getitem 12375, 3; //3 Acaraje
+			getitem 12321, 10; //10 Sanduíche do Deserto de Arunafeltz
+			getitem 23820,1;  //1 Chip Farm AFK
+			getitem 12208, 1; //1 Manual de Combate
+			##AuxilioFrost_Nivel90 = 1;
+			mes "Recompensa do nível 90 coletada!";
+		} else if (BaseLevel >= 99 && ##AuxilioFrost_Nivel99 != 1) {
+			// Recompensas de Nível 99
+			getitem 480126, 1; //1 Capa Iniciante
+			getitem 410049, 1; //1 Piscadela Gold
+			getitem 12531, 1; //1 Cx Poção Branca
+			getitem 12319, 10; //10 Bolo de Morango de Rune-Midgard
+			getitem 12321, 10; //10 Sanduíche do Deserto de Arunafeltz
+			getitem 12414, 10; //10 Bala de Guaraná
+			getitem 23820,1;  //1 Chip Farm AFK
+			delitem 310, 1;
+			##AuxilioFrost_Nivel99 = 1;
+			mes "Parabéns por alcançar o nível 99!";
+			
+		} else {
+			mes "Continue progredindo para desbloquear mais recompensas.";
+		}
+		close;
+}
+
+

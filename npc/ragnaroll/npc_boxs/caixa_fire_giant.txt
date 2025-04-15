@@ -1,0 +1,5 @@
+function	script	caixa_fire_giant	{
+	setarray .@items[0], 50148,50149,50150,50151,50152,50153,50154;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

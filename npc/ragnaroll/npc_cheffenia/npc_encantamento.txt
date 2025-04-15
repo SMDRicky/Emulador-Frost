@@ -1,0 +1,132 @@
+//===== NPC de Encantamento de Acessórios =====//
+que_temsky,93,147,5	script	Encantador de Acessórios	4_4job_sealstone,{
+
+	// Mensagem de Introdução
+	mes "[Encantador de Acessórios]";
+	mes "Olá aventureiro!";
+	mes "Posso adicionar um poderoso encantamento em seu ^0000FFacessório^000000.";
+	mes "Mas para isso, preciso de ^B8860BZeny^000000 e uma ^4169E1Runa de Encantamento^000000.";
+	mes "<b>^FF0000ATENÇÃO^000000</b>";
+	mes "<b>^FF0000Tenha Apenas 1 com mesmo (ID) No inventário.^000000</b>";
+	next;
+	mes "Os acessórios podem ser encantados no último slot disponível.";
+	next;
+
+	// Custo do encantamento
+	set .entry_cost, 500000; // 500.000 Zenys
+
+	// Runas de encantamento aceitas
+	setarray .rune_ids, 310615,310612,310609,310611,310610,310614;
+
+	// Seleção do acessório equipado
+	set .@acc_left, getequipid(EQI_ACC_L);
+	set .@acc_right, getequipid(EQI_ACC_R);
+
+	if (.@acc_left == -1 && .@acc_right == -1) {
+		mes "Você não possui um acessório equipado!";
+		close;
+	}
+
+	// Se apenas um acessório estiver equipado, seleciona automaticamente
+	if (.@acc_left > 0 && .@acc_right == -1) {
+		set .@selected_acc, .@acc_left;
+		set .@equip_loc, EQI_ACC_L;
+	} else if (.@acc_right > 0 && .@acc_left == -1) {
+		set .@selected_acc, .@acc_right;
+		set .@equip_loc, EQI_ACC_R;
+	} else {
+		// Ambos equipados, o jogador escolhe
+		mes "Escolha o acessório que deseja encantar:";
+		set .@menu$, "";
+		if (.@acc_left > 0) set .@menu$, .@menu$ + "Direito [" + getitemname(.@acc_left) + "]:"; 
+		if (.@acc_right > 0) set .@menu$, .@menu$ + "Esquerdo [" + getitemname(.@acc_right) + "]:"; 
+		
+		set .@choice, select(.@menu$);
+
+		if (.@choice == 1) {
+			set .@selected_acc, .@acc_left;
+			set .@equip_loc, EQI_ACC_L;
+		} else {
+			set .@selected_acc, .@acc_right;
+			set .@equip_loc, EQI_ACC_R;
+		}
+	}
+
+	// Verifica se o item já tem encantamento no último slot
+	if (getequipcardid(.@equip_loc, 3) > 0) {
+		mes "Este acessório já está encantado no último slot!";
+		close;
+	}
+
+	// Seleção da runa de encantamento
+	mes "Agora selecione a Runa de Encantamento:";
+	set .@rune_menu$, "";
+	setarray .rune_names$, "Runa de Frigg", "Runa de Thor", "Runa de Freya", "Runa de Baldur", "Runa de Mimir", "Runa de Loki";
+
+	// Construção do menu e checagem de estoque
+	set .@valid_choices, 0;
+	for (.@i = 0; .@i < getarraysize(.rune_ids); .@i++) {
+		if (countitem(.rune_ids[.@i]) > 0) {
+			set .@rune_menu$, .@rune_menu$ + "[" + getitemname(.rune_ids[.@i]) + "] " + .rune_names$[.@i] + ":"; 
+			set .@rune_valid[.@valid_choices], .rune_ids[.@i]; // Salva o ID correto
+			set .@valid_choices, .@valid_choices + 1;
+		}
+	}
+	if (.@valid_choices == 0) {
+		mes "Você não possui nenhuma Runa de Encantamento!";
+		close;
+	}
+
+	set .@rune_choice, select(.@rune_menu$) - 1;
+	set .@selected_rune, .@rune_valid[.@rune_choice]; // Usa o ID correto da runa
+
+	// Confirmação do pagamento
+	mes "O encantamento custará ^FF0000" + .entry_cost + " Zenys^000000 e consumirá a ^FF0000" + getitemname(.@selected_rune) + "^000000.";
+	mes "Deseja continuar?";
+	if (select("Sim:Não") == 2) {
+		mes "Tudo bem, volte quando quiser encantar um acessório!";
+		close;
+	}
+
+	if (Zeny < .entry_cost) {
+		mes "Você não tem Zeny suficiente!";
+		close;
+	}
+	if (countitem(.@selected_rune) < 1) {
+		mes "Você não tem a runa necessária!";
+		close;
+	}
+
+	// Aplicação do encantamento
+	close2;
+	specialeffect2 EF_MAPPILLAR;
+	progressbar "FFFF00", 5;
+
+	set Zeny, Zeny - .entry_cost;
+	delitem .@selected_rune, 1; // Agora a runa correta será consumida.
+
+	mes "Encantamento realizado com sucesso!";
+	specialeffect2 154;
+
+	// Remove o item equipado e entrega um novo com a runa aplicada no último slot
+	set .@card0, getequipcardid(.@equip_loc, 0);
+	set .@card1, getequipcardid(.@equip_loc, 1);
+	set .@card2, getequipcardid(.@equip_loc, 2);
+	set .@refine, getequiprefinerycnt(.@equip_loc);
+	set .@r_opt1, getequiprandomoption(.@equip_loc, 0, ROA_ID);
+	set .@r_opt2, getequiprandomoption(.@equip_loc, 1, ROA_ID);
+	set .@r_opt3, getequiprandomoption(.@equip_loc, 2, ROA_ID);
+
+	delitem .@selected_acc, 1; // Remove o acessório antigo
+	getitem3 .@selected_acc, 1, 1, .@refine, 0, .@card0, .@card1, .@card2, .@selected_rune, .@r_opt1, .@r_opt2, .@r_opt3;
+	equip .@selected_acc;
+	close;
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 22;
+	setunittitle getnpcid(0), "[Rocha Encantada]";
+	end;
+
+}
+
+

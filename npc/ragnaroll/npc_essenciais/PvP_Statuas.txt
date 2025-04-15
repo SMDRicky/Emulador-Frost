@@ -1,0 +1,114 @@
+//====== rAthena Script ======================================================
+//= MVP ladder script
+//===== By: ==================================================================
+//= Rokimoki but edited and adapted from AnnieRuru PVP Ladder
+//= https://herc.ws/board/topic/18871-dota-pvp-ladder/
+//= Mark Script fixed and adapted some small things
+//===== Current Version: =====================================================
+//= 2.1
+//===== Compatible With: =====================================================
+//= rAthena 2020-10-20, with MySQL 8.0
+//===== Description: =========================================================
+//= MVP ladder store in SQL table
+//= Requested by DevThor
+//===== Additional Comments: =================================================
+//= 1.0 initial version
+//= 2.0 added total kill count and fixed some sql bugs
+//= 2.1 fixed sql sorting rank
+//============================================================================
+
+//---- MvP Ladder Logic Script
+
+-	script	PVPLadder	-1,{
+
+OnInit:
+// Config
+	.gmnokill = 0; // Os GMs não devem matar o MVP. Um GM com nível <este número> ou superior não fará nada. SE definido como 60, GM60 e superior matar qualquer jogador não receberá nada: 0 - off
+	.showtotal = 10; // mostre o comprimento da escada.
+	.showpage = 10;	// defina as visualizações por página.
+	.showstatue = 3; // número de estátuas. Este número deve corresponder ao número de duplicatas no final do script
+	.fix_custom_sprite = false; // se o seu servidor tiver um sprite animado personalizado que se sobrepõe repetidamente à animação do sprite nas estátuas, habilite isto
+
+// Config ends ------------------------------------------------------------------------------------------
+
+//	to prevent bug happen
+	if (.gmnokill <= 0) .gmnokill = 100;
+
+	sleep 1;
+	
+OnTimer30000: // refresh statues every 30 seconds. Note the `char` table is unrealiable, player still need to perform certain task to save the character -> see 'save_settings' in conf\map-server.conf
+	.@query$ = "SELECT `char`.`char_id`, `char`.`name`, `char`.`guild_id`, `char`.`class`, "
+			 + "`char`.`sex`, `char`.`hair`, `char`.`hair_color`, `char`.`clothes_color`, "
+			 + "`char`.`body`, `char`.`head_top`, `char`.`head_mid`, `char`.`head_bottom`, `char`.`robe`, "
+	         + "SUM(`ranking_pvp`.`Total`) as `orderKills` "
+	         + "FROM `char` RIGHT JOIN `ranking_pvp` ON `char`.`char_id` = `ranking_pvp`.`char_id` GROUP BY `char`.`char_id` ORDER BY `orderKills` DESC LIMIT " + .showstatue;
+	.@nb = query_sql(.@query$, .@cid, .@name$, .@guild_id, .@class, .@sex$, .@hair, .@hair_color, .@clothes_color, .@body, .@head_top, .@head_mid, .@head_bottom, .@robe, .@kills);
+	if (.fix_custom_sprite) {
+		for (.@i = 0; .@i < .@nb; ++.@i) {
+			setunitdata .statue[.@i +1], UNPC_HEADTOP, 0;
+			setunitdata .statue[.@i +1], UNPC_HEADMIDDLE, 0;
+			setunitdata .statue[.@i +1], UNPC_HEADBOTTOM, 0;
+			setunitdata .statue[.@i +1], UNPC_ROBE, 0;
+		}
+	}
+	for (.@i = 0; .@i < .@nb; ++.@i) {
+		setunitdata .statue[.@i +1], UNPC_CLASS, .@class[.@i];
+		setunitdata .statue[.@i +1], UNPC_SEX, (.@sex$[.@i] == "F")? SEX_FEMALE:SEX_MALE;
+		setunitdata .statue[.@i +1], UNPC_HAIRSTYLE, .@hair[.@i];
+		setunitdata .statue[.@i +1], UNPC_HAIRCOLOR, .@hair_color[.@i];
+		setunitdata .statue[.@i +1], UNPC_CLOTHCOLOR, .@clothes_color[.@i];
+		setunitdata .statue[.@i +1], UNPC_BODY2, .@body[.@i];
+		setunitdata .statue[.@i +1], UNPC_HEADTOP, .@head_top[.@i];
+		setunitdata .statue[.@i +1], UNPC_HEADMIDDLE, .@head_mid[.@i];
+		setunitdata .statue[.@i +1], UNPC_HEADBOTTOM, .@head_bottom[.@i];
+		setunitdata .statue[.@i +1], UNPC_ROBE, .@robe[.@i];
+		setnpcdisplay "pvp_ladder_statue#"+(.@i +1), .@name$[.@i];
+		.statue_name$[.@i +1] = .@name$[.@i];
+		.statue_guild$[.@i +1] = getguildname(.@guild_id[.@i]);
+		.statue_kills[.@i +1] = .@kills[.@i];
+	}
+	for (.@i = .@nb; .@i < .showstatue; ++.@i)
+		setunitdata .statue[.@i +1], UNPC_CLASS, HIDDEN_WARP_NPC;
+	initnpctimer;
+	end;
+
+OnNPCKillEvent: // Lógica para detectar quando um MvP é morto
+	if (getmonsterinfo(killedrid, MOB_MVPEXP) > 0) {
+		.@selectIfKillExistQuery$ = "SELECT char_id, mob_id, kills FROM ranking_pvp WHERE char_id = '" + getcharid(0) + "' AND mob_id = '" + killedrid + "';";
+		if (query_sql(.@selectIfKillExistQuery$, .@charid, .@kills, .@name$) > 0) { // Exist a kill of that MVP so +1 to kill count
+			.@updateLadderQuery$ = "UPDATE ranking_pvp SET kills = kills + 1 WHERE char_id = '" + getcharid(0) + "' AND mob_id = '" + killedrid + "'";
+		} else { // Create a new kill of specific MVP
+			//.@updateLadderQuery$ = "INSERT INTO ranking_pvp (char_id, mob_id, kills) VALUES ('" + getcharid(0) + "','" + killedrid + "','1');";
+			.@updateLadderQuery$ = "INSERT INTO ranking_pvp (`char_id` , `mob_id` , `kills`) VALUES ('" + getcharid(0) + "','" + killedrid + "','1');";
+		}
+		query_sql(.@updateLadderQuery$);
+	}
+	end;
+}
+
+//---- NPCs de statuas - mensagens
+
+-	script	pvp_ladder_statue	-1,{
+	.@id = getelementofarray(getvariableofnpc(.npcgid, "PVPLadder"), getnpcid(0));
+	mes "^00B2EE[ Ranking PVP ]^000000";
+	mes "^996600Posição : "+ .@id +"º lugar";
+	mes "^006699Nome : "+ getelementofarray(getvariableofnpc(.statue_name$, "PVPLadder"), .@id);
+	.@guildname$ = getelementofarray(getvariableofnpc(.statue_guild$, "PVPLadder"), .@id);
+	mes "^00AAAAGuilda : "+((.@guildname$ == "null")? "^AAAAAANenhuma": .@guildname$);
+	mes "^00AA00Total de KDA derrotados: "+ getelementofarray(getvariableofnpc(.statue_kills, "PVPLadder"), .@id) +"";
+	close;
+
+OnInit:
+	.@id = strnpcinfo(2);
+	set getvariableofnpc(.statue[.@id], "PVPLadder"), getnpcid(0);
+	set getvariableofnpc(.npcgid[getnpcid(0)], "PVPLadder"), .@id;
+	// Loop para atualizar o título sobre a estátua
+	PUBTITLE:
+		showscript "Posição: " + .@id + "º lugar", getnpcid(0);
+		sleep 3000;
+		goto PUBTITLE;
+end;
+}
+prontera,183,216,3	duplicate(pvp_ladder_statue)	pvp_ladder_statue#1	1_F_MARIA
+prontera,186,215,3	duplicate(pvp_ladder_statue)	pvp_ladder_statue#2	1_F_MARIA
+prontera,182,219,3	duplicate(pvp_ladder_statue)	pvp_ladder_statue#3	1_F_MARIA

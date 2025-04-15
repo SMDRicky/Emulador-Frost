@@ -1,0 +1,26 @@
+// NPC invisível para limpar a tabela picklog automaticamente e via comando
+prontera,0,0,0	script	PicklogCleaner	-1,{
+
+OnInit:
+	// Inicia o timer global do NPC ao iniciar o servidor
+	initnpctimer;
+	bindatcmd "limpezapick", "PicklogCleaner::OnCommandClearPicklog", 99, 99;
+	end;
+
+// TIMER: Executa a cada 2 horas (7200000 ms)
+OnTimer7200000:
+	query_sql("TRUNCATE TABLE `picklog`");
+	announce "[Sistema]: A tabela de picklog foi limpa automaticamente.", bc_all;
+	initnpctimer; // Reinicia o timer
+	end;
+
+// COMANDO: Executa a limpeza manual via @clearpicklog
+OnCommandClearPicklog:
+	if (getgroupid() < 99) {
+		dispbottom "[Erro]: Você não tem permissão para usar este comando.";
+		end;
+	}
+	query_sql("TRUNCATE TABLE `picklog`");
+	dispbottom "[GM]: A tabela de picklog foi limpa com sucesso.";
+	end;
+}

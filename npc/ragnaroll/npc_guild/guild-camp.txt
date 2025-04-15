@@ -1,0 +1,3286 @@
+//===== RSM Mod Script =======================================
+//= Guild Camp
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versao Atual: ========================================
+//= 1.0
+//===== Compativel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Sistema de Pontos de Acampamento de Clã com diversas
+//= funcionalidades.
+//===== Comentarios Adicional: ===============================
+//= 1.0 Primeira versao.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Site: https://rsmdeveloper.com.br
+//= Facebook: https://facebook.com/RomuloDevel
+//============================================================
+
+// Guild Configs
+// ====================================================
+-	script	Guild Camp#configs	-1,{
+OnInit:
+	// Configurações dos Acampamentos.
+	setarray $@GCampSpots$[0],
+			// <Id>, "<CampName>", "<MapName>", <CoordX>, <CoordY>, <ZenyCost>, <ExpireTime>
+			//	Id: Id único.
+			//	CampName: Nome do Acampamento.
+			//	MapName: Mapa de teleporte.
+			//	CoordX: Coordenadas X do teleporte.
+			//	CoordY: Coordenadas Y do teleporte.
+			//	ZenyCost: Coordenadas Y do teleporte.
+			//	ExpireTime: Tempo para expirar em segundos.
+			//
+			1, "Acampamento de Prontera (1)", "prontera", 66, 56, 30000000, 604800,
+			2, "Acampamento de Prontera (2)", "prontera", 50, 279, 30000000, 604800,
+			3, "Acampamento de Prontera (3)", "prontera", 260, 262, 30000000, 604800,
+			4, "Acampamento de Payon (1)", "payon", 260, 144, 30000000, 604800,
+ 			5, "Acampamento de Payon (2)", "payon", 70, 123, 30000000, 604800,
+			6, "Acampamento de Payon (3)", "payon", 180, 313, 30000000, 604800,
+			7, "Acampamento de Morroc", "morocc", 231, 217, 30000000, 604800,
+			8, "Acampamento de Geffen", "geffen", 142, 199, 30000000, 604800
+	;
+	
+	// Apartir de tempo em segundos faltando para encerrar a alocação poderá ser feito a renovação.
+	// Exemplo: 86400 segundos é um dia, com um dia ou menos para encerrar poderá ser feito a renovação de alocação.
+	$@GCampRenewTimer = 500;
+	
+	// Preço que será incrementado a cada vez que o jogador renovar a alocação.
+	// 0 irá desativar esta opção.
+	// Exemplo: preço do aluguel + (quantidade de vezes renovado * preço da renovação)
+	$@GCampRenewCost = 500;
+	
+	// Bonus de investimento de acordo com a quantidade de renovação de aluguel.
+	// 0 irá desativar esta opção.
+	// Exemplo: 2 renovação * valor definido
+	$@GCCampRenewBonus = 500;
+
+	// Multiplicar investimento de acordo com a quantidade de renovação de aluguel?
+	// 1 ativa esta opção e 0 desativa.
+	$@GCampMultipleInvest = 1;
+	
+	// Configurações de Investimentos.
+	setarray $@GCampInvestCost[0],
+			1001,	// Serviços Kafra.
+			1002,	// Serviços Kafra VIP.
+			2003,	// Serviços de Cura.
+			2004,	// Serviços de Teleporte.
+			3005,	// Serviços de Utilidades.
+			506,	// Serviços de PvP.
+			10007,	// Serviços de Encantamento.
+			10008	// Serviços de Armazém do Clã.
+	;
+	
+	// Configurações de Bônus de Investimentos de Serviços.
+	setarray $@GCampInvestBonus[0],
+			500,	// Serviços Kafra.
+			500,	// Serviços Kafra VIP.
+			500,	// Serviços de Cura.
+			500,	// Serviços de Teleporte.
+			500,	// Serviços de Utilidades.
+			500,	// Serviços de PvP.
+			500,	// Serviços de Encantamento.
+			500		// Serviços de Armazém do Clã.
+	;
+	
+	// Bônus de Investimento por renovação de contrato.
+	$@GCampRentBonus = 1000;
+	
+	// Anunciar quando Acampamento ficar disponível?
+	$@GCampAnnounce = 1;
+	
+	// Deixar invisível NPC's de serviços enquanto não forem contratados?
+	$@GCampHiddenNpc = 0;
+	
+	// Mínimo de GroupId para utilizar serviços relacionado a VIP.
+	// 100 desativa esta opção.
+	$@GCampGroupVIP = 99;
+	
+	// O Gerente de Campo deve mostrar o ponto do acampamento deve levar um jogador ao seu acampamento ou mostrar no mini-mapa?
+	//	0: Mostrar no mini-mapa.
+	//	1: Levar o jogador.
+	$@GCampManagerWarpMode = 0;
+	
+	// Configurações da Kafra
+	// ====================================================
+	// Menu que será exibido para os jogadores.
+	// Mais informações função 'F_Kafra' em 'npc/kafras/functions_kafras.txt'.
+	$@GCampKafraMenu = 2;
+	
+	// Custo para usar o Armazém Pessoal, 0 desativa esta opção.
+	$@GCampKafraStorCost = 40;
+	
+	// Custo para alugar um Carrinho, 0 desativa esta opção.
+	$@GCampKafraRentCost = 800;
+	
+	// Custo para adicionar ou trocar senha do Armazém Pessoal, 0 desativa esta opção.
+	$@GCampKafraPassSetCost = 5000;
+	
+	// Custo para remover senha do Armazém Pessoal, 0 destiva esta opção.
+	$@GCampKafraPassRemCost = 1000;
+	
+	// Custo para salvar o ponto no acampamento.
+	$@GCampKafraSaveCost = 100;
+	
+	// Incrementar a quantidade de Zeny cobrada no investimento?
+	//	1: Valor Total.
+	//	2: Metade do Valor.
+	$@GCampKafraInvest = 2;
+	
+	// Configurações da Kafra VIP
+	// ====================================================
+	// Menu que será exibido para os jogadores.
+	// Mais informações função 'F_Kafra' em 'npc/kafras/functions_kafras.txt'.
+	$@GCampKafraVMenu = 0;
+	
+	// Custo para usar o Armazém Pessoal, 0 desativa esta opção.
+	$@GCampKafraVStorCost = 0;
+	
+	// Custo para alugar um Carrinho,
+	$@GCampKafraVRentCost = 0;
+	
+	// Custo para adicionar ou trocar senha do Armazém Pessoal, 0 desativa esta opção.
+	$@GCampKafraVPassSetCost = 5000;
+	
+	// Custo para remover senha do Armazém Pessoal, 0 destiva esta opção.
+	$@GCampKafraVPassRemCost = 1000;
+	
+	// Custo para salvar o ponto no acampamento.
+	$@GCampKafraVSaveCost = 100;
+	
+	// Configurações da Curandeira
+	// ====================================================
+	// Tempo em segundos para se curar novamente.
+	$@GCampHealDelay = 1;
+	
+	// Habilitar Buffs?
+	$@GCampHealBuffs = 1;
+	
+	// Reparar Equipamentos?
+	$@GCampRepair = 1;
+
+	// Zeny para utilizar a curandeira, 0 desativa esta opção.
+	$@GCampHealCost = 1000;
+	
+	// Incrementar a quantidade de Zeny cobrada no investimento?
+	//	1: Valor Total.
+	//	2: Metade do Valor.
+	$@GCampHealInvest = 2;
+	
+	// Configurações do Teleportador
+	// ====================================================
+	// Modo em que o teleportador irá funcionar para jogadores comuns.
+	//	0: Teleportar somente para entrada dos feudos.
+	//	1: Teleportar somente para entrada dos castelos que seu clã tiver conquistado.
+	//	2: Teleportar para entrada de todos os castelos.
+	//	3: Teleportar para entrada de todos os castelos desde que o clã contratou os serviços VIP.
+	$@GCampWarpMode = 3;
+	$@GCampWarpDefault = 1;
+	
+	// Modo em que o teleportador irá funcionar para jogadores VIP.
+	//	0: Teleportar somente para entrada dos feudos.
+	//	1: Teleportar somente para entrada dos castelos que seu clã tiver conquistado.
+	//	2: Teleportar para entrada de todos os castelos.
+	//	3: Teleportar para entrada de todos os castelos desde que o clã contratou os serviços VIP.
+	$@GCampWarpVIPMode = 3;
+	$@GCampWarpVIPDefault = 0;
+	
+	// Tempo em segundos para pode utilizar o teleporte novamente para jogadores comuns.
+	$@GCampWarpDelay = 300;
+	
+	// Tempo em segundos para pode utilizar o teleporte novamente para jogadores VIP.
+	$@GCampWarpVIPDelay = 180;
+	
+	// Zeny para utilizar o teleportador, 0 desativa esta opção.
+	$@GCampWarpCost = 1000;
+	
+	// Incrementar a quantidade de Zeny cobrada no investimento?
+	//	1: Valor Total.
+	//	2: Metade do Valor.
+	$@GCampWarpInvest = 2;
+	
+	// Configurações do Vendedor de Utilidades
+	// ====================================================
+	// Itens a ser vendido na Loja de Utilidades Normal.
+	// Valores dos itens definido com -1 será pego do item_db.yml
+	setarray $@GCampUtilsNameId_Lv1[0], 501, 502;	// Id dos Itens Camp (Nv. 1)
+	setarray $@GCampUtilsPrice_Lv1[0], 10, 50;		// Valor dos Itens Camp (Nv. 1)
+	setarray $@GCampUtilsNameId_Lv2[0], 501, 502;	// Id dos Itens Camp (Nv. 2)
+	setarray $@GCampUtilsPrice_Lv2[0], 9, 49;		// Valor dos Itens Camp (Nv. 2)
+	setarray $@GCampUtilsNameId_Lv3[0], 501, 502;	// Id dos Itens Camp (Nv. 3)
+	setarray $@GCampUtilsPrice_Lv3[0], 8, 48;		// Valor dos Itens Camp (Nv. 3)
+	setarray $@GCampUtilsNameId_Lv4[0], 501, 502;	// Id dos Itens Camp (Nv. 4)
+	setarray $@GCampUtilsPrice_Lv4[0], 7, 47;		// Valor dos Itens Camp (Nv. 4)
+	setarray $@GCampUtilsNameId_Lv5[0], 501, 502;	// Id dos Itens Camp (Nv. 5)
+	setarray $@GCampUtilsPrice_Lv5[0], 6, 46;		// Valor dos Itens Camp (Nv. 5)
+	setarray $@GCampUtilsNameId_Lv6[0], 501, 502;	// Id dos Itens Camp (Nv. 6)
+	setarray $@GCampUtilsPrice_Lv6[0], 5, 45;		// Valor dos Itens Camp (Nv. 6)
+	setarray $@GCampUtilsNameId_Lv7[0], 501, 502;	// Id dos Itens Camp (Nv. 7)
+	setarray $@GCampUtilsPrice_Lv7[0], 4, 44;		// Valor dos Itens Camp (Nv. 7)
+	setarray $@GCampUtilsNameId_Lv8[0], 501, 502;	// Id dos Itens Camp (Nv. 8)
+	setarray $@GCampUtilsPrice_Lv8[0], 4, 43;		// Valor dos Itens Camp (Nv. 8)
+	setarray $@GCampUtilsNameId_Lv9[0], 501, 502;	// Id dos Itens Camp (Nv. 9)
+	setarray $@GCampUtilsPrice_Lv9[0], 4, 42;		// Valor dos Itens Camp (Nv. 9)
+	
+	// Itens a ser vendido na Loja de Utilidades VIP.
+	// Valores dos itens definido com -1 será pego do item_db.yml
+	setarray $@GCampUtilsVNameId_Lv1[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 1)
+	setarray $@GCampUtilsVPrice_Lv1[0], 10, 50, 180, 1200;	// Valor dos Itens Camp (Nv. 1)
+	setarray $@GCampUtilsVNameId_Lv2[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 2)
+	setarray $@GCampUtilsVPrice_Lv2[0], 9, 49, 179, 1199;		// Valor dos Itens Camp (Nv. 2)
+	setarray $@GCampUtilsVNameId_Lv3[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 3)
+	setarray $@GCampUtilsVPrice_Lv3[0], 8, 48, 178, 1198;		// Valor dos Itens Camp (Nv. 3)
+	setarray $@GCampUtilsVNameId_Lv4[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 4)
+	setarray $@GCampUtilsVPrice_Lv4[0], 7, 47, 177, 1197;		// Valor dos Itens Camp (Nv. 4)
+	setarray $@GCampUtilsVNameId_Lv5[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 5)
+	setarray $@GCampUtilsVPrice_Lv5[0], 6, 46, 176, 1196;		// Valor dos Itens Camp (Nv. 5)
+	setarray $@GCampUtilsVNameId_Lv6[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 6)
+	setarray $@GCampUtilsVPrice_Lv6[0], 5, 45, 175, 1195;		// Valor dos Itens Camp (Nv. 6)
+	setarray $@GCampUtilsVNameId_Lv7[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 7)
+	setarray $@GCampUtilsVPrice_Lv7[0], 4, 44, 174, 1194;		// Valor dos Itens Camp (Nv. 7)
+	setarray $@GCampUtilsVNameId_Lv8[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 8)
+	setarray $@GCampUtilsVPrice_Lv8[0], 4, 43, 173, 1193;		// Valor dos Itens Camp (Nv. 8)
+	setarray $@GCampUtilsVNameId_Lv9[0], 501, 502, 503, 504;	// Id dos Itens Camp (Nv. 9)
+	setarray $@GCampUtilsVPrice_Lv9[0], 4, 42, 172, 1192;		// Valor dos Itens Camp (Nv. 9)
+	
+	// Somente VIPs poderão acessar a loja de Utilidades VIP?
+	// Se você definir 0 jogadores comuns poderão acessar desde que o clã contratou os serviços VIP.
+	$@GCampUtilsVIPMode = 0;
+	
+	// Incrementar a quantidade de Zeny cobrada em itens comprados no investimento?
+	//	1: Valor Total.
+	//	2: Metade do Valor.
+	$@GCampUtilsInvest = 1;
+	
+	// Configurações do Encantador de Armas
+	// ====================================================
+	// Configurações dos encantamentos.
+	setarray $@GCampEnchants[0],
+			// <Tempo>, <Zeny>, <Level>
+			1200000, 20000, 5,	// Geada
+			1200000, 20000, 5,	// Chama
+			1200000, 20000, 5,	// Terremoto
+			1200000, 20000, 1,	// Ventania
+			1200000, 20000, 5	// Sagrado
+	;
+	
+	// Incrementar a quantidade de Zeny cobrada no investimento?
+	//	1: Valor Total.
+	//	2: Metade do Valor.
+	$@GCampEnchantInvest = 1;
+	
+	// Configurações do Armazém do Clã
+	// ====================================================
+	// Zeny para utilizar o armazém, , 0 desativa esta opção.
+	$@GCampGStorCost = 0;
+	
+	// Incrementar a quantidade de Zeny cobrada no investimento?
+	//	1: Valor Total.
+	//	2: Metade do Valor.
+	$@GCampGStorInvest = 1;
+
+	// Não alterar daqui para baixo!
+	initnpctimer;
+	
+	freeloop(1);
+	for( .@l=1; .@l <= 9; .@l++ ) {
+		deletearray .@NameIds;
+		deletearray .@Prices;
+		npcshopdelitem "Utils Shop Normal " + .@l + "#guildcamp", 501;
+		copyarray .@NameIds, getd("$@GCampUtilsNameId_Lv" + .@l), getarraysize(getd("$@GCampUtilsNameId_Lv" + .@l));
+		copyarray .@Prices, getd("$@GCampUtilsPrice_Lv" + .@l), getarraysize(getd("$@GCampUtilsPrice_Lv" + .@l));
+		
+		for( .@i=0; .@i < getarraysize(.@NameIds); .@i++ ) {
+			.@price = .@Prices[.@i] == -1 ? getiteminfo(.@NameIds[.@i],ITEMINFO_BUY) : .@Prices[.@i];
+			npcshopadditem "Utils Shop Normal " + .@l + "#guildcamp", .@NameIds[.@i], .@price;
+		}
+		
+		deletearray .@NameIds;
+		deletearray .@Prices;
+		npcshopdelitem "Utils Shop VIP " + .@l + "#guildcamp", 501;
+		copyarray .@NameIds, getd("$@GCampUtilsVNameId_Lv" + .@l), getarraysize(getd("$@GCampUtilsVNameId_Lv" + .@l));
+		copyarray .@Prices, getd("$@GCampUtilsVPrice_Lv" + .@l), getarraysize(getd("$@GCampUtilsVPrice_Lv" + .@l));
+		
+		for( .@i=0; .@i < getarraysize(.@NameIds); .@i++ ) {
+			.@price = .@Prices[.@i] == -1 ? getiteminfo(.@NameIds[.@i],ITEMINFO_BUY) : .@Prices[.@i];
+			npcshopadditem "Utils Shop VIP " + .@l + "#guildcamp", .@NameIds[.@i], .@price;
+		}
+	}
+	freeloop(0);
+    end;
+	
+OnCheck:
+OnTimer5000:
+	stopnpctimer;
+	for( .@i=0; .@i < getarraysize($@GCampSpots$); .@i+=7 ) {
+		deletearray .@GID;
+		query_sql "SELECT `guild_id`, `invest`, `rent_count`, `rent_time`, `kafra`, `vip`, `healer`, `warper`, `utils`, `pvp`, `enchant`, `gstor` FROM `guild_camp` WHERE `camp_id`='" + $@GCampSpots$[.@i] + "'", .@GID, .@Invest, .@RentCount, .@RentTime, .@Kafra, .@VIP, .@Healer, .@Warper, .@Utils, .@PvP, .@Enchant, .@GStorage;
+		
+		if( getarraysize(.@GID) && gettimetick(2) >= .@RentTime ) {
+			.@bonusText$ += "";
+			.@bonusInvest = 0;
+			if( $@GCampRentBonus && .@RentCount > 1 ) {
+				.@bonusInvest += (.@RentCount*$@GCampRentBonus);
+				.@bonusText$ += "\n\r\t" + "- Renovação de Aluguel: " + callfunc("F_InsertComma", (.@RentCount*$@GCampRentBonus)) + "z";
+			}
+
+			if( .@Kafra ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Funcionária Kafra#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[0] ) {
+					.@bonusInvest += $@GCampInvestBonus[0];
+					.@bonusText$ += "\n\r\t" + "- Kafra: " + callfunc("F_InsertComma", $@GCampInvestBonus[0]) + "z";
+				}
+			}
+
+			if( .@VIP ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Kafra VIP#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[1] ) {
+					.@bonusInvest += $@GCampInvestBonus[1];
+					.@bonusText$ += "\n\r\t" + "- Kafra VIP: " + callfunc("F_InsertComma", $@GCampInvestBonus[1]) + "z";
+				}
+			}
+
+			if( .@Healer ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Curandeira#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[2] ) {
+					.@bonusInvest += $@GCampInvestBonus[2];
+					.@bonusText$ += "\n\r\t" + "- Cura: " + callfunc("F_InsertComma", $@GCampInvestBonus[2]) + "z";
+				}
+			}
+
+			if( .@Warper ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Teleportadora#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[3] ) {
+					.@bonusInvest += $@GCampInvestBonus[3];
+					.@bonusText$ += "\n\r\t" + "- Teleporte: " + callfunc("F_InsertComma", $@GCampInvestBonus[3]) + "z";
+				}
+			}
+
+			if( .@Utils ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Vendedor de Utilidades#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[4] ) {
+					.@bonusInvest += $@GCampInvestBonus[4];
+					.@bonusText$ += "\n\r\t" + "- Utilidades: " + callfunc("F_InsertComma", $@GCampInvestBonus[4]) + "z";
+				}
+			}
+
+			if( .@PvP ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Arena PvP#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[5] ) {
+					.@bonusInvest += $@GCampInvestBonus[5];
+					.@bonusText$ += "\n\r\t" + "- PvP: " + callfunc("F_InsertComma", $@GCampInvestBonus[5]) + "z";
+				}
+			}
+
+			if( .@Enchant ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Encantadora#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[6] ) {
+					.@bonusInvest += $@GCampInvestBonus[6];
+					.@bonusText$ += "\n\r\t" + "- Encantamentos: " + callfunc("F_InsertComma", $@GCampInvestBonus[6]) + "z";
+				}
+			}
+
+			if( .@GStorage ) {
+				if( $@GCampHiddenNpc )
+					disablenpc "Armazém do Clã#guildcamp_" + $@GCampSpots$[.@i];
+				if( $@GCampInvestBonus[7] ) {
+					.@bonusInvest += $@GCampInvestBonus[7];
+					.@bonusText$ += "\n\r\t" + "- Armazém: " + callfunc("F_InsertComma", $@GCampInvestBonus[7]) + "z";
+				}
+			}
+
+			if( .@Invest ) {
+				.@bonusInvest += .@Invest;
+				.@bonusText$ += "\n\r\t- Gastos com serviços: " + callfunc("F_InsertComma", .@Invest) + "z";
+			}
+			
+			if( $@GCampMultipleInvest && .@RentCount > 1 )
+				.@bonusInvest = .@RentCount * .@bonusInvest;
+				
+			.@body$ = "Encerramento de Aluguel.";
+			.@body$ += "\n\r\tData: " + sprintf("%02d/%02d/%02d às %02dh%02dm%02ds", gettime(DT_DAYOFMONTH), gettime(DT_MONTH), gettime(DT_YEAR), gettime(DT_HOUR), gettime(DT_MINUTE),  gettime(DT_SECOND)); 
+			.@body$ += "\n\r\tPonto: " + $@GCampSpots$[.@i+1];
+			.@body$ += "\n\r\tRenovações: " + .@RentCount;
+			.@body$ += "\n\r\tRetorno de Investimento: " + callfunc("F_InsertComma", .@bonusInvest) + "z";
+			if( .@bonusInvest )
+				.@body$ += "\n\r\tRelatório: " + .@bonusText$;
+			.@MasterId = callfunc("F_GC_GUILD_MASTERID", .@GID);
+			if( .@MasterId ) {
+				.@GuildName$ = callfunc("F_GC_GUILD_NAME", .@GID);
+				mail .@MasterId, "Server", "Guild Camp", .@body$, .@bonusInvest;
+			}
+			
+			query_sql "DELETE FROM `guild_camp` WHERE `camp_id`='" + $@GCampSpots$[.@i] + "'";
+			
+			if( $@GCampAnnounce )
+				announce "[Guild Camp]: O " + $@GCampSpots$[.@i+1] + " está disponível para aluguel.", bc_blue|bc_all;
+				
+			if( $@GCampHiddenNpc ) {
+				disablenpc "Guild Camp#flag1_guildcamp_" + $@GCampSpots$[.@i];
+				disablenpc "Guild Camp#flag2_guildcamp_" + $@GCampSpots$[.@i];
+			}
+			else {
+				donpcevent "Guild Camp#flag1_guildcamp_" + $@GCampSpots$[.@i] + "::OnEmblem";
+				donpcevent "Guild Camp#flag2_guildcamp_" + $@GCampSpots$[.@i] + "::OnEmblem";
+			}
+			donpcevent "Guild Camp Área#guildcamp_" + $@GCampSpots$[.@i] + "::OnBoard";
+		}
+	}
+	initnpctimer;
+	end;
+}
+
+
+// Guild Camp
+// ====================================================
+-	script	Guild Camp#manager	-1,{
+	.@loop_1 = 1;
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	while(.@loop_1) {
+		.@GID = getcharid(2);
+		.@CampId = callfunc("F_GC_GET_CAMP", .@GID);
+		mes "^b312ff[Gerente do Guild Camp]^000000";
+		mes "Olá, " + strcharinfo(0) + "!";
+		if( .@CampId ) {
+			if( .@CampId != .@num ) {
+				mes "Sinto muito, você deve procurar serviços no seu acampamento.";
+				close;
+			}
+
+			.@CampName$ = callfunc("F_GC_GET_NAME", .@CampId);
+			.@Idx = callfunc("F_GC_GET_INDEX", .@CampId);
+			.@ExpireTime = callfunc("F_GC_GET_INFO", .@CampId, 2);
+			if( gettimetick(2) >= .@ExpireTime ) {
+				mes "Me desculpe, mais sua alocação já encerrou.";
+				close;
+			}
+			mes "Sou o responsável por gerenciar o ^0000FF" + .@CampName$ + "^000000.";
+			mes "^FF0000Seu acampamento expira em:^000000 " + callfunc("Time2Str", .@ExpireTime);
+		}
+		else
+			mes "Sou o responsável por gerenciar os acampamentos dos Clãs.";
+		mes "Em que posso ajudar?";
+		next;
+		switch( select((!.@CampId ? "- Alugar Ponto de Guild." : ""), (.@CampId ? "^0000FF- Contratar Serviços.^000000" : ""), "- Informações de Serviços.", (.@CampId ? "- Renovar Contrato.": ""), "- Informações de Alocação.", (.@CampId ? "- Cancelar contrato." : ""), "^FF0000- Cancelar.^000000") ) {
+			case 1:
+				.@loop_2 = 1;
+				while(.@loop_2) {
+					/*.@count = 0;
+					.@buildmenu$ = "";
+					for( .@i=0; .@i < getarraysize($@GCampSpots$); .@i+=7 ) {
+						.@check = callfunc("F_GC_GET_GUILD", $@GCampSpots$[.@i]);
+						if( .@check <= 0 ) {
+							.@buildmenu$ += "- " + $@GCampSpots$[.@i+1];
+							.@count++;
+						}
+						.@buildmenu$ += ":";
+					}
+					
+					if( .@count <= 0 ) {
+						mes "^b312ff[Gerente do Guild Camp]^000000";
+						mes "Não há acampamentos livre para aluguel.";
+						next;
+						.@loop_2 = 0;
+						break;
+					}
+					
+					mes "^b312ff[Gerente do Guild Camp]^000000";
+					mes "Selecione um acampamentos disponível:";
+					next;
+					.@size = getarraysize($@GCampSpots$)/7;
+					.@i = select(.@buildmenu$ + "- Voltar.:^FF0000- Cancelar.^000000")-1;
+					if( .@i == .@size ) {
+						.@loop_2 = 0;
+						break;
+					}
+					else if( .@i >= .@size ) {
+						.@loop_1 = 0;
+						.@loop_2 = 0;
+					}
+					
+					.@i = .@i*7;*/
+					
+					.@GID2 = callfunc("F_GC_GET_GUILD", .@num);
+					if( .@GID2 ) {
+						mes "^b312ff[Gerente do Guild Camp]^000000";
+						mes "Este acampamento já está alugado.";
+						mes "Aguarde o proprietário desalocar.";
+						next;
+						break;
+					}
+					
+					.@i = callfunc("F_GC_GET_INDEX", .@num);
+					.@Id = atoi($@GCampSpots$[.@i]);
+					.@Name$ = $@GCampSpots$[.@i+1];
+					.@mapName$ = $@GCampSpots$[.@i+2];
+					.@coordX = atoi($@GCampSpots$[.@i+3]);
+					.@coordY = atoi($@GCampSpots$[.@i+4]);
+					.@ZenyCost = atoi($@GCampSpots$[.@i+5]);
+					.@Timer = atoi($@GCampSpots$[.@i+6]);
+					
+					mes "^b312ff[Gerente do Guild Camp]^000000";
+					if( .@ZenyCost )
+						mes "A taxa de aluguel do ^0000FF" + .@Name$ + "^000000 é ^FF0000" + callfunc("F_InsertComma", .@ZenyCost) + " zeny(s)^000000.";
+					else
+						mes "Na verdade não há taxa de aluguel do ^0000FF" + .@Name$ + "^000000, você pode pegar simplesmente grátis.";
+					
+					if( .@Timer )
+						mes "Ele irá durar ^FF0000" + callfunc("Time2Str", (gettimetick(2)+.@Timer)) + "^000000.";
+
+					mes "Deseja alugar esse acampamento para seu Clã?";
+					next;
+					switch( select("- Sim, por favor.", "- Escolher outro.", "^FF0000- Cancelar.^000000") ) {
+						case 1:
+							.@check = callfunc("F_GC_GET_GUILD", .@Id);
+							mes "^b312ff[Gerente do Guild Camp]^000000";
+							if( !.@GID )
+								mes "Você não está em um clã.";
+							else if( !is_guild_leader() )
+								mes "Você precisa ser o líder de um Clã para remover o contrato.";
+							else if( .@ZenyCost && Zeny < .@ZenyCost )
+								mes "Você não tem Zenys suficiente para alugar este acampamento.";
+							else if( .@check )
+								mes "Me desculpe, mais este acampamento já está alugado.";
+							else {
+								query_sql "INSERT INTO `guild_camp` (`camp_id`, `guild_id`, `name`, `rent_count`, `rent_time`) VALUES (" + .@Id + ", " + .@GID + ", '" + .@Name$ + "', 0, " + (gettimetick(2)+.@Timer) + ")";
+							
+								if( $@GCampHiddenNpc ) {
+									enablenpc "Guild Camp#flag1_guildcamp_" + .@Id;
+									enablenpc "Guild Camp#flag2_guildcamp_" + .@Id;
+								}
+								donpcevent "Guild Camp#flag1_guildcamp_" + .@Id + "::OnEmblem";
+								donpcevent "Guild Camp#flag2_guildcamp_" + .@Id + "::OnEmblem";
+								donpcevent "Guild Camp Área#guildcamp_" + .@Id + "::OnBoard";
+								if( .@ZenyCost )
+									Zeny -= .@ZenyCost;
+								mes "Parabéns por ter adquirido ^0000FF" + .@Name$ + "^000000 para seu Clã!";
+								close;
+							}
+							next;
+							break;
+						case 2:
+							break;
+						case 3:
+							.@loop_1 = 0;
+							.@loop_2 = 0;
+							break;
+					}
+				}
+				break;
+			case 2:
+				.@loop_2 = 1;
+				while(.@loop_2) {
+					setarray .@types[0], 3, 4, 5, 9, 6, 10, 7, 8;
+					setarray .@columns$[0], "kafra", "vip", "healer", "enchant", "warper", "gstor", "utils", "pvp";
+					setarray .@names$[0], "Serviço Kafra", "Serviço Kafra VIP", "Serviço de Cura", "Serviço de Encantamentos", "Serviço de Teleporte", "Serviço de Armazém", "Serviço de Utilidades", "Serviço PvP";
+					setarray .@npcname$[0], "Funcionária Kafra", "Kafra VIP", "Curandeira", "Encantadora", "Teleportador", "Armazém do Clã", "Vendedor de Utilidades", "Arena PvP";
+					
+					.@count = 0;
+					.@level = 1;
+					.@buildmenu$ = "";
+					for( .@i=0; .@i < getarraysize(.@types); .@i++ ) {
+						.@check = callfunc("F_GC_GET_INFO", .@CampId, .@types[.@i]);
+						if( !.@check ) {
+							.@buildmenu$ += "- " + .@names$[.@i] + ".";
+							.@count++;
+						}
+						else
+							.@level++;
+						.@buildmenu$ += ":";
+					}
+					
+					mes "^b312ff[Gerente do Guild Camp]^000000";
+					if( .@count <= 0 ) {
+						mes "Parabéns, você já contratou todos serviços.";
+						next;
+						break;
+					}
+					
+					mes "Selecione o ^0000FFserviço^000000 que deseja contratar:";
+					next;
+					.@i = select(.@buildmenu$ + "- Voltar.:^FF0000- Cancelar.^000000")-1;
+					if( .@i == getarraysize(.@types) )
+						break;
+					else if( .@i >= getarraysize(.@types) ) {
+						.@loop_1 = 0;
+						break;
+					}
+					
+					.@Cost = $@GCampInvestCost[.@types[.@i]-3];
+					mes "^b312ff[Gerente do Guild Camp]^000000";
+					if( .@Cost )
+						mes "Para contratar o ^0000FF" + .@names$[.@i] + "^000000 é necessário ^FF0000" + callfunc("F_InsertComma", .@Cost) + " zenys^000000.";
+					else
+						mes "O ^0000FF" + .@names$[.@i] + "^000000 é um serviço gratuíto.";
+					mes "Deseja contratar o serviço?";
+					next;
+					switch( select("- Sim, por favor.", "- Não, escolher outro.", "^FF0000- Cancelar.^000000") ) {
+						case 1:
+							mes "^b312ff[Gerente do Guild Camp]^000000";
+							if( .@Cost && Zeny < .@Cost )
+								mes "Você não tem Zenys suficiente para contratar esse serviço.";
+							else {
+								.@level++;
+								if( .@Cost )
+									Zeny -= .@Cost;
+								enablenpc .@npcname$[.@i]+"#guildcamp_" + .@CampId;
+								query_sql "UPDATE `guild_camp` SET `" + .@columns$[.@i] + "`='1' WHERE `camp_id`='" + .@CampId + "'";
+								mes "Parabéns, você contratou o ^0000FF" + .@names$[.@i] + "^000000 e seu ^FF0000nível de investimento^000000 súbiu para para " + .@level + ".";
+								close;
+							}
+							next;
+							break;
+						case 2:
+							break;
+						case 3:
+							.@loop_1 = 0;
+							.@loop_2 = 0;
+							break;
+					}
+				}
+				break;
+			case 3:
+				.@r = callfunc("F_GC_SERVICES_INFO", "^b312ff[Gerente do Guild Camp]^000000");
+				if( .@r == 0 )
+					.@loop_1 = 0;
+				break;
+			case 4:
+				.@loop_2 = 1;
+				while(.@loop_2) {
+					.@CampId = callfunc("F_GC_GET_CAMP", .@GID);
+					mes "^b312ff[Gerente do Guild Camp]^000000";
+					if( !.@CampId ) {
+						mes "Me desculpe, mais você não alugou nenhum acampamento.";
+						next;
+						break;
+					}
+					
+					if( .@CampId != .@num ) {
+						mes "Me desculpe, mais você não é o mestre deste acampamento.";
+						next;
+						break;
+					}
+					
+					.@Idx = callfunc("F_GC_GET_INDEX", .@num);
+					.@ExpireTime = callfunc("F_GC_GET_INFO", .@num, 2);
+					if( gettimetick(2) >= .@ExpireTime ) {
+						mes "Me desculpe, mais sua alocação já encerrou.";
+						next;
+						break;
+					}
+					
+					if( $@GCampRenewTimer ) {
+						mes "Você pode renovar seu contrato";
+						mes "quando o final da sua alocação";
+						mes "estiver em ^FF0000" + callfunc("Time2Str", gettimetick(2)+$@GCampRenewTimer) + " ou menor^000000.";
+						next;
+						mes "^b312ff[Gerente do Guild Camp]^000000";
+					}
+					
+					if( $@GCampMultipleInvest ) {
+						mes "É importante fazer a renovação";
+						mes "de contrato antecipado para";
+						mes "que seu investimento seja melhor aproveitado.";
+						next;
+						mes "^b312ff[Gerente do Guild Camp]^000000";
+					}
+					
+					.@RenewCost = atoi($@GCampSpots$[.@Idx+5]);
+					if( $@GCampRenewCost ) {
+						.@RentCount = callfunc("F_GC_GET_INFO", .@CampId, 1) + 1;
+						.@RenewCost += .@RentCount * $@GCampRenewCost;
+					}
+					mes "Para renovar seu contrato";
+					mes "é necessário ^FF0000" + callfunc("F_InsertComma", .@RenewCost) + " zenys^000000.";
+					mes "Deseja fazer a renovação do seu contrato?";
+					next;
+					switch( select("- Sim, por favor.", "- Não, obrigado.", "^FF0000- Cancelar.^000000") ) {
+						case 1:
+							.@CampId = callfunc("F_GC_GET_CAMP", .@GID);
+							mes "^b312ff[Gerente do Guild Camp]^000000";
+							if( !.@GID )
+								mes "Você não está em um clã.";
+							else if( !is_guild_leader() )
+								mes "Você precisa ser o líder de um Clã para remover o contrato.";
+							else if( !.@CampId )
+								mes "Seu clã ^ff0000não possui^000000 um acampamento!";
+							else if( .@CampId != .@num )
+								mes "Somente o mestre deste acampamento pode renovar o contrato.";
+							else {
+								.@ExpireTime = callfunc("F_GC_GET_INFO", .@CampId, 2);
+								.@TimeLeft = .@ExpireTime-gettimetick(2);
+								
+								if( gettimetick(2) >= .@ExpireTime )
+									mes "Me desculpe, mais sua alocação já encerrou.";
+								else if( $@GCampRenewTimer && .@TimeLeft > $@GCampRenewTimer )
+									mes "Me desculpe, mais você não pode renovar seu contrato no momento.";
+								else if( Zeny < .@RenewCost )
+									mes "Me desculpe, mais você não tem zeny suficiente.";
+								else {
+									.@Expire = gettimetick(2) + atoi($@GCampSpots$[.@Idx+6]) + .@TimeLeft;
+									query_sql "UPDATE `guild_camp` SET `rent_time`='" + .@Expire + "', `rent_count`=`rent_count`+'1' WHERE `camp_id`='" + .@CampId + "'";
+									Zeny -= .@RenewCost;
+									mes "Muito bem, seu contrato foi renovado!";
+									close;
+								}
+							}
+							next;
+							.@loop_2 = 0;
+							break;
+						case 2:
+							.@loop_2 = 0;
+							break;
+						case 3:
+							.@loop_1 = 0;
+							.@loop_2 = 0;
+							break;
+					}
+				}
+				next;
+				break;
+			case 5:
+				mes "^b312ff[Gerente do Guild Camp]^000000";
+				mes "Requisitos:";
+				mes "- Ser líder do Clã.";
+				mes "- Pagar uma taxa de zenys.";
+				next;
+				break;
+			case 6:
+				.@CampId = callfunc("F_GC_GET_CAMP", .@GID);
+				.@Idx = callfunc("F_GC_GET_INDEX", .@num);
+				.@ExpireTime = callfunc("F_GC_GET_INFO", .@num, 2);
+				mes "^b312ff[Gerente do Guild Camp]^000000";
+				mes "Se você fazer isso,";
+				mes "você irá perder todo";
+				mes "investimento do acampamento.";
+				mes "Deseja continuar?";
+				next;
+				switch( select("- Sim, por favor.", "- Não, obrigado.", "^FF0000- Cancelar.^000000") ) {
+					case 1:
+						.@CampId = callfunc("F_GC_GET_CAMP", .@GID);
+						.@Idx = callfunc("F_GC_GET_INDEX", .@num);
+						.@ExpireTime = callfunc("F_GC_GET_INFO", .@num, 2);
+						mes "^b312ff[Gerente do Guild Camp]^000000";
+						if( !.@CampId )
+							mes "Me desculpe, mais você não alugou nenhum acampamento.";
+						else if( .@CampId != .@num )
+							mes "Me desculpe, mais você não é o mestre deste acampamento.";
+						else if( !.@GID )
+							mes "Você não está em um clã.";
+						else if( !is_guild_leader() )
+							mes "Você precisa ser o líder de um Clã para remover o contrato.";
+						else if( gettimetick(2) >= .@ExpireTime )
+							mes "Me desculpe, mais sua alocação já encerrou.";
+						else {
+							query_sql "SELECT `kafra`, `vip`, `healer`, `warper`, `utils`, `pvp`, `enchant`, `gstor` FROM `guild_camp` WHERE `camp_id`='" + .@num + "'", .@Kafra, .@VIP, .@Healer, .@Warper, .@Utils, .@PvP, .@Enchant, .@GStorage;
+							query_sql "DELETE FROM `guild_camp` WHERE `camp_id`='" + .@num + "'";
+		
+							if( $@GCampHiddenNpc ) {
+								if( .@Kafra )
+									disablenpc "Funcionária Kafra#guildcamp_" + .@num;
+								if( .@VIP )
+									disablenpc "Kafra VIP#guildcamp_" + .@num;
+								if( .@Healer )
+									disablenpc "Curandeira#guildcamp_" + .@num;
+								if( .@Warper )
+									disablenpc "Teleportadora#guildcamp_" + .@num;
+								if( .@Utils )
+									disablenpc "Vendedor de Utilidades#guildcamp_" + .@num;
+								if( .@PvP )
+									disablenpc "Arena PvP#guildcamp_" + .@num;
+								if( .@Enchant )
+									disablenpc "Encantadora#guildcamp_" + .@num;
+								if( .@GStorage )
+									disablenpc "Armazém do Clã#guildcamp_" + .@num;
+								
+								disablenpc "Guild Camp#flag1_guildcamp_" + .@num;
+								disablenpc "Guild Camp#flag2_guildcamp_" + .@num;
+							}
+							else {
+								donpcevent "Guild Camp#flag1_guildcamp_" + .@num + "::OnEmblem";
+								donpcevent "Guild Camp#flag2_guildcamp_" + .@num + "::OnEmblem";
+							}
+						
+							if( $@GCampAnnounce )
+								announce "[Guild Camp]: O " + $@GCampSpots$[.@Idx+1] + " está disponível para aluguel.", bc_blue|bc_all;
+							
+							donpcevent "Guild Camp Área#guildcamp_" + .@num + "::OnBoard";
+							mes "Muito bem, a alocação foi encerrada.";
+							close;
+						}
+						next;
+						break;
+					case 2:
+						break;
+					case 3:
+						.@loop_1 = 0;
+						break;
+				}
+				
+			
+				query_sql "SELECT `camp_id` FROM `guild_camp` WHERE `guild_id`='" + .@GID + "' LIMIT 1", .@camp;
+				mes "^b312ff[Gerente do Guild Camp]^000000";
+				if( !.@GID )
+					mes "Você não está em um clã.";
+				else if( !is_guild_leader() )
+					mes "Você precisa ser o líder de um Clã para remover o contrato.";
+				else if( !.@camp )
+					mes "Seu clã ^ff0000não possui^000000 um acampamento!";
+				else {
+					mes "Seu contrato será encerrado e seu acampamento de clã desocupado, mas o dinheiro investido não será devolvido.";
+					mes "Quer continuar mesmo assim?";
+					next;
+					if( select("- Sim.", "- Não.") == 1 ) {
+						donpcevent "Guild Camp Events#" + .@camp + "::OnTerminate";
+						query_sql "DELETE FROM `guild_camp` WHERE `guild_id`='" + .@GID + "'";
+						mes "^b312ff[Gerente do Guild Camp]^000000";
+						mes "Pois bem, seu contrato está encerrado.";
+						close;
+					}
+				}
+				next;
+				break;
+			case 7:
+				.@loop_1 = 0;
+				break;
+		}
+	}
+	mes "^b312ff[Gerente do Guild Camp]^000000";
+	mes "Estarei aqui a sua disposição.";
+	close;
+	
+OnInit:
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Herney");
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 2;
+	end;
+}
+
+// Bulleting Boards
+// ====================================================
+-	script	Guild Camp#board	-1,{
+	.@num = callfunc("F_GC_GET_NUM",0,strnpcinfo(2));
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	.@Lv = callfunc("F_GC_COUNT_INVEST", .@num) + 1;
+	.@ExpireTime = callfunc("F_GC_GET_INFO", .@num, 2);
+	
+	if( .@Lv <= 1 )
+		.@Lv = 1;
+	else if( .@Lv >= 8 )
+		.@Lv = 9;
+
+	if( !.@GID || gettimetick(2) >= .@ExpireTime ) {
+		mes "[Acampamento]";
+		mes "Para alugar este acampamento, por favor procurar ^0000FFGerente de Campo^000000.";
+		close;
+	}
+	
+	
+	.@name$ = callfunc("F_GC_GUILD_NAME", .@GID);
+	mes "[Acampamento]";
+	mes "Acampamento do ^0000FFClã " + .@name$ + "^000000.";
+	mes "^FF0000Nv. de Investimento:^000000 " + .@Lv;
+	mes "^FF0000Alocação vence em:^000000 " + callfunc("Time2Str", .@ExpireTime) + ".";
+	close;
+	
+OnInit:
+OnBoard:
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+		
+	.@UID = getnpcid(0);
+	if( .@GID ) {
+		.@name$ = callfunc("F_GC_GUILD_NAME", .@GID);
+		setunittitle(.@UID, .@name$);
+	}
+	else
+		setunittitle(.@UID, "Vago");
+	setunitdata .@UID, UNPC_GROUP_ID, 14;
+	end;
+}
+
+// Flags
+// ====================================================
+-	script	Guild Camp#flag	-1,{
+	end;
+
+OnInit:
+	if( strnpcinfo(2) == "flag" )
+		end;
+OnEmblem:
+	.@num = callfunc("F_GC_GET_NUM", 1, strnpcinfo(2));
+	.@GID = callfunc("F_GC_GET_GUILD",.@num);
+	if( !.@GID ) {
+		if( $@GCampHiddenNpc )
+			disablenpc strnpcinfo(0);
+	}
+	flagemblem .@GID;
+	end;
+}
+
+// Kafras
+// ====================================================
+-	script	Guild Camp#kafra	-1,{
+	cutin "kafra_01",2;
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 3);
+	.@CHK2 = callfunc("F_GC_GET_INFO", .@num, 4);
+
+	if( !.@CHK ) {
+		mes "[Funcionária Kafra]";
+		mes "Me desculpe, mais o clã deste acampamento ainda não contratou meus serviços.";
+		close2;
+		cutin "kafra_01",255;
+		end;
+	}
+	
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	
+	if( .@GID != getcharid(2) ) {
+		mes "[Funcionária Kafra]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente ao Clã deste equipamento.";
+		close2;
+		cutin "kafra_01",255;
+		end;
+	}
+
+	mes "[Funcionária Kafra]";
+	mes "Bem vindo à Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para apoiar";
+	mes "você e seu Clã. Então,";
+	mes "como posso ser útil?";
+	next;
+	switch( select("- Usar Armazém.", "- Alugar um Carrinho.", (.@CHK2?"- Salvar Ponto.":""), "- Outras Informações.", "^FF0000- Cancelar.^000000") ) {
+		case 1:
+			if( !callfunc("F_CanOpenStorage") ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Me desculpe, mas você";
+				mes "precisa da Habilidade";
+				mes "Básica de Aprendiz no";
+				mes "nível 6 para usar o";
+				mes "serviço de Armazém.";
+				close2;
+				cutin "kafra_01", 255;
+				end;
+			}
+			
+			if( #kafra_code ) {
+				.@code = callfunc("F_GC_KAFRA_ENTERCODE", "Funcionária Kafra");
+				if( !.@code )
+					break;
+			}
+		
+			if( $@GCampKafraStorCost ) {
+				mes "[Funcionária Kafra]";
+				mes "Para usar o armazém é";
+				mes "necessário ^FF0000" + callfunc("F_InsertComma", $@GCampKafraStorCost) + " zenys^000000.";
+				mes "Deseja abrir o armazém?";
+				next;
+				if( select("- Sim.","^FF0000- Não, obrigado.^000000") == 2 )
+					break;
+					
+				if( Zeny < $@GCampKafraStorCost ) {
+					emotion ET_SORRY;
+					mes "[Funcionária Kafra]";
+					mes "Me desculpe, mais você não tem zeny suficiente.";
+					next;
+					break;
+				}
+				
+				RESRVPTS += ($@GCampKafraStorCost/5);
+				Zeny -= $@GCampKafraStorCost;
+				if( $@GCampKafraInvest )
+					callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraInvest == 2 ? 1 : 0, $@GCampKafraStorCost;
+			}
+			
+			emotion ET_THANKS;
+			mes "[Funcionária Kafra]";
+			mes "Aqui, deixe-me abrir o Armazém para você.";
+			mes "Obrigado e continue utilizando os serviços Kafra.";
+			close2;
+			openstorage;
+			cutin "kafra_01", 255;
+			end;
+		case 2:
+			if( BaseClass != Job_Merchant ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Me desculpe, mais sua classe";
+				mes "não utiliza carrinhos.";
+			}
+			else if( checkcart() == true ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Você já possuí um";
+				mes "Carrinho equipado.";
+				mes "Infelizmente, não podemos";
+				mes "alugar mais de um para";
+				mes "o mesmo cliente de uma vez.";
+			}
+			else if( getskilllv("MC_PUSHCART") == 0 ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Você precisa aprender a";
+				mes "habilidade \"Usar Carrinho\" para";
+				mes "utilizar um.";
+			}
+			else {
+				if( $@GCampKafraRentCost ) {
+					mes "[Funcionária Kafra]";
+					mes "Para alugar um carrinho é";
+					mes "necessário ^FF0000" + callfunc("F_InsertComma", $@GCampKafraRentCost) + " zenys^000000.";
+					mes "Deseja alugar um carrinho?";
+					next;
+					if( select("- Sim.","^FF0000- Não, obrigado.^000000") == 2 )
+						break;
+						
+					if( Zeny < $@GCampKafraRentCost ) {
+						emotion ET_SORRY;
+						mes "[Funcionária Kafra]";
+						mes "Me desculpe, mais você não tem zeny suficiente.";
+						next;
+						break;
+					}
+					
+					RESRVPTS += 48;
+					Zeny -= $@GCampKafraRentCost;
+					if( $@GCampKafraInvest )
+						callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraInvest == 2 ? 1 : 0, $@GCampKafraRentCost;
+				}
+				
+				setcart;
+				emotion ET_THANKS;
+				mes "[Funcionária Kafra]";
+				mes "Aqui está seu carrinho.";
+				mes "Obrigado e continue utilizando os serviços Kafra.";
+				close2;
+				cutin "kafra_01", 255;
+				end;
+			}
+			next;
+			break;
+		case 3:
+			mes "[Funcionária Kafra]";
+			if( $@GCampKafraSaveCost )
+				mes "Para salvar seu ponto no acampamento custa ^FF0000apenas " + callfunc("F_InsertComma", $@GCampKafraSaveCost) + " zenys^000000.";
+			mes "Deseja salvar seu ponto no acampamento?";
+			next;
+			if( select("- Sim.", "^FF0000- Não, obrigado.^000000") == 2 )
+				break;
+				
+			mes "[Funcionária Kafra]";
+			if( $@GCampKafraSaveCost ) {
+				if( Zeny < $@GCampKafraSaveCost ) {
+					emotion ET_SORRY;
+					mes "Me desculpe, mais você não tem zeny suficiente.";
+					next;
+					break;
+				}
+				Zeny -= $@GCampKafraSaveCost;
+				if( $@GCampKafraSaveCost )
+					callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraSaveCost == 2 ? 1 : 0, $@GCampKafraSaveCost;
+			
+			}
+			
+			.@i = callfunc("F_GC_GET_INDEX", .@num);
+			savepoint $@GCampSpots$[.@i+2],atoi($@GCampSpots$[.@i+3]),atoi($@GCampSpots$[.@i+4]),1,1;
+			emotion ET_THANKS;
+			mes "Ponto salvo com sucesso.";
+			mes "Obrigado e continue utilizando os serviços Kafra.";
+			close2;
+			cutin "kafra_01", 255;
+			end;
+		case 4:
+			mes "[Funcionária Kafra]";
+			mes "Em que mais posso te ajudar?";
+			next;
+			switch( select((.@CHK2?"- Pontos de Reserva Especial.":""), "- Senha do Armazém.", "^FF0000- Cancelar.^000000") ) {
+				case 1:
+					mes "[Funcionária Kafra]";
+					mes "Vamos ver...";
+					mes strcharinfo(0) + "...";
+					mes "Ah, você tem um total de ^0000FF pontos " + RESRVPTS + " de Reserva Especial^0000000.";
+					next;
+					mes "[Kafra Employee]";
+					mes "Você pode trocar seus";
+					mes "Pontos de Reserva Especial por";
+					mes "recompensas no Quartel Gneral";
+					mes "Kafra em Al De Baran. Por favor,";
+					mes "use nossos serviços convenientes";
+					mes "para ver os benefícios do nosso";
+					mes "programa de recompensas.";
+					next;
+					break;
+				case 2:					
+					if( #kafra_code == 0 ) {
+						mes "[Funcionária Kafra]";
+						mes "A Corporação Kafra orgulhosamente";
+						mes "apresenta um novo serviço:";
+						mes "Proteção adicional de armazém com senha.";
+						if( $@GCampKafraPassSetCost )
+							mes "Este serviço custa apenas ^FF0000" + callfunc("F_InsertComma", $@GCampKafraPassSetCost) + " zenys^000000.";
+						next;
+						if( select("- Definir uma senha.", "^FF0000- Cancelar.^000000") == 2 )
+							break;
+							
+						if( $@GCampKafraPassSetCost && Zeny < $@GCampKafraPassSetCost ) {
+							emotion ET_SORRY;
+							mes "[Funcionária Kafra]";
+							mes "Me desculpe, mais você não tem zeny suficiente.";
+							next;
+							break;
+						}
+
+						.@code = callfunc("F_GC_KAFRA_SETCODE", "Funcionária Kafra");	
+						if( !.@code )
+							break;
+						
+						mes "[Funcionária Kafra]";
+						if( $@GCampKafraPassSetCost ) {
+							if( Zeny < $@GCampKafraPassSetCost ) {
+								emotion ET_SORRY;
+								mes "Me desculpe, mais você não tem zeny suficiente.";
+								next;
+								break;
+							}
+							Zeny -= $@GCampKafraPassSetCost;
+							if( $@GCampKafraPassSetCost )
+								callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraPassSetCost == 2 ? 1 : 0, $@GCampKafraPassSetCost;
+						}
+						#kafra_code = .@code;
+						emotion ET_THANKS;
+						mes "Você protegeu seu armazém com uma senha secreta.";
+						mes "Obrigado e continue utilizando os serviços Kafra.";
+						close2;
+						cutin "kafra_01", 255;
+						end;
+					}
+					else {
+						mes "[Funcionária Kafra]";
+						mes "Seu armazém está protegido por senha.";
+						mes "O que você deseja fazer?";
+						next;
+						switch( select("- Trocar Senha.", "- Remover Senha.", "^FF0000- Cancelar.^000000" ) ) {
+							case 1:
+								.@code = callfunc("F_GC_KAFRA_ENTERCODE", "Funcionária Kafra");
+								if( !.@code )
+									break;
+								
+								.@code = callfunc("F_GC_KAFRA_SETCODE", "Funcionária Kafra");
+								if( !.@code )
+									break;
+									
+								if( .@code == #kafra_code ) {
+									mes "[Funcionária Kafra]";
+									mes "Você informou a mesma senha.";
+									next;
+									break;
+								}
+								
+								mes "[Funcionária Kafra]";
+								mes "Tem certeza que deseja alterar a sua senha?";
+								if( $@GCampKafraPassSetCost )
+									mes "Este serviço custa ^FF0000apenas " + callfunc("F_InsertComma", $@GCampKafraPassSetCost) + " zenys^000000.";
+								next;
+								if( select("- Sim.", "^FF0000- Não, obrigado.^000000") == 2 )
+									break;
+								
+								mes "[Funcionária Kafra]";
+								if( $@GCampKafraPassSetCost ) {
+									if( Zeny < $@GCampKafraPassSetCost ) {
+										emotion ET_SORRY;
+										mes "Me desculpe, mais você não tem zeny suficiente.";
+										next;
+										break;
+									}
+									
+									Zeny -= $@GCampKafraPassSetCost;
+									if( $@GCampKafraPassSetCost )
+										callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraPassSetCost == 2 ? 1 : 0, $@GCampKafraPassSetCost;
+								}
+								#kafra_code = .@code;
+								emotion ET_THANKS;
+								mes "Você protegeu seu armazém com uma senha secreta.";
+								mes "Obrigado e continue utilizando os serviços Kafra.";
+								close2;
+								cutin "kafra_01", 255;
+								end;
+							case 2:
+								.@code = callfunc("F_GC_KAFRA_ENTERCODE", "Funcionária Kafra");
+								if( !.@code )
+									break;
+
+								mes "[Funcionária Kafra]";
+								mes "Tem certeza que deseja remover a sua senha?";
+								if( $@GCampKafraPassRemCost )
+									mes "Este serviço custa apenas ^FF0000" + callfunc("F_InsertComma", $@GCampKafraPassRemCost) + " zenys^000000.";
+								next;
+								if( select("- Sim.", "^FF0000- Não, obrigado.^000000") == 2 )
+									break;
+									
+								mes "[Funcionária Kafra]";
+								if( $@GCampKafraPassSetCost ) {
+									if( Zeny < $@GCampKafraPassRemCost ) {
+										emotion ET_SORRY;
+										mes "Me desculpe, mais você não tem zeny suficiente.";
+										next;
+										break;
+									}
+									
+									Zeny -= $@GCampKafraPassRemCost;
+									if( $@GCampKafraPassRemCost )
+										callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraPassRemCost == 2 ? 1 : 0, $@GCampKafraPassRemCost;
+								}
+								#kafra_code = 0;
+								emotion ET_THANKS;
+								mes "Você removeu sua senha secreta.";
+								mes "Obrigado e continue utilizando os serviços Kafra.";
+								close2;
+								cutin "kafra_01", 255;
+								end;
+							case 3:
+								break;
+						}
+					}
+					break;
+				case 3:
+					break;
+			}
+			break;
+		case 5:
+			break;
+	}
+
+	mes "[Funcionária Kafra]";
+	mes "Nós, aqui da Corporação Kafra,";
+	mes "estamos sempre nos esforçando";
+	mes "para lhe oferecer os melhores";
+	mes "serviços. Esperamos atender às";
+	mes "suas necessidades de aventura e";
+	mes "padrões de excelência.";
+	close2;
+	cutin "kafra_01", 255;
+	end;
+
+OnInit:
+	if( strnpcinfo(2) == "kafra" )
+		end;
+		
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Karin");
+	setunitdata .@UID, UNPC_GROUP_ID, 7;
+		
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 3);
+	if( !.@CHK && $@GCampHiddenNpc )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Kafras
+// ====================================================
+-	script	Guild Camp#kafravip	-1,{
+	cutin "kafra_08",2;
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 4);
+
+	if( !.@CHK ) {
+		mes "[Funcionária Kafra]";
+		mes "Me desculpe, mais o clã deste acampamento ainda não contratou meus serviços.";
+		close2;
+		cutin "kafra_08",255;
+		end;
+	}
+	
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	
+	if( .@GID != getcharid(2) ) {
+		mes "[Funcionária Kafra]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente ao Clã deste equipamento.";
+		close2;
+		cutin "kafra_08",255;
+		end;
+	}
+	
+	if( getgroupid() < $@GCampGroupVIP ) {
+		mes "[Funcionária Kafra]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente aos jogadores VIP.";
+		close2;
+		cutin "kafra_08",255;
+		end;
+	}
+
+	mes "[Funcionária Kafra]";
+	mes "Bem vindo à Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para apoiar";
+	mes "você e seu Clã. Então,";
+	mes "como posso ser útil?";
+	next;
+	switch( select("- Usar Armazém.", "- Alugar um Carrinho.", "- Salvar Ponto.", "- Outras Informações.", "^FF0000- Cancelar.^000000") ) {
+		case 1:
+			if( !callfunc("F_CanOpenStorage") ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Me desculpe, mas você";
+				mes "precisa da Habilidade";
+				mes "Básica de Aprendiz no";
+				mes "nível 6 para usar o";
+				mes "serviço de Armazém.";
+				close2;
+				cutin "kafra_08", 255;
+				end;
+			}
+			
+			if( #kafra_code ) {
+				.@code = callfunc("F_GC_KAFRA_ENTERCODE", "Funcionária Kafra");
+				if( !.@code )
+					break;
+			}
+		
+			if( $@GCampKafraVStorCost ) {
+				mes "[Funcionária Kafra]";
+				mes "Para usar o armazém é";
+				mes "necessário ^FF0000" + callfunc("F_InsertComma", $@GCampKafraVStorCost) + " zenys^000000.";
+				mes "Deseja abrir o armazém?";
+				next;
+				if( select("- Sim.","^FF0000- Não, obrigado.^000000") == 2 )
+					break;
+					
+				if( Zeny < $@GCampKafraVStorCost ) {
+					emotion ET_SORRY;
+					mes "[Funcionária Kafra]";
+					mes "Me desculpe, mais você não tem zeny suficiente.";
+					next;
+					break;
+				}
+				
+				RESRVPTS += ($@GCampKafraVStorCost/5);
+				Zeny -= $@GCampKafraVStorCost;
+				if( $@GCampKafraVInvest )
+					callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraVInvest == 2 ? 1 : 0, $@GCampKafraVStorCost;
+			}
+			
+			emotion ET_THANKS;
+			mes "[Funcionária Kafra]";
+			mes "Aqui, deixe-me abrir o Armazém para você.";
+			mes "Obrigado e continue utilizando os serviços Kafra.";
+			close2;
+			openstorage;
+			cutin "kafra_08", 255;
+			end;
+		case 2:
+			if( BaseClass != Job_Merchant ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Me desculpe, mais sua classe";
+				mes "não utiliza carrinhos.";
+			}
+			else if( checkcart() == true ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Você já possuí um";
+				mes "Carrinho equipado.";
+				mes "Infelizmente, não podemos";
+				mes "alugar mais de um para";
+				mes "o mesmo cliente de uma vez.";
+			}
+			else if( getskilllv("MC_PUSHCART") == 0 ) {
+				emotion ET_SCRATCH;
+				mes "[Funcionária Kafra]";
+				mes "Você precisa aprender a";
+				mes "habilidade \"Usar Carrinho\" para";
+				mes "utilizar um.";
+			}
+			else {
+				if( $@GCampKafraVRentCost ) {
+					mes "[Funcionária Kafra]";
+					mes "Para alugar um carrinho é";
+					mes "necessário ^FF0000" + callfunc("F_InsertComma", $@GCampKafraVRentCost) + " zenys^000000.";
+					mes "Deseja alugar um carrinho?";
+					next;
+					if( select("- Sim.","^FF0000- Não, obrigado.^000000") == 2 )
+						break;
+						
+					if( Zeny < $@GCampKafraVRentCost ) {
+						emotion ET_SORRY;
+						mes "[Funcionária Kafra]";
+						mes "Me desculpe, mais você não tem zeny suficiente.";
+						next;
+						break;
+					}
+					
+					RESRVPTS += 48;
+					Zeny -= $@GCampKafraVRentCost;
+					if( $@GCampKafraVInvest )
+						callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraVInvest == 2 ? 1 : 0, $@GCampKafraVRentCost;
+				}
+				
+				setcart;
+				emotion ET_THANKS;
+				mes "[Funcionária Kafra]";
+				mes "Aqui está seu carrinho.";
+				mes "Obrigado e continue utilizando os serviços Kafra.";
+				close2;
+				cutin "kafra_08", 255;
+				end;
+			}
+			next;
+			break;
+		case 3:
+			mes "[Funcionária Kafra]";
+			if( $@GCampKafraVSaveCost )
+				mes "Para salvar seu ponto no acampamento custa ^FF0000apenas " + callfunc("F_InsertComma", $@GCampKafraVSaveCost) + " zenys^000000.";
+			mes "Deseja salvar seu ponto no acampamento?";
+			next;
+			if( select("- Sim.", "^FF0000- Não, obrigado.^000000") == 2 )
+				break;
+				
+			mes "[Funcionária Kafra]";
+			if( $@GCampKafraVSaveCost ) {
+				if( Zeny < $@GCampKafraVSaveCost ) {
+					emotion ET_SORRY;
+					mes "Me desculpe, mais você não tem zeny suficiente.";
+					next;
+					break;
+				}
+				Zeny -= $@GCampKafraVSaveCost;
+				if( $@GCampKafraVSaveCost )
+					callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraVSaveCost == 2 ? 1 : 0, $@GCampKafraVSaveCost;
+			
+			}
+			
+			.@i = callfunc("F_GC_GET_INDEX", .@num);
+			savepoint $@GCampSpots$[.@i+2],atoi($@GCampSpots$[.@i+3]),atoi($@GCampSpots$[.@i+4]),1,1;
+			emotion ET_THANKS;
+			mes "Ponto salvo com sucesso.";
+			mes "Obrigado e continue utilizando os serviços Kafra.";
+			close2;
+			cutin "kafra_08", 255;
+			end;
+		case 4:
+			mes "[Funcionária Kafra]";
+			mes "Em que mais posso te ajudar?";
+			next;
+			switch( select("- Pontos de Reserva Especial.", "- Senha do Armazém.", "^FF0000- Cancelar.^000000") ) {
+				case 1:
+					mes "[Funcionária Kafra]";
+					mes "Vamos ver...";
+					mes strcharinfo(0) + "...";
+					mes "Ah, você tem um total de ^0000FF pontos " + RESRVPTS + " de Reserva Especial^0000000.";
+					next;
+					mes "[Kafra Employee]";
+					mes "Você pode trocar seus";
+					mes "Pontos de Reserva Especial por";
+					mes "recompensas no Quartel Gneral";
+					mes "Kafra em Al De Baran. Por favor,";
+					mes "use nossos serviços convenientes";
+					mes "para ver os benefícios do nosso";
+					mes "programa de recompensas.";
+					next;
+					break;
+				case 2:					
+					if( #kafra_code == 0 ) {
+						mes "[Funcionária Kafra]";
+						mes "A Corporação Kafra orgulhosamente";
+						mes "apresenta um novo serviço:";
+						mes "Proteção adicional de armazém com senha.";
+						if( $@GCampKafraVPassSetCost )
+							mes "Este serviço custa apenas ^FF0000" + callfunc("F_InsertComma", $@GCampKafraVPassSetCost) + " zenys^000000.";
+						next;
+						if( select("- Definir uma senha.", "^FF0000- Cancelar.^000000") == 2 )
+							break;
+							
+						if( $@GCampKafraVPassSetCost && Zeny < $@GCampKafraVPassSetCost ) {
+							emotion ET_SORRY;
+							mes "[Funcionária Kafra]";
+							mes "Me desculpe, mais você não tem zeny suficiente.";
+							next;
+							break;
+						}
+
+						.@code = callfunc("F_GC_KAFRA_SETCODE", "Funcionária Kafra");	
+						if( !.@code )
+							break;
+						
+						mes "[Funcionária Kafra]";
+						if( $@GCampKafraVPassSetCost ) {
+							if( Zeny < $@GCampKafraVPassSetCost ) {
+								emotion ET_SORRY;
+								mes "Me desculpe, mais você não tem zeny suficiente.";
+								next;
+								break;
+							}
+							Zeny -= $@GCampKafraVPassSetCost;
+							if( $@GCampKafraVPassSetCost )
+								callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraVPassSetCost == 2 ? 1 : 0, $@GCampKafraVPassSetCost;
+						}
+						#kafra_code = .@code;
+						emotion ET_THANKS;
+						mes "Você protegeu seu armazém com uma senha secreta.";
+						mes "Obrigado e continue utilizando os serviços Kafra.";
+						close2;
+						cutin "kafra_08", 255;
+						end;
+					}
+					else {
+						mes "[Funcionária Kafra]";
+						mes "Seu armazém está protegido por senha.";
+						mes "O que você deseja fazer?";
+						next;
+						switch( select("- Trocar Senha.", "- Remover Senha.", "^FF0000- Cancelar.^000000" ) ) {
+							case 1:
+								.@code = callfunc("F_GC_KAFRA_ENTERCODE", "Funcionária Kafra");
+								if( !.@code )
+									break;
+								
+								.@code = callfunc("F_GC_KAFRA_SETCODE", "Funcionária Kafra");
+								if( !.@code )
+									break;
+									
+								if( .@code == #kafra_code ) {
+									mes "[Funcionária Kafra]";
+									mes "Você informou a mesma senha.";
+									next;
+									break;
+								}
+								
+								mes "[Funcionária Kafra]";
+								mes "Tem certeza que deseja alterar a sua senha?";
+								if( $@GCampKafraVPassSetCost )
+									mes "Este serviço custa ^FF0000apenas " + callfunc("F_InsertComma", $@GCampKafraVPassSetCost) + " zenys^000000.";
+								next;
+								if( select("- Sim.", "^FF0000- Não, obrigado.^000000") == 2 )
+									break;
+								
+								mes "[Funcionária Kafra]";
+								if( $@GCampKafraVPassSetCost ) {
+									if( Zeny < $@GCampKafraVPassSetCost ) {
+										emotion ET_SORRY;
+										mes "Me desculpe, mais você não tem zeny suficiente.";
+										next;
+										break;
+									}
+									
+									Zeny -= $@GCampKafraVPassSetCost;
+									if( $@GCampKafraVPassSetCost )
+										callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraVPassSetCost == 2 ? 1 : 0, $@GCampKafraVPassSetCost;
+								}
+								#kafra_code = .@code;
+								emotion ET_THANKS;
+								mes "Você protegeu seu armazém com uma senha secreta.";
+								mes "Obrigado e continue utilizando os serviços Kafra.";
+								close2;
+								cutin "kafra_08", 255;
+								end;
+							case 2:
+								.@code = callfunc("F_GC_KAFRA_ENTERCODE", "Funcionária Kafra");
+								if( !.@code )
+									break;
+
+								mes "[Funcionária Kafra]";
+								mes "Tem certeza que deseja remover a sua senha?";
+								if( $@GCampKafraVPassRemCost )
+									mes "Este serviço custa apenas ^FF0000" + callfunc("F_InsertComma", $@GCampKafraVPassRemCost) + " zenys^000000.";
+								next;
+								if( select("- Sim.", "^FF0000- Não, obrigado.^000000") == 2 )
+									break;
+									
+								mes "[Funcionária Kafra]";
+								if( $@GCampKafraVPassSetCost ) {
+									if( Zeny < $@GCampKafraVPassRemCost ) {
+										emotion ET_SORRY;
+										mes "Me desculpe, mais você não tem zeny suficiente.";
+										next;
+										break;
+									}
+									
+									Zeny -= $@GCampKafraVPassRemCost;
+									if( $@GCampKafraVPassRemCost )
+										callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampKafraVPassRemCost == 2 ? 1 : 0, $@GCampKafraVPassRemCost;
+								}
+								#kafra_code = 0;
+								emotion ET_THANKS;
+								mes "Você removeu sua senha secreta.";
+								mes "Obrigado e continue utilizando os serviços Kafra.";
+								close2;
+								cutin "kafra_08", 255;
+								end;
+							case 3:
+								break;
+						}
+					}
+					break;
+				case 3:
+					break;
+			}
+			break;
+		case 5:
+			break;
+	}
+
+	mes "[Funcionária Kafra]";
+	mes "Nós, aqui da Corporação Kafra,";
+	mes "estamos sempre nos esforçando";
+	mes "para lhe oferecer os melhores";
+	mes "serviços. Esperamos atender às";
+	mes "suas necessidades de aventura e";
+	mes "padrões de excelência.";
+	close2;
+	cutin "kafra_08", 255;
+	end;
+
+OnInit:
+	if( strnpcinfo(2) == "kafravip" )
+		end;
+		
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Amanda");
+	setunitdata .@UID, UNPC_GROUP_ID, 6;
+		
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 4);
+	if( !.@CHK && $@GCampHiddenNpc )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Healer
+// ====================================================
+-	script	Guild Camp#healer	-1,{
+	.@num = callfunc("F_GC_GET_NUM",0,strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 5);
+	if( !.@CHK ) {
+		mes "[Curandeira]";
+		mes "Me desculpe, mais o clã deste acampamento ainda não contratou meus serviços.";
+		close;
+	}
+	
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	
+	if( .@GID != getcharid(2) ) {
+		mes "[Curandeira]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente ao Clã deste equipamento.";
+		close;
+	}
+	else if( $@GCampHealCost ) {
+		mes "[Curandeira]";
+		mes "Para se curar é necessário ^FF0000" + callfunc("F_InsertComma", $@GCampHealCost) + " zeny(s)^000000.";
+		mes "Deseja se curar?";
+		next;
+		if( select("- Sim, por favor.", "- Não obrigado.") == 2 ) {
+			mes "[Curandeira]";
+			mes "Muito bem, estarei aqui se precisar.";
+			close;
+		}
+		
+		mes "[Curandeira]";
+		if( Zeny < $@GCampHealCost )
+			mes "Você não tem Zeny suficiente.";
+		else {
+			Zeny -= $@GCampHealCost;
+			
+			if( $@GCampHealInvest )
+				callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampHealInvest == 2 ? 1 : 0, $@GCampHealCost;
+			
+			callsub subHeal, .@num;
+			mes "Muito bem, irei realizar sua cura.";
+		}
+		close;
+	}
+	
+	callsub subHeal, .@num;
+	end;
+
+subHeal:
+	.@is_vip = getgroupid() >= 1? 1 : 0;
+	.@is_premium = callfunc("F_isPremium");
+
+	specialeffect2 EF_HEAL2;
+	percentheal 100,100;
+
+	if( $@GCampRepair )
+		repairall;
+
+	if( .@is_premium ){
+		callfunc("F_BuffPremium");	
+		.@premium_message$ = "[Ragna Frost]: Você ainda possui %s de Buff Premium!";
+		dispbottom sprintf(.@premium_message$, callfunc("F_RemainingBuffTime"));
+	}else if (.@is_vip) {
+		callfunc("F_BuffVip");
+	} else if( $@GCampBuffs ) {
+		// Mantém buffs padrão caso não tenha VIP ou Premium
+		specialeffect2 EF_INCAGILITY;
+		sc_start SC_INCREASEAGI,600000,10;
+		specialeffect2 EF_BLESSING;
+		sc_start SC_BLESSING,600000,10;
+		sc_end SC_STONE;
+		sc_end SC_FREEZE;
+		sc_end SC_STUN;
+		sc_end SC_SLEEP;
+		sc_end SC_POISON;
+		sc_end SC_CURSE;
+		sc_end SC_SILENCE;
+		sc_end SC_CONFUSION;
+		sc_end SC_BLIND;
+		sc_end SC_BLOODING;
+		sc_end SC_DEC_AGI;
+		sc_end SC_NOEQUIPWEAPON;
+		sc_end SC_NOEQUIPSHIELD;
+		sc_end SC_NOEQUIPARMOR;
+		sc_end SC_NOEQUIPHELM;
+		sc_end SC__STRIPACCESSARY;
+		sc_end SC_ORCISH;
+
+		.@invest = callfunc("F_GC_COUNT_INVEST", getarg(0));
+		if( .@invest >= 2 ){
+			specialeffect2 EF_IMPOSITIO;
+			sc_start SC_IMPOSITIO,600000,5;
+			specialeffect2 EF_SUFFRAGIUM;
+			sc_start SC_SUFFRAGIUM,600000,5;
+			specialeffect2 EF_MAGNIFICAT;
+			sc_start SC_MAGNIFICAT,600000,5;
+		}
+
+		if( .@invest >= 3 ){
+			specialeffect2 EF_GLORIA;
+			sc_start SC_GLORIA,600000,5;
+			specialeffect2 EF_ASSUMPTIO;
+			sc_start SC_ASSUMPTIO,180000,5;
+			sc_start SC_STRFOOD,600000,5;
+			sc_start SC_INTFOOD,600000,5;
+			sc_start SC_DEXFOOD,600000,5;
+			sc_start SC_AGIFOOD,600000,5;
+			sc_start SC_VITFOOD,600000,5;
+			sc_start SC_LUKFOOD,600000,5;
+
+			identifyall(true);
+			repairall getcharid(0);
+		}
+	}
+
+	return;
+	
+OnInit:
+	if( strnpcinfo(2) == "healer" )
+		end;
+		
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Emilly");
+	setunitdata .@UID, UNPC_GROUP_ID, 10;
+		
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 5);
+	if( !.@CHK && $@GCampHiddenNpc )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Enchants
+// ====================================================
+-	script	Guild Camp#enchant	-1,{
+	.@num = callfunc("F_GC_GET_NUM",0,strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 9);
+	if( !.@CHK ) {
+		mes "[Encantadora]";
+		mes "Me desculpe, mais o clã deste acampamento ainda não contratou meus serviços.";
+		close;
+	}
+	
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	
+	if( .@GID != getcharid(2) ) {
+		mes "[Encantadora]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente ao Clã deste equipamento.";
+		close;
+	}
+	
+	mes "[Encantadora]";
+	mes "Olá, eu posso Encantar a sua Arma com qualquer elemento.";
+	mes "Em que posso ajudar?";
+	next;
+    switch( select("- Ecantar com Geada.", "- Encantar com Chama.", "- Encantar com Terremoto.", "- Encantar com Ventania.", "- Encantar com Sagrado.", "^FF0000- Cancelar.^000000") ) {
+		case 1:
+			callsub subEnchant, SC_WATERWEAPON, "Geada", $@GCampEnchants[0], $@GCampEnchants[1], $@GCampEnchants[2];
+			break;
+		case 2:
+			callsub subEnchant, SC_FIREWEAPON, "Chama", $@GCampEnchants[3], $@GCampEnchants[4], $@GCampEnchants[5];
+			break;
+		case 3:
+			callsub subEnchant, SC_EARTHWEAPON, "Terremoto", $@GCampEnchants[6], $@GCampEnchants[7], $@GCampEnchants[8];
+			break;
+		case 4:
+			callsub subEnchant, SC_WINDWEAPON, "Ventania", $@GCampEnchants[9], $@GCampEnchants[10], $@GCampEnchants[11];
+			break;
+		case 5:
+			callsub subEnchant, SC_ASPERSIO, "Sagrado", $@GCampEnchants[12], $@GCampEnchants[13], $@GCampEnchants[14];
+			break;
+	}
+	
+	mes "[Encantadora]";
+	mes "Muito bem, estarei aqui caso precisar.";
+	close;
+	
+subEnchant:
+	.@Timer = getarg(2);
+	.@Cost = getarg(3);
+	.@Level = getarg(4);
+	
+	.@tick = .@Timer*1000;
+	
+	mes "[Encantadora]";
+	if( .@Cost ) {
+		mes "Para encantar sua arma com ^0000FF" + getarg(1) + "^000000, é necessário ^FF0000" + callfunc("F_InsertComma", .@Cost) + " zeny(s)^000000.";
+		mes "^FF0000Tempo de duração:^000000 " + callfunc("Time2Str", gettimetick(2)+.@Timer);
+	
+		mes "Deseja continuar com o encantamento?";
+		next;
+		if( select("- Sim, por favor.", "- Não, obrigado.") == 2 )
+			return;
+		
+		mes "[Encantadora]";
+		if( Zeny < .@Cost ) {
+			mes "Me desculpe, mas você não tem Zeny suficiente.";
+			close;
+		}
+		
+		if( $@GCampEnchantInvest )
+			callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampEnchantInvest == 2 ? 1: 0, .@Cost;
+			
+		mes "Muito bem, você encantou sua arma.";
+	}
+	else {
+		mes "Muito bem, você encantou sua arma.";
+		mes "^FF0000Tempo de duração:^000000 " + callfunc("Time2Str", gettimetick(2)+.@tick);
+	}
+	
+	sc_start getarg(0),.@tick,.@Level;
+	close;
+	
+OnInit:
+	if( strnpcinfo(2) == "enchant" )
+		end;
+
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Emerald");
+	setunitdata .@UID, UNPC_GROUP_ID, 9;
+		
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 9);
+	if( !.@CHK && $@GCampHiddenNpc )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Warper
+// ====================================================
+-	script	Guild Camp#warper	-1,{
+
+function Go; function Disp; function Pick; function Restrict;
+		mes "^FF0000[Teletransportadora]^000000";
+		mes "Olá ^0000FF"+strcharinfo(0)+"^000000,";
+		mes "Selecione um local para se teleportar!";
+// --------------------------------------------------
+//	Main Menu:
+// --------------------------------------------------
+
+menu	"[»] Utimo Mapa ^777777["+lastwarp$+"]^000000",-,
+		"^3CB371[»]^000000 Cidades",Cidades,
+		"^880808[»]^000000 Campos",Campos,
+		"^0000FF[»]^000000 Cavernas",Cavernas,
+		"[»] Mapa Especiais ^777777",Especiais;
+
+	if (lastwarp$ == "")
+		message strcharinfo(0),"você não tem nenhum mapa salvo.";
+	else
+		warp lastwarp$,lastwarpx,lastwarpy;
+	end;
+
+// ------------------- Functions -------------------
+// * Go("<map>",<x>,<y>);
+//	~ Warps directly to a map.
+//
+// * Disp("<Menu Option>",<first option>,<last option>);
+// * Pick("<map_prefix>"{,<index offset>});
+//	~ Dynamic menu and map selection (auto-numbered).
+//
+// * Disp("<Option 1>:<Option 2>:<etc.>");
+// * Pick("","<map1>","<map2>","<etc.>");
+//	~ Manual menu and map selection (listed).
+//
+// * Restrict("<RE | Pre-RE>"{,<menu option numbers>});
+//	~ Only allows map for Renewal or Pre-Renewal modes.
+//     If menu option numbers are given, only those maps
+//     will be restricted (i.e. not for "Go").
+//
+// Other notes:
+//   ~ Array @c[] holds all (x,y) coordinates.
+//   ~ Use @c[2] EXCEPT when maps begin dynamically
+//	  at 0: use @c[0] and Pick() offset 1.
+// --------------------------------------------------
+
+function Go {
+	lastwarp$ = getarg(0);
+	lastwarpx = getarg(1,0);
+	lastwarpy = getarg(2,0);
+	warp getarg(0),getarg(1,0),getarg(2,0);
+	end;
+}
+function Disp {
+	if (getargcount() < 3)
+		@menu$ = getarg(0);
+	else {
+		@menu$ = "";
+		for (.@i = getarg(1); .@i <= getarg(2); .@i++)
+			@menu$ = @menu$+getarg(0)+" "+.@i+":";
+	}
+	return;
+}
+function Pick {
+	.@warp_block = @warp_block;
+	@warp_block = 0;
+	.@select = select(@menu$);
+	if (getarg(0) == "") {
+		.@i = .@select;
+		.@map$ = getarg(.@i);
+	} else {
+		.@i = .@select-getarg(1,0);
+		.@map$ = getarg(0)+((.@i<10)?"0":"")+.@i;
+	}
+	if (.@warp_block & (1<<.@select)) {
+		message strcharinfo(0),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
+		end;
+	}
+	.@x = @c[.@i*2];
+	.@y = @c[.@i*2+1];
+	deletearray @c[0],getarraysize(@c);
+	Go(.@map$,.@x,.@y);
+}
+function Restrict {
+	if ((getarg(0) == "RE" && !RENEWAL) || (getarg(0) == "Pre-RE" && RENEWAL)) {
+		if (getarg(1,0)) {
+			@warp_block = 0;
+			for (.@i = 1; .@i < getargcount(); .@i++)
+				@warp_block = @warp_block | (1<<getarg(.@i));
+		} else {
+			message strcharinfo(0),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
+			end;
+		}
+	}
+	return;
+}
+
+// --------------------------------------------------
+	Cidades:
+// --------------------------------------------------
+menu	"^880808[»]^000000 Cidade de Prontera",T1,
+        "^880808[»]^000000 Cidade de Alberta",T2,
+        "^880808[»]^000000 Cidade de Aldebaran",T3,
+        "^880808[»]^000000 Cidade de Amatsu",T4,
+        "^880808[»]^000000 Cidade de Ayothaya",T5,
+        "^880808[»]^000000 Cidade de Brasilis",T6,
+        "^880808[»]^000000 Cidade de Comodo",T7,
+        "^880808[»]^000000 Cidade de Dewata",T8,
+        "^880808[»]^000000 Cidade de Eclage",T9, 
+        "^880808[»]^000000 Cidade de Einbech",T10, 
+        "^880808[»]^000000 Cidade de Einbroch",T11, 
+        "^880808[»]^000000 Cidade de El Dicastes",T12, 
+        "^880808[»]^000000 Cidade de Geffen",T13, 
+        "^880808[»]^000000 Cidade de Gonryun",T14, 
+        "^880808[»]^000000 Cidade de Hugel",T15,
+        "^880808[»]^000000 Cidade de Izlude",T16, 
+		"^880808[»]^000000 Cidade de Jawaii",T17, 
+		"^880808[»]^000000 Cidade de Lasagna",T18, 
+		"^880808[»]^000000 Cidade de Lighthalzen",T19, 
+		"^880808[»]^000000 Cidade de Louyang",T20,
+        "^880808[»]^000000 Cidade de Lutie",T21, 
+		"^880808[»]^000000 Cidade de Malangdo",T22, 
+		"^880808[»]^000000 Cidade de Malaya",T23, 
+		"^880808[»]^000000 Cidade de Manuk",T24,
+        "^880808[»]^000000 Cidade de Midgarts Expedition Camp",T25, 
+		"^880808[»]^000000 Cidade de Mora",T26, 
+		"^880808[»]^000000 Cidade de Morroc",T27, 
+		"^880808[»]^000000 Cidade de Moscovia",T28,
+        "^880808[»]^000000 Cidade de Nameless Island",T29, 
+		"^880808[»]^000000 Cidade de Niflheim",T30, 
+		"^880808[»]^000000 Cidade de Payon",T31, 
+		"^880808[»]^000000 Cidade de Rachel",T32, 
+		"^880808[»]^000000 Cidade de Splendide",T33,
+        "^880808[»]^000000 Cidade de Thor Camp",T34, 
+		"^880808[»]^000000 Cidade de Umbala",T35, 
+		"^880808[»]^000000 Cidade de Veins",T36, 
+		"^880808[»]^000000 Cidade de Yuno",T37;
+
+T1: Go("prontera",155,183);
+T2: Go("alberta",28,234);
+T3: Go("aldebaran",140,131);
+T4: Go("amatsu",198,84);
+T5: Go("ayothaya",208,166);
+T6: Restrict("RE");
+    Go("brasilis",196,217);
+T7: Go("comodo",209,143);
+T8: Restrict("RE");
+    Go("dewata",200,180);
+T9: Restrict("RE");
+    Go("ecl_in01",48,53);
+T10: Go("einbech",63,35);
+T11: Go("einbroch",64,200);
+T12: Restrict("RE");
+     Go("dicastes01",198,187);
+T13: Go("geffen",119,59);
+T14: Go("gonryun",160,120);
+T15: Go("hugel",96,145);
+T16: Go("izlude",128,(checkre(3)?146:114));
+T17: Go("jawaii",251,132);
+T18: Restrict("RE");
+     Go("lasagna",193,182);
+T19: Go("lighthalzen",158,92);
+T20: Go("louyang",217,100);
+T21: Go("xmas",147,134);
+T22: Restrict("RE");
+     Go("malangdo",140,114);
+T23: Restrict("RE");
+     Go("malaya",231,200);
+T24: Go("manuk",282,138);
+T25: Go("mid_camp",210,288);
+T26: Restrict("RE");
+     Go("mora",55,146);
+T27: Go("morocc",156,93);
+T28: Go("moscovia",223,184);
+T29: Go("nameless_n",256,215);
+T30: Go("niflheim",202,174);
+T31: Go("payon",179,100);
+T32: Go("rachel",130,110);
+T33: Go("splendide",201,147);
+T34: Go("thor_camp",246,68);
+T35: Go("umbala",97,153);
+T36: Go("veins",216,123);
+T37: Go("yuno",157,51);
+
+// --------------------------------------------------
+	Campos:
+// --------------------------------------------------
+menu		"^880808[»]^000000 Campos de Amatsu",F1,
+
+		"^880808[»]^000000 Campos de Amatsu",F1, 
+		"^880808[»]^000000 Campos de Ayothaya",F2, 
+		"^880808[»]^000000 Campos de Bifrost", F3,
+        "^880808[»]^000000 Campos de Brasilis",F4, 
+		"^880808[»]^000000 Campos de Comodo",F5, 
+		"^880808[»]^000000 Campos de Dewata",F6,
+        "^880808[»]^000000 Campos de Eclage",F7, 
+		"^880808[»]^000000 Campos de Einbroch",F8, 
+		"^880808[»]^000000 Campos de El Dicastes",F9,
+        "^880808[»]^000000 Campos de Geffen",F10, 
+		"^880808[»]^000000 Campos de Gonryun",F11, 
+		"^880808[»]^000000 Campos de Hugel",F12,
+        "^880808[»]^000000 Campos de Lasagna",F13, 
+		"^880808[»]^000000 Campos de Lighthalzen",F14, 
+		"^880808[»]^000000 Campos de Louyang",F15, 
+        "^880808[»]^000000 Campos de Lutie",F16, 
+		"^880808[»]^000000 Campos de Malaya",F17, 
+		"^880808[»]^000000 Campos de Manuk",F18, 
+        "^880808[»]^000000 Campos de Mjolnir",F19, 
+		"^880808[»]^000000 Campos de Moscovia",F20, 
+		"^880808[»]^000000 Campos de Niflheim",F21, 
+        "^880808[»]^000000 Campos de Payon",F22, 
+		"^880808[»]^000000 Campos de Prontera",F23, 
+		"^880808[»]^000000 Campos de Rachel",F24, 
+        "^880808[»]^000000 Campos de Sograt",F25, 
+		"^880808[»]^000000 Campos de Splendide",F26, 
+		"^880808[»]^000000 Campos de Umbala",F27, 
+        "^880808[»]^000000 Campos de Veins",F28, 
+		"^880808[»]^000000 Campos de Yuno",F29;
+
+F1: setarray @c[2],190,197;
+    Disp("Amatsu Field",1,1); Pick("ama_fild");
+F2: setarray @c[2],173,134,212,150;
+    Disp("Ayothaya Field",1,2); Pick("ayo_fild");
+F3: Restrict("RE");
+    setarray @c[2],193,220,220,187;
+    Disp("Bifrost Field",1,2); Pick("bif_fild");
+F4: Restrict("RE");
+    setarray @c[2],74,32;
+    Disp("Brasilis Field",1,1); Pick("bra_fild");
+F5: Restrict("Pre-RE",5);
+    setarray @c[2],180,178,231,160,191,172,228,194,224,203,190,223,234,177,194,175,172,172;
+    Disp("Comodo Field",1,9); Pick("cmd_fild");
+F6: Restrict("RE");
+    setarray @c[2],371,212;
+    Disp("Dewata Field",1,1); Pick("dew_fild");
+F7: Restrict("RE");
+    setarray @c[2],97,314;
+    Disp("Eclage Field",1,1); Pick("ecl_fild");
+F8: Restrict("Pre-RE",2,10);
+    setarray @c[2],142,225,182,141,187,228,185,173,216,173,195,148,272,220,173,214,207,174,196,200;
+    Disp("Einbroch Field",1,10); Pick("ein_fild");
+F9: Restrict("RE");
+    setarray @c[2],143,132,143,217;
+    Disp("El Dicastes Field",1,2); Pick("dic_fild");
+F10: Restrict("Pre-RE",13,15);
+     setarray @c[0],46,199,213,204,195,212,257,192,188,171,166,263,248,158,195,191,186,183,221,117,178,218,136,328,240,181,235,235,211,185;
+     Disp("Geffen Field",0,14); Pick("gef_fild",1);
+F11: setarray @c[2],220,227;
+     Disp("Gonryun Field",1,1); Pick("gon_fild");
+F12: Restrict("Pre-RE",3,7);
+     setarray @c[2],268,101,222,193,232,185,252,189,196,106,216,220,227,197;
+     Disp("Hugel Field",1,7); Pick("hu_fild");
+F13: Restrict("RE");
+     setarray @c[2],344,371,20,98;
+     Disp("Lasagna Field",1,2); Pick("lasa_fild");     
+F14: setarray @c[2],240,179,185,235,240,226;
+     Disp("Lighthalzen Field",1,3); Pick("lhz_fild");
+F15: setarray @c[2],229,187;
+     Disp("Louyang Field",1,1); Pick("lou_fild");
+F16: setarray @c[2],115,145;
+     Disp("Lutie Field",1,1); Pick("xmas_fild");
+F17: Restrict("RE");
+     setarray @c[2],40,272,207,180;
+     Disp("Malaya Field",1,2); Pick("ma_fild");
+F18: setarray @c[2],35,236,35,262,84,365;
+     Disp("Manuk Field",1,3); Pick("man_fild");
+F19: setarray @c[2],204,120,175,193,208,213,179,180,181,240,195,270,235,202,188,215,205,144,245,223,180,206,196,208;
+     Disp("Mjolnir Field",1,12); Pick("mjolnir_");
+F20: setarray @c[2],82,104,131,147;
+     Disp("Moscovia Field",1,2); Pick("mosk_fild");
+F21: setarray @c[2],215,229,167,234;
+     Disp("Niflheim Field",1,2); Pick("nif_fild");
+F22: Restrict("Pre-RE",5,11);
+     setarray @c[2],158,206,151,219,205,148,186,247,134,204,193,235,200,177,137,189,201,224,160,205,194,150;
+     Disp("Payon Forest",1,11); Pick("pay_fild");
+F23: setarray @c[0],208,227,190,206,240,206,190,143,307,252,239,213,185,188,193,194,187,218,210,183,195,149,198,164;
+     Disp("Prontera Field",0,11); Pick("prt_fild",1);
+F24: Restrict("Pre-RE",2,7,9,10,11,13);
+     setarray @c[2],192,162,235,166,202,206,202,208,225,202,202,214,263,196,217,201,87,121,277,181,221,185,175,200,174,197;
+     Disp("Rachel Field",1,13); Pick("ra_fild");
+F25: if(.Satan_Morroc){
+     setarray @c[2],219,205,177,206,194,182,224,170,198,216,156,187,185,263,206,228,208,238,209,223,85,97,207,202,31,195,38,195;
+     Disp("Sograt Desert 1:Sograt Desert 2:Sograt Desert 3:Sograt Desert 7:Sograt Desert 11:Sograt Desert 12:Sograt Desert 13:Sograt Desert 16:Sograt Desert 17:Sograt Desert 18:Sograt Desert 19:Sograt Desert 20:Sograt Desert 21:Sograt Desert 22");
+     Pick("","moc_fild01","moc_fild02","moc_fild03","moc_fild07","moc_fild11","moc_fild12","moc_fild13","moc_fild16","moc_fild17","moc_fild18","moc_fild19","moc_fild20","moc_fild21","moc_fild22");
+     }else{
+     setarray @c[2],219,205,177,206,194,182,146,297,204,197,275,302,224,170,139,123,101,110,341,39,198,216,156,187,185,263,223,222,170,257,206,228,208,238,209,223,85,97;
+     Disp("Sograt Desert",1,19); Pick("moc_fild");
+     }
+F26: setarray @c[2],175,186,236,184,188,204;
+     Disp("Splendide Field",1,3); Pick("spl_fild");
+F27: setarray @c[2],217,206,223,221,237,215,202,197;
+     Disp("Umbala Field",1,4); Pick("um_fild");
+F28: Restrict("Pre-RE",5);
+     setarray @c[2],186,175,196,370,222,45,51,250,202,324,150,223,149,307;
+     Disp("Veins Field",1,7); Pick("ve_fild");
+F29: Restrict("Pre-RE",5,10);
+     setarray @c[2],189,224,192,207,221,157,226,199,223,177,187,232,231,174,196,203,183,214,200,124,195,226,210,304;
+     Disp("Yuno Field",1,12); Pick("yuno_fild");
+
+// --------------------------------------------------
+	Especiais:
+	menu
+// --------------------------------------------------
+"^0000FF[»]^000000 Instancias",B1,
+"^0000FF[»]^000000 Cheffenia",B2,
+"^0000FF[»]^000000 BIO 4 & 5",B3;
+
+B1:
+Go("firstcity",218,262);
+
+B2:
+Go("que_temsky",100,140);
+
+B3:
+Go("gl_dun02",224,274);
+
+// --------------------------------------------------
+	Cavernas:
+// --------------------------------------------------
+menu	 	"^0000FF[»]^000000 Caverna de Amatsu",D2,
+"^0000FF[»]^000000 Caverna de Ayothaya",D4,
+"^0000FF[»]^000000 Caverna de Comodo",D5,
+"^0000FF[»]^000000 Caverna de Einbroch",D14,
+"^0000FF[»]^000000 Caverna de Geffen",D16,
+"^0000FF[»]^000000 Caverna de Gelo",D47,
+"^0000FF[»]^000000 Caverna de Gonryun",D18, 
+"^0000FF[»]^000000 Caverna de Louyang",D23,
+"^0000FF[»]^000000 Caverna de Magma",D24, 
+"^0000FF[»]^000000 Caverna de Payon",D30, 
+"^0000FF[»]^000000 Caverna de Umbala",D40, 
+"^0000FF[»]^000000 Caverna dos Orc",D29,
+"^0000FF[»]^000000 Esgoto de Prontera",D42,
+"^0000FF[»]^000000 Esfinge",D34, 
+"^0000FF[»]^000000 Fábrica de Brinquedo",D38,
+"^0000FF[»]^000000 Fábrica de Robôs - ^FF0000Quest^000000",D46,
+"^0000FF[»]^000000 Formigueiro Infernal",D41, 
+"^0000FF[»]^000000 Gefenia - ^FF0000Quest^000000",D15,
+"^0000FF[»]^000000 Glast Heim",D17,
+"^0000FF[»]^000000 Ilha das Tartarugas",D39,
+"^0000FF[»]^000000 Ilha Esquecida",D50,
+"^0000FF[»]^000000 Juperos",D21,
+"^0000FF[»]^000000 Labirinto da Floresta",D19,
+"^0000FF[»]^000000 Laboratório de Somatologia - ^FF0000Quest^000000",D1,
+"^0000FF[»]^000000 Lago do Abismo",D44,
+"^0000FF[»]^000000 Mina Abandonada de Mjolnir",D10,
+"^0000FF[»]^000000 Navio Fantasma",D35,
+"^0000FF[»]^000000 Piramide",D31,
+"^0000FF[»]^000000 Santuário de Rachel",D49,
+"^0000FF[»]^000000 Templo de Odin",D45,
+"^0000FF[»]^000000 Torre de Thanatos",D36,
+"^0000FF[»]^000000 Torre do Relogio",D9,
+"^0000FF[»]^000000 Túnel Submarino",D43,
+"^0000FF[»]^000000 Vulcão de Thor",D48;
+
+
+D1:
+next;
+if(countitem(2657) < 1) {mes "Para ter acesso a lighthalzen você precisa ter o item ^FF0000Passe do Laboratório.^000000 <URL>Como conseguir!!!<INFO>https://browiki.org/wiki/Infiltrando_na_Rekenber</INFO></URL>"; end;}
+		Go("lhz_dun01",149,287);
+	
+
+D2: setarray @c[2],228,11,34,41,119,14;
+		Disp("Amatsu Dungeon",1,2); Pick("","ama_dun01","ama_dun02");
+D3: setarray @c[2],35,262,168,170;
+	Disp("Anthell",1,1); Pick("anthell");
+D4:
+next;
+switch(select("Andar 1:Sair")) {
+    case 1:
+		Go("ayo_dun01",275,19);
+    case 2:
+        close2;
+        end;
+}
+
+D5:
+	menu "Karu a Caverna Oeste",BEACH1,"Ruande a Caverna Norte",BEACH2,"Mao a Caverna Leste",BEACH3;
+BEACH1: Go("beach_dun",268,68);
+BEACH2: Go("beach_dun2",154,25);
+BEACH3: Go("beach_dun3",23,260);
+
+D6: Restrict("RE",4);
+	setarray @c[2],150,288,150,18,140,134,244,52;
+	Disp("Bio Lab",1,1); Pick("lhz_dun");
+D7: Restrict("RE");
+	setarray @c[2],87,47,262,262;
+	Disp("Brasilis Dungeon",1,1); Pick("bra_dun");
+D8: Restrict("RE",6);
+	setarray @c[0],168,168,253,252,236,204,32,63,26,27,141,187;
+	Disp("Byalan Dungeon",1,1); Pick("iz_dun",1);
+D9: setarray @c[2],199,159,148,283,65,147,56,155,297,25,127,169,277,178,268,74;
+	Disp("Clock Tower 1");
+	Pick("","c_tower1");
+D10: setarray @c[2],52,17;
+	 Disp("Coal Mines",1,1); Pick("mjo_dun");
+D11: setarray @c[2],131,247,19,19,180,169,100,92;
+	 Disp("Culvert",1,1); Pick("","prt_sewb1","prt_sewb2","prt_sewb3","prt_sewb4");
+D12: setarray @c[2],51,14,150,11,120,10;
+	 Disp("Cursed Abbey",1,1); Pick("abbey");
+D13: Restrict("RE");
+	 setarray @c[2],285,160,299,29;
+	 Disp("Dewata Dungeon",1,1); Pick("dew_dun");
+D14: setarray @c[2],22,14,292,290;
+	 Disp("Einbroch Dungeon",1,1); Pick("ein_dun");
+D15:
+next;
+if(countitem(7025) < 1) {mes "Para ter acesso a Gefenia você precisa ter o item ^FF0000Lamento de Lúcifer.^000000 <URL>Como conseguir!!!<INFO>https://browiki.org/wiki/O_Sinal</INFO></URL>"; end;}
+	setarray @c[2],00,00;
+	 Disp("Gefenia",1,1); Pick("gefenia");
+	 
+D16: setarray @c[0],104,99,115,236,106,132,203,200;
+	 Disp("Geffen Dungeon",1,1); Pick("gef_dun",1);
+D17: setarray @c[2],370,304,199,29,104,25,150,15,157,287,147,15,258,255,108,291,171,283,68,277,156,7,12,7,133,271,224,274,14,70,150,14;
+	 Disp("Entrance");
+	 Pick("","glast_01");
+D18: setarray @c[2],153,53,28,113,68,16;
+	 Disp("Gonryun Dungeon",1,1); Pick("gon_dun");
+D19: setarray @c[2],176,7,93,20,23,8;
+	 Disp("Hidden Dungeon",1,1); Pick("prt_maze");
+D20: setarray @c[2],157,14,151,155,149,22,33,158;
+	 Disp("Ice Dungeon",1,1); Pick("ice_dun");
+D21: setarray @c[2],140,51,53,247,37,63,150,285;
+	 Disp("Entrada");
+	 Pick("","jupe_cave");
+D22: setarray @c[2],28,226;
+	 Disp("Kiel Dungeon",1,1); Pick("kh_dun");
+D23: setarray @c[2],218,196,282,20,165,38;
+	 Disp("A Tumba Real"); Pick("lou_dun");
+D24: setarray @c[2],126,68;
+	 Disp("Magma Dungeon",1,1); Pick("mag_dun");
+D25: Restrict("RE");
+	 setarray @c[2],33,230;
+	 Disp("Malangdo Dungeon",1,1); Pick("mal_dun");
+D26: setarray @c[2],189,48,165,30,32,135;
+	 Disp("Moscovia Dungeon",1,1); Pick("mosk_dun");
+D27: setarray @c[2],61,239,60,271;
+	 Disp("Nidhogg's Dungeon",1,1); Pick("nyd_dun");
+D28: setarray @c[2],298,167,224,149,266,280;
+	 Disp("Odin Temple",1,1); Pick("odin_tem");
+D29: setarray @c[2],32,170,21,185;
+	 Disp("Orc Dungeon",1,1); Pick("orcsdun");
+D30: setarray @c[0],21,183,19,33,19,63,155,159,201,204;
+	 Disp("Payon Dungeon",1,1); Pick("pay_dun",1);
+D31: Restrict("RE",7,8);
+	 setarray @c[2],192,9,10,192,100,92,181,11,94,96,192,8,94,96,192,8;
+	 Disp("Pyramids 1");
+	 Pick("","moc_pryd01");
+D32: setarray @c[2],140,11;
+	 Disp("Rachel Sanctuary",1,1); Pick("ra_san");
+D33: Restrict("RE");
+	 setarray @c[2],364,44,101,141;
+	 Disp("Scaraba Hole",1,1); Pick("dic_dun");
+D34: setarray @c[2],288,9,149,81,210,54,10,222,100,99;
+	 Disp("Sphinx",1,1); Pick("","in_sphinx1","in_sphinx2","in_sphinx3","in_sphinx4","in_sphinx5");
+D35: setarray @c[2],69,24,102,27;
+	 Disp("Sunken Ship",1,1); Pick("treasure");
+D36:
+setarray @c[2],150,39,150,136,220,158,59,143,62,11,89,221,35,166,93,148,29,107,159,138,19,20,130,52;
+	 Disp("Torre Thanatos",1,1); Pick("tha_t");
+
+D37: setarray @c[2],21,228,75,205,34,272;
+	 Disp("Thor Volcano",1,1); Pick("thor_v");
+D38: setarray @c[2],205,15,129,133;
+	 Disp("Toy Factory",1,1); Pick("xmas_dun");
+
+D39: 
+next;
+setarray @c[2],154,49;
+	 Disp("Entrance"); Pick("tur_dun");
+
+D40: Restrict("Pre-RE",1,1);
+	 setarray @c[2],42,31,48,30,204,78;
+	 Disp("Carpenter's Shop in the Tree");
+	 Pick("","um_dun01");
+D41: setarray @c[2],37,262,275,270,116,27;
+	Disp("Formigueiro Infernal",1,1); Pick("anthell");
+D42: setarray @c[2],132,248;
+	Disp("Esgoto de Prontera");
+	Pick("","prt_sewb1");
+D43: setarray @c[2],168,168;
+	 Disp("Túnel Submarino");
+	 Pick("","iz_dun00");
+D44:
+next;
+setarray @c[2],260,269;
+	 Disp("Lago do Abismo",1,1); Pick("abyss_");
+
+D45:
+next;
+setarray @c[2],93,146;
+	 Disp("Templo de Odin",1,1); Pick("odin_tem");
+   
+   D46:
+next;
+if(countitem(7509) < 1) {mes "Para ter acesso a Fábrica de Robôs você precisa ter o item ^FF0000Cartão de Acesso Exuberente.^000000 <URL>Como conseguir!!!<INFO>https://browiki.org/wiki/Academia_Kiel_Hyre</INFO></URL>"; end;}
+switch(select("Nível 1:Nível 2:Sair")) {
+    case 1:
+		Go("kh_dun01",3,231);
+    case 2:
+	Go("kh_dun02",43,199);
+    case 3:
+        close2;
+        end;
+}
+
+D47: setarray @c[2],158,20;
+	 Disp("Caverna de Gelo");
+	 Pick("","ice_dun01");
+
+D48: setarray @c[2],168,235;
+	 Disp("Vulcão de Thor");
+	 Pick("","ve_fild03");
+
+D49: setarray @c[2],139,133;
+	 Disp("Santuário de Rachel");
+	 Pick("","ra_san01");
+
+D50: setarray @c[2],160,184;
+	 Disp("Ilha esquecida");
+	 Pick("","nameless_n");
+
+D51: setarray @c[2],189,46;
+	 Disp("Floresta Encantada");
+	 Pick("","mosk_dun01");
+
+// --------------------------------------------------
+	Castelo:
+// --------------------------------------------------
+menu	"Aldebaran Castles",C1, "Geffen Castles",C2, "Payon Castles",C3,
+		"Prontera Castles",C4, "Arunafeltz Castles",C5, "Schwaltzvalt Castles",C6;
+
+//C1: setarray @c[2],48,83,95,249,142,85,239,242,264,90;
+	Disp("Neuschwanstein:Hohenschwangau:Nuenberg:Wuerzburg:Rothenburg");
+	Pick("","alde_gld","alde_gld","alde_gld","alde_gld","alde_gld");
+//C2: setarray @c[2],214,75,308,240,143,240,193,278,305,87;
+	Disp("Repherion:Eeyolbriggar:Yesnelph:Bergel:Mersetzdeitz");
+	Pick("","gef_fild13","gef_fild13","gef_fild13","gef_fild13","gef_fild13");
+//C3: setarray @c[2],121,233,295,116,317,293,140,160,204,266;
+	Disp("Bright Arbor:Scarlet Palace:Holy Shadow:Sacred Altar:Bamboo Grove Hill");
+	Pick("","pay_gld","pay_gld","pay_gld","pay_gld","pay_gld");
+//C4: setarray @c[2],134,65,240,128,153,137,111,240,208,240;
+	Disp("Kriemhild:Swanhild:Fadhgridh:Skoegul:Gondul");
+	Pick("","prt_gld","prt_gld","prt_gld","prt_gld","prt_gld");
+//C5: setarray @c[2],158,272,83,47,68,155,299,345,292,107;
+	Disp("Mardol:Cyr:Horn:Gefn:Banadis");
+	Pick("","aru_gld","aru_gld","aru_gld","aru_gld","aru_gld");
+//C6: setarray @c[2],293,100,288,252,97,196,137,90,71,315;
+	Disp("Himinn:Andlangr:Viblainn:Hljod:Skidbladnir");
+	Pick("","sch_gld","sch_gld","sch_gld","sch_gld","sch_gld");
+
+// --------------------------------------------------
+	Guild_Cavernas:
+// --------------------------------------------------
+menu	"Baldur",G1, "Luina",G2, "Valkyrie",G3, "Britoniah",G4,
+		"Arunafeltz",G5, "Schwaltzvalt",G6;
+
+//G1: Restrict("RE",2,3);
+	setarray @c[2],119,93,119,93,120,130;
+	Disp("Baldur F1:Baldur F2:Hall of Abyss");
+	Pick("","gld_dun01","gld_dun01_2","gld2_pay");
+//G2: Restrict("RE",2,3);
+	setarray @c[2],39,161,39,161,147,155;
+	Disp("Luina F1:Luina F2:Hall of Abyss");
+	Pick("","gld_dun02","gld_dun02_2","gld2_ald");
+//G3: Restrict("RE",2,3);
+	setarray @c[2],50,44,50,44,140,132;
+	Disp("Valkyrie F1:Valkyrie F2:Hall of Abyss");
+	Pick("","gld_dun03","gld_dun03_2","gld2_prt");
+//G4: Restrict("RE",2,3);
+	setarray @c[2],116,45,116,45,152,118;
+	Disp("Britoniah F1:Britoniah F2:Hall of Abyss");
+	Pick("","gld_dun04","gld_dun04_2","gld2_gef");
+//G5: Go("arug_dun01",199,195);
+//G6: Go("schg_dun01",200,124);
+
+// --------------------------------------------------
+	Instances:
+// --------------------------------------------------
+menu	/*"Santuario",I1, "Santuario de Dewata",I2, "Navio de Malangdo",I3,*/
+		"Ilha de Brasilis",I4, /*"Floresta da Neve",I5, "Ilha Esquecida",I6,*/ "Ponte da Morte",I7,
+		/*"Deseto de Veis",I8, "Castelo de glast",I9,*/ "Jawaii Festa",I10, /*"Floresta de Hugel",I11,*/ 
+		"Casa de Tatishume",I12;
+
+//I1: Restrict("RE");
+	Go("pay_dun03",89,143);
+//I2: Restrict("RE");
+	Go("dew_fild01",181,307);
+//I3: Restrict("RE");
+	Go("malangdo",172,159);
+//I4: Go("bra_fild01",78,35);
+//I5: Restrict("RE");
+	Go("xmas_fild01",112,86);
+//I6: Restrict("RE");
+	Go("gon_fild01",220,226);
+//I7: Go("ayo_fild01",170,133);
+//I8: Restrict("RE");
+	Go("ve_fild07",155,304);
+//I9: Restrict("RE");
+	Go("glast_01",204,268);
+//I10: Go("jawaii",153,117);
+//I11: Restrict("RE");
+	Go("hu_fild02",207,106);
+//I12: Go("ama_fild01",336,135);
+
+
+// --------------------------------------------------
+	Sagradas:
+// --------------------------------------------------
+menu	"Prontera Arvore",S1, "Battlegrounds",S2, "Casino",S3, /*"Grupo de Eden",S4,*/
+		"Brasilis Calsadão",S5, "Templo dewata",S6, "Prisão",S7, "Estatua de Gonryun",S8;
+
+//S1: Go("prontera",270,152);
+//S2: Go("bat_room",154,150);
+//S3: Go("cmd_in02",179,129);
+//S4: Restrict("RE");
+	Go("moc_para01",31,14);
+//S5: Go("brasilis",184,146);
+//S6: Go("dewata",88,202);
+//S7: Go("sec_pri",23,61);
+//S8: Go("gonryun",162,130);
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 51;
+	setunittitle getnpcid(0), "[Analia	Warper]";
+    end;
+
+}
+
+// Utilities
+// ====================================================
+-	script	Guild Camp#utils	-1,{
+	.@num = callfunc("F_GC_GET_NUM",0,strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 7);
+	.@CHK2 = callfunc("F_GC_GET_INFO", .@num, 4);
+	.@Lv = callfunc("F_GC_COUNT_INVEST", .@num);
+	
+	if( .@Lv <= 1 )
+		.@Lv = 1;
+	else if( .@Lv >= 8 )
+		.@Lv = 9;
+
+	if( !.@CHK ) {
+		mes "[Vendedor de Utilidades]";
+		mes "Me desculpe, mais o clã deste acampamento ainda não contratou meus serviços.";
+		close;
+	}
+	
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	
+	if( .@GID != getcharid(2) ) {
+		mes "[Vendedor de Utilidades]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente ao Clã deste equipamento.";
+		close;
+	}
+	
+	if( .@CHK2 || (!.@CHK2 && getgroupid() >= $@GCampGroupVIP) ) {
+		GCAMPSHOP = 1;
+		GCAMPSHOPLV = .@Lv;
+		.@npcName$ = "Utils Shop VIP " + .@Lv + "#guildcamp";
+	}
+	else {
+		GCAMPSHOP = 0;
+		GCAMPSHOPLV = .@Lv;
+		.@npcName$ = "Utils Shop Normal " + .@Lv + "#guildcamp";
+	}
+	
+	callshop .@npcName$, 1;
+	npcshopattach .@npcName$;
+	end;
+	
+OnBuyItem:
+	.@zeny = 0;
+	if( !checkweight2(@bought_nameid, @bought_quantity) ) {
+		dispbottom "Você não pode carregar tantos itens.", 0xFF0000;
+		end;
+	}
+	
+	deletearray .@NameIds;
+	deletearray .@Prices;
+	if( GCAMPSHOP ) {
+		copyarray .@NameIds, getd("$@GCampUtilsVNameId_Lv" + GCAMPSHOPLV), getarraysize(getd("$@GCampUtilsVNameId_Lv" + GCAMPSHOPLV));
+		copyarray .@Prices, getd("$@GCampUtilsVPrice_Lv" + GCAMPSHOPLV), getarraysize(getd("$@GCampUtilsVPrice_Lv" + GCAMPSHOPLV));
+	}
+	else {
+		copyarray .@NameIds, getd("$@GCampUtilsNameId_Lv" + GCAMPSHOPLV), getarraysize(getd("$@GCampUtilsNameId_Lv" + GCAMPSHOPLV));
+		copyarray .@Prices, getd("$@GCampUtilsPrice_Lv" + GCAMPSHOPLV), getarraysize(getd("$@GCampUtilsPrice_Lv" + GCAMPSHOPLV));
+	}
+	
+	if( getarraysize(.@NameIds) <= 0 ) {
+		dispbottom "Me desculpe mais a loja não está disponível.", 0xFF0000;
+		end;
+	}
+	
+	for( .@i=0; .@i < getarraysize(@bought_nameid); .@i++ ) {
+		.@idx = inarray(.@NameIds, @bought_nameid[.@i]);
+		if( .@idx == -1 )
+			continue;
+			
+		.@price = @bought_quantity[.@i] * .@Prices[.@idx];
+		getitem @bought_nameid[.@i], @bought_quantity[.@i];
+		.@zeny += .@price;
+	}
+	
+	Zeny -= .@zeny;
+	
+	if( $@GCampUtilsInvest )
+		callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampUtilsInvest == 2 ? 1: 0, .@zeny;
+	end;
+	
+OnInit:
+	if( strnpcinfo(2) == "utils" )
+		end;
+	
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Grey");
+	setunitdata .@UID, UNPC_GROUP_ID, 11;
+	
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 7);
+	if( !.@CHK && $@GCampHiddenNpc )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// PvP
+// ====================================================
+-	script	Guild Camp#pvp	-1,{
+	.@num = callfunc("F_GC_GET_NUM",0,strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 7);
+	if( !.@CHK ) {
+		mes "[Arena PvP]";
+		mes "Me desculpe, mais o clã deste acampamento ainda não contratou meus serviços.";
+		close;
+	}
+	
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	
+	if( .@GID != getcharid(2) ) {
+		mes "[Arena PvP]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente ao Clã deste equipamento.";
+		close;
+	}
+	
+	mes "[Arena PvP]";
+	mes "No momento não foi inserido a funcionalidade de Arena PvP.";
+	close;
+	
+OnInit:
+	if( strnpcinfo(2) == "pvp" )
+		end;
+		
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Syrn");
+	setunitdata .@UID, UNPC_GROUP_ID, 8;
+	
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 8);
+	if( !.@CHK && $@GCampHiddenNpc )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Guild Storage
+// ====================================================
+-	script	Guild Camp#stor	-1,{
+	.@num = callfunc("F_GC_GET_NUM",0,strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 10);
+	if( !.@CHK ) {
+		mes "[Conferente]";
+		mes "Me desculpe, mais o clã deste acampamento ainda não contratou meus serviços.";
+		close;
+	}
+	
+	.@GID = callfunc("F_GC_GET_GUILD", .@num);
+	
+	if( .@GID != getcharid(2) ) {
+		mes "[Conferente]";
+		mes "Me desculpe, mais estou autorizado a prestar serviços somente ao Clã deste equipamento.";
+		close;
+	}
+	
+	if( $@GCampGStorCost ) {
+		mes "[Conferente]";
+		mes "O custo para utilizar o serviço de ^0000FFArmazém do Clã^000000 é de ^FF0000" + callfunc("F_InsertComma", $@GCampGStorCost) + "zeny(s)^000000.";
+		mes "Deseja abrir o armazém?";
+		next;
+		if( select("- Sim, por favor.", "- Não, obrigado.") == 2 ) {
+			mes "[Conferente]";
+			mes "Muito bem, estarei aqui caso precisar.";
+			close;
+		}
+		
+		if( Zeny < $@GCampGStorCost ) {
+			mes "[Conferente]";
+			mes "Me desculpe, mas você não tem Zeny suficiente.";
+			close;
+		}
+		
+		mes "[Conferente]";
+		mes "Muito bem, irei abrir o ^0000FFArmazém do Clã^000000 para você.";
+		close2;
+	}
+	
+	if( !guildopenstorage() ) {
+		mes "[Conferente]";
+		mes "Não foi possível abrir o ^0000FFArmazém do Clã^000000.";
+		mes "Tente novamente mais tarde.";
+		close;
+	}
+	
+	if( $@GCampGStorCost )
+		Zeny -= $@GCampGStorCost;
+		
+	if( $@GCampGStorInvest )
+		callfunc "F_GC_UPDATE_INVEST", .@num, $@GCampGStorInvest == 2 ? 1: 0, $@GCampGStorCost;
+
+	end;
+
+OnInit:
+	if( strnpcinfo(2) == "stor" )
+		end;
+		
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Browning");
+	setunitdata .@UID, UNPC_GROUP_ID, 13;
+		
+	.@num = callfunc("F_GC_GET_NUM", 0, strnpcinfo(2));
+	.@CHK = callfunc("F_GC_GET_INFO", .@num, 10);
+	if( !.@CHK && $@GCampHiddenNpc )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Teleportador
+// ====================================================
+-	script	Camp Guild#guildcamp	-1,{
+	.@loop_1 = 1;
+	while(.@loop_1) {
+		.@GID = getcharid(2);
+		.@CampId = callfunc("F_GC_GET_CAMP", .@GID);
+		.@ExpireTime = callfunc("F_GC_GET_INFO", .@CampId, 2);
+		.@i = callfunc("F_GC_GET_INDEX", .@CampId);
+		if( gettimetick(2) >= .@ExpireTime )
+			.@CampId = 0;
+		
+		mes "^b312ff[Gerente]^000000";
+		mes "Bem-vindo ao ^0000FFGuild Camp^000000.";
+		if( !.@CampId ) {
+			mes "Sou responsável por orientar";
+			mes "os clãs sobre o aluguel de pontos";
+			mes "de acampamento e serviços prestados.";
+		}
+		else {
+			.@Lv = callfunc("F_GC_COUNT_INVEST", .@CampId) + 1;
+			mes "Seu acampamento está no ^0000FFNv. " + .@Lv + "^000000";
+		}
+		mes "Em que posso te ajudar?";
+		next;
+		switch( select((.@CampId ? "- Ír para meu Acampamento." : ""), (!.@CampId ? "- Acampamentos para alugar." : ""), "- Sobre Acampamentos.", "- Sobre Serviços Contratados.", "^FF0000- Cancelar.^000000") ) {
+			case 1:
+				
+				mes "^b312ff[Gerente]^000000";
+				mes "Vou te mandar para lá.";
+				close2;
+				warp $@GCampSpots$[.@i+2], atoi($@GCampSpots$[.@i+3]), atoi($@GCampSpots$[.@i+4]);
+				end;
+			case 2:
+				.@count = 0;
+				.@buildmenu$ = "";
+				for( .@i=0; .@i < getarraysize($@GCampSpots$); .@i+=7 ) {
+					.@check = callfunc("F_GC_GET_GUILD", $@GCampSpots$[.@i]);
+					if( .@check <= 0 ) {
+						.@buildmenu$ += "- " + $@GCampSpots$[.@i+1];
+						.@count++;
+					}
+					.@buildmenu$ += ":";
+				}
+				
+				if( .@count <= 0 ) {
+					mes "^b312ff[Gerente]^000000";
+					mes "Me desculpe, mais não há acampamentos";
+					mes "disponível para alocação.";
+					next;
+					break;
+				}
+				
+				mes "^b312ff[Gerente]^000000";
+				mes "Escolha o acampamento:";
+				next;
+				.@i = select(.@buildmenu$+"^FFA500- Voltar.^000000:^FF0000- Cancelar^000000")-1;
+				.@size = getarraysize($@GCampSpots$)/7;
+				
+				if( .@i == .@size )
+					break;
+				else if( .@i > .@size ) {
+					.@loop_1 = 0;
+					break;
+				}
+				
+				.@i *= 7;
+				mes "^b312ff[Gerente]^000000";
+				mes "O ^0000FF" + $@GCampSpots$[.@i+1] + "^000000 custa ^FF0000" + callfunc("F_InsertComma", $@$[.@i+5]) + " zenys^000000.";
+				mes "Deseja ír até o acampamento?";
+				next;
+				switch( select("- Sim, por favor.", "^FFA500- Não, outras opções.^000000", "^FF0000- Cancelar.^000000") ) {
+					case 1:
+						mes "^b312ff[Gerente]^000000";
+						mes "Vou te mandar para lá agora mesmo.";
+						close2;
+						warp $@GCampSpots$[.@i+2], atoi($@GCampSpots$[.@i+3]), atoi($@GCampSpots$[.@i+4]);
+						end;
+					case 2:
+						break;
+					case 3:
+						.@loop_1 = 0;
+						break;
+				}
+				break;
+			case 3:
+				mes "^b312ff[Gerente]^000000";
+				mes "Os acampamentos permite";
+				mes "com que os clãs criem ponto";
+				mes "de encontro e também oferece";
+				mes "serviços exclusívos ao clã.";
+				next;
+				mes "^b312ff[Gerente]^000000";
+				mes "Nele é possível você contratar";
+				mes "alguns serviços previlegiados";
+				mes "garantindo um desenvolvimento";
+				mes "melhor e vantagens ao seu clã.";
+				next;
+				mes "^b312ff[Gerente]^000000";
+				mes "Conforme você for contratando";
+				mes "serviços seu nível de acampamento";
+				mes "irá aumentar, podendo desbloquear";
+				mes "outras funcionalidades em outros";
+				mes "serviços.";
+				next;
+				mes "^b312ff[Gerente]^000000";
+				mes "No encerramento do seu contrato";
+				mes "de alocação, você receberá um";
+				mes "retorno do seu investimento.";
+				next;
+				break;
+			case 4:
+				.@r = callfunc("F_GC_SERVICES_INFO", "^b312ff[Gerente]^000000");
+				if( .@r == 0 )
+					.@loop_1 = 0;
+				break;
+			case 5:
+				.@loop_1 = 0;
+				break;
+		}
+	}
+	
+	mes "^b312ff[Gerente]^000000";
+	mes "Tudo bem, estarei aqui caso precisar.";
+	close;
+	
+OnInit:
+	.@UID = getnpcid(0);
+    setunittitle(.@UID, "Erika");
+	setunitdata .@UID, UNPC_GROUP_ID, 2;
+	end;
+}
+
+// Duplicates
+// ====================================================
+// Cities
+prontera,146,172,5	duplicate(Camp Guild#guildcamp)	Guild Camp#guildcamp_prt	1_F_02
+payon,164,222,4	duplicate(Camp Guild#guildcamp)	Guild Camp#guildcamp_pay	1_F_02
+
+// Prontera Camp 1
+prontera,66,61,4	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_1	4_M_MINISTER
+prontera,75,58,4	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_1	4_BULLETIN_BOARD2
+prontera,60,62,4	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_1	GUILD_FLAG
+prontera,72,62,4	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_1	GUILD_FLAG
+prontera,58,61,4	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_1	4_F_KAFRA1
+prontera,62,61,4	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_1	4_F_KAFRA8
+prontera,60,60,4	duplicate(Guild Camp#healer)	Curandeira#guildcamp_1	4_EP18_MARK
+prontera,64,62,4	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_1	4_F_DESERT
+prontera,68,62,4	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_1	4_f_fairy1
+prontera,70,61,4	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_1	4_M_JOB_KNIGHT1
+prontera,74,61,4	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_1	4_M_REDMAN
+//prontera,72,60,4	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_1	4_M_MALAYA
+
+// Prontera Camp 2
+prontera,50,284,4	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_2	4_M_MINISTER
+prontera,59,280,4	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_2	4_BULLETIN_BOARD2
+prontera,44,285,4	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_2	GUILD_FLAG
+prontera,56,285,4	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_2	GUILD_FLAG
+prontera,42,284,4	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_2	4_F_KAFRA1
+prontera,46,284,4	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_2	4_F_KAFRA8
+prontera,44,282,4	duplicate(Guild Camp#healer)	Curandeira#guildcamp_2	4_EP18_MARK
+prontera,48,285,4	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_2	4_F_DESERT
+prontera,52,285,4	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_2	4_f_fairy1
+prontera,54,284,4	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_2	4_M_JOB_KNIGHT1
+prontera,58,284,4	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_2	4_M_REDMAN
+//prontera,56,282,4	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_2	4_M_MALAYA
+
+// Prontera Camp 3
+prontera,260,267,4	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_3	4_M_MINISTER
+prontera,269,259,4	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_3	4_BULLETIN_BOARD2
+prontera,258,270,4	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_3	GUILD_FLAG
+prontera,262,270,4	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_3	GUILD_FLAG
+prontera,254,262,5	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_3	4_F_KAFRA1
+prontera,254,266,5	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_3	4_F_KAFRA8
+prontera,255,264,5	duplicate(Guild Camp#healer)	Curandeira#guildcamp_3	4_EP18_MARK
+prontera,258,268,4	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_3	4_F_DESERT
+prontera,262,268,4	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_3	4_f_fairy1
+prontera,266,266,3	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_3	4_M_JOB_KNIGHT1
+prontera,266,262,2	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_3	4_M_REDMAN
+//prontera,265,264,2	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_3	4_M_MALAYA
+
+// Payon Camp 1
+payon,265,139,1	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_4	4_M_MINISTER
+payon,256,133,1	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_4	4_BULLETIN_BOARD2
+payon,269,145,2	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_4	GUILD_FLAG
+payon,261,133,1	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_4	GUILD_FLAG
+payon,269,147,2	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_4	4_F_KAFRA1
+payon,269,143,2	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_4	4_F_KAFRA8
+payon,267,145,1	duplicate(Guild Camp#healer)	Curandeira#guildcamp_4	4_EP18_MARK
+payon,267,139,1	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_4	4_F_DESERT
+payon,265,137,1	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_4	4_f_fairy1
+payon,263,134,1	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_4	4_M_JOB_KNIGHT1
+payon,260,131,1	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_4	4_M_REDMAN
+//payon,260,135,1	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_4	4_M_MALAYA
+
+// Payon Camp 2
+payon,75,123,2	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_5	4_M_MINISTER
+payon,76,111,2	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_5	4_BULLETIN_BOARD2
+payon,77,129,2	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_5	GUILD_FLAG
+payon,77,117,2	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_5	GUILD_FLAG
+payon,77,131,2	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_5	4_F_KAFRA1
+payon,77,127,2	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_5	4_F_KAFRA8
+payon,75,129,2	duplicate(Guild Camp#healer)	Curandeira#guildcamp_5	4_EP18_MARK
+payon,76,125,2	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_5	4_F_DESERT
+payon,76,121,2	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_5	4_f_fairy1
+payon,77,119,2	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_5	4_M_JOB_KNIGHT1
+payon,77,115,2	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_5	4_M_REDMAN
+//payon,75,117,2	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_5	4_M_MALAYA
+
+// Payon Camp 3
+payon,180,318,4	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_6	4_M_MINISTER
+payon,190,312,4	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_6	4_BULLETIN_BOARD2
+payon,178,321,4	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_6	GUILD_FLAG
+payon,182,321,4	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_6	GUILD_FLAG
+payon,173,315,5	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_6	4_F_KAFRA1
+payon,175,317,5	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_6	4_F_KAFRA8
+payon,175,315,5	duplicate(Guild Camp#healer)	Curandeira#guildcamp_6	4_EP18_MARK
+payon,178,319,4	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_6	4_F_DESERT
+payon,182,319,4	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_6	4_f_fairy1
+payon,185,317,3	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_6	4_M_JOB_KNIGHT1
+payon,187,315,2	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_6	4_M_REDMAN
+//payon,185,315,2	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_6	4_M_MALAYA
+
+// morroc Camp 1
+morocc,232,223,4	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_7	4_M_MINISTER
+morocc,239,220,4	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_7	4_BULLETIN_BOARD2
+morocc,226,226,4	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_7	GUILD_FLAG
+morocc,237,226,4	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_7	GUILD_FLAG
+morocc,235,223,4	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_7	4_F_KAFRA1
+morocc,238,223,4	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_7	4_F_KAFRA8
+morocc,229,223,4	duplicate(Guild Camp#healer)	Curandeira#guildcamp_7	4_EP18_MARK
+morocc,226,223,4	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_7	4_F_DESERT
+morocc,224,221,4	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_7	4_f_fairy1
+morocc,224,218,4	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_7	4_M_JOB_KNIGHT1
+morocc,224,215,4	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_7	4_M_REDMAN
+//prontera,72,60,4	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_7	4_M_MALAYA
+
+// Geffen Camp 1
+geffen,142,206,4	duplicate(Guild Camp#manager)	Gerente do Campo#guildcamp_8	4_M_MINISTER
+geffen,142,196,4	duplicate(Guild Camp#board)	Guild Camp Área#guildcamp_8	4_BULLETIN_BOARD2
+geffen,148,196,4	duplicate(Guild Camp#flag)	Guild Camp#flag1_guildcamp_8	GUILD_FLAG
+geffen,135,196,4	duplicate(Guild Camp#flag)	Guild Camp#flag2_guildcamp_8	GUILD_FLAG
+geffen,148,206,4	duplicate(Guild Camp#kafra)	Funcionária Kafra#guildcamp_8	4_F_KAFRA1
+geffen,136,206,4	duplicate(Guild Camp#kafravip)	Kafra VIP#guildcamp_8	4_F_KAFRA8
+geffen,145,206,4	duplicate(Guild Camp#healer)	Curandeira#guildcamp_8	4_EP18_MARK
+geffen,134,204,4	duplicate(Guild Camp#enchant)	Encantadora#guildcamp_8	4_F_DESERT
+geffen,139,206,4	duplicate(Guild Camp#warper)	Teleportadora#guildcamp_8	4_f_fairy1
+geffen,151,203,4	duplicate(Guild Camp#utils)	Vendedor de Utilidades#guildcamp_8	4_M_JOB_KNIGHT1
+geffen,151,199,4	duplicate(Guild Camp#pvp)	Arena PvP#guildcamp_8	4_M_REDMAN
+//prontera,72,60,4	duplicate(Guild Camp#stor)	Armazém do Clã#guildcamp_8	4_M_MALAYA
+
+// Lojas de Utilidades (Não alterar)
+// ====================================================
+-	shop	Utils Shop Normal 1#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 2#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 3#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 4#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 5#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 6#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 7#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 8#guildcamp	-1,501:-1
+-	shop	Utils Shop Normal 9#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 1#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 2#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 3#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 4#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 5#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 6#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 7#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 8#guildcamp	-1,501:-1
+-	shop	Utils Shop VIP 9#guildcamp	-1,501:-1
+
+// Functions
+// ====================================================
+
+// Pega o Id do acampamento através do hidden name do NPC.
+//	callfunc("F_GC_GET_CAMP", <camp_id>);
+//
+//	<camp_id>: Id do Acampamento
+//
+function	script	F_GC_GET_NUM	{
+	if( getarg(0) ) {
+		.@temp_$ = replacestr(getarg(1),"flag1_guildcamp_","");
+		.@temp_$ = replacestr(.@temp_$,"flag2_guildcamp_","");
+		return atoi(.@temp_$);
+	}
+	else
+		return atoi(replacestr(getarg(1),"guildcamp_",""));
+}
+
+// Pega o Id de um acampamento pelo id da guild, retorna zero caso não encontrar.
+//	callfunc("F_GC_GET_CAMP", <guild_id>);
+//
+//	<camp_id>: Id do Acampamento
+//
+function	script	F_GC_GET_CAMP	{
+	.@val_ = 0;
+	query_sql "SELECT `camp_id` FROM `guild_camp` WHERE `guild_id`='" + getarg(0) + "'", .@val_;
+	return getarraysize(.@val_) ? .@val_ : 0;
+}
+
+// Pega o Id da Guild de um acampamento, retorna zero caso não encontrar.
+//	callfunc("F_GC_GET_GUILD", <camp_id>);
+//
+//	<camp_id>: Id do Acampamento
+//
+function	script	F_GC_GET_GUILD	{
+	.@val_ = 0;
+	query_sql "SELECT `guild_id` FROM `guild_camp` WHERE `camp_id`='" + getarg(0) + "'", .@val_;
+	return getarraysize(.@val_) ? .@val_ : 0;
+}
+
+// Pega uma determinada informação de um acampamento.
+//	callfunc("F_GC_GET_INFO", <camp_id>, <type>);
+//
+//	<camp_id>: Id do Acampamento
+//	<type>: Tipo da Informação:
+//		- 0: Investimento
+//		- 1: Quantiadade de vezes que foi realugado consecutivas.
+//		- 2: O tempo atual que foi alugado.
+//		- 3: Serviços Kafra.
+//		- 4: Serviços Kafra VIP.
+//		- 5: Serviços de Cura.
+//		- 6: Serviços de Teleporte.
+//		- 7: Serviços de Utilidades.
+//		- 8: Serviços de PvP.
+//		- 9: Serviços de Encantamento.
+//		- 10: Armazém do Clã.
+//
+function	script	F_GC_GET_INFO	{
+	setarray .@columns_$[0], "invest", "rent_count", "rent_time", "kafra", "vip", "healer", "warper", "utils", "pvp", "enchant", "gstor";
+	if( getarg(1) < 0 || getarg(1) > 10 )
+		return 0;
+		
+	.@val_ = 0;
+	query_sql "SELECT `" + .@columns_$[getarg(1)] + "` FROM `guild_camp` WHERE `camp_id`='" + getarg(0) + "'", .@val_;
+	return getarraysize(.@val_) ? .@val_ : 0;
+}
+
+// Pega o nome do acampamento.
+//	callfunc("F_GC_GET_NAME", <camp_id>);
+//
+//	<camp_id>: Id do Acampamento
+//
+function	script	F_GC_GET_NAME	{
+	for( .@i_=0; .@i_ < getarraysize($@GCampSpots$); .@i_+=7 ) {
+		if( atoi($@GCampSpots$[.@i_]) == getarg(0) )
+			return $@GCampSpots$[.@i_+1];
+	}
+	
+	return "Unknown";
+}
+
+// Pega a Index das configurações de spot de um acampamento.
+//	callfunc("F_GC_GET_INDEX", <camp_id>);
+//
+//	<camp_id>: Id do Acampamento
+//
+function	script	F_GC_GET_INDEX	{
+	for( .@i_=0; .@i_ < getarraysize($@GCampSpots$); .@i_+=7 ) {
+		if( atoi($@GCampSpots$[.@i_]) == getarg(0) )
+			return .@i_;
+	}
+	
+	return -1;
+}
+
+// Conta o total de NPC's investidos.
+//	callfunc("F_GC_COUNT_INVEST", <camp_id>);
+//
+//	<camp_id>: Id do Acampamento
+//
+function	script	F_GC_COUNT_INVEST	{
+	.@val_ = 0;
+	query_sql "SELECT (`kafra`+`vip`+`healer`+`warper`+`utils`+`pvp`+`gstor`) AS `value` FROM `guild_camp` WHERE `camp_id`='" + getarg(0) + "'", .@val_;
+	return getarraysize(.@val_) ? .@val_ : 0;
+}
+
+// Conta o total de NPC's investidos.
+//	callfunc("F_GC_UPDATE_INVEST", <camp_id>, <type>, <increment>);
+//
+//	<camp_id>: Id do Acampamento
+//	<type>: Tipo da Operação:
+//		- 0: Valor total.
+//		- 1: Metade do valor.
+//	<increment>: Valor a ser incrementado.
+//
+function	script	F_GC_UPDATE_INVEST	{
+	.@val_ = getarg(2);
+	if( getarg(1) )
+		.@val_ /= 2;
+	query_sql "UPDATE `guild_camp` SET `invest`=`invest`+'" + .@val_ + "' WHERE `camp_id`='" + getarg(0) + "'";
+	return;
+}
+
+// Pega o Char id do Mestre de um Clã.
+//	callfunc("F_GC_GUILD_MASTERID", <guild_id>);
+function	script	F_GC_GUILD_MASTERID	{
+	.@val_ = 0;
+	query_sql "SELECT `char_id` FROM `guild` WHERE `guild_id`='" + getarg(0) + "'", .@val_;
+	return getarraysize(.@val_) ? .@val_ : 0;
+}
+
+// Pega o Nome de um Clã.
+//	callfunc("F_GC_GUILD_NAME", <guild_id>);
+function	script	F_GC_GUILD_NAME	{
+	.@val_$ = 0;
+	query_sql "SELECT `name` FROM `guild` WHERE `guild_id`='" + getarg(0) + "'", .@val_$;
+	return getarraysize(.@val_$) ? .@val_$ : "Unknown";
+}
+
+// Entrar com a sennha do Armazém Kafra.
+//	callfunc("F_GC_KAFRA_ENTERCODE", "NPC Name");
+function	script	F_GC_KAFRA_ENTERCODE	{
+	.@try = 0;
+	while(1) {
+		mes "[" + getarg(0) + "]";
+		mes "Entre com sua senha do armazém:";
+		mes "^FF0000- Digite 0 para cancelar a operação -^000000";
+		next;
+		input .@code;
+		if( .@code == 0 )
+			return 0;
+		
+		if( .@code != #kafra_code ) {
+			if( .@try >= 3 ) {
+				mes "[" + getarg(0) + "]";
+				mes "Você errou demais a sua senha.";
+				next;
+				emotion ET_SCRATCH;
+				return 0;
+			}
+			
+			.@try++;
+			mes "[" + getarg(0) + "]";
+			mes "Senha incorreta, tente novamente.";
+			next;
+			continue;
+		}
+		break;
+	}
+	return .@code;
+}
+
+// Pré-Processo de definição de sennha do Armazém Kafra.
+//	callfunc("F_GC_KAFRA_SETCODE", "NPC Name");
+function	script	F_GC_KAFRA_SETCODE	{
+	.@try = 0;
+	while(1) {
+		if( .@try >= 10 ) {
+			mes "[" + getarg(0) + "]";
+			mes "Você já usou tentativas demais para sua nova senha.";
+			next;
+			emotion ET_SCRATCH;
+			break;
+		}
+		
+		.@try++;
+		mes "[" + getarg(0) + "]";
+		mes "Agora entre ^FF0000com sua nova senha^000000 de proteção de Armazém contra ladrões.";
+		mes "A senha deve ser entre 1000~10000000:";
+		mes "^FF0000- Digite 0 para cancelar a operação -^000000";
+		next;
+		input .@code;
+		
+		if( .@code == 0 )
+			return 0;
+		
+		if( .@code > 1000000 ) {
+			mes "[" + getarg(0) + "]";
+			mes "Você não pode usar senhas tão grandes.";
+			next;
+			continue;
+		}
+		
+		if( .@code < 1000 ) {
+			mes "[" + getarg(0) + "]";
+			mes "Sua senha é muito curta.";
+			next;
+			continue;
+		}
+		return .@code;
+	}
+	return 0;
+}
+
+// Informações dos serviços.
+//	callfunc("F_GC_SERVICES_INFO", "NPC Name");
+function	script	F_GC_SERVICES_INFO	{
+	while(1) {
+		mes getarg(0);
+		mes "Os serviços são importantes para";
+		mes "auxiliar seu clã no dia a dia ou";
+		mes "durante a ^0000FFGuerra do Emperium.^000000";
+		mes "Sobre o que você deseja saber?";
+		next;
+		switch( select("- Serviços Kafras.", "- Serviços VIP.", "- Serviços de Cura.", "- Serviços de Encantamentos.", "- Serviços de Teleporte.", "- Serviços de Utilidades.", "- Serviços de Armazém.", "- Serviços PvP.", "^FFA500- Voltar.^000000", "^FF0000- Cancelar.^000000") ) {
+			case 1:
+				mes getarg(0);
+				mes "A Corporação Kafra vem a anos";
+				mes "fazendo um excelente trabalho.";
+				mes "E ela irá reforçar seu acampamento";
+				mes "oferecendo diversos tipos de serviços.";
+				next;
+				break;
+			case 2:
+				mes getarg(0);
+				mes "O serviço VIP é dedicado tanto";
+				mes "a membros comuns ou VIP's do";
+				mes "seu Clã, ele também irá desbloquear";
+				mes "outras funcionalidades em outros serviços";
+				next;
+				break;
+			case 3:
+				mes getarg(0);
+				mes "Nossa curandeira irá cuidar da";
+				mes "saúde dos membros do seu clã.";
+				if( $@GCampHealBuffs )
+					mes "Irá também prestar um serviço de encantamentos.";
+				if( $@GCampRepair )
+					mes "Ela também cuidará dos seus itens quebrados.";
+				next;
+				break;
+			case 4:
+				mes getarg(0);
+				mes "A Encantadora irá lhe oferecer";
+				mes "encantamentos para sua arma,";
+				mes "como fogo, geada e entre outros.";
+				next;
+				break;
+			case 5:
+				mes getarg(0);
+				mes "O serviço de teleporte irá";
+				mes "te movimentar rapidamente";
+				mes "para feudos e castelos.";
+				mes "Isso dependendo da politica";
+				mes "de serviços de teleporte hehe~";
+				next;
+				break;
+			case 6:
+				mes getarg(0);
+				mes "O vendedor de utilidades irá";
+				mes "lhe oferecer itens.";
+				mes "De acordo com seu nível de";
+				mes "acampamento ele irá oferecer";
+				mes "mais itens ou reduzir o preço.";
+				next;
+				break;
+			case 7:
+				mes getarg(0);
+				mes "Serviço de Armazém irá";
+				mes "possibilitar o acesso ao";
+				mes "Armazém do seu Clã.";
+				next;
+				break;
+			case 8:
+				mes getarg(0);
+				mes "Arenas PvP's reservadas";
+				mes "a Clãs que possuí acampamentos.";
+				next;
+				break;
+			case 9:
+				return 1;
+			case 10:
+				return 0;
+		}
+	}
+}

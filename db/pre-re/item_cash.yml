@@ -1,0 +1,459 @@
+	# This file is a part of rAthena.
+#   Copyright(C) 2022 rAthena Development Team
+#   https://rathena.org - https://github.com/rathena
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+###########################################################################
+# Item Cash Database
+###########################################################################
+#
+# Item Cash Settings
+#
+###########################################################################
+# - Tab                     Cash shop tab. Available tabs are New, Hot, Limited, Rental, Permanent, Scrolls, Consumables, Other, Sale.
+#   Items:                  List of possible items.
+#     - Item                Item name.
+#       Price               Item cost in cash points (#CASHPOINTS).
+###########################################################################
+
+Header:
+  Type: ITEM_CASH_DB
+  Version: 1
+
+Body:
+  - Tab: Consumables
+    Items:
+     - Item: C_Mermaid_Wig
+       Price: 15000
+##     - Item: C_Mermaid_Wig_Peach
+##       Price: 15000
+##     - Item: C_SR_Hair_SV
+##       Price: 15000
+##     - Item: C_Snow_Rabbit_Wig
+##       Price: 15000
+##     - Item: C_Valkyrie_Hair
+##       Price: 15000
+##     - Item: C_VIP_Hair_Male
+##       Price: 15000
+##     - Item: C_Straight_Long_GL
+##       Price: 15000
+##     - Item: C_Vassalage_Necklace
+##       Price: 15000
+##     - Item: C_Smiling_Eyes
+##       Price: 15000
+##     - Item: C_SantaPoring_Promo
+##       Price: 15000
+##     - Item: C_Magician_Knithat
+##       Price: 15000
+##     - Item: Mobile_Pursuit_SystemBL
+##       Price: 15000
+##     - Item: Mobile_Pursuit_SystemPR
+##       Price: 15000
+##     - Item: Mobile_Pursuit_SystemR
+##       Price: 15000
+##     - Item: C_Imperial_Glory
+##       Price: 15000
+##     - Item: C_PGstone_Knit_Hat_PK
+##       Price: 15000
+##     - Item: C_Bouquet_Hat
+##       Price: 15000
+##     - Item: C_Fairy_Feathers
+##       Price: 15000
+##     - Item: C_Sakura_Coronet
+##       Price: 15000
+##     - Item: C_Angel_Spirit_Guides
+##       Price: 15000
+##     - Item: C_Angel_Fluttering
+##       Price: 15000
+##     - Item: C_Vanargandr_Helm
+##       Price: 15000
+##     - Item: C_Yesterday_Once_More_K
+##       Price: 15000
+##     - Item: C_Released_Ground
+##       Price: 15000
+##     - Item: C_Katashiro_Flying
+##       Price: 15000
+##     - Item: C_Blink_Eyes_Golden
+##       Price: 15000
+##     - Item: C_Belka_Strelka
+##       Price: 15000
+##     - Item: C_Gigant_Helm
+##       Price: 15000
+##     - Item: C_Ice_Wing_Ear
+##       Price: 15000
+##     - Item: C_Adv_Whisper_Mask
+##       Price: 15000
+##     - Item: C_Deviruchi_Balloon
+##       Price: 15000
+##     - Item: C_Rudolph_Santa_Hat
+##       Price: 15000
+##     - Item: C_Baby_Penguin
+##       Price: 15000
+##     - Item: C_Blessing_Of_Angels
+##       Price: 15000
+##     - Item: Mascara_Insouke
+##       Price: 15000
+##     - Item: Chapeu_Luffy
+##       Price: 15000
+##     - Item: Red_eyes
+##       Price: 15000
+##     - Item: C_Taurus_Crown
+##       Price: 15000
+##     - Item: C_Demons_Eye
+##       Price: 15000
+##     - Item: C_Snow_Rabbit_Knit_Hat
+##       Price: 15000
+##     - Item: C_Golden_Fish
+##       Price: 15000
+##     - Item: C_Cat_Ears_Cape_Red
+##       Price: 15000
+##     - Item: C_Charleston_Antenna
+##       Price: 15000
+##     - Item: abbaddon_aura_yellow
+##       Price: 15000
+##     - Item: abbaddon_aura_white
+##       Price: 15000
+##     - Item: abbaddon_aura_red
+##       Price: 15000
+##     - Item: abbaddon_aura_pink
+##       Price: 15000
+##     - Item: abbaddon_aura_green
+##       Price: 15000
+##     - Item: abbaddon_aura_blue
+##       Price: 15000
+##     - Item: abbaddon_aura_black
+##       Price: 15000
+##     - Item: C_Cat_Ear_Hat
+##       Price: 15000
+##     - Item: C_Lolita_Ten_Gallon_Hat
+##       Price: 15000
+##     - Item: C_Halloween_Hat_Orange
+##       Price: 15000
+##     - Item: C_Black_Witch_Hat
+##       Price: 15000
+##     - Item: C_Fishbone_Hair
+##       Price: 15000
+##     - Item: C_Asgard_Circlet_TW
+##       Price: 15000
+##     - Item: C_Mermaid_Wig_Peach
+##       Price: 15000
+##     - Item: C_Mouse_Hat3
+##       Price: 15000
+##     - Item: C_Mouse_Hat4
+##       Price: 15000
+##     - Item: C_Mouse_Hat5
+##       Price: 15000
+##     - Item: C_Bullock_Helm_J
+##       Price: 15000
+##     - Item: C_General_Helmet
+##       Price: 15000
+##     - Item: C_Dragon_Skull
+##       Price: 15000
+##     - Item: C_Rainbow_Wing_Ears
+##       Price: 15000
+##     - Item: C_Scratching_Cat
+##       Price: 15000
+##     - Item: C_Leopard_Ear_Hat
+##       Price: 15000
+##     - Item: C_Amistr_Beret
+##       Price: 15000
+##     - Item: C_Pegasus_Wing_Ears
+##       Price: 15000
+##     - Item: C_Dark_Knight_Mask
+##       Price: 15000
+
+  - Tab: Scrolls
+    Items:
+     - Item: Anel_do_Baby_Templario
+       Price: 7000
+     - Item: Anel_do_Baby_Bruxo
+       Price: 7000
+     - Item: Anel_do_Baby_Sabio
+       Price: 7000
+     - Item: Anel_do_Baby_Mercenario
+       Price: 7000
+     - Item: Anel_do_Baby_Arruaceiro
+       Price: 7000
+     - Item: Anel_do_Baby_Ferreiro
+       Price: 7000
+     - Item: Anel_do_Baby_Alquimista
+       Price: 7000
+     - Item: Anel_do_Baby_Sacerdote
+       Price: 7000
+     - Item: Anel_do_Baby_Monge
+       Price: 7000
+     - Item: Anel_do_Baby_Cacador
+       Price: 7000
+     - Item: Anel_do_Baby_Bardo
+       Price: 7000
+
+  - Tab: Permanent
+    Items:
+     - Item: Token_Of_Siegfried
+       Price: 3000
+     - Item: Token_Of_Siegfried_Box
+       Price: 25000
+     - Item: Bubble_Gum
+       Price: 2000
+     - Item: Bubble_Gum_Box
+       Price: 12000
+     - Item: Battle_Manual
+       Price: 2000
+     - Item: Battle_Manual_Box
+       Price: 12000
+     - Item: Job_Manual50
+       Price: 2000
+     - Item: Max_Weight_Up_Scroll
+       Price: 2000
+     - Item: Max_Weight_Up_10Box
+       Price: 18000
+     - Item: Boarding_Halter_Box
+       Price: 20000
+     - Item: Neuralizer
+       Price: 5000
+     - Item: Seguro_de_Lealdade
+       Price: 25000
+     - Item: Inventory_Ex
+       Price: 5000
+     - Item: Ticket_Mudar_Nome
+       Price: 15000
+     - Item: Ticket_Sexo
+       Price: 15000
+     - Item: Battle_Vigor
+       Price: 6000
+     - Item: Battle_Vigor_Rare
+       Price: 8000
+     - Item: Battle_Vigor_Epic
+       Price: 10000
+
+  - Tab: New
+    Items:
+     - Item: Battle_PassRO
+       Price: 40000
+     - Item: Caixa_Asa_de_mosca_dourada
+       Price: 10000
+     - Item: Moeda_Cash
+       Price: 1000
+     - Item: Ticket_Vip30
+       Price: 30000
+     - Item: HE_Battle_Manual
+       Price: 10000
+     - Item: Anel_comerciante
+       Price: 15000
+     - Item: Elemental_Side
+       Price: 1000
+  - Tab: Hot
+    Items:
+     - Item: Lovecap_China
+       Price: 25000
+     - Item: Alice_Doll
+       Price: 20000
+     - Item: Little_Angel_Doll
+       Price: 16000
+     - Item: C_Cloud_Buster
+       Price: 20000
+     - Item: Super_Scell
+       Price: 20000
+     - Item: Bulb_Hairband
+       Price: 18000
+     - Item: Mask_Of_Ifrit
+       Price: 20000
+     - Item: Leaf_Cat_Hat
+       Price: 20000
+     - Item: Ayam
+       Price: 20000
+     - Item: Blue_Arara_Hat
+       Price: 20000
+     - Item: Dice_Hat
+       Price: 20000
+     - Item: Dolor_Hat
+       Price: 20000
+     - Item: Kettle_Hat
+       Price: 20000
+     - Item: Pecopeco_Hairband
+       Price: 15000
+     - Item: whikebain_ears
+       Price: 12000       
+     - Item: Yellow_Bandana
+       Price: 20000
+     - Item: Beer_Cap
+       Price: 15000
+     - Item: Rabbit_Ear_Hat
+       Price: 15000
+     - Item: Kettle_Hat
+       Price: 15000
+     - Item: Raven_Cap
+       Price: 20000
+     - Item: Ramen_Hat
+       Price: 25000
+     - Item: Minstrel_Hat
+       Price: 20000
+     - Item: Marcher_Hat
+       Price: 25000
+     - Item: Remover_Hat
+       Price: 25000
+     - Item: Rideword_Hat
+       Price: 20000
+     - Item: B_Dragon_Hat
+       Price: 20000
+     - Item: J_Captain_Hat
+       Price: 25000
+     - Item: Ayothaya_Hat
+       Price: 20000
+     - Item: Hermose_Cap
+       Price: 18000
+     - Item: Anubis_Helm
+       Price: 25000
+     - Item: Helm_Of_Dragoon
+       Price: 20000
+     - Item: Shrine_Maiden_Hat
+       Price: 17000
+     - Item: Black_Tail_Ribbon
+       Price: 15000
+     - Item: Flying_Angel
+       Price: 15000
+     - Item: Satanic_Chain_P
+       Price: 20000
+     - Item: Fancy_Phantom_Mask
+       Price: 25000
+     - Item: Crown_Of_Deceit
+       Price: 17000
+     - Item: Valentine_Hat
+       Price: 15000
+     - Item: Neko_Mimi_Kafra
+       Price: 20000
+     - Item: Blue_Pajamas_Hat
+       Price: 16000
+     - Item: Pink_Pajamas_Hat
+       Price: 16000
+
+  - Tab: Limited
+    Items:
+     - Item: Hairband_Of_Reginleif
+       Price: 15000
+     - Item: Fafnir_Skin
+       Price: 16000
+     - Item: Filir_Wing
+       Price: 16000
+     - Item: Sigrun's_Wing
+       Price: 13000
+     - Item: Pecopeco_Wing_Ears
+       Price: 13000
+     - Item: Angel_Spirit
+       Price: 18000
+     - Item: Scuba_Mask
+       Price: 10000
+     - Item: Jaguar_Hat
+       Price: 18000
+     - Item: Hockey_Mask
+       Price: 18000
+     - Item: Improved_Fin_Helm
+       Price: 13000
+     - Item: Black_Glasses
+       Price: 15000
+     - Item: Red_Glasses
+       Price: 15000
+     - Item: Cyclops_Visor
+       Price: 13000
+     - Item: Eyes_Of_Darkness
+       Price: 15000
+     - Item: Robo_Eye
+       Price: 20000
+     - Item: Ifrit's_Ear
+       Price: 18000
+     - Item: Blush_Of_Groom
+       Price: 20000
+
+  - Tab: Rental
+    Items:
+     - Item: Donut_In_Mouth
+       Price: 15000
+     - Item: Spare_Card
+       Price: 15000
+     - Item: Antique_Pipe
+       Price: 15000
+     - Item: Ninja_Scroll
+       Price: 15000
+     - Item: Pencil_In_Mouth
+       Price: 15000
+     - Item: 4Leaf_Clover_In_Mouth
+       Price: 15000
+     - Item: CD_In_Mouth
+       Price: 15000
+     - Item: Umbala_Spirit
+       Price: 15000
+     - Item: Fafnir_Mask
+       Price: 15000
+     - Item: Pirate_Dagger_J
+       Price: 10000
+     - Item: Rainbow_Scarf
+       Price: 13000
+     - Item: Gang_Scarf
+       Price: 18000
+     - Item: Samurai_Mask
+       Price: 15000
+     - Item: Spiked_Scarf
+       Price: 15000
+     - Item: Event_Pierrot_Nose
+       Price: 15000
+     - Item: Fish_In_Mouth
+       Price: 15000
+     - Item: Blood_Sucker
+       Price: 15000
+     - Item: Whike_Black_Tail
+       Price: 15000
+     - Item: Thief_Handcuff
+       Price: 18000
+     - Item: Prison_Uniform
+       Price: 15000
+
+  - Tab: Other
+    Items:
+     - Item: C_Labrys
+       Price: 20000
+     - Item: C_Evil_Scythe
+       Price: 20000
+     - Item: C_Beer_Server
+       Price: 20000
+     - Item: C_Triple_Ice_Cream
+       Price: 20000
+     - Item: C_Giant_Shark
+       Price: 20000
+     - Item: C_Kirin_Wing
+       Price: 20000
+     - Item: C_Kyel_hyre_Ulti_TW
+       Price: 20000
+     - Item: C_Filir_Bag
+       Price: 20000
+     - Item: C_Evil_Druid_Cross
+       Price: 20000
+     - Item: C_Digital_Space
+       Price: 20000
+     - Item: C_Invisible_Manteau
+       Price: 5000
+     - Item: C_GiantCatBag_TW
+       Price: 20000
+     - Item: C_GiantCatBag_JP_BL
+       Price: 20000
+     - Item: C_Wings_of_Michael
+       Price: 20000
+     - Item: C_Wings_of_Uriel
+       Price: 20000
+     - Item: C_Thanatos_Sword
+       Price: 20000
+     - Item: C_Nifl_Bloom
+       Price: 20000
+     - Item: C_Valkyrie_Wing
+       Price: 20000

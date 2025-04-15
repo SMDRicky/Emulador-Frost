@@ -1,0 +1,106 @@
+function	script	F_UseCheffeniaProtection	{
+	// Lista de mapas permitidos
+	setarray .@allowed_maps$, "bossnia_01", "gld2_ald"; // Adicione outros mapas conforme necessário
+
+	// Verifica se o jogador está em um dos mapas permitidos
+	.@current_map$ = strcharinfo(3);
+	.@allowed = 0;
+
+	for (.@i = 0; .@i < getarraysize(.@allowed_maps$); .@i++) {
+		if (.@current_map$ == .@allowed_maps$[.@i]) {
+			.@allowed = 1;
+			break;
+		}
+	}
+
+	// Se o jogador não estiver em um mapa permitido, devolve o item e impede o uso
+	if (!.@allowed) {
+		dispbottom "Este item só pode ser usado dentro da [Cheffenia].";
+		getitem 17139, 1; // Devolve o item ao jogador caso tenha sido consumido automaticamente
+		end;
+	}
+
+	// Aplica o buff Proteção Total no usuário
+	sc_start SC_CP_WEAPON, 400000, 5;
+	sc_start SC_CP_SHIELD, 400000, 5;
+	sc_start SC_CP_ARMOR, 400000, 5;
+	sc_start SC_CP_HELM, 400000, 5;
+
+	// Efeito visual da Proteção Total (ID: 459)
+	specialeffect2 300;
+	end;
+}
+
+
+function	script	F_UseWindPotion	{
+	// Lista de mapas permitidos
+	setarray .@allowed_maps$, "bossnia_01", "gld2_ald"; // Adicione outros mapas permitidos
+
+	// Verifica se o jogador está em um dos mapas permitidos
+	.@current_map$ = strcharinfo(3);
+	.@allowed = 0;
+
+	for (.@i = 0; .@i < getarraysize(.@allowed_maps$); .@i++) {
+		if (.@current_map$ == .@allowed_maps$[.@i]) {
+			.@allowed = 1;
+			break;
+		}
+	}
+
+	// Se o jogador não estiver em um mapa permitido, devolve o item e impede o uso
+	if (!.@allowed) {
+		dispbottom "Este item só pode ser usado dentro da [Cheffenia].";
+		getitem 18140, 1; // Devolve o item ao jogador caso tenha sido consumido automaticamente
+		end;
+	}
+
+	// Aplica os buffs da Poção dos Ventos
+	sc_start SC_SPEEDUP1,5000,80;
+
+	// Efeito visual para indicar o uso da poção
+	specialeffect2 1108; // Efeito da poção de velocidade
+	end;
+}
+
+
+function	script	F_UseYggdrasilCheffenia	{
+	// Lista de mapas permitidos
+	setarray .@allowed_maps$, "bossnia_01", "gld2_ald"; // Adicione outros mapas conforme necessário
+
+	// Verifica se o jogador está em um dos mapas permitidos
+	.@current_map$ = strcharinfo(3);
+	.@allowed = 0;
+
+	for (.@i = 0; .@i < getarraysize(.@allowed_maps$); .@i++) {
+		if (.@current_map$ == .@allowed_maps$[.@i]) {
+			.@allowed = 1;
+			break;
+		}
+	}
+
+	// Se o jogador não estiver em um mapa permitido, devolve o item e impede o uso
+	if (!.@allowed) {
+		dispbottom "Este item só pode ser usado dentro da [Cheffenia].";
+		getitem 18141, 1; // Devolve o item ao jogador caso tenha sido consumido automaticamente
+		end;
+	}
+
+	// Verifica se o jogador está no cooldown de 3 segundos
+	if (getd("ygg_cooldown_" + getcharid(3)) > gettimetick(2)) {
+		dispbottom "[Cheffenia] ~> Você precisa esperar 1 segundos antes de usar este item novamente!";
+		getitem 18141, 1; // Devolve o item ao jogador caso tenha sido consumido automaticamente
+		end;
+	}
+
+	// Define o cooldown de 3 segundos
+	setd("ygg_cooldown_" + getcharid(3), gettimetick(2) + 1);
+
+	// Recupera 100% de HP e SP
+	percentheal 100, 100;
+
+	// Efeito visual de cura
+	specialeffect2 313;
+	end;
+}
+
+

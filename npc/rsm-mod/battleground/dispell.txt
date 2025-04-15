@@ -1,0 +1,26 @@
+-	script	DispellOnEnter	-1,{
+	OnPCLoadMapEvent:
+		// Checa se o jogador entrou nos mapas de bat_c01 até bat_c08
+		if (strcharinfo(3) == "bat_c01" ||
+		    strcharinfo(3) == "bat_c02" ||
+		    strcharinfo(3) == "bat_c03" ||
+		    strcharinfo(3) == "bat_c04" ||
+		    strcharinfo(3) == "bat_c05" ||
+		    strcharinfo(3) == "bat_c06" ||
+		    strcharinfo(3) == "bat_c07" ||
+		    strcharinfo(3) == "bat_c08") {
+			// Remove todos os buffs do jogador
+			//sc_end sc_all;
+		}
+		end;
+}
+
+// Adiciona o evento de mapa para todos os mapas necessários
+bat_c01	mapflag	loadevent
+bat_c02	mapflag	loadevent
+bat_c03	mapflag	loadevent
+bat_c04	mapflag	loadevent
+bat_c05	mapflag	loadevent
+bat_c06	mapflag	loadevent
+bat_c07	mapflag	loadevent
+bat_c08	mapflag	loadevent

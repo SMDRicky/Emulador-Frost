@@ -1,0 +1,2 @@
+// @pvpmode proibido
+prontera	mapflag	no_pvpmode

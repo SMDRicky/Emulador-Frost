@@ -1,0 +1,5 @@
+function	script	caixa_ultrainstinct	{
+	setarray .@items[0], 50261,50262,50263,50264,50265,50266,50267,50268,50269,50270,50271;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

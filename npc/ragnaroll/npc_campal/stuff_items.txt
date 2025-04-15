@@ -1,0 +1,131 @@
+/*.-----------------------------------------------------------------.
+  .    ____                          __                             .
+  .   /\  _`\                       /\ \__  __                      .
+  .   \ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __      .
+  .    \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\    .
+  .     \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/    .
+  .      \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\   .
+  .       \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/   .
+  .                                                                 .
+  .          2014~2021 © Creative Services and Development          .
+  .                      www.creativesd.com.br                      .
+  .-----------------------------------------------------------------.
+  . Script:                                                         .
+  .    Mapflags Stuffs                                              .
+  .-----------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                            Versão: 1.0  .
+  .                                                                 .
+  . Compátivel:	eAthena e derivações.                    	        .
+  .-----------------------------------------------------------------.
+  . Descrição:                                                      .
+  .    Mapflags Stuffs Consume                                      .
+  *-----------------------------------------------------------------*/
+  
+// Battleground
+bat_a01	mapflag	bg_consume
+bat_a02	mapflag	bg_consume
+bat_b01	mapflag	bg_consume
+bat_b02	mapflag	bg_consume
+bat_c01	mapflag	bg_consume
+bat_c02	mapflag	bg_consume
+bat_c03	mapflag	bg_consume
+bat_g02	mapflag	bg_consume
+bat_g01	mapflag	bg_consume
+//bat_d01	mapflag	bg_consume
+//bat_d02	mapflag	bg_consume
+bat_g01	mapflag	bg_consume
+//bat_g02	mapflag	bg_consume
+//bat_v01	mapflag	bg_consume
+//bat_v02	mapflag	bg_consume
+//bat_t01	mapflag	bg_consume
+//bat_t02	mapflag	bg_consume
+//bat_s01	mapflag	bg_consume
+//bat_s02	mapflag	bg_consume
+
+// PvP Common
+pvp_y_1-1	mapflag	pvp_consume
+pvp_y_1-2	mapflag	pvp_consume
+pvp_y_1-3	mapflag	pvp_consume
+pvp_y_1-4	mapflag	pvp_consume
+pvp_y_1-5	mapflag	pvp_consume
+pvp_y_2-1	mapflag	pvp_consume
+pvp_y_2-2	mapflag	pvp_consume
+pvp_y_2-3	mapflag	pvp_consume
+pvp_y_2-4	mapflag	pvp_consume
+pvp_y_2-5	mapflag	pvp_consume
+pvp_y_3-1	mapflag	pvp_consume
+pvp_y_3-2	mapflag	pvp_consume
+pvp_y_3-3	mapflag	pvp_consume
+pvp_y_3-4	mapflag	pvp_consume
+pvp_y_3-5	mapflag	pvp_consume
+pvp_y_4-1	mapflag	pvp_consume
+pvp_y_4-2	mapflag	pvp_consume
+pvp_y_4-3	mapflag	pvp_consume
+pvp_y_4-4	mapflag	pvp_consume
+pvp_y_4-5	mapflag	pvp_consume
+pvp_y_5-1	mapflag	pvp_consume
+pvp_y_5-2	mapflag	pvp_consume
+pvp_y_5-3	mapflag	pvp_consume
+pvp_y_5-4	mapflag	pvp_consume
+pvp_y_5-5	mapflag	pvp_consume
+pvp_y_6-1	mapflag	pvp_consume
+pvp_y_6-2	mapflag	pvp_consume
+pvp_y_6-3	mapflag	pvp_consume
+pvp_y_6-4	mapflag	pvp_consume
+pvp_y_6-5	mapflag	pvp_consume
+pvp_y_7-1	mapflag	pvp_consume
+pvp_y_7-2	mapflag	pvp_consume
+pvp_y_7-3	mapflag	pvp_consume
+pvp_y_7-4	mapflag	pvp_consume
+pvp_y_7-5	mapflag	pvp_consume
+pvp_y_8-1	mapflag	pvp_consume
+pvp_y_8-2	mapflag	pvp_consume
+pvp_y_8-3	mapflag	pvp_consume
+pvp_y_8-4	mapflag	pvp_consume
+pvp_y_8-5	mapflag	pvp_consume
+
+guild_vs4	mapflag	pvp_consume
+guild_vs2	mapflag	pvp_consume
+guild_vs1	mapflag	pvp_consume
+// Woe
+prtg_cas01	mapflag	gvg_consume
+prtg_cas02	mapflag	gvg_consume
+arena_room	mapflag	gvg_consume
+prt_are_in	mapflag	gvg_consume
+prtg_cas03	mapflag	gvg_consume
+prtg_cas04	mapflag	gvg_consume
+prtg_cas05	mapflag	gvg_consume
+payg_cas01	mapflag	gvg_consume
+payg_cas02	mapflag	gvg_consume
+payg_cas03	mapflag	gvg_consume
+payg_cas04	mapflag	gvg_consume
+payg_cas05	mapflag	gvg_consume
+gefg_cas01	mapflag	gvg_consume
+gefg_cas02	mapflag	gvg_consume
+gefg_cas03	mapflag	gvg_consume
+gefg_cas04	mapflag	gvg_consume
+gefg_cas05	mapflag	gvg_consume
+aldeg_cas01	mapflag	gvg_consume
+aldeg_cas02	mapflag	gvg_consume
+aldeg_cas03	mapflag	gvg_consume
+aldeg_cas04	mapflag	gvg_consume
+aldeg_cas05	mapflag	gvg_consume
+nguild_alde	mapflag	gvg_consume
+nguild_gef	mapflag	gvg_consume
+nguild_pay	mapflag	gvg_consume
+nguild_prt	mapflag	gvg_consume
+schg_cas01	mapflag	gvg_consume
+schg_cas02	mapflag	gvg_consume
+schg_cas03	mapflag	gvg_consume
+schg_cas04	mapflag	gvg_consume
+schg_cas05	mapflag	gvg_consume
+te_aldecas1	mapflag	gvg_consume
+te_aldecas2	mapflag	gvg_consume
+te_aldecas3	mapflag	gvg_consume
+te_aldecas4	mapflag	gvg_consume
+te_aldecas5	mapflag	gvg_consume
+te_prtcas01	mapflag	gvg_consume
+te_prtcas02	mapflag	gvg_consume
+te_prtcas03	mapflag	gvg_consume
+te_prtcas04	mapflag	gvg_consume
+te_prtcas05	mapflag	gvg_consume

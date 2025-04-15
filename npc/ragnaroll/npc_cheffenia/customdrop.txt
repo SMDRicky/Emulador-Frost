@@ -1,0 +1,443 @@
+-	script	FragmentoCheffeniaFacil	FAKE_NPC,{
+
+function add_drop;
+
+set .@id,add_drop;
+
+OnNPCKillEvent:
+	if (!playerattached())
+		end;
+	.@mob_id = killedrid;
+	.@size = getd(".size_" + .@mob_id);
+	if (.@size < 1)
+		end;
+	.@pid = getcharid(1);
+
+	// Obtém a rate de drop customizada do jogador
+	.@dropRate = CUSTOM_RATE_DROP;
+	if (.@dropRate < 1) .@dropRate = 1; // Evita valores inválidos
+
+	for (.@i = 0; .@i < .@size; .@i++) {
+
+		.@mapname$ = getd(".map_name_" + .@mob_id + "$[" + .@i + "]");
+		.@chance = getd(".chance_" + .@mob_id + "[" + .@i + "]");
+		.@id = getd(".item_id_" + .@mob_id + "[" + .@i + "]");
+		.@amt_min = getd(".item_amount_" + .@mob_id + "[" + .@i + "]");
+		.@amt_max = getd(".item_amount_max_" + .@mob_id + "[" + .@i + "]");
+		.@quant = rand(.@amt_min,.@amt_max);
+
+		// Modifica a chance de drop com base na rate escolhida
+		.@adjustedChance = (.@chance * (CUSTOM_RATE_DROP + 99)) / 100;
+
+		if(strcharinfo(3) == .@mapname$) {
+			if ( !.@pid ) {
+				if( getstatus( SC_ITEMBOOST,1 ) == 200) {
+					if (rand(10000) < .@adjustedChance * 3) {
+						getitem .@id,.@quant;
+						// Só anuncia globalmente se a chance original for menor que 5% (500 em 10000)
+						if (.@chance < 500) {
+							announce "["+strcharinfo(0)+"] dropou "+getitemname(.@id)+"!",0x00FF00;
+						}
+					}
+				} else if( getstatus( SC_ITEMBOOST,1) == 100 ) {
+					if (rand(10000) < .@adjustedChance * 2) {
+						getitem .@id,.@quant;
+						if (.@chance < 500) {
+							announce "["+strcharinfo(0)+"] dropou "+getitemname(.@id)+"!",0x00FF00;
+						}
+					}
+				} else {
+					if (rand(10000) < .@adjustedChance) {
+						getitem .@id,.@quant;
+						if (.@chance < 500) {
+							announce "["+strcharinfo(0)+"] dropou "+getitemname(.@id)+"!",0x00FF00;
+						}
+					}
+				}
+			}
+
+			// Aplica a mesma lógica para os membros do grupo
+			getpartymember .@pid, 1;
+			getpartymember .@pid, 2;
+			getmapxy(.@map$, .@x, .@y, BL_PC);
+
+			for ( .@p = 0; .@p < $@partymembercount; ++.@p ) {
+				if ( isloggedin( $@partymemberaid[.@p], $@partymembercid[.@p] ) ) {
+					attachrid $@partymemberaid[.@p];
+					getmapxy(@map$, @x, @y, BL_PC);
+					if (@map$ == .@map$ && distance(.@x, .@y, @x, @y) <= 15){
+						if ( getstatus(SC_ITEMBOOST,1) == 100) {
+							if(rand(10000) < .@adjustedChance * 2){
+								getitem .@id,.@quant;
+								if (.@chance < 500) {
+									announce "["+strcharinfo(0)+"] dropou "+getitemname(.@id)+"!",0x00FF00;
+								}
+							}
+						}
+						else if ( getstatus(SC_ITEMBOOST,1) == 200) {
+							if(rand(10000) < .@adjustedChance * 3){
+								getitem .@id,.@quant;
+								if (.@chance < 500) {
+									announce "["+strcharinfo(0)+"] dropou "+getitemname(.@id)+"!",0x00FF00;
+								}
+							}
+						} else {
+							if(rand(10000) < .@adjustedChance){
+								getitem .@id,.@quant;
+								if (.@chance < 500) {
+									announce "["+strcharinfo(0)+"] dropou "+getitemname(.@id)+"!",0x00FF00;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	end;
+
+
+OnInit:
+	// <map_name>,<mob_id>, <item_id>, <item_amount_min>,<item_amount_max>, <chance>
+	// Chance ========================
+	// 10000 	= 100%
+	// 1000		= 10%
+	// 100		= 1%
+	// 99		= 0.99%
+	// 50		= 0.50%
+	// 1		= 0.01%
+	// ===============================
+/////////////////////// Drop Cheffenia Normal ////////////////////////////
+	add_drop("bossnia_01", 1157, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1157, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1157, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1623, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1623, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1623, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1087, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1087, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1087, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1190, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1190, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1190, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1272, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1272, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1272, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1373, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1373, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1373, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1312, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1312, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1312, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1511, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1511, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1511, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1751, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1751, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1751, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1832, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1832, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1832, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1871, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1871, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1871, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1159, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1159, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1159, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1046, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1046, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1046, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1651, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1651, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1651, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1649, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1649, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1649, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1646, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1646, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1646, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1650, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1650, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1650, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1648, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1648, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1648, 40003, 10,30 , 350);
+
+	add_drop("bossnia_01", 1647, 35034, 1, 1, 1);
+	add_drop("bossnia_01", 1647, 35075, 1, 5, 300);
+	add_drop("bossnia_01", 1647, 40003, 10,30 , 350);
+	/////////////////////// Drop Cheffenia Dificil ////////////////////////////
+// Tao Gunka Dificil - 20840
+	add_drop("gld2_ald", 20840, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20840, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20840, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20840, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20840, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20840, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20840, 23822, 1, 1, 50);
+// Hatii Dificil - 20841
+	add_drop("gld2_ald", 20841, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20841, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20841, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20841, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20841, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20841, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20841, 23822, 1, 1, 50);
+// Eddga Dificil - 20842
+	add_drop("gld2_ald", 20842, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20842, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20842, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20842, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20842, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20842, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20842, 23822, 1, 1, 50);
+// GT Dificil
+	add_drop("gld2_ald", 20843, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20843, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20843, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20843, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20843, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20843, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20843, 23822, 1, 1, 50);
+//RSX
+	add_drop("gld2_ald", 20844, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20844, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20844, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20844, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20844, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20844, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20844, 23822, 1, 1, 50);
+//YGNIZEM
+	add_drop("gld2_ald", 20845, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20845, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20845, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20845, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20845, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20845, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20845, 23822, 1, 1, 50);
+//DARK LORD
+	add_drop("gld2_ald", 20846, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20846, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20846, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20846, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20846, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20846, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20846, 23822, 1, 1, 50);
+//Senhor dos Mortos
+	add_drop("gld2_ald", 20847, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20847, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20847, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20847, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20847, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20847, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20847, 23822, 1, 1, 50);
+//Drake
+	add_drop("gld2_ald", 20848, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20848, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20848, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20848, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20848, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20848, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20848, 23822, 1, 1, 50);
+//Farao
+	add_drop("gld2_ald", 20849, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20849, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20849, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20849, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20849, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20849, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20849, 23822, 1, 1, 50);
+//Bafome
+	add_drop("gld2_ald", 20850, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20850, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20850, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20850, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20850, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20850, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20850, 23822, 1, 1, 50);
+	add_drop("gld2_ald", 20849, 23822, 1, 1, 50);
+//Abelha
+	add_drop("gld2_ald", 20851, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20851, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20851, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20851, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20851, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20851, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20851, 23822, 1, 1, 50);
+//Doppelganger
+	add_drop("gld2_ald", 20852, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20852, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20852, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20852, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20852, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20852, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20852, 23822, 1, 1, 50);
+//Orc Lord
+	add_drop("gld2_ald", 20853, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20853, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20853, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20853, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20853, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20853, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20853, 23822, 1, 1, 50);
+//AmonRA
+	add_drop("gld2_ald", 20854, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20854, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20854, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20854, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20854, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20854, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20854, 23822, 1, 1, 50);
+//Vesper
+	add_drop("gld2_ald", 20855, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20855, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20855, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20855, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20855, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20855, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20855, 23822, 1, 1, 50);
+//Kiel
+	add_drop("gld2_ald", 20856, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20856, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20856, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20856, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20856, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20856, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20856, 23822, 1, 1, 50);
+//Thanatos
+	add_drop("gld2_ald", 20857, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20857, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20857, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20857, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20857, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20857, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20857, 23822, 1, 1, 50);
+//Ktullanux
+	add_drop("gld2_ald", 20858, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20858, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20858, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20858, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20858, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20858, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20858, 23822, 1, 1, 50);
+//Celine
+	add_drop("gld2_ald", 20859, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20859, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20859, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20859, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20859, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20859, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20859, 23822, 1, 1, 50);
+//Detardeuros
+	add_drop("gld2_ald", 20860, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20860, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20860, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20860, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20860, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20860, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20860, 23822, 1, 1, 50);
+//Gopinich
+	add_drop("gld2_ald", 20861, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20861, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20861, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20861, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20861, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20861, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20861, 23822, 1, 1, 50);
+//Boitata
+	add_drop("gld2_ald", 20862, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20862, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20862, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20862, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20862, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20862, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20862, 23822, 1, 1, 50);
+//Kublin
+	add_drop("gld2_ald", 20863, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20863, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20863, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20863, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20863, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20863, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20863, 23822, 1, 1, 50);
+//Ifrit
+	add_drop("gld2_ald", 20864, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20864, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20864, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20864, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20864, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20864, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20864, 23822, 1, 1, 50);
+//Pesar
+	add_drop("gld2_ald", 20865, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20865, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20865, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20865, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20865, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20865, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20865, 23822, 1, 1, 50);
+//Valk
+	add_drop("gld2_ald", 1751, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 1751, 35076, 1, 2, 1000);
+	add_drop("gld2_ald", 1751, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 1751, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 1751, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 1751, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 1751, 23822, 1, 1, 50);
+//Betegel
+	add_drop("gld2_ald", 20994, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 20994, 35076, 1, 5, 300);
+	add_drop("gld2_ald", 20994, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 20994, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 20994, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 20994, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 20994, 23822, 1, 1, 50);
+//SatanMorroc
+	add_drop("gld2_ald", 1917, 35034, 2, 5, 2);
+	add_drop("gld2_ald", 1917, 35076, 1, 2, 1000);
+	add_drop("gld2_ald", 1917, 40003, 5, 15, 350);
+	add_drop("gld2_ald", 1917, 40004, 1, 1, 1);
+	add_drop("gld2_ald", 1917, 23820, 1, 1, 25);
+	add_drop("gld2_ald", 1917, 23821, 1, 1, 10);
+	add_drop("gld2_ald", 1917, 23822, 1, 1, 50);
+/////////////////////// Instancias ////////////////////////////
+	add_drop("2@orcs", 1087, 35016, 1, 5, 10000); //Memorial dos Orcs
+	add_drop("1@orcs", 1087, 35016, 1, 5, 10000);
+
+	end;
+
+function add_drop {
+	.@arg_count = getargcount();
+	if (.@arg_count % 6)
+		return;
+
+	for (.@i = 0; .@i < .@arg_count; .@i += 6) {
+		.@mob_id = getarg(.@i+1);
+		.@size = getd(".size_" + .@mob_id);
+		setd ".map_name_" + .@mob_id + "$[" + .@size + "]", getarg(.@i);
+		setd ".item_id_" + .@mob_id + "[" + .@size + "]", getarg(.@i+2);
+		setd ".item_amount_" + .@mob_id + "[" + .@size + "]", getarg(.@i+3);
+		setd ".item_amount_max_" + .@mob_id + "[" + .@size + "]", getarg(.@i+4);
+		setd ".chance_" + .@mob_id + "[" + .@size + "]", getarg(.@i+5);
+		setd ".size_" + .@mob_id, .@size + 1;
+	}
+	return;
+}
+}

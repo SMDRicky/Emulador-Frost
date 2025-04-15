@@ -1,0 +1,135 @@
+//===== NPC de Entrada para Mapas Rotativos =====//
+prontera,163,186,4	script	Mapas Rotativos	642,{
+
+	// Custo da entrada
+	set .entry_cost, 500000;
+
+	// Se o mapa não estiver definido, define um mapa válido
+	if (getd(".active_map$") == "") {
+		set .@index, rand(6);
+		setd ".active_map$", getd(".maps$[" + .@index + "]");
+		setd ".active_element$", getd(".elements$[" + .@index + "]");
+	}
+
+	mes "[Mapas Rotativos]";
+	mes "O Mapa Rotativo muda a cada 2 horas!";
+	mes "Atualmente, o mapa ativo é:";
+	mes "^0000FF" + getd(".active_map$") + " (" + getd(".active_element$") + ")^000000.";
+	mes "A entrada custa ^FF0000" + .entry_cost + " Zenys^000000.";
+	next;
+
+	// Menu de opções
+	switch (select("[»] Entrar no Mapa [" + getmapusers(getd(".active_map$")) + "]:[»] Informações:[»] Cancelar:[»] Rotacionar Mapa")) {
+		case 1:
+			if (Zeny < .entry_cost) {
+				mes "Você não tem Zenys suficientes!";
+				close;
+			}
+			Zeny -= .entry_cost;
+
+			// Verifica se o mapa existe antes de tentar teleportar
+			if (getmapflag(getd(".active_map$"), mf_pvp)) {
+				warp getd(".active_map$"), 0, 0;
+			} else {
+				mes "Erro: O mapa não está disponível no momento.";
+			}
+			close;
+			end;
+
+		case 2:
+			mes "[Mapas Rotativos]";
+			mes "Os mapas mudam automaticamente a cada 2 horas.";
+			mes "Cada mapa possui um elemento diferente:";
+			for (.@i = 0; .@i < 6; .@i++) {
+				mes "^0000FF" + getd(".maps$[" + .@i + "]") + "^000000 - " + getd(".elements$[" + .@i + "]") + ".";
+			}
+			mes "Aproveite as batalhas!";
+			close;
+
+		case 3:
+			mes "Tudo bem, volte quando quiser participar!";
+			close;
+
+		case 4:
+			if (getgmlevel() < 90) { // Apenas GMs nível 90+
+				mes "Apenas a staff pode rotacionar os mapas!";
+				close;
+			}
+			mes "Rotacionando mapa manualmente...";
+			donpcevent "Rotacao_PVP::ManualRotate";
+			end;
+	}
+
+	OnInit:
+		// Definição dos mapas e elementos
+		setd ".maps$[0]", "pvp_n_1-1";
+		setd ".maps$[1]", "pvp_n_1-2";
+		setd ".maps$[2]", "pvp_n_1-3";
+		setd ".maps$[3]", "pvp_n_1-4";
+		setd ".maps$[4]", "pvp_n_1-5";
+		setd ".maps$[5]", "pvp_n_2-5";
+
+		setd ".elements$[0]", "Sombrio";
+		setd ".elements$[1]", "Sagrado";
+		setd ".elements$[2]", "Vento";
+		setd ".elements$[3]", "Fogo";
+		setd ".elements$[4]", "Terra";
+		setd ".elements$[5]", "Água";
+
+		// Escolhe um mapa inicial aleatório
+		set .@index, rand(6);
+		setd ".active_map$", getd(".maps$[" + .@index + "]");
+		setd ".active_element$", getd(".elements$[" + .@index + "]");
+
+		// Inicia a rotação automática corretamente
+		initnpctimer;
+		end;
+
+	OnTimer7200000: // A cada 2 horas, troca o mapa automaticamente
+		donpcevent "Rotacao_PVP::OnRotate";
+		stopnpctimer;
+		initnpctimer;
+		end;
+}
+
+//===== NPC Invisível para a Rotação Automática =====//
+-	script	Rotacao_PVP	-1,{
+
+	OnInit:
+		// Inicia a rotação automática ao iniciar o servidor
+		initnpctimer;
+		end;
+
+	OnRotate:
+		// Escolhe um novo mapa aleatório sem repetir o anterior
+		do {
+			.@random_index = rand(6);
+		} while (getd(".maps$[" + .@random_index + "]") == getd(".active_map$"));
+
+		// Atualiza o mapa e elemento ativos
+		setd ".active_map$", getd(".maps$[" + .@random_index + "]");
+		setd ".active_element$", getd(".elements$[" + .@random_index + "]");
+
+		// Anuncia a mudança de mapa
+		announce "[Mapas Rotativos] O novo mapa ativo é " + getd(".active_map$") + " (" + getd(".active_element$") + ").", bc_all;
+		end;
+
+	OnManualRotate:
+		// Espera 1 segundo para evitar loops acidentais
+		sleep 1000;
+
+		// Escolhe um novo mapa aleatório sem repetir o anterior
+		do {
+			.@random_index = rand(6);
+		} while (getd(".maps$[" + .@random_index + "]") == getd(".active_map$"));
+
+		// Atualiza o mapa e elemento ativos
+		setd ".active_map$", getd(".maps$[" + .@random_index + "]");
+		setd ".active_element$", getd(".elements$[" + .@random_index + "]");
+
+		// Anuncia a mudança de mapa manualmente
+		announce "[Mapas Rotativos] A STAFF alterou o mapa ativo para " + getd(".active_map$") + " (" + getd(".active_element$") + ").", bc_all;
+		end;
+}
+
+

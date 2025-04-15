@@ -1,0 +1,180 @@
+moc_para01,51,57,3	script	Loja do Eden#1	901,{
+	mes "[^A020F0Loja Iniciante^000000]";
+	mes "Olá, eu sou o responsável por controla os itens Iniciantes.";
+	mes "Gostaria de verificar os valores ? ";
+	next;
+	switch(select("^32CD32[»]^000000 Elmos","^32CD32[»]^000000 Armaduras","^32CD32[»]^000000 Escudos","^32CD32[»]^000000 Capas","^32CD32[»]^000000 Calçados","^32CD32[»]^000000 Armas","^8B0000[»]^000000 Não, Obrigado")) {
+		case 1:
+		close2;
+		callshop "elmo_eden", 1;
+		end;
+		case 2:
+		close2;
+		callshop "armadura_eden", 1;
+		end;
+		case 3:
+		close2;
+		callshop "escudo_eden", 1;
+		end;
+		case 4:
+		close2;
+		callshop "capa_eden", 1;
+		end;
+		case 5:
+		close2;
+		callshop "calcado_eden", 1;
+		end;
+		case 6:
+		close2;
+		callshop "armas_eden", 1;
+		end;
+		case 7:
+		mes "[^6666FFLoja Eden^000000]";
+		mes "Volte quando precisar!!!";
+		end;	
+
+	}
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 67;
+	setunittitle getnpcid(0), "[Iniciante]";
+    end;
+
+}
+
+moc_para01,51,53,3	script	Chapeleiro Maluco#2	748,{
+	mes "[^A020F0Chapaleiro Maluco^000000]";
+	mes "Olá, eu sou o responsável por alguns itens.";
+	mes "Qual loja você deseja abrir ? ";
+	next;
+	switch(select("^32CD32[»]^000000 Loja [A]","^32CD32[»]^000000 Loja [B]","^32CD32[»]^000000 Loja [C]","^32CD32[»]^000000 Loja [D]","^8B0000[»]^000000 Não, Obrigado")) {
+		case 1:
+		close2;
+		callshop "chapeu_eden_a", 1;
+		end;
+		case 2:
+		close2;
+		callshop "chapeu_eden_b", 1;
+		end;
+		case 3:
+		close2;
+		callshop "chapeu_eden_c", 1;
+		end;
+		case 4:
+		close2;
+		callshop "chapeu_eden_d", 1;
+		end;
+		case 5:
+		mes "[^6666FFChapaleiro Maluco^000000]";
+		mes "Volte quando precisar!!!";
+		end;
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 67;
+    setunittitle getnpcid(0), "[Intermediário]";
+	}
+}
+
+moc_para01,51,45,3	script	Loja Inerente	851,{
+	mes "[^A020F0Loja Inerente^000000]";
+	mes "Olá, eu sou o responsável por controla os itens inerentes.";
+	mes "Gostaria de verificar os valores ? ";
+	next;
+	switch(select("^32CD32[»]^000000 Armas Inerentes","^32CD32[»]^000000 Acessorios Inerentes","^8B0000[»]^000000 Nada, Obrigado")) {
+		case 1:
+		close2;
+		callshop "custom_armas", 1;
+		end;
+		case 2:
+		close2;
+		callshop "custom_acessorios", 1;
+		end;
+		case 3:
+		mes "[^6666FFLoja Inerente^000000]";
+		mes "Volte quando precisar!!!";
+		end;	
+
+	}
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 63;
+	setunittitle getnpcid(0), "[Custom Quests]";
+    end;
+
+}
+
+moc_para01,51,41,3	script	Loja Munições	851,{
+	mes "[^A020F0Loja de Munições^000000]";
+	mes "Olá, eu sou o responsável por controle e distribuição das munições.";
+	mes "Gostaria de verificar os valores ? ";
+	next;
+	switch(select("^32CD32[»]^000000 Esferas Estilingue","^32CD32[»]^000000 Balas do justiceiro","^8B0000[»]^000000 Nada, Obrigado")) {
+		case 1:
+		close2;
+		callshop "eferas_estilingue", 1;
+		end;
+		case 2:
+		close2;
+		callshop "balas_custom", 1;
+		end;
+		case 3:
+		mes "[^6666FFLoja de Munições^000000]";
+		mes "Volte quando precisar!!!";
+		end;	
+
+	}
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 63;
+	setunittitle getnpcid(0), "[Custom Quests]";
+    end;
+
+}
+
+prontera,146,192,5	script	Troca de Chips#1	4058,{
+	mes "[^A020F0Troca de Chips^000000]";
+	mes "Olá, Seu Chip esta com defeito ?.";
+	mes "Eu troco chips defeituosos por chips funcionais";
+	mes "Caso você tenha um Chip Frostpass com ID 23820 troque aqui pelo chip funcional";
+	next;
+	switch(select("^32CD32[»]^000000 Sim","^8B0000[»]^000000 Não, Obrigado")) {
+		case 1:
+		close2;
+		callshop "pets_eden", 1;
+		end;
+		case 2:
+		mes "[^6666FFTroca de Chips^000000]";
+		mes "Volte quando precisar!!!";
+		end;	
+
+	}
+
+	OnInit:
+   setunitdata getnpcid(0), UNPC_GROUP_ID, 64;
+	setunittitle getnpcid(0), "[CHIPS FROSTPASS]";
+   end;
+
+}
+
+cockpit,106,118,5	script	Loja de Eventos#1	612,{
+	mes "[^A020F0Loja de Eventos^000000]";
+	mes "Olá, gostaria de ver a loja de evetos.";
+	mes "Aqui você pega utilitarios";
+	next;
+	switch(select("^32CD32[»]^000000 Sim","^8B0000[»]^000000 Não, Obrigado")) {
+		case 1:
+		close2;
+		callshop "LojaEventos", 1;
+		end;
+		case 2:
+		mes "[^6666FFLoja de Eventos^000000]";
+		mes "Volte quando precisar!!!";
+		end;	
+
+	}
+
+	OnInit:
+   setunitdata getnpcid(0), UNPC_GROUP_ID, 61;
+	setunittitle getnpcid(0), "[Eventos RagnaFrost]";
+   end;
+
+}

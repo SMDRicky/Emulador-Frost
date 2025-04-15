@@ -1,0 +1,61 @@
+prontera,165,193,5	script	Vote por Pontos	582,{
+
+	set .npcname$, "^339966[ Vote por Pontos ]^000000";
+	set .reward_item, 25737; // ID do item a ser entregue
+	set .reward_cost, 1;     // Custo em pontos por 1 item
+	set .shopname$, "DeepWeb"; // Nome da loja definida no arquivo shop
+
+	mes .npcname$;
+	mes "Olá, ^008aff" + strcharinfo(0) + "^000000!";
+	set .@points, callfunc("F_GetVotePoints", getcharid(3));
+	mes "Você possui ^339966[" + .@points + "]^000000 ponto(s).";
+	next;
+
+	switch(select("Trocar pontos por " + getitemname(.reward_item) + ":Abrir Loja de Votos:Sair")) {
+
+	case 1:
+		mes .npcname$;
+		mes "Você pode trocar pontos por ^0000FF" + getitemname(.reward_item) + "^000000.";
+		mes "Digite a quantidade que deseja trocar:";
+		input .@amount;
+
+		if (.@amount <= 0) {
+			mes "Valor inválido.";
+			close;
+		}
+
+		if (.@amount > .@points) {
+			mes "Você não possui pontos suficientes.";
+			close;
+		}
+
+		callfunc("F_UpdateVotePoints", getcharid(3), .@amount * .reward_cost);
+		getitem .reward_item, .@amount;
+		mes "Você recebeu ^0055FF" + .@amount + "^000000x " + getitemname(.reward_item) + ".";
+		mes "Obrigado por votar!";
+		close;
+
+	case 2:
+		callshop .shopname$, 1;
+		close;
+
+	case 3:
+		mes "Até logo!";
+		close;
+	}
+}
+// ===============================
+// Função: buscar pontos do jogador
+// ===============================
+function	script	F_GetVotePoints	{
+	query_sql("SELECT `vote` FROM `login` WHERE `account_id` = " + getarg(0) + " LIMIT 1", .@result);
+	return getarraysize(.@result) ? .@result[0] : 0;
+}
+
+// ===============================
+// Função: atualizar pontos (descontar)
+// ===============================
+function	script	F_UpdateVotePoints	{
+	query_sql("UPDATE `login` SET `vote` = GREATEST(`vote` - " + getarg(1) + ", 0) WHERE `account_id` = " + getarg(0));
+	return;
+}

@@ -1,0 +1,87 @@
+prontera,148,184,4	script	Cheffenia	635,{
+
+set .vzeny,500000;
+set .vzenyn,700000;
+set .vzenyh,900000;
+
+	mes "[^4B0082Cheffenia^000000]";
+	mes "-----------------------------------------";
+	mes "Deseja teleportar para a ^4B0082Cheffenia^000000?";
+	mes "Custa ^FFA500500.000^000000 Zeny para Facil";
+	mes "Custa ^FF8C00700.000^000000 Zeny para Normal";
+	mes "Custa ^FF4500900.000^000000 Zeny para Dificil";
+	next;
+	switch(select("^BA55D3[»]^000000 Entrar", "^9932CC[»]^000000 Loja", "^9400D3[»]^000000 Ainda não me preparei")){
+
+	case 1:	
+		mes "[^4B0082Cheffenia^000000]";
+		mes "Qual dificuldade você vai escolher dessa vez ?";
+		mes "^FF0000~~~~ ATENÇÃO ~~~~^000000";
+		mes "O DROP É PARA A PT !";
+		mes "MESMO SOLO CRIE UM GRUPO !";
+		mes "PARA RECEBER SEUS FRAGMENTOS !";
+		next;
+		switch(select("[»] Facil","[»] Normal","[»] Dificil","[»] Nada")) {
+			
+			case 1:
+		if (Zeny < .vzeny) goto FALTA_ZENY;
+				mes "[^4B0082Cheffenia^000000]";
+				mes "^FF0000~~~~ ATENÇÃO ~~~~^000000";
+				mes "O DROP É PARA A PT !";
+				mes "MESMO SOLO CRIE UM GRUPO !";
+				mes "PARA RECEBER SEUS FRAGMENTOS !";
+				close2;
+				zeny -= .vzeny;
+				warp "dic_fild01",150,279;
+				end;		
+			
+			case 2:
+		if (Zeny < .vzenyn) goto FALTA_ZENY;
+				mes "[^4B0082Cheffenia^000000]";
+				mes "^FF0000~~~~ ATENÇÃO ~~~~^000000";
+				mes "O DROP É PARA A PT !";
+				mes "MESMO SOLO CRIE UM GRUPO !";
+				mes "PARA RECEBER SEUS FRAGMENTOS !";
+				close2;
+				zeny -= .vzenyn;
+				warp "dic_fild02",71,369;
+				end;
+			case 3:
+		if (Zeny < .vzenyh) goto FALTA_ZENY;
+				mes "[^4B0082Cheffenia^000000]";
+				mes "^FF0000~~~~ ATENÇÃO ~~~~^000000";
+				mes "O DROP É PARA A PT !";
+				mes "MESMO SOLO CRIE UM GRUPO !";
+				mes "PARA RECEBER SEUS FRAGMENTOS !";
+				close2;
+				zeny -= .vzenyh;
+				warp "gld2_ald",104,250;
+				end;
+			case 4:
+				mes "[^4B0082Cheffenia^000000]";
+				mes "Me avise quando estiver com tudo pronto.";
+				mes "Ai envio você até o ^C0392BCheffenia^000000.";
+				end;
+		}
+	case 2:
+		close2;
+		callfunc "lojacheffenia";
+		end;
+		
+	case 3:
+		mes "[Cheffenia]";
+		mes "Me avise quando estiver com tudo pronto.";
+		mes "Ai envio você até o ^C0392BCheffenia^000000.";
+		close;
+	}
+
+		FALTA_ZENY:
+		next;
+		mes .n$;
+		mes "Requer: ^FFA500500.000^000000z Para o modo Facil";
+		mes "Requer: ^FF8C00700.000^000000z Para o modo Normal";
+		mes "Requer: ^FF4500900.000^000000z Para o modo Dificil";
+	end;
+}
+
+

@@ -1,0 +1,172 @@
+mainhall,117,151,4	script	Plagiador de Habilidades#Premium	779,{
+	doevent "plagiadorHabilidadess::OnPlagio";
+	OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 52;
+	setunittitle getnpcid(0), "[VIP RAGNAFROST]";
+	end;
+}
+
+-	script	plagiadorHabilidadess	-1,{
+
+
+OnPlagio:
+    set .@lvlHabilidade,getskilllv( "RG_PLAGIARISM" );
+    .nomeNPC$ = "^354D68[ Plagiador de Habilidades ]^000000";
+
+    mes .nomeNPC$;
+    mes "Bem-vindo ao mundo do plágio.";
+    mes "Sou o maior plagiador da história, pode apostar.";
+    mes "Posso te ajudar a plagiar a habilidade de algumas profissões.";
+    mes "Você tem interesse?";
+	mes "Cobro 50.000 zeny";
+    menu "Sim, também quero plagiar!",PLAGIAR,"Não tenho interesse...",NAO;
+
+PLAGIAR:
+    clear;
+    mes .nomeNPC$;
+    mes "Vamos começar então.";
+    mes "Vamos começar escolhendo qual habilidade você gostaria de plagiar.";
+    
+    // Verifica se o jogador tem 50k zeny
+    if (Zeny < 50000) {
+        mes .nomeNPC$;
+        mes "Você não tem zeny suficiente.";
+        mes "Você precisa de 50.000 zeny para plagiar uma habilidade.";
+        close;
+    }
+	
+    //set SkillPoint,0;
+
+    if ( !.@lvlHabilidade ){
+        clear;
+        mes .nomeNPC$;
+        mes "Espera!!!";
+        mes "Você é da polícia ou o que?";
+        mes "Eu só falo com ^f00e47Desordeiros^000000, se você não tem um mandato judicial, eu não tenho mais nada para falar!";
+        end;
+    } else {
+        if ( select( ( CLONE_SKILL )?"^008aff[»]^000000 Esquecer meu plágio atual":"^008aff[»]^000000 Plagiar nova habilidade","^ff0000[»]^000000 Cancelar" ) == 1 ){
+            if ( CLONE_SKILL && CLONE_SKILL_LV ) {
+                next;
+                mes .nomeNPC$;
+                mes "Pronto!";
+                mes "Limpei suas memórias quanto ao seu último plágio.";
+                set CLONE_SKILL_LV,0;
+                skill CLONE_SKILL,CLONE_SKILL_LV,0;
+                set CLONE_SKILL,0;
+            } else {
+                next;
+                mes .nomeNPC$;
+                mes "Qual habilidade gostaria que eu te ajudasse a plagiar hoje?";
+                set .@i,select( .menu$ ) - 1;
+                if( .@lvlHabilidade > .lvlMaxHabilidade[.@i] )
+                    set .@lvlHabilidade,.lvlMaxHabilidade[.@i];
+                mes "Habilidade : ^0055FF"+.nomeHabilidade$[.@i]+"^000000";
+                mes "Level : ^0055FF"+.@lvlHabilidade+"^000000";
+                if( select( "^008aff[»]^000000 Confirmar","^ff0000[»]^000000 Cancelar" ) == 1 ){
+                    set CLONE_SKILL,.idHabilidade[.@i];
+                    set CLONE_SKILL_LV,.@lvlHabilidade;
+                    next;
+                    // Cobra 50k zeny
+                    set Zeny, Zeny - 50000;
+                    mes "Acabei de te ensinar a habilidade ^0055FF"+.nomeHabilidade$[.@i]+"^000000 no ^0055FFlevel "+CLONE_SKILL_LV+"^000000";
+                    skill CLONE_SKILL,CLONE_SKILL_LV,0;
+                }
+            }
+        }
+    }
+    if ( CLONE_SKILL_LV > 0 ) {
+        dispbottom "Habilidade plagiada:";
+        dispbottom "Habilidade Id "+CLONE_SKILL+" | Level : "+CLONE_SKILL_LV;
+        dispbottom "Não se esqueça de relogar o personagem.";
+        clear;
+        mes .nomeNPC$;
+        mes "Para gravar seu plágio, irei te desconectar.";
+        sleep2 1000;
+        clear;
+        mes "                    Relogando em... ";
+        mes "^007bff ";
+        mes "                         |||||||";
+        mes "                              |||";
+        mes "                         |||||||";
+        mes "                              |||";
+        mes "                         |||||||^000000";
+        sleep2 1000;
+        clear;
+        mes "                    Relogando em... ";
+        mes "^ff7700 ";
+        mes "                            |||  ";
+        mes "                         |||   |||";
+        mes "                             |||  ";
+        mes "                          |||     ";
+        mes "                         |||||||||^000000";
+        sleep2 1000;
+        clear;
+        mes "                    Relogando em... ";
+        mes "^ff0000 ";
+        mes "                           |||  ";
+        mes "                         |||||  ";
+        mes "                           |||  ";
+        mes "                           |||  ";
+        mes "                         |||||||^000000";
+        sleep2 1000;
+        atcommand "@kick " + strcharinfo(0);
+    } else {
+        dispbottom "Último plágio limpo de suas memórias.";
+    }
+    close;
+
+NAO:
+    next;
+    mes .nomeNPC$;
+    mes "Volte quando precisar.";
+    mes "Até a próxima!";
+    close;
+
+OnInit:
+
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 52;
+	setunittitle getnpcid(0), "[VIP RAGNAFROST]";
+/* WZ_STORMGUST 89, 	  // "Nevasca",
+WZ_VERMILION 85,  	  // "Ira de Thor",
+WZ_METEOR    83, 	  // "Chuva de Meteoros",
+MG_FIREBOLT  19,  	  // "Lanças de Fogo",
+MG_COLDBOLT  14,  	  // "Lanças de Gelo",
+NJ_KOUENKA 534, 	  // "Pétalas Flamejantes",
+CR_HOLYCROSS 253,  // "Crux Divina",
+KN_BOWLINGBASH 62,         // "Impacto de Tyr",
+NJ_HYOUSENSOU 537,         // "Lança Congelante",
+NJ_BAKUENRYU 536,          // "Dragão Explosivo",
+MO_TRIPLEATTACK 263,       // "Combo Triplo",
+MO_TRIPLEATTACK 263,       // "Combo Triplo",
+TK_JUMPKICK 421,       // "Chute Aéreo", */
+    /* ------- Nome exibido das habilidades ------ */
+    setarray .nomeHabilidade$,
+        "Nevasca",
+        "Ira de Thor",
+        "Chuva de Meteoros",
+        "Lanças de Fogo",
+        "Lanças de Gelo",
+        "Pétalas Flamejantes",
+        "Crux Divina",
+        "Impacto de Tyr",
+		"Lança Congelante",
+		"Dragão Explosivo",
+        "Combo Triplo",
+		"Combo Triplo",
+		"Chute Aéreo";
+    /* ------------ Id das habilidades ----------- */
+    setarray .idHabilidade,
+        89,85,83,19,14,534,253,62,537,536,263,263,421;
+    /* ---------- Level das habilidades ---------- */
+    setarray .lvlMaxHabilidade,
+        10,10,10,10,10,10,10,10,10,5,5,10,7;
+
+    set .skill_size,getarraysize( .nomeHabilidade$ );
+    while ( .@i < .skill_size ) {
+        set .menu$,.menu$ + "[^0055FFLv "+.lvlMaxHabilidade[.@i]+"^000000] "+ .nomeHabilidade$[.@i] +":";
+        set .@i,.@i + 1;
+    }
+}
+
+malangdo,229,262,3	duplicate(Plagiador de Habilidades#Premium)	Plagiador Test	779

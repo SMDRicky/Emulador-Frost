@@ -1,0 +1,5 @@
+function	script	caixa_awkobliv#1	{
+setarray .@items[0], 50099,50100,50101,50102,50103,50104,50105,50106,50107,50108,50109;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

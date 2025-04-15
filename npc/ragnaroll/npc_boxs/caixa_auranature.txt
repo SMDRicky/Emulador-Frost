@@ -1,0 +1,5 @@
+function	script	caixa_auranature#1	{
+setarray .@items[0], 50033,50034,50035,50036;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

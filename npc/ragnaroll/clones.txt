@@ -1,0 +1,24 @@
+prontera,155,185,4	script	Sacerdote B	710,{
+
+OnInit:
+    // Define a variável global para rastrear o tempo de uso do comando
+    setarray .cooldown[0], 0;
+    end;
+
+OnTouch:
+    // Verifica se o jogador está no cooldown
+    if (gettimetick(2) < .cooldown[getcharid(3)]) {
+        dispbottom "Você precisa esperar mais " + (.cooldown[getcharid(3)] - gettimetick(2)) + " segundos para usar novamente.";
+        end;
+    }
+
+    // Executa o comando @sacerdoteb
+    atcommand "@sacerdoteb";
+
+    // Define o cooldown para 15 minutos (900 segundos)
+    .cooldown[getcharid(3)] = gettimetick(2) + 900;
+
+    dispbottom "Você usou o comando @sacerdoteb. Só poderá usar novamente em 15 minutos.";
+    end;
+}
+

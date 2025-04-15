@@ -1,0 +1,59 @@
+//===== RSM Mod ==============================================
+//= Map Msg Conf (Extended Vending, Buying Store and Search Store)
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Descrição: ===========================================
+//= Mensagens de exibição em Português (Brasil).
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://facebook.com/RomuloDevel
+//= Site: https://rsmdeveloper.com.br
+//============================================================
+
+1751: Você abriu a loja de %s. A venda é realizada por %s.
+1752: Você abriu a loja de compra de %s. A transação será realizada por %s.
+1753: A moeda selecionada não é válida.
+1754: Você não pode vender mais que %d itens.
+1755: Moeda Atual: %s
+1756: Você selecionou: %s
+1757: O vendedor %s não tem fundos suficiente.
+1758: Você não tem %s suficiente.
+1759: Não é possível comprar com itens vinculados.
+1760: O vendedor não tem espaço suficiente no seu inventário.
+1761: O vendedor não pode levar todos os itens por excesso de peso.
+1762: Sistema de Venda
+1763: %s comprou em sua loja os seguintes itens:
+1764:   - %dx %s, %d %s.
+1765: e mais...
+// Stall
+1950: Você não pode abrir duas lojas de rua ao mesmo tempo em um personagem.
+1951: Esta loja não está mais aberta.
+1952: Lojas de rua não é permitido parar neste mapa.
+1953: Algo deu errado, talvez você tenha usado símbolos no nome da loja.
+1954: Algo deu errado na configuração da loja.
+1955: Os preços de compra não podem ser gratuitos.
+1956: Vitrine da Loja
+1957: Fechar Loja de Compra
+1958: Item de Venda
+1959: Item de Compra
+1960: Fechar Loja de Venda
+//1961: Free
+//1962: Free
+//1963: Free
+1964: Você não tem o item %s no seu inventário.
+1965: Item da Lista
+1966: Item reembolsado
+1967: Qtd. reembolsada
+1968: Hora da compra
+1969: Hora do reembolso
+1970: Item
+1971: Preço Unitário
+1972: Quantidade
+1973: Preço
+1974: Total
+1975: Total de Reembolso
+1976: %Y/%m/%d, %H:%M

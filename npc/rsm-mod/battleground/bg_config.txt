@@ -1,0 +1,253 @@
+//===== rAthena Script =======================================
+//= BattleGround Expansion - Configurações
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Configurações das Arenas das Batalhas Campais.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+// Tierra Config
+//============================================================
+-	script	Battleground Tierra 01	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@TierraBG1_MaxPlayer = 5;			// Quantidade de Jogadores por time para começar a Batalha.
+	$@TierraBG1_MinBaseLevel = 80;		// Nível de Base mínimo para entrar na Batalha.
+	$@TierraBG1_MaxBaseLevel = 170;		// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@TierraBG1_BattleTimer = 10;		// Tempo para terminar as Batalhas em minutos.
+	$@TierraBG1_MaxRound = 2;			// Rounds que uma das equipes devem fazer para terminar a partida.
+
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Kalos::OnStart";
+		donpcevent "Tenente Eyor::OnStart";
+	}
+	end;
+}
+
+-	script	Battleground Tierra 02	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@TierraBG2_MaxPlayer = 5;			// Quantidade de Jogadores por time para começar a Batalha.
+	$@TierraBG2_MinBaseLevel = 80;		// Nível de Base mínimo para entrar na Batalha.
+	$@TierraBG2_MaxBaseLevel = 170;		// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@TierraBG2_BattleTimer = 2;		// Tempo para terminar as Batalhas em minutos.
+	$@TierraBG2_MaxRound = 2;			// Rounds que uma das equipes devem fazer para terminar a partida.
+
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Rundel::OnStart";
+		donpcevent "Tenente Guerrit::OnStart";
+	}
+	end;
+}
+
+// Flavius Config
+//============================================================
+-	script	Battleground Flavius 01	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@FlaviusBG1_MaxPlayer = 5;			// Quantidade de Jogadores por time para começar a Batalha.
+	$@FlaviusBG1_MinBaseLevel = 80;		// Nível de Base mínimo para entrar na Batalha.
+	$@FlaviusBG1_MaxBaseLevel = 170;	// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@FlaviusBG1_BattleTimer = 2;		// Tempo para terminar as Batalhas em minutos.
+	$@FlaviusBG1_MaxRound = 2;			// Rounds que uma das equipes devem fazer para terminar a partida.
+
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Ator::OnStart";
+		donpcevent "Tenente Thelokus::OnStart";
+	}
+	end;
+}
+
+-	script	Battleground Flavius 02	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@FlaviusBG2_MaxPlayer = 5;			// Quantidade de Jogadores por time para começar a Batalha.
+	$@FlaviusBG2_MinBaseLevel = 80;		// Nível de Base mínimo para entrar na Batalha.
+	$@FlaviusBG2_MaxBaseLevel = 170;	// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@FlaviusBG2_BattleTimer = 5;		// Tempo para terminar as Batalhas em minutos.
+	$@FlaviusBG2_MaxRound = 2;			// Rounds que uma das equipes devem fazer para terminar a partida.
+
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Huvas::OnStart";
+		donpcevent "Tenente Yukon::OnStart";
+	}
+	end;
+}
+
+// KvM Config
+//============================================================
+-	script	Battleground KvM 01	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@KvMBG1_MaxPlayer = 6;				// Quantidade de Jogadores por time para começar a Batalha.
+	$@KvMBG1_MinBaseLevel = 90;			// Nível de Base mínimo para entrar na Batalha.
+	$@KvMBG1_MaxBaseLevel = 99;			// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@KvMBG1_BattleTimer = 5;			// Tempo para terminar as Batalhas em minutos.
+	
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "KvM01R_Guillaume::OnStart";
+		donpcevent "KvM01R_Croix::OnStart";
+	}
+	end;
+}
+
+-	script	Battleground KvM 02	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@KvMBG2_MaxPlayer = 5;				// Quantidade de Jogadores por time para começar a Batalha.
+	$@KvMBG2_MinBaseLevel = 1;			// Nível de Base mínimo para entrar na Batalha.
+	$@KvMBG2_MaxBaseLevel = 59;			// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@KvMBG2_BattleTimer = 5;			// Tempo para terminar as Batalhas em minutos.
+
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "KvM02R_Guillaume::OnStart";
+		donpcevent "KvM02R_Croix::OnStart";
+	}
+	end;
+}
+
+-	script	Battleground KvM 03	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@KvMBG3_MaxPlayer = 5;				// Quantidade de Jogadores por time para começar a Batalha.
+	$@KvMBG3_MinBaseLevel = 60;			// Nível de Base mínimo para entrar na Batalha.
+	$@KvMBG3_MaxBaseLevel = 80;			// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@KvMBG3_BattleTimer = 5;			// Tempo para terminar as Batalhas em minutos.
+	
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "KvM03R_Guillaume::OnStart";
+		donpcevent "KvM03R_Croix::OnStart";
+	}
+	end;
+}
+
+// Valfreyja Config
+//============================================================
+-	script	Battleground Valfreyja 01 	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@ValfreyjaBG1_MaxPlayer = 5;		// Quantidade de Jogadores por time para começar a Batalha.
+	$@ValfreyjaBG1_MinBaseLevel = 1;	// Nível de Base mínimo para entrar na Batalha.
+	$@ValfreyjaBG1_MaxBaseLevel = 170;	// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@ValfreyjaBG1_BattleTimer = 15;	// Tempo para terminar as Batalhas em minutos.
+	$@ValfreyjaBG1_EnableGuardian = 1;	// Habilitar Guardiões para proteger as Bandeiras?
+	$@ValfreyjaBG1_ViewPoint = 1;		// Mostrar posição das Bandeiras no mini-mapa?
+	$@ValfreyjaBG1_ShowTarget = 1;		// Mostrar efeito de alvo em jogadores que estiverem com a bandeira?
+	$@ValfreyjaBG1_NoSkillCall = 1;		// Desativar Habilidade Chamado Urgente quando o jogador está aguardando o respawn?
+										// Embora por padrão esta habilidade é desativada na arena por mapflag, por questão do líder ficar na
+										// base dando recall em membros que já estão com a bandeira.
+	
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Ari::OnStart";
+		donpcevent "Tenente Brendo::OnStart";
+	}
+	end;
+}
+
+-	script	Battleground Valfreyja 02 	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@ValfreyjaBG2_MaxPlayer = 5;		// Quantidade de Jogadores por time para começar a Batalha.
+	$@ValfreyjaBG2_MinBaseLevel = 1;	// Nível de Base mínimo para entrar na Batalha.
+	$@ValfreyjaBG2_MaxBaseLevel = 170;	// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@ValfreyjaBG2_BattleTimer = 15;	// Tempo para terminar as Batalhas em minutos.
+	$@ValfreyjaBG2_EnableGuardian = 0;	// Habilitar Guardiões para proteger as Bandeiras?
+	$@ValfreyjaBG2_ViewPoint = 0;		// Mostrar posição das Bandeiras no mini-mapa?
+	$@ValfreyjaBG2_ShowTarget = 0;		// Mostrar efeito de alvo em jogadores que estiverem com a bandeira?
+	$@ValfreyjaBG2_NoSkillCall = 1;		// Desativar Habilidade Chamado Urgente quando o jogador está aguardando o respawn?
+										// Embora por padrão esta habilidade é desativada na arena por mapflag, por questão do líder ficar na
+										// base dando recall em membros que já estão com a bandeira.
+	
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Edvan::OnStart";
+		donpcevent "Tenente Arvid::OnStart";
+	}
+	end;
+}
+
+// Kingdom Config
+//============================================================
+-	script	Battleground Kingdom 01 	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@KingdomBG1_MaxPlayer = 5;			// Quantidade de Jogadores por time para começar a Batalha.
+	$@KingdomBG1_MinBaseLevel = 1;		// Nível de Base mínimo para entrar na Batalha.
+	$@KingdomBG1_MaxBaseLevel = 170;	// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@KingdomBG1_BattleTimer = 10;		// Tempo para terminar as Batalhas em minutos.
+	$@KingdomBG1_NoSkillCall = 0;		// Desativar Habilidade Chamado Urgente quando o jogador está aguardando o respawn?
+	
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Rhuan::OnStart";
+		donpcevent "Tenente Urd::OnStart";
+	}
+	end;
+}
+
+-	script	Battleground Arbor 01 	-1,{
+OnInit:
+	// Configurações de Waitingroom
+	// Para Hexed 2012-01-01 ou inferior!
+	$@KingdomBG2_MaxPlayer = 6;			// Quantidade de Jogadores por time para começar a Batalha.
+	$@KingdomBG2_MinBaseLevel = 1;		// Nível de Base mínimo para entrar na Batalha.
+	$@KingdomBG2_MaxBaseLevel = 170;	// Nível de Base máximo para entrar na Batalha.
+	
+	// Configurações Globais
+	$@KingdomBG2_BattleTimer = 2;		// Tempo para terminar as Batalhas em minutos.
+	$@KingdomBG2_NoSkillCall = 0;		// Desativar Habilidade Chamado Urgente quando o jogador está aguardando o respawn?
+	
+	// Start Arena
+	if (!getbattleflag("feature.bgqueue")) {
+		donpcevent "Tenente Aric::OnStart";
+		donpcevent "Tenente Gorm::OnStart";
+	}
+	end;
+}

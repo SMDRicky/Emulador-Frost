@@ -1,0 +1,36 @@
+-	script	Find_My_Clone	10005,{
+	end;
+OnInit:
+	.gmminlevel = 20;
+	.winradius = 1;
+	bindatcmd "pegapega",strnpcinfo(3)+"::OnCommand",.gmminlevel,99;
+	end;
+OnCommand:
+	.gm$ = strcharinfo(0);
+	getmapxy(.map$,.x,.y,BL_PC,.gm$);
+	announce .gm$ + ": Estou em algum lugar de "+.map$+"! O primeiro que me tocar ganha uma recompensa !",bc_all|bc_blue;
+	initnpctimer;
+	end;
+OnTimer250:
+	.@stop = 0;
+	getmapxy(.map$,.x,.y,BL_PC,.gm$);
+	if (getareaunits(BL_PC,.map$,.x+.winradius,.y+.winradius,.x-.winradius,.y-.winradius,.@gids)) {
+		for (.@i = 0; .@i < getarraysize(.@gids); .@i++) {
+			attachrid .@gids[.@i];
+			if (getgmlevel(getcharid(0)) < .gmminlevel) {
+				specialeffect2 68;
+				//REWARDS
+				getitem 35034,5;
+				zeny += 1000000;
+				announce "Parabéns "+strcharinfo(0)+", Você é o Vencedor!",bc_all|bc_blue;
+				.@stop =1;
+			}
+		}
+	}
+	if (.@stop) {
+		stopnpctimer;
+	} else {
+		initnpctimer;
+	}
+	end;
+}

@@ -1,0 +1,59 @@
+//===== RSM Mod ==============================================
+//= Map Msg Conf (Extended Vending, Buying Store and Search Store)
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Descrição: ===========================================
+//= Mensagens de exibição em Português (Brasil).
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://facebook.com/RomuloDevel
+//= Site: https://rsmdeveloper.com.br
+//============================================================
+
+1751: You have opened the %s store. The sale is handled by %s.
+1752: You have opened the %s purchase shop. The transaction will be handled by %s.
+1753: The selected currency is not valid.
+1754: You cannot sell more than %d items.
+1755: Current Currency: %s
+1756: You selected: %s
+1757: Seller %s does not have sufficient funds.
+1758: You don't have enough %s.
+1759: Cannot purchase with linked items.
+1760: The seller does not have enough space in their inventory.
+1761: The seller cannot take all the items due to excess weight.
+1762: Sales System
+1763: %s purchased the following items from your store:
+1764:   - %dx %s, %d %s.
+1765: and more...
+// Stall
+1950: You can't open 2 stalls at the same time on a char.
+1951: This stall is not opened anymore.
+1952: Stall is not allowed on this map.
+1953: Something went wrong, maybe you used symbols in shop name.
+1954: Something went wrong on stall setting.
+1955: Buying prices can't be free.
+1956: Store Window
+1957: Close Purchase Store
+1958: Sale Item
+1959: Purchase Item
+1960: Close Store Sale
+//1961: Free
+//1962: Free
+//1963: Free
+1964: You do not have the item %s in your inventory.
+1965: List Item
+1966: Item refunded
+1967: Refunded quantity
+1968: Purchase time
+1969: Refund time
+1970: Item
+1971: Unit Price
+1972: Amount
+1973: Price
+1974: Total
+1975: Total Refund
+1976: %Y/%m/%d, %H:%M

@@ -1,0 +1,155 @@
+// Script original por Desconhecido
+// Editado por Mabuhay
+// Removido os tempos de espera do meu temporizador e outras coisas.
+// Ajuste para o horário desejado para iniciar.
+
+-	script	Evento_NvZ	-1,{
+OnInit:
+	// recompensa de itens
+	setarray .item,
+		35015, 5;
+
+	// @nvzstart - início manual pelo GM
+	bindatcmd "nvzstart", strnpcinfo(0)+"::OnStart",60,60;
+	
+	// @nvz - jogador entra no evento
+	bindatcmd "nvz", strnpcinfo(0)+"::OnJoinEvent";
+	
+	// Mapflags
+	setarray .@mapflag,
+		mf_nowarp,
+		mf_nowarpto,
+		mf_noskill,
+		mf_noteleport,
+		mf_nomemo,
+		mf_nosave,
+		mf_noicewall,
+		mf_nobranch,
+		mf_noreturn,
+		mf_nocommand;
+		
+	for ( .@i = 0; .@i < getarraysize(.@mapflag); .@i++)
+		setmapflag "quiz_01", .@mapflag[.@i];
+	end;
+	
+OnJoinEvent:
+	mes " [ Status do Evento ] ";
+	switch ( .start ) {
+		case 1: .@status$ = "ativo"; break;
+		case 2: .@status$ = "em andamento"; break;
+		default: .@status$ = "não ativo"; break;
+	}
+	mes "O evento está atualmente ^ff0000"+ .@status$ +"^000000";
+	next;
+	switch(select(
+		"Evento Novice vs. Zombie - "+ ((.start == 1) ? "^0000ffEntrar no Evento":((.start == 2) ? "^0000ffEvento em Andamento":"^ff0000Não Disponível"))+"^000000" )) {
+	case 1:
+		if ( !.start ) {
+			mes "O evento não está disponível.";
+			close;
+		} else if ( .start == 2 ) {
+			mes "O evento está em andamento";
+			close;
+		}
+if ( BaseLevel != 1 || Job != Job_Novice ) {
+	mes "Apenas Novices de nível 1 podem participar.";
+	close;
+}
+
+		else {
+			getinventorylist;
+			if ( @inventorylist_amount ) {
+				mes "Guarde todos os seus itens primeiro.";
+				close2;
+				@inventorylist_amount = false;
+				end;
+			}
+			sc_end SC_ALL;
+			sc_start SC_DECREASEAGI,600000,10;
+			percentheal 100,100;
+			warp "quiz_01",42,369;
+		}
+	}
+	end;
+
+OnStart:
+// Adicione seus temporizadores do relógio aqui.
+OnClock0100:
+OnClock0800:
+OnClock1300:
+OnClock2300:
+	if ( .start ) end;
+	.start = 1;
+	killmonsterall "quiz_01";
+	announce "NvZ: Teremos um evento Novice Vs. Zombie.",0;
+	sleep 10000;
+	announce "NvZ: Para participar, use @nvz",0;
+	sleep 10000;
+	announce "NvZ: Após 1 minuto, o evento será encerrado.",0;
+	sleep 10000;
+	announce "NvZ: Então, por favor, se quiser participar, use @nvz",0;
+	sleep 60000;
+	announce "NvZ: A entrada para o evento está agora fechada.",bc_all,0x0ceedb;
+	if ( getmapusers("quiz_01") <= 1 ) {
+		announce "NvZ: Não há participantes suficientes.",bc_all,0x0ceedb;
+		.start = false;
+		mapwarp "quiz_01", "prontera", 150, 180; // teleporte para fora.
+		end;
+	}
+	.start = 2;
+	sleep 3500;
+	mapannounce "quiz_01","Estamos prestes a começar o evento.",bc_map,0x0ceedb;
+	sleep 2500;
+	mapannounce "quiz_01","As regras são simples.",bc_map,0x0ceedb;
+	sleep 2500;
+	mapannounce "quiz_01","Zumbis serão gerados no mapa.",bc_map,0x0ceedb;
+	sleep 2500;
+	mapannounce "quiz_01","e aparecerão a cada 20 segundos.",bc_map,0x0ceedb;
+	sleep 2000;
+	mapannounce "quiz_01","O último homem sobrevivente vence.",bc_map,0x0ceedb;
+	sleep 2000;
+	mapannounce "quiz_01","Isso é tudo. Vamos começar.",bc_map,0x0ceedb;
+	sleep 3000;
+	monster "quiz_01",42,369,"Zumbi",1036,4;
+	initnpctimer;
+	end;
+	
+OnTimer20000: // Temporizador de 20 segundos e também verificação de quantos jogadores restam no mapa
+	.@users = getmapusers("quiz_01");
+	if (.@users > 5)
+		monster "quiz_01",42,369,"Zumbi",1036,10;
+	else if (.@users > 2)
+		monster "quiz_01",42,369,"Zumbi",1036,7;
+	else
+		monster "quiz_01",42,369,"Zumbi",1036,4;
+	setnpctimer 0;
+	end;
+	
+OnPCDieEvent:
+	if ( .start && strcharinfo(3) == "quiz_01" ) {
+		warp "prontera",rand(148,163),rand(167,186);
+		if ( getmapusers("quiz_01") == 1 ) {
+			stopnpctimer;
+			killmonsterall "quiz_01";
+			.@size = getmapunits(BL_PC,"quiz_01",.@aid);
+			.@amt = getarraysize(.item);
+			.start = false;
+			attachrid .@aid;
+			announce strcharinfo(0)+" venceu o evento Novice vs. Zombie.",bc_all,0x0ceedb;
+			for ( .@j = 0; .@j < .@amt; .@j += 2 )
+				getitem .item[.@j], .item[.@j+1];				
+			warp "prontera",rand(148,163),rand(167,186);
+			end;
+		}
+	}
+	end;
+}
+
+-	script	zumbivsaprend	-1,{
+OnTalk:
+mes "Use o comando @nvz para participar do evento.";
+
+end;
+
+}
+cockpit,105,112,3	duplicate(zumbivsaprend)	Aprendiz Vs Zumbi	0

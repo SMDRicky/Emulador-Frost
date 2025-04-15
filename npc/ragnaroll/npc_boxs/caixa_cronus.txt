@@ -1,0 +1,5 @@
+function	script	caixa_cronus	{
+	setarray .@items[0], 50142,50143,50144,50145,50146,50147;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

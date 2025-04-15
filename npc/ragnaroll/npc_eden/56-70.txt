@@ -1,0 +1,140 @@
+//=============================================
+//== Cronus Tools :: Gerador de missão's =======
+//== Versão: ==================================
+//== 1.0
+//== Autor: ===================================
+//== RoM
+//=============================================
+-	script	missao6180	-1,{
+OnTalk:	
+    function Ac {
+        return "Quest_6180_";
+    }
+
+    if (BaseLevel < 61) {
+        mes "Não há tarefas disponíveis para você no momento.";
+        close;
+    }
+
+    mes "[Missão 61 - 80]";
+    mes "Olá "+StrCharInfo(0)+"!";
+    mes "Caso a missão não apareça relogue";
+    next;
+
+    for (.@i = 0; .@i < getarraysize(.QuestNames$); .@i++) {
+        if (getd(Ac() + "Q_" + .@i + "_Active")) {
+            mes "Você tem uma missão ativa: " + .QuestNames$[.@i];
+            mes "Progresso: (" + getd(Ac() + "Q_" + .@i + "_Progress") + "/" + getd(Ac() + "Q_" + .@i + "_Count") + ")";
+            break;
+        }
+    }
+
+    if (.@i == getarraysize(.QuestNames$)) {
+        mes "Eu tenho algumas missões interessantes aqui.";
+    }
+    next;
+
+    switch (select("Pegar uma missão:Cancelar missão:Entregar missão:Deixar para lá")) {
+        case 1:
+            for (.@i = 0; .@i < getarraysize(.QuestNames$); .@i++) {
+                if (getd(Ac() + "Q_" + .@i + "_Active")) {
+                    mes "Você já tem uma missão ativa. Cancele a missão atual antes de pegar uma nova.";
+                    close;
+                }
+            }
+
+            if (BaseLevel > 80) {
+                mes "Essas missões são muito fáceis para o seu nível. Procure uma missão mais adequada.";
+                close;
+            }
+
+            // Escolher um mob baseado no nível do personagem
+            mes "Escolha um mob para a sua missão:";
+            .@mobListSize = getarraysize(.QuestMobs);
+            .@availableMobs$ = "";
+            for (.@i = 0; .@i < .@mobListSize; .@i++) {
+                if (BaseLevel >= .QuestMobsLevel[.@i] - 10 && BaseLevel <= .QuestMobsLevel[.@i] + 30) {
+                    .@availableMobs$ = .@availableMobs$ + .QuestNames$[.@i] + ":";
+                    set .@availableMobs[.@availableMobsSize], .@i;
+                    .@availableMobsSize++;
+                }
+            }
+            if (.@availableMobsSize == 0) {
+                mes "Desculpe, não há missões disponíveis para o seu nível.";
+                close;
+            }
+
+            .@choice = select(.@availableMobs$) - 1;
+            .@chosenIndex = .@availableMobs[.@choice];
+
+            mes "Você recebeu a missão: " + .QuestNames$[.@chosenIndex];
+            mes "Recompensa:";
+            mes "EXP Base - " + .QuestBEXP[.@chosenIndex];
+            mes "EXP Classe - " + .QuestJEXP[.@chosenIndex];
+            setd(Ac() + "Q_" + .@chosenIndex + "_Active", true);
+            setd(Ac() + "Q_" + .@chosenIndex + "_Progress", 0);
+            setd(Ac() + "Q_" + .@chosenIndex + "_Count", .QuestCounts[.@chosenIndex]);
+            setd(Ac() + "Q_" + .@chosenIndex + "_MobID", .QuestMobs[.@chosenIndex]);
+            next;
+            mes "[Missão 61 - 80]";
+            mes "Boa sorte na sua missão!";
+            close;
+
+        case 2:
+            for (.@i = 0; .@i < getarraysize(.QuestNames$); .@i++) {
+                if (getd(Ac() + "Q_" + .@i + "_Active")) {
+                    mes "Missão de " + .QuestNames$[.@i] + " cancelada.";
+                    setd(Ac() + "Q_" + .@i + "_Active", false);
+                    close;
+                }
+            }
+            mes "Você não tem nenhuma missão ativa para cancelar.";
+            close;
+
+        case 3:
+            mes "[Missão 61 - 80]";
+            mes "Verificando missões completadas...";
+            for (.@i = 0; .@i < getarraysize(.QuestNames$); .@i++) {
+                if (getd(Ac() + "Q_" + .@i + "_Active") && getd(Ac() + "Q_" + .@i + "_Progress") >= getd(Ac() + "Q_" + .@i + "_Count")) {
+                    mes "Missão de " + .QuestNames$[.@i] + " completada! Parabéns! Aqui está sua recompensa!";
+                    getexp .QuestBEXP[.@i], .QuestJEXP[.@i];
+                    getitem 35082, 15;
+                    setd(Ac() + "Q_" + .@i + "_Active", false);
+                    callfunc("F_Battle_Passe", 5, 1000);
+			close;
+                }
+            }
+            mes "Desculpe, você não completou nenhuma missão.";
+            close;
+
+        case 4:
+            mes "[Missão 61 - 80]";
+            mes "Tudo bem, estarei aqui se você mudar de ideia.";
+            close;
+    }
+
+    OnNPCKillEvent:
+    for (.@i = 0; .@i < getarraysize(.QuestNames$); .@i++) {
+        if (getd(Ac() + "Q_" + .@i + "_Active") && killedrid == getd(Ac() + "Q_" + .@i + "_MobID")) {
+            setd(Ac() + "Q_" + .@i + "_Progress", getd(Ac() + "Q_" + .@i + "_Progress") + 1);
+            dispbottom "Missão [" + .QuestNames$[.@i] + "]: (" + getd(Ac() + "Q_" + .@i + "_Progress") + "/" + getd(Ac() + "Q_" + .@i + "_Count") + ")";
+            if (getd(Ac() + "Q_" + .@i + "_Progress") >= getd(Ac() + "Q_" + .@i + "_Count")) {
+                dispbottom "Sua missão " + .QuestNames$[.@i] + " está concluída. ^FF00FFParabéns!^000000";
+                specialeffect2 EF_FLOWERPETAL;
+            }
+        }
+    }
+
+    OnInit:
+    setarray .QuestNames$, "Caçar Esqueleto Prisioneiro", "Caçar Pessegueiro Encantado", "Caçar Bafomé Jr.", "Caçar Minorous", "Caçar Druida Maligno", "Caçar Bode", "Caçar Árvore Maldita";
+    setarray .QuestBEXP, 1980000, 2000000, 2200000, 2400000, 2500000, 1800000, 3800000;
+    setarray .QuestJEXP, 900000, 900000, 900000, 900000, 900000, 900000, 900000;
+    setarray .QuestCounts, 80, 90, 100, 110, 120, 130, 140;
+    setarray .QuestMobs, 1196, 1410, 1101, 1149, 1117, 1372, 1503; // IDs dos mobs correspondentes às missões
+    setarray .QuestMobsLevel, 61, 61, 61, 61, 61, 61, 61; // Níveis dos mobs correspondentes às missões
+    .variable_name$ = "QUEST6180_";    // Nome da variável base para as missões
+    end;
+}
+
+
+moc_para01,42,38,3	duplicate(missao6180)	Missão [61 - 80]#Tuto	4_BOARD3,{

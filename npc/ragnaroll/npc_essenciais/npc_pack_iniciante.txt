@@ -1,0 +1,16 @@
+-	script	Pack_Iniciante	-1,{
+
+OnPCLoginEvent:
+
+	if (rentalcountitem(875) > 0) {
+        fstatus(getcharid(0), 1511, 0, 1);
+}
+
+	if (rentalcountitem(23820) > 0) {
+        fstatus(getcharid(0), 2001, 0, 1);
+}
+    if (!#Freebiess) {
+	getitem 310,01;
+        set #Freebiess, 1;
+    }
+}

@@ -1,0 +1,531 @@
+# This file is a part of rAthena.
+#   Copyright(C) 2023 rAthena Development Team
+#   https://rathena.org - https://github.com/rathena
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+###########################################################################
+# Enchantgrade Database
+###########################################################################
+#
+# Enchantgrade Settings
+#
+###########################################################################
+# - Type                                Item type.
+#   Levels:                             Enchantgrade settings per item level.
+#     - Level                           Item level.
+#       Grades:                         Enchantgrade settings per grade level.
+#         - Grade                       Enchantgrade level.
+#           Chances:                    Chance settings per refine level.
+#             - Refine                  Refine level.
+#               Chance                  Base chance of success out of 0~10000.
+#           Bonus                       Enchantgrade bonus. (Default: 0)
+#           AnnounceSuccess             Announce on upgrade success. (Default: true)
+#           AnnounceFail                Announce on upgrade failure. (Default: false)
+#           Announce                    Announce on upgrade success and failure.
+#           Catalyst:                   Catalyst item to increase chance of success.
+#             Item                      The item that can be used.
+#             AmountPerStep             Amount of Item needed.
+#                                       Set to 0 to disable the catalyst.
+#             MaximumSteps              Maximum amount of times Item can be used.
+#             ChanceIncrease            Amount at which the chance increases for each Item used.
+#           Options:                    Success chance based on cost type.
+#             - Option                  Index of the client option.
+#               Item                    Required item.
+#               Amount                  Amount of required item. (Default: 1)
+#                                       Set to 0 to remove an option.
+#               Price                   Amount of zeny required. (Default: 0)
+#               BreakingRate            Chance of item breaking out of 0~10000. (Default: 0)
+#               DowngradeAmount         Number of refine levels reduced on failure. (Default: 0)
+###########################################################################
+
+Header:
+  Type: ENCHANTGRADE_DB
+  Version: 3
+
+Body:
+  - Type: Armor
+    Levels:
+      - Level: 1
+        Grades:
+          - Grade: none
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 10
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 1
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: D
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 30
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 3
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: C
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 50
+            AnnounceFail: true
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 5
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: B
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 100
+            AnnounceFail: true
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 7
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 2
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 10
+                Zeny: 10000000
+  - Type: Weapon
+    Levels:
+      - Level: 4
+        Grades:
+          - Grade: none
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 8
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 1
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: D
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 10
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 3
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: C
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 15
+            AnnounceFail: true
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 5
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: B
+            Chances:
+              - Refine: 1
+                Chance: 600
+              - Refine: 2
+                Chance: 700
+              - Refine: 3
+                Chance: 800
+              - Refine: 4
+                Chance: 1000
+              - Refine: 5
+                Chance: 1400
+              - Refine: 6
+                Chance: 1500
+              - Refine: 7
+                Chance: 1800
+              - Refine: 8
+                Chance: 2000
+              - Refine: 9
+                Chance: 2500
+              - Refine: 10
+                Chance: 3000
+            Bonus: 20
+            AnnounceFail: true
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 7
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 2
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 10
+                Zeny: 10000000
+  - Type: Weapon
+    Levels:
+      - Level: 1
+        Grades:
+          - Grade: none
+            Chances:
+              - Refine: 1
+                Chance: 500
+              - Refine: 2
+                Chance: 600
+              - Refine: 3
+                Chance: 700
+              - Refine: 4
+                Chance: 800
+              - Refine: 5
+                Chance: 1000
+              - Refine: 6
+                Chance: 1200
+              - Refine: 7
+                Chance: 1400
+              - Refine: 8
+                Chance: 1800
+              - Refine: 9
+                Chance: 1900
+              - Refine: 10
+                Chance: 2000
+            Bonus: 8
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 1
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: D
+            Chances:
+              - Refine: 1
+                Chance: 500
+              - Refine: 2
+                Chance: 600
+              - Refine: 3
+                Chance: 700
+              - Refine: 4
+                Chance: 800
+              - Refine: 5
+                Chance: 1000
+              - Refine: 6
+                Chance: 1200
+              - Refine: 7
+                Chance: 1400
+              - Refine: 8
+                Chance: 1800
+              - Refine: 9
+                Chance: 1900
+              - Refine: 10
+                Chance: 2000
+            Bonus: 10
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 3
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: C
+            Chances:
+              - Refine: 1
+                Chance: 500
+              - Refine: 2
+                Chance: 600
+              - Refine: 3
+                Chance: 700
+              - Refine: 4
+                Chance: 800
+              - Refine: 5
+                Chance: 1000
+              - Refine: 6
+                Chance: 1200
+              - Refine: 7
+                Chance: 1400
+              - Refine: 8
+                Chance: 1800
+              - Refine: 9
+                Chance: 1900
+              - Refine: 10
+                Chance: 2000
+            Bonus: 15
+            AnnounceFail: true
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 5
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 1
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 5
+                Zeny: 10000000
+          - Grade: B
+            Chances:
+              - Refine: 1
+                Chance: 500
+              - Refine: 2
+                Chance: 600
+              - Refine: 3
+                Chance: 700
+              - Refine: 4
+                Chance: 800
+              - Refine: 5
+                Chance: 1000
+              - Refine: 6
+                Chance: 1200
+              - Refine: 7
+                Chance: 1400
+              - Refine: 8
+                Chance: 1800
+              - Refine: 9
+                Chance: 1900
+              - Refine: 10
+                Chance: 2000
+            Bonus: 20
+            AnnounceFail: true
+            Catalyst:
+                Item: Gema_de_Frost
+                AmountPerStep: 7
+                MaximumSteps: 10
+                ChanceIncrease: 300
+            Options:
+              - Option: 0
+                Item: Gema_de_Hel
+                Amount: 2
+                Zeny: 5000000
+                BreakingRate: 10000
+              - Option: 1
+                Item: Gema_de_Hel
+                Amount: 10
+                Zeny: 10000000

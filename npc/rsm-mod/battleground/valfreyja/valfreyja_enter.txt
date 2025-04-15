@@ -1,0 +1,428 @@
+//===== rAthena Script =======================================
+//= BattleGround Expansion - Entrada da Valfreyja
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Npc's de Entrada da Valfreyja.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+// Oficiais Valfreyja 01
+//============================================================
+bat_room02,125,178,5	script	Oficial Valfreyja#01a	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Guillaume]";
+	mes "Vamos mostrar o poder do Exército de Guillaume para aqueles Croixs fedorentos!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Guillaume]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@ValfreyjaBG1_MinBaseLevel && BaseLevel > $@ValfreyjaBG1_MinBaseLevel) || ($@ValfreyjaBG1_MaxBaseLevel && BaseLevel < $@ValfreyjaBG1_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Guillaume]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				if (getmapusers("bat_v01") > 0) {
+					mes "[Oficial do Exército de Guillaume]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Croixs.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@ValfreyjaBG1 > 0) {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Croixs o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",85,224;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Guillaume]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,125,121,1	script	Oficial Valfreyja#01b	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Croix]";
+	mes "Vamos mostrar aos Guillaumes o poder do Exército Croix!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Croix]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@ValfreyjaBG1_MinBaseLevel && BaseLevel > $@ValfreyjaBG1_MinBaseLevel) || ($@ValfreyjaBG1_MaxBaseLevel && BaseLevel < $@ValfreyjaBG1_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Croix]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				if (getmapusers("bat_v01") > 0) {
+					mes "[Oficial do Exército de Croix]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Guillaume.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@ValfreyjaBG1 > 0) {
+						mes "[Oficial do Exército de Croix]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Croix]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Guillaumes o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",85,207;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Croix]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,127,178,5	script	Cavaleiro de Guillaume#v01_a_1	-1,{
+	mes "[Cavaleiro de Guillaume]";
+	mes "Nesta batalha, você deve capturar a bandeira dos inimigos e trazer em sua base.";
+	if( $@ValfreyjaBG1_EnableGuardian )
+		mes "Tome cuidado com guardiões que protegem as bandeiras, eles podem ser um problema e interceptar ou impedir que você capture a bandeira.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "Você pode interceptar a bandeira eliminando o jogador do time adversário que estiver com ela em posse.";
+	mes "Caso você resgate uma bandeira do seu time, você deve leva-lá a base equivalente da mesma para deixa-lá em segurança.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "Você não pode carregar mais de uma bandeira, então fique atento se é vantajoso ter uma bandeira em posse.";
+	next;
+	if( $@ValfreyjaBG1_ViewPoint ) {
+		mes "[Cavaleiro de Guillaume]";
+		mes "Todas as bandeiras possuem um rastreador para ambos times mesmo ela em posse de um jogador.";
+		mes "^0000FFMarcações em azul significa as localizações das bandeiras de Guillaume.^000000";
+		mes "^FF0000Marcações em vermelho significa as localizações das bandeiras de Croix.^000000";
+		mes "^ad9202Marcações em amarelo significa aonde você deve levar a bandeira.^000000";
+		mes "Por tanto fique atento, não podemos deixar o time de Croix levar as bandeiras de Guillaume para base deles!";
+		next;
+	}
+	if( $@ValfreyjaBG1_ShowTarget ) {
+		mes "[Cavaleiro de Guillaume]";
+		mes "Quando você estiver em posse de uma bandeira, tome cuidado, você será um alvo fácil em campo aberto.";
+		mes "Você será indentificado pelos inimigos, pois as bandeiras possuem um tipo de alarme visual que todos podem ver.";
+		next;
+	}
+	mes "[Cavaleiro de Guillaume]";
+	mes "A Batalha dura " + $@ValfreyjaBG1_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Guillaume]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}
+
+bat_room02,127,121,1	script	Cavaleiro de Croix#v01_b_1	-1,{
+	mes "[Cavaleiro de Croix]";
+	mes "Nesta batalha, você deve capturar a bandeira dos inimigos e trazer em sua base.";
+	if( $@ValfreyjaBG1_EnableGuardian )
+		mes "Tome cuidado com guardiões que protegem as bandeiras, eles podem ser um problema e interceptar ou impedir que você capture a bandeira.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "Você pode interceptar a bandeira eliminando o jogador do time adversário que estiver com ela em posse.";
+	mes "Caso você resgate uma bandeira do seu time, você deve leva-lá a base equivalente da mesma para deixa-lá em segurança.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "Você não pode carregar mais de uma bandeira, então fique atento se é vantajoso ter uma bandeira em posse.";
+	next;
+	if( $@ValfreyjaBG1_ViewPoint ) {
+		mes "[Cavaleiro de Croix]";
+		mes "Todas as bandeiras possuem um rastreador para ambos times mesmo ela em posse de um jogador.";
+		mes "^0000FFMarcações em azul significa as localizações das bandeiras de Guillaume.^000000";
+		mes "^FF0000Marcações em vermelho significa as localizações das bandeiras de Croix.^000000";
+		mes "^ad9202Marcações em amarelo significa aonde você deve levar a bandeira.^000000";
+		mes "Por tanto fique atento, não podemos deixar o time de Guillaume levar as bandeiras de Croix para base deles!";
+		next;
+	}
+	if( $@ValfreyjaBG1_ShowTarget ) {
+		mes "[Cavaleiro de Guillaume]";
+		mes "Quando você estiver em posse de uma bandeira, tome cuidado, você será um alvo fácil em campo aberto.";
+		mes "Você será indentificado pelos inimigos, pois as bandeiras possuem um tipo de alarme visual que todos podem ver.";
+		next;
+	}
+	mes "[Cavaleiro de Croix]";
+	mes "A Batalha dura " + $@ValfreyjaBG1_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Croix]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}
+
+// Oficiais Valfreyja 02
+//============================================================
+bat_room02,133,178,5	script	Oficial Valfreyja#02a	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Guillaume]";
+	mes "Vamos mostrar o poder do Exército de Guillaume para aqueles Croixs fedorentos!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Guillaume]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@ValfreyjaBG2_MinBaseLevel && BaseLevel > $@ValfreyjaBG2_MinBaseLevel) || ($@ValfreyjaBG2_MaxBaseLevel && BaseLevel < $@ValfreyjaBG2_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Guillaume]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				if (getmapusers("bat_v02") > 0) {
+					mes "[Oficial do Exército de Guillaume]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Croixs.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@ValfreyjaBG2 > 0) {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Croixs o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",141,224;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Guillaume]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,133,121,1	script	Oficial Valfreyja#02b	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Croix]";
+	mes "Vamos mostrar aos Guillaumes o poder do Exército Croix!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Croix]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@ValfreyjaBG2_MinBaseLevel && BaseLevel > $@ValfreyjaBG2_MinBaseLevel) || ($@ValfreyjaBG2_MaxBaseLevel && BaseLevel < $@ValfreyjaBG2_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Croix]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				if (getmapusers("bat_v02") > 0) {
+					mes "[Oficial do Exército de Croix]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Guillaume.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@ValfreyjaBG2 > 0) {
+						mes "[Oficial do Exército de Croix]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Croix]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Guillaumes o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",141,208;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Croix]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,135,178,5	script	Cavaleiro de Guillaume#v02_a_1	-1,{
+	mes "[Cavaleiro de Guillaume]";
+	mes "Nesta batalha, você deve capturar a bandeira dos inimigos e trazer em sua base.";
+	if( $@ValfreyjaBG2_EnableGuardian )
+		mes "Tome cuidado com guardiões que protegem as bandeiras, eles podem ser um problema e interceptar ou impedir que você capture a bandeira.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "Você pode interceptar a bandeira eliminando o jogador do time adversário que estiver com ela em posse.";
+	mes "Caso você resgate uma bandeira do seu time, você deve leva-lá a base equivalente da mesma para deixa-lá em segurança.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "Você não pode carregar mais de uma bandeira, então fique atento se é vantajoso ter uma bandeira em posse.";
+	next;
+	if( $@ValfreyjaBG2_ViewPoint ) {
+		mes "[Cavaleiro de Guillaume]";
+		mes "Todas as bandeiras possuem um rastreador para ambos times mesmo ela em posse de um jogador.";
+		mes "^0000FFMarcações em azul significa as localizações das bandeiras de Guillaume.^000000";
+		mes "^FF0000Marcações em vermelho significa as localizações das bandeiras de Croix.^000000";
+		mes "^ad9202Marcações em amarelo significa aonde você deve levar a bandeira.^000000";
+		mes "Por tanto fique atento, não podemos deixar o time de Croix levar as bandeiras de Guillaume para base deles!";
+		next;
+	}
+	if( $@ValfreyjaBG2_ShowTarget ) {
+		mes "[Cavaleiro de Guillaume]";
+		mes "Quando você estiver em posse de uma bandeira, tome cuidado, você será um alvo fácil em campo aberto.";
+		mes "Você será indentificado pelos inimigos, pois as bandeiras possuem um tipo de alarme visual que todos podem ver.";
+		next;
+	}
+	mes "[Cavaleiro de Guillaume]";
+	mes "A Batalha dura " + $@ValfreyjaBG2_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Guillaume]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}
+
+bat_room02,135,121,1	script	Cavaleiro de Croix#v02_b_1	-1,{
+	mes "[Cavaleiro de Croix]";
+	mes "Nesta batalha, você deve capturar a bandeira dos inimigos e trazer em sua base.";
+	if( $@ValfreyjaBG2_EnableGuardian )
+		mes "Tome cuidado com guardiões que protegem as bandeiras, eles podem ser um problema e interceptar ou impedir que você capture a bandeira.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "Você pode interceptar a bandeira eliminando o jogador do time adversário que estiver com ela em posse.";
+	mes "Caso você resgate uma bandeira do seu time, você deve leva-lá a base equivalente da mesma para deixa-lá em segurança.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "Você não pode carregar mais de uma bandeira, então fique atento se é vantajoso ter uma bandeira em posse.";
+	next;
+	if( $@ValfreyjaBG2_ViewPoint ) {
+		mes "[Cavaleiro de Croix]";
+		mes "Todas as bandeiras possuem um rastreador para ambos times mesmo ela em posse de um jogador.";
+		mes "^0000FFMarcações em azul significa as localizações das bandeiras de Guillaume.^000000";
+		mes "^FF0000Marcações em vermelho significa as localizações das bandeiras de Croix.^000000";
+		mes "^ad9202Marcações em amarelo significa aonde você deve levar a bandeira.^000000";
+		mes "Por tanto fique atento, não podemos deixar o time de Guillaume levar as bandeiras de Croix para base deles!";
+		next;
+	}
+	if( $@ValfreyjaBG2_ShowTarget ) {
+		mes "[Cavaleiro de Guillaume]";
+		mes "Quando você estiver em posse de uma bandeira, tome cuidado, você será um alvo fácil em campo aberto.";
+		mes "Você será indentificado pelos inimigos, pois as bandeiras possuem um tipo de alarme visual que todos podem ver.";
+		next;
+	}
+	mes "[Cavaleiro de Croix]";
+	mes "A Batalha dura " + $@ValfreyjaBG2_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Croix]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}

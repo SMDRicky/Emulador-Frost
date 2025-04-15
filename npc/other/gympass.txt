@@ -1,0 +1,149 @@
+//===== rAthena Script ======================================= 
+//= Gym Pass Cash Item NPC
+//===== By: ================================================== 
+//= Kisuka
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= rAthena Project
+//===== Description: ========================================= 
+//= [Official Conversion]
+//= Exchange Gym Passes to learn "Enlarge Weight Limit"
+//= iRO NPC situated in Payon beside Kafra Shop.
+//===== Additional Comments: ================================= 
+//= 1.0 First version [L0ne_W0lf]
+//= 1.1 Fixed the NPC saying you "00" [L0ne_W0lf]
+//= 1.2 Replaced effect numerics with constants. [Samuray22]
+//= 1.3 Updated script, and fixed potential errors. [L0ne_W0lf]
+//============================================================ 
+
+moc_para01,51,32,3	script	Mister Peso#GymPass	899,{
+mes "[ Mister Peso ]";
+mes "Ei, aqui. As pessoas não estão";
+mes "tão ativas fisicamente como costumavam ser.";
+mes "Mesmo que você lute para viver, seu corpo pode";
+mes "estar fraco e flácido em algumas áreas.";
+mes "Sabe o que quero dizer?";
+next;
+mes "[ Mister Peso ]";
+mes "Ei, treine comigo e posso garantir";
+mes "que você será capaz de levantar e carregar";
+mes "mais coisas. É só me dar seu";
+mes "^FF0000Passe Antigravitacional^000000 toda vez,";
+mes "e estaremos prontos para começar.";
+next;
+mes "[ Mister Peso ]";
+mes "Mas não fique muito animado:";
+mes "por mais que eu o treine, você pode";
+mes "exagerar. Já ouviu falar de alguém";
+mes "que ficou exageradamente musculoso?";
+mes "É porque eles estão mortos. Entendeu?";
+next;
+mes "[ Mister Peso ]";
+mes "Eu diria que é seguro";
+mes "treinar seriamente comigo e aumentar sua";
+mes "capacidade de carregar itens ^FF000010 vezes^000000.";
+mes "Então... Está pronto para suar?";
+next;
+switch(select("Sim:Não:Ah, meus treinos acabaram.")) {
+	case 1:
+		if (gympassmemory < 10) {
+			set .@add_carry,gympassmemory + 1;
+			set .@remain_carry,10 - .@add_carry;
+			if (countitem(7776) > 0) {
+				mes "[Senhor Peso]";
+mes "Oh, ótimo, vejo que você";
+mes "trouxe seu Passe Antigravitacional.";
+mes "Tudo bem, apenas faça o que eu faço";
+mes "e tente sentir a queimação.";
+mes "Pronto? Vamos lá!";
+next;
+specialeffect2 EF_EARTHSPIKE;
+next;
+specialeffect2 EF_DEVIL;
+next;
+specialeffect2 EF_COIN;
+next;
+specialeffect2 EF_SIGHTRASHER;
+next;
+mes "[ Mister Peso ]";
+mes "Pronto, você deveria ser capaz";
+mes "de carregar mais coisas agora.";
+mes "Vamos ver, podemos aumentar";
+mes "sua capacidade de carregar itens";
+mes "^FF0000" + .@remain_carry + "^000000 vezes a mais se continuarmos";
+mes "treinando juntos assim.";
+				delitem 7776,1; //Max_Weight_Up_Scroll
+				set gympassmemory,.@add_carry;
+				skill "ALL_INCCARRY",.@add_carry,SKILL_PERM_GRANT;
+				close;
+			}
+			else {
+				mes "[ Mister Peso ]";
+mes "Cara, o que eu te disse?";
+mes "Você precisa me trazer seu";
+mes "^FF0000Passe Antigravitacional^000000 se quiser";
+mes "treinar e fortalecer seus";
+mes "músculos para carregar itens.";
+				close;
+			}
+		}
+		else {
+mes "[ Mister Peso ]";
+mes "Cara, acho que não podemos mais";
+mes "fortalecer seus músculos para carregar";
+mes "itens além disso.";
+mes "É muito perigoso para o seu";
+mes "corpo se tentássemos! Vamos lá,";
+mes "eu te avisei sobre os limites.";
+close;
+}
+case 2:
+mes "[ Mister Peso ]";
+mes "Ah, que pena.";
+mes "Bem, volte se mudar de ideia.";
+mes "Fale para seus amigos sobre mim:";
+mes "se eles estiverem fora de forma, eu os ajudarei";
+mes "a entrar em forma.";
+close;
+	case 3:
+		if (gympassmemory > 0) {
+mes "[ Mister Peso ]";
+mes "O que aconteceu?";
+mes "Deixou seus músculos para carregar itens";
+mes "atrofiarem? Sorte sua, existe algo";
+mes "chamado memória muscular. Não levará";
+mes "tanto tempo para fortalecê-los novamente...";
+next;
+specialeffect2 EF_EARTHSPIKE;
+next;
+specialeffect2 EF_DEVIL;
+next;
+specialeffect2 EF_COIN;
+next;
+specialeffect2 EF_SIGHTRASHER;
+next;
+mes "[ Mister Peso ]";
+mes "E aí, como foi?";
+mes "Seus músculos para carregar itens";
+mes "voltaram, assim tão rápido! Tente não";
+mes "desistir novamente, certo?";
+			skill "ALL_INCCARRY",gympassmemory,SKILL_PERM_GRANT;
+			close;
+		}
+		else {
+mes "[ Mister Peso ]";
+mes "Ah...";
+mes "Nós não treinamos juntos";
+mes "antes.";
+mes "Tenho certeza disso.";
+			close;
+		}
+	}
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 11;
+	setunittitle getnpcid(0), "[Gym Pass]";
+	end;
+
+}

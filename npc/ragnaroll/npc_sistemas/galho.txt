@@ -1,0 +1,59 @@
+prontera,123,198,5	script	Galho Sangrento#0	101,{
+
+if (!getcharid(1)) {
+    mes "[ Sala Eterna ]";
+    mes "Uau~ você precisa de um grupo.";
+    end;
+}
+    mes "[ Sala Eterna ]";
+    mes "Você deseja ir para a Sala Eterna?";
+    menu "Sim",sim,"Não",nao;
+
+sim:
+    .@md_name$ = "Sala Eterna";
+    if (instance_live_info(ILI_NAME, instance_id(IM_PARTY)) == .@md_name$) {
+        menu "^0084ff[»]^000000 Entrar na Sala",enter,"^ff0000[»]^000000 Cancelar",exit;
+    } else if (is_party_leader()) {
+        menu "^0084ff[»]^000000 Alugar uma Sala",rent,"^ff0000[»]^000000 Cancelar",exit;
+    }
+rent:
+    next;
+    mes "[ Sala Eterna ]";
+    if (Zeny < 2000000) {
+        mes "Você não tem zeny suficiente. É necessário 2kk para alugar a sala.";
+        close;
+    }
+    mes "Clique em Entrar na Sala.";
+    Zeny -= 2000000;
+    instance_create(.@md_name$);
+    close3;
+enter:
+    next;
+    switch( instance_enter(.@md_name$) ) {
+    case IE_OTHER:
+        mes "Ocorreu um erro desconhecido.";
+        close3;
+    case IE_NOINSTANCE:
+        mes "A instância de ^ff0000Sala Eterna^000000 ainda não foi criada.";
+        close3;
+    case IE_NOMEMBER:
+        end;
+    case IE_OK:
+        mapannounce "guild_vs3", "Membro do grupo " + strcharinfo(0) + " da parte " + getpartyname(getcharid(0)) + " inseriu " + .@md_name$ + ".", bc_map, 0xFF9900;
+        end;
+    }
+    end;
+nao:
+    next;
+    close3;
+exit:
+    next;
+    close3;
+    end;
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 56;
+	setunittitle getnpcid(0), "[Sala Eterna]";
+    end;
+
+}

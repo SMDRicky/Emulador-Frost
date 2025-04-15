@@ -1,0 +1,6 @@
+moc_para01,30,11,5	script	Marechalss	45,1,1,{
+
+	warp "prontera",155,186;
+
+end;
+}

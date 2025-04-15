@@ -1,0 +1,77 @@
+que_temsky,61,142,5	script	Guerra do Tesouro	512,{
+
+    mes .npc$;
+    mes (gettime(3) >= 6 && gettime(3) <= 12 ? "Bom-dia" : (gettime(3) >= 13 && gettime(3) <= 18 ? "Boa-tarde" : "Boa-noite")) + ", ^008aff" + strcharinfo(0) + "^000000 !";
+    switch(select("^0084ff[»]^000000 Entrar na arena:^0084ff[»]^000000 Ver Ranking:^0084ff[»]^000000 Sair")) {
+    case 01:
+        if (!getcharid(2)) {
+            mes "Desculpe, você precisa ter um clã para acessar a Guerra do Tesouro!";
+            close;
+        }
+        if (!$WoT) {
+            mes .npc$;
+            mes "O evento está fechado!";
+            close;
+        }
+        warp "izlude", 128, 222;
+        dispbottom "[Guerra do Tesouro]: Você está dentro do Evento! Boa Sorte!";
+        end;
+    case 02:
+        mes "^3366FF[Rank Guerra do Tesouro]^000000";
+        mes "^999999Posição^000000  : ^339966Guild ^000000: ^000080Pontos^000000";
+        query_sql "select `name`,`pontos` from `guild` where `pontos` > 0 ORDER BY `pontos` DESC LIMIT 10", .@n$, .@p;
+        for (set .@i, 0; .@i < 10 && .@n$[.@i] != ""; set .@i, .@i + 1) {
+            mes "^999999" + (.@i + 1) + "^000000 : ^339966" + .@n$[.@i] + "^000000 : ^000080" + .@p[.@i] + "^000000";
+        }
+        close;
+    case 03:
+        close;
+    }
+
+OnInit:
+		.@UID = getnpcid(0);
+		setunittitle(.@UID, "[ Venha com sua Guild ]");
+		setunitdata .@UID, UNPC_GROUP_ID, 58;
+
+    .npc$ = "^339966[ Guerra do Tesouro ]^000000";
+    $WoT = 1;
+    .mapa$ = "prt_are_in";
+    end;
+
+OnClock0750:
+OnClock0950:
+OnClock1350:
+OnClock1650:
+OnClock1950:
+OnClock2350:
+    killmonsterall .mapa$;
+    if (getmapusers(.mapa$) < 1) {
+        announce "[Guerra do Tesouro]: O Evento foi cancelado por falta de jogadores.", 0, 0x4EEE94;
+        sleep 5000;
+        mapwarp .mapa$, "prontera", 156, 180;
+        end;
+    }
+    announce "[Guerra do Tesouro]: Os Tesouros vão aparecer dentro de 10 minutos !", 0, 0x4EEE94;
+    sleep 300000;
+    announce "[Guerra do Tesouro]: Os Tesouros vão aparecer dentro de 5 minutos !", 0, 0x4EEE94;
+    sleep 240000;
+    announce "[Guerra do Tesouro]: Os Tesouros vão aparecer dentro de 1 minuto !", 0, 0x4EEE94;
+    sleep 60000;
+    announce "[Guerra do Tesouro]: Os baús apareceram !!", 0, 0x4EEE94;
+    monster .mapa$, 22, 140, "[WoT] Tesouro", 1324, 1, "WoTchest::OnKillTreasure";
+    monster .mapa$, 22, 88, "[WoT] Tesouro", 1324, 1, "WoTchest::OnKillTreasure";
+    monster .mapa$, 22, 192, "[WoT] Tesouro", 1324, 1, "WoTchest::OnKillTreasure";
+    end;
+}
+
+-	script	WoTchest	-1,{
+    OnKillTreasure:
+        .mapa$ = "prt_are_in";
+        .@players = getmapusers(.mapa$);
+        .@premioWoT = 35015;
+        @GID = getcharid(2);
+        getitem .@premioWoT, 3;
+        query_sql "UPDATE `guild` SET `pontos`=`pontos`+1 WHERE `guild_id`='"+getcharid(2)+"'";
+        announce "[Guerra do Tesouro]: " + strcharinfo(0) + " do Clã [" + GetGuildName(@GID) + "] conquistou o baú e recebeu [3] " + getitemname(.@premioWoT) + ".", 0, 0x4EEE94;
+        end;
+}

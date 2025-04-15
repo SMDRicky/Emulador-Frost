@@ -1,0 +1,59 @@
+moc_para01,25,44,4	script	Sacoleiro de Zeny	963,{
+    mes "[ Sacoleiro de Zeny ]";
+    mes "Olá, " + (Sex?"Mr.":"Mrs.") + " " + strcharinfo(0);
+    mes "Eu presto um serviço muito bom: troco Zenys por bolsas.";
+	next;
+    mes "[ Sacoleiro de Zeny ]";
+    mes "Lembrando que a qualquer momento você pode converter e pegar o Zeny novamente clicando duas vezes na bolsa.";
+    mes "Deseja fazer essa troca?";
+    switch(select ("^339966[»]^000000 Sim:^339966[»]^000000 Não")) {
+
+        case 1: 
+        next;
+        mes "[ Sacoleiro de Zeny ]";
+        mes "Por gentileza, selecione a bolsa que você deseja adquirir.";
+        switch(select ("^339966[»]^000000 Sacola de Bronze [10KK]:^339966[»]^000000 Sacola de Prata [100KK]:^339966[»]^000000 Sacola de Ouro [1B]")) {
+
+            case 1:
+        	next;
+		if(Zeny < 10000000) { mes "Você não tem zeny o suficiente."; end; }
+            	mes "[ Sacoleiro de Zeny ]";
+		mes "Ai está sua bolsa de zenys. Faça um bom proveito.";
+		set Zeny, zeny - 10000000;
+		getitem 672,1;
+            	close;
+
+            case 2:
+            next;
+		if(Zeny < 100000000) { mes "Você não tem zeny o suficiente."; end; }
+            	mes "[ Sacoleiro de Zeny ]";
+		mes "Ai está sua bolsa de zenys. Faça um bom proveito.";
+		set Zeny, zeny - 100000000;
+		getitem 676,1;
+            close;
+
+            case 3:
+            next;
+		if(Zeny < 1000000000) { mes "Você não tem zeny o suficiente."; end; }
+            	mes "[ Sacoleiro de Zeny ]";
+		mes "Ai está sua bolsa de zenys. Faça um bom proveito.";
+		set Zeny, zeny - 1000000000;
+		getitem 670,1;
+            close;
+
+
+        }
+
+        case 2:
+        next;
+        mes "[ Sacoleiro de Zeny ]";
+        mes "Volte quando precisa dos meus serviços!";
+        end;
+
+    } 
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 43;
+	setunittitle getnpcid(0), "[Negociante de Zeny]";
+	end;
+
+}

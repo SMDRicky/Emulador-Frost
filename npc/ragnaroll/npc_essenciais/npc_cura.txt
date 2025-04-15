@@ -1,0 +1,195 @@
+//===== Cronus Script ======================================== 
+//= Curandeira
+//===== Por: =================================================
+//= DennyLoko
+//===== Vers?o Atual: ======================================== 
+//= 1.3a
+//===== Descri??o: =========================================== 
+//= Recupera HP e SP gratuitamente
+//= Usado as cordenadas do NPC do eAthena
+//===== Changelog: =========================================== 
+//= 1.0 Iniciado o Npc [DennyLoko]
+//= 1.1 Organizado o NPc [Kamper]
+//= 1.1b corrigindo erro na duplicate de rachel [Tiu Skan]
+//= - Removidos ".gat" 
+//= Script Reestruturado [Mehah]
+//= 1.2 Removido falas, adicionado cura de Homunculo e Mosc?via. [RoM]
+//= 1.3 Adicionado a op??o paga. [RoM]
+//= 1.3a Removido show [Keoy]
+//============================================================
+
+prontera,149,189,5	script	Curandeira#hG1-1::HealerG	616,{
+
+	.@is_vip = getgroupid() >= 1? 1 : 0;
+	.@is_premium = callfunc("F_isPremium");
+
+	if(Class == 23){ 
+		set PC_DIE_COUNTER,0;
+	}
+
+	emotion 51;
+	if(.@is_premium == 1){
+		callfunc("F_BuffPremium");	
+		.@premium_message$ = "[Ragna Frost]: Você ainda possui %s de Buff Premium!";
+		dispbottom sprintf(.@premium_message$, callfunc("F_RemainingBuffTime"));
+	}else if (.@is_vip == 1) {
+		callfunc("F_BuffVip");
+	} else {
+		dispbottom "[Ragna Frost]: Você não é um jogador VIP, acesse www.Ragna Frost.com e saiba como conseguir os privilégios!";
+	}
+	
+	percentheal 100,100;
+	end;
+
+	OnPCLoginEvent:
+		if(callfunc("F_isPremium")){
+	        fstatus(getcharid(0), 1514, 0, 1);
+		}
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 44;
+	setunittitle getnpcid(0), "[Cura e Buffs]";
+    end;
+}
+
+
+function	script	F_isPremium	{
+	return #buff_premium_tick > gettimetick(2)? 1 : 0;
+
+}
+
+function	script	F_RemainingBuffTime	{
+	.@diff =  #buff_premium_tick - gettimetick(2);
+	.@remaining = .@diff / 60;
+	if(.@remaining > 1440){
+		.@days = .@remaining/ 1440;
+		.@hours =  .@remaining%1440 / 60;
+		return sprintf("%d %s e %d %s", .@remaining/ 1440, callfunc("pluralize", .@days, "dia", "dias"), .@hours, callfunc("pluralize", .@hours, "hora", "horas"));
+	} else if(.@remaining > 60){
+		.@hours = .@remaining/ 60;
+		return sprintf("%d %s", .@remaining/60, callfunc("pluralize", .@hours, "hora", "horas"));
+	} else {
+		return sprintf("%d %s", .@remaining, callfunc("pluralize", .@remaining, "minuto", "minutos"));
+	}
+}
+
+function	script	pluralize	{
+	return getarg(0) > 1 ? getarg(2) : getarg(1);
+}
+
+function	script	F_AddBuffPremium	{
+	.@days = getarg(0);
+	.@is_premium = callfunc("F_isPremium");
+
+
+	if(.@is_premium){
+		#buff_premium_tick += (60 * 60 * 24 * .@days);
+	} else {
+		#buff_premium_tick = gettimetick(2) + (60 * 60 * 24 * .@days);
+	}
+
+	dispbottom sprintf("[Ragna Frost]: Você acabou de adicionar %d dias de curandeira premium. Total %s", .@days, callfunc("F_RemainingBuffTime"));
+	return;
+}
+
+function	script	F_BuffVip	{
+	sc_start 32, 600000, 10;
+	sc_start 30, 600000, 10;
+	identifyall(true);
+	repairall getcharid(0);
+	return;
+}
+
+function	script	F_BuffPremium	{
+	sc_end SC_STONE;
+	sc_end SC_FREEZE;
+	sc_end SC_STUN;
+	sc_end SC_SLEEP;
+	sc_end SC_POISON;
+	sc_end SC_CURSE;
+	sc_end SC_SILENCE;
+	sc_end SC_CONFUSION;
+	sc_end SC_BLIND;
+	sc_end SC_BLOODING;
+	sc_end SC_DEC_AGI;
+	sc_end SC_NOEQUIPWEAPON;
+	sc_end SC_NOEQUIPSHIELD;
+	sc_end SC_NOEQUIPARMOR;
+	sc_end SC_NOEQUIPHELM;
+	sc_end SC__STRIPACCESSARY;
+	sc_end SC_ORCISH;
+
+	sc_start SC_ANGELUS,600000,10;
+	sc_start SC_MAGNIFICAT,600000,5;
+	sc_start SC_GLORIA,60000,5;
+	sc_start 32, 600000, 10;
+	sc_start 30, 600000, 10;
+
+	//Foods
+	sc_start SC_STRFOOD,600000,5;
+	sc_start SC_INTFOOD,600000,5;
+	sc_start SC_DEXFOOD,600000,5;
+	sc_start SC_AGIFOOD,600000,5;
+	sc_start SC_VITFOOD,600000,5;
+	sc_start SC_LUKFOOD,600000,5;
+
+	identifyall(true);
+	repairall getcharid(0);
+
+	return;
+}
+
+
+
+bossnia_01,203,204,5	duplicate(HealerG)	Buffs#hG2-90	616
+bossnia_01,34,193,5	duplicate(HealerG)	Buffs#hG2-91	616
+bossnia_01,42,39,5	duplicate(HealerG)	Buffs#hG2-92	616
+bossnia_01,199,44,5	duplicate(HealerG)	Buffs#hG2-93	616
+bossnia_01,131,118,5	duplicate(HealerG)	Buffs#hG2-94	616
+gld2_ald,258,119,5	duplicate(HealerG)	Buffs#hG2-107	616
+bat_room02,148,153,5	duplicate(HealerG)	Buffs#hG2-107BG	616
+gld2_ald,178,53,5	duplicate(HealerG)	Buffs#hG2-106	616
+gld2_ald,150,110,5	duplicate(HealerG)	Buffs#hG2-105	616
+gld2_ald,94,139,5	duplicate(HealerG)	Buffs#hG2-104	616
+gld2_ald,110,255,5	duplicate(HealerG)	Buffs#hG2-103	616
+dic_fild02,94,126,5	duplicate(HealerG)	Buffs#hG2-102	616
+dic_fild02,136,234,5	duplicate(HealerG)	Buffs#hG2-101	616
+dic_fild02,78,370,5	duplicate(HealerG)	Buffs#hG2-100	616
+dic_fild01,156,279,5	duplicate(HealerG)	Buffs#hG2-223	616
+dic_fild01,139,186,5	duplicate(HealerG)	Buffs#hG2-222	616
+dic_fild01,82,69,5	duplicate(HealerG)	Buffs#hG2-221	616
+morocc,153,97,5	duplicate(HealerG)	Buffs#hG2-2	616
+ayothaya,155,111,5	duplicate(HealerG)	Buffs#hG2-3	616
+geffen,112,63,5	duplicate(HealerG)	Buffs#hG2-4	616
+umbala,94,162,5	duplicate(HealerG)	Buffs#hG2-5	616
+payon,163,236,5	duplicate(HealerG)	Buffs#hG2-6	616
+alberta,192,151,5	duplicate(HealerG)	Buffs#hG2-7	616
+alb2trea,64,64,2	duplicate(HealerG)	Buffs#hG2-8	616
+aldebaran,134,123,5	duplicate(HealerG)	Buffs#hG2-9	616
+izlude,125,118,5	duplicate(HealerG)	Buffs#hG2-10	616
+hugel,91,148,5	duplicate(HealerG)	Buffs#hG2-1111	616
+xmas,149,136,5	duplicate(HealerG)	Buffs#hG2-11	616
+comodo,215,142,5	duplicate(HealerG)	Buffs#hG2-12	616
+amatsu,200,80,5	duplicate(HealerG)	Buffs#hG2-13	616
+gonryun,163,122,5	duplicate(HealerG)	Buffs#hG2-14	616
+yuno,149,187,5	duplicate(HealerG)	Buffs#hG2-15	616
+yuno,162,53,5	duplicate(HealerG)	Buffs#hG2-1045	616
+//niflheim,188,180,5	duplicate(HealerG)	Buffs#hG2-16	616
+louyang,221,47,5	duplicate(HealerG)	Buffs#hG2-17	616
+rachel,130,117,5	duplicate(HealerG)	Buffs#hG2-18	616
+veins,212,124,5	duplicate(HealerG)	Buffs#hG2-19	91
+moscovia,217,197,5	duplicate(HealerG)	Buffs#hG2-20	616
+cave,81,48,4	duplicate(HealerG)	Buffs#hG2-25	616
+einbroch,70,200,4	duplicate(HealerG)	Buffs#hG2-29	616
+einbech,67,100,4	duplicate(HealerG)	Buffs#hG2-129	616
+lighthalzen,165,88,2	duplicate(HealerG)	Buffs#hG2-31	616
+moc_para01,27,53,5	duplicate(HealerG)	Buffs#hG2-32	616
+niflheim,28,158,5	duplicate(HealerG)	Buffs#hG2-68	616
+prontera,229,76,5	duplicate(HealerG)	Buffs#hG2-99	616
+prontera,246,76,5	duplicate(HealerG)	Buffs#hG2-10012	616
+jawaii,254,135,5	duplicate(HealerG)	Buffs#hG2-168	616
+
+mainhall,82,152,5	duplicate(HealerG)	Buffs#hG2-168vip	616
+new_1-3,85,72,5	duplicate(HealerG)	Buffs#hG2-168training	616
+malangdo,230,273,6	duplicate(HealerG)	Buffs#hG2-169	616
+malangdo,131,270,6	duplicate(HealerG)	Buffs#testearea	616

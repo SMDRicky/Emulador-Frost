@@ -1,0 +1,81 @@
+bossnia_01,0,0,0,0	monster	Faraó	1157,3,100000,150000
+bossnia_01,0,0,0,0	monster	RSX 0806	1623,3,100000,150000
+bossnia_01,0,0,0,0	monster	Orc Heroi	1087,4,100000,150000
+bossnia_01,0,0,0,0	monster	Orc Lord	1190,4,100000,150000
+bossnia_01,0,0,0,0	monster	Dark Lord	1272,4,100000,150000
+bossnia_01,0,0,0,0	monster	Senhor dos Mortos	1373,4,100000,150000
+bossnia_01,0,0,0,0	monster	General Tartaruga	1312,3,100000,150000
+bossnia_01,0,0,0,0	monster	Amon-ra	1511,5,100000,150000
+//bossnia_01,0,0,0,0	monster	Valquiria Randgris	1751,2,100000,150000
+bossnia_01,0,0,0,0	monster	Ifrit	1832,2,100000,150000
+bossnia_01,0,0,0,0	monster	Bispo Decadente	1871,2,100000,150000
+bossnia_01,0,0,0,0	monster	Freoni	1159,4,100000,150000
+bossnia_01,0,0,0,0	monster	Doppelganger	1046,5,100000,150000
+//bossnia_01,0,0,0,0	monster	Arquimaga Katrin	1651,1,100000,150000
+//bossnia_01,0,0,0,0	monster	Sumo Magaleta	1649,1,100000,150000
+//bossnia_01,0,0,0,0	monster	Sniper Cecil	1650,1,100000,150000
+//bossnia_01,0,0,0,0	monster	Assassino Eremes	1647,1,100000,150000
+//bossnia_01,0,0,0,0	monster	Lorde Seyren	1646,1,100000,150000
+//bossnia_01,0,0,0,0	monster	Ferreiro Harword	1648,1,100000,150000
+
+
+gld2_ald,0,0,0,0	monster	Tao Gunka Dificil	20840,5,10000,20000
+gld2_ald,0,0,0,0	monster	Hatii Dificil	20841,6,10000,20000
+gld2_ald,0,0,0,0	monster	Eddga Dificil	20842,7,10000,20000
+gld2_ald,0,0,0,0	monster	GT Dificil	20843,7,10000,20000
+gld2_ald,0,0,0,0	monster	RSX-0806 Dificil	20844,3,10000,20000
+gld2_ald,0,0,0,0	monster	YGNIZEM Dificil	20845,6,10000,20000
+gld2_ald,0,0,0,0	monster	Dark Lord Dificil	20846,5,10000,20000
+gld2_ald,0,0,0,0	monster	Senhor dos Mortos Dificil	20847,8,10000,20000
+gld2_ald,0,0,0,0	monster	Drake Dificil	20848,4,10000,20000
+gld2_ald,0,0,0,0	monster	Farao Dificil	20849,4,10000,20000
+gld2_ald,0,0,0,0	monster	Bafome Dificil	20850,5,10000,20000
+gld2_ald,0,0,0,0	monster	Abelha-Rainha Dificil	20851,6,10000,20000
+gld2_ald,0,0,0,0	monster	Doppelganger Dificil	20852,4,10000,20000
+gld2_ald,0,0,0,0	monster	Orc Lord Dificil	20853,4,10000,20000
+gld2_ald,0,0,0,0	monster	Amon Ra Dificil	20854,4,10000,20000
+gld2_ald,0,0,0,0	monster	Vesper Dificil	20855,5,10000,20000
+gld2_ald,0,0,0,0	monster	Kiel Dificil	20856,4,10000,20000
+gld2_ald,0,0,0,0	monster	Thanatos Dificil	20857,4,10000,20000
+gld2_ald,0,0,0,0	monster	Ktullanux Dificil	20858,4,10000,20000
+gld2_ald,0,0,0,0	monster	Celine Kimi Dificil	20859,5,10000,20000
+gld2_ald,0,0,0,0	monster	Detardeurus Dificil	20860,5,10000,20000
+gld2_ald,0,0,0,0	monster	Gopinich Dificil	20861,5,10000,20000
+gld2_ald,0,0,0,0	monster	Boitata Dificil	20862,5,10000,20000
+gld2_ald,0,0,0,0	monster	Kublin Dificil	20863,9,10000,20000
+gld2_ald,0,0,0,0	monster	Ifrit Dificil	20864,5,10000,20000
+gld2_ald,0,0,0,0	monster	Pesar Noturno Dificil	20865,4,10000,20000
+gld2_ald,0,0,0,0	monster	Valquiria Randgris	1751,4,100000,150000
+gld2_ald,0,0,0,0	monster	Betelgeuse	20994,1,100000,150000
+gld2_ald,0,0,0,0	monster	Morroc Ferido	1917,3,100000,150000
+
+
+
+
+
+
+gld2_ald	mapflag	nodrop
+gld2_ald	mapflag	nomobloot
+gld2_ald	mapflag	nomvploot
+gld2_ald	mapflag	nosave	SavePoint
+gld2_ald	mapflag	noreturn
+gld2_ald	mapflag	nobranch
+gld2_ald	mapflag	nomemo
+gld2_ald	mapflag	nowarp
+gld2_ald	mapflag	nogo
+gld2_ald	mapflag	nowarpto
+gld2_ald	mapflag	noteleport
+
+
+
+bossnia_01	mapflag	nodrop
+bossnia_01	mapflag	nomobloot
+bossnia_01	mapflag	nomvploot
+bossnia_01	mapflag	nosave	SavePoint
+bossnia_01	mapflag	noreturn
+bossnia_01	mapflag	nobranch
+bossnia_01	mapflag	nomemo
+bossnia_01	mapflag	nowarp
+bossnia_01	mapflag	nogo
+bossnia_01	mapflag	nowarpto
+bossnia_01	mapflag	noteleport

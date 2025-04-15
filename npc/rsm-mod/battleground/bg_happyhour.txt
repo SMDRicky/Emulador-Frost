@@ -1,0 +1,44 @@
+//===== rAthena Script =======================================
+//= BattleGround Expansion - Happy Hour
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Anuncia o Happy Hour das Batalhas Campais.
+//= Contém um exemplo de iniciar/terminar o Happy Hour por
+//= evento de tempo.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+-	script	BG Happy Hour	-1,{
+OnBGHappyHourStart:
+	announce "[Batalhas Campais]: Começou o Happy Hour das Batalhas Campais!",bc_yellow|bc_all;
+	sleep 3000;
+	announce "[Batalhas Campais]: O dobro de Recompensas nos Campos de Batalha!",bc_yellow|bc_all;
+	end;
+	
+OnBGHappyHourEnd:
+	announce "[Batalhas Campais]: O Happy Hour das Batalhas Campais foi encerrado!",bc_yellow|bc_all;
+	sleep 3000;
+	announce "[Batalhas Campais]: As Recompensas dos Campos de Batalha retornaram ao normal!",bc_yellow|bc_all;
+	end;
+
+// Sample Clocks
+//
+// Start
+//OnClock1700:
+//	bg_happyhour 1;
+//	end;
+//
+// End
+//OnClock1830:
+//	bg_happyhour 0;
+//	end;
+}

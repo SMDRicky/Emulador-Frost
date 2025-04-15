@@ -1,0 +1,825 @@
+Header:
+  Type: LAPHINE_CREATE_DB
+  Version: 1
+
+Body:
+  # =====================
+  # Adagas
+  # =====================
+  - Item: Cutter
+    RequiredRequirementsCount: 4
+    Requirements:
+      - Item: Diagrama_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Iron
+        Amount: 25
+        Type: 1
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_1
+      - Option: DAGGER_GROUP_C_1
+      - Option: DAGGER_GROUP_B_1
+      - Option: DAGGER_GROUP_A_1
+  - Item: Knife
+    RequiredRequirementsCount: 5
+    Requirements:
+      - Item: Diagrama_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Jellopy
+        Amount: 5
+        Type: 1
+      - Item: Iron
+        Amount: 3
+        Type: 1
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_1
+      - Option: DAGGER_GROUP_C_1
+      - Option: DAGGER_GROUP_B_1
+      - Option: DAGGER_GROUP_A_1
+  - Item: Main_Gauche
+    RequiredRequirementsCount: 4
+    Requirements:
+      - Item: Diagrama_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Iron
+        Amount: 50
+        Type: 1
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_1
+      - Option: DAGGER_GROUP_C_1
+      - Option: DAGGER_GROUP_B_1
+      - Option: DAGGER_GROUP_A_1
+  - Item: Dagger #1213
+    RequiredRequirementsCount: 4
+    Requirements:
+      - Item: Diagrama_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Steel
+        Amount: 30
+        Type: 1
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_2
+      - Option: DAGGER_GROUP_C_2
+      - Option: DAGGER_GROUP_B_2
+      - Option: DAGGER_GROUP_A_2
+  - Item: Dirk #1210
+    RequiredRequirementsCount: 4
+    Requirements:
+      - Item: Diagrama_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Steel
+        Amount: 17
+        Type: 1
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_2
+      - Option: DAGGER_GROUP_C_2
+      - Option: DAGGER_GROUP_B_2
+      - Option: DAGGER_GROUP_A_2
+  - Item: Stiletto #1216 
+    RequiredRequirementsCount: 4
+    Requirements:
+      - Item: Diagrama_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_2
+        Amount: 1
+        Type: 0
+      - Item: Steel
+        Amount: 40
+        Type: 1
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_2
+      - Option: DAGGER_GROUP_C_2
+      - Option: DAGGER_GROUP_B_2
+      - Option: DAGGER_GROUP_A_2
+  - Item: Cinquedea
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_3
+      - Option: DAGGER_GROUP_C_3
+      - Option: DAGGER_GROUP_B_3
+      - Option: DAGGER_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Sparkling_Dust #1001
+        Amount: 1
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 3
+        Type: 1
+      - Item: Steel #999
+        Amount: 40
+        Type: 1
+  - Item: Coward
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_3
+      - Option: DAGGER_GROUP_C_3
+      - Option: DAGGER_GROUP_B_3
+      - Option: DAGGER_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Scarlet_Jewel #722
+        Amount: 3
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 5
+        Type: 1
+      - Item: Steel #999
+        Amount: 35
+        Type: 1
+  - Item: Damascus #1222 
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_3
+      - Option: DAGGER_GROUP_C_3
+      - Option: DAGGER_GROUP_B_3
+      - Option: DAGGER_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Bluish_Green_Jewel #729
+        Amount: 1
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 4
+        Type: 1
+      - Item: Steel #999
+        Amount: 60
+        Type: 1
+  - Item: Gladius #1219
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_3
+      - Option: DAGGER_GROUP_C_3
+      - Option: DAGGER_GROUP_B_3
+      - Option: DAGGER_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Blue_Jewel #726
+        Amount: 1
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 4
+        Type: 1
+      - Item: Steel #999
+        Amount: 40
+        Type: 1
+  - Item: Assasin_Dagger #1232
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_4
+      - Option: DAGGER_GROUP_C_4
+      - Option: DAGGER_GROUP_B_4
+      - Option: DAGGER_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Hinalle #703
+        Amount: 5
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 15
+        Type: 1
+      - Item: Steel #999
+        Amount: 50
+        Type: 1
+  - Item: Bazerald #1231
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_4
+      - Option: DAGGER_GROUP_C_4
+      - Option: DAGGER_GROUP_B_4
+      - Option: DAGGER_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Old_Magic_Book #1006
+        Amount: 2
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 12
+        Type: 1
+      - Item: Steel #999
+        Amount: 70
+        Type: 1 
+  - Item: Dragon_Killer #13001 
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_4
+      - Option: DAGGER_GROUP_C_4
+      - Option: DAGGER_GROUP_B_4
+      - Option: DAGGER_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Tri_Headed_Dragon_Head #7443
+        Amount: 2
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 20
+        Type: 1
+      - Item: Steel #999
+        Amount: 70
+        Type: 1
+  - Item: Forturn_Sword
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_4
+      - Option: DAGGER_GROUP_C_4
+      - Option: DAGGER_GROUP_B_4
+      - Option: DAGGER_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Gold #969
+        Amount: 1
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 10
+        Type: 1
+      - Item: Steel #999
+        Amount: 55
+        Type: 1
+  - Item: Mamas_Knife #1229
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_4
+      - Option: DAGGER_GROUP_C_4
+      - Option: DAGGER_GROUP_B_4
+      - Option: DAGGER_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Skirt_Of_Virgin #1049
+        Amount: 5
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 15
+        Type: 1
+      - Item: Steel #999
+        Amount: 60
+        Type: 1
+  - Item: Moonlight_Sword #1234
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_4
+      - Option: DAGGER_GROUP_C_4
+      - Option: DAGGER_GROUP_B_4
+      - Option: DAGGER_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Contracts_In_Shadow #641  
+        Amount: 3
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 15
+        Type: 1
+      - Item: Steel #999
+        Amount: 72
+        Type: 1
+  - Item: Sucsamad #1236
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: DAGGER_GROUP_D_4
+      - Option: DAGGER_GROUP_C_4
+      - Option: DAGGER_GROUP_B_4
+      - Option: DAGGER_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Rainbow_Carrot #622 
+        Amount: 3
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 10
+        Type: 1
+      - Item: Steel #999
+        Amount: 55
+        Type: 1

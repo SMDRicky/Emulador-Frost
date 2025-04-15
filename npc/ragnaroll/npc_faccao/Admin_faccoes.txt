@@ -1,0 +1,624 @@
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|				
+//|§§§§§§§§§§§§§§§§§§§§§  "Original é o que cria não é aquele que copia".  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§  ragnaproxy ©2017 - TODOS OS DIREITOS RERSEVADOS  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|					 
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§\    \§§§§§§§§/    /§§\    \§§§§§§/    /TM°§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§§\    \§§§§§§/    /§§§§\    \§§§§/    /§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|            |§§§§\    \§§§§/    /§§§§§§\    \§§/    /§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§\    \§§/    /§§§§§§§§\    \/    /§§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§§\    \/    /§§§§§§§§§§\        /§§§§§§§§§§§§|
+//|§§|            |§§§|            \§§§§§|   |§§§§|   |§§§§§§§\        /§§§§§§§§§§§§\      /§§§§§§§§§§§§§|
+//|§§|            |§§§|             \§§§§|   |§§§§|   |§§§§§§§§\      /§§§§§§§§§§§§§§\    /§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§\    |§§§|   |§§§§|   |§§§§§§§§/      \§§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§§/        \§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§/    /\    \§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§/    /§§\    \§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|	                                                                                       
+//| =====================================================================================================|
+//|   Script Criando por ragnaproxy | Cronus | Por Favor, Não Retire Os Créditos.              		 
+//| ==================================================================================================== |
+//|   Sistema de Facções VERSÃO: 4.0p							       		 
+//| ==================================================================================================== |
+//|													 											 
+//| 					Lista de comandos administrativos"		 
+//|     											                  		  
+//|   Utilize @faction <opção>                 		  
+//|   <dellrank>  -> limpa um ranking.
+//|   <dellall>   -> limpa todos os rankings.
+//|   <dellfame>  -> limpa o ranking da fama do site.
+//|   <closeduel> -> bloqueia os duelos.
+//|   <openduel>  -> desbloqueia os duelos.
+//|   <closebau>  -> bloqueia o bau.";
+//|   <openbau>   -> desbloqueia o bau.";
+//|   <talkfac>   -> manda uma mensagem para uma facção.
+//|   <closefac>  -> bloqueia entrada de membros nas facções.
+//|   <openfac>   -> desbloquea entrada de membros nas facções.
+//|   <ajuda>     -> mostra está lista de comandos.
+//|   <addzeny>   -> adiciona zeny para riqueza de uma facção.					 
+//| 						                                    					 
+//| 						                                              		         
+//|======================================================================================================|
+
+-	script	COMANDOS	-1,{
+
+OnInit:
+$@name$ = "[^FF0000Administração das facções^000000]"; end;
+bindatcmd "faction", "COMANDOS::OnCommand" ,$admin_lvl,$admin_lvl;
+end;
+
+OnCommand:
+if (!getarraysize(.@atcmd_parameters$)) {
+message strcharinfo(0), "Argumento inválido.";
+callsub Ajuda;
+end;
+}
+
+.@command$ = strtolower(.@atcmd_parameters$[0]);
+
+if(.@command$ == "dellrank"){ callsub Dellrank; end; }
+
+if (.@command$ == "dellall"){ callsub Dellall; end; }
+
+if (.@command$ == "dellfame"){ callsub Dellfame; end; }
+
+if (.@command$ == "closeduel"){callsub Closeduel; end; }
+
+if(.@command$ == "openduel"){ callsub Openduel; end; }
+
+if (.@command$ == "closebau"){ callsub Closebau; end; }
+
+if (.@command$ == "openbau"){ callsub Openbau; end; }
+
+if (.@command$ == "talkfac"){callsub Talkfac; end; }
+
+if (.@command$ == "closefac"){ callsub Closefac; end; }
+
+if (.@command$ == "openfac"){ callsub Openfac; end; }
+
+if (.@command$ == "ajuda"){ callsub Ajuda; end; }
+
+if (.@command$ == "addzeny"){ callsub Addzeny; end; }
+
+Ajuda:
+	message strcharinfo(0), "Lista de comandos administrativos";                  		  
+	message strcharinfo(0), "Utilize @faction <opção>";                  		  
+	message strcharinfo(0), "Opções:";
+	message strcharinfo(0), "<dellrank> -> limpa um ranking.";
+	message strcharinfo(0), "<dellall>  -> limpa todos os rankings.";
+	message strcharinfo(0), "<dellfame> -> limpa o ranking da fama do site.";
+	message strcharinfo(0), "<closeduel> -> bloqueia os duelos.";
+	message strcharinfo(0), "<openduel>  -> desbloqueia os duelos.";
+	message strcharinfo(0), "<closebau>  -> bloqueia o bau.";
+	message strcharinfo(0), "<openbau>   -> desbloqueia o bau.";
+	message strcharinfo(0), "<talkfac>   -> manda uma mensagem para uma facção.";
+	message strcharinfo(0), "<closefac>  -> bloqueia entrada de membros nas facções.";
+	message strcharinfo(0), "<openfac>   -> desbloquea entrada de membros nas facções.";
+	message strcharinfo(0), "<ajuda>   -> mostra está lista de comandos.";
+	message strcharinfo(0), "<addzeny>   -> adiciona zeny para riqueza de uma facção.";
+	end;
+	
+Dellrank:
+
+	mes $@name$;
+	mes "Comando usado: ^006400dellrank^000000";
+	mes "Qual ranking desejar limpar?";
+	next;
+	mes $@name$;
+	mes "Primeiro selecione a opção do ranking.";
+	next;
+	if(select("-> ^000080Ranking das facções^000000:-> ^000080Ranking dos membros das facções^000000") == 1){
+
+		mes $@name$;
+		mes "Selecione o ranking.";	
+		switch(select("-> ^000080Ranking riqueza^000000:-> ^000080Ranking pontos de duelos^000000:-> ^000080Ranking quantidade de membros^000000")){ next;
+		
+			case 1:
+				mes $@name$;
+				mes "Você escolheu limpar o Ranking riqueza, deseja prosseguir com essa ação?";
+				next;
+				if(select("Não:Sim") == 2){		
+				mes $@name$;
+				query_sql "UPDATE `contagem_faccao` set `total_z_m` = -1";
+				query_sql "UPDATE `contagem_faccao` set `total_z_n` = -1";
+				query_sql "UPDATE `contagem_faccao` set `total_z_l` = -1";
+				mes "O Ranking foi limpo!";
+				close;
+				
+					}
+					mes $@name$;
+					mes "Processo cancelado!";
+					close;
+
+			case 2:
+				mes $@name$;
+				mes "Você escolheu limpar o Ranking pontos de duelos, deseja prosseguir com essa ação?";
+				next;
+				if(select("Não:Sim") == 2){	
+				mes $@name$;
+				query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_m` = -1";
+				query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_n` = -1";
+				query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_l` = -1";
+				mes "O Ranking foi limpo!";
+				close;
+				
+					}
+					mes $@name$;
+					mes "Processo cancelado!";
+					close;
+
+			case 3:
+				mes $@name$;
+				mes "Você escolheu limpar o Ranking quantidade de membros!";
+				mes "^FF0000ATENÇÃO:^000000 Essa opção não é recomendada, isso vai afetar a ordem natural do sistema!";
+				next;
+				mes $@name$;
+				mes "Deseja prosseguir com essa ação?";	
+				next;
+				if(select("Não:Sim") == 2){	
+				mes $@name$;
+				query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_morte` = -1";
+				query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_noite` = -1";
+				query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_luz` = -1";
+				mes "O Ranking foi limpo!";
+				close;
+				
+					}
+					mes $@name$;
+					mes "Processo cancelado!";
+					close;
+			}
+		}
+		mes $@name$;
+		mes "Selecione o ranking.";	
+		switch(select("-> ^000080Ranking Matador^000000:-> ^000080Ranking doador de zenny^000000:-> ^000080Ranking pontos em duelos^000000:-> ^000080Ranking nivel do membro na facção^000000")){ next;
+		
+			case 1:
+				mes $@name$;
+				mes "Você escolheu limpar o Ranking Matador, deseja prosseguir com essa ação?";
+				next;
+				if(select("Não:Sim") == 2){
+				mes $@name$;
+				query_sql "UPDATE `faccaom` set `kills_m` = -1";
+				query_sql "UPDATE `faccaom` set `death_m` = -1";
+				query_sql "UPDATE `faccaon` set `kills_n` = -1";
+				query_sql "UPDATE `faccaon` set `death_n` = -1";
+				query_sql "UPDATE `faccaol` set `kills_l` = -1";
+				query_sql "UPDATE `faccaol` set `death_l` = -1";
+				mes "O Ranking foi limpo!";
+				close;
+				
+					}
+					mes $@name$;
+					mes "Processo cancelado!";
+					close;
+
+			case 2:
+				mes $@name$;
+				mes "Você escolheu limpar o Ranking doador de zenny, deseja prosseguir com essa ação?";
+				next;
+				if(select("Não:Sim") == 2){
+				mes $@name$;
+				query_sql "UPDATE `faccaom` set `zenny_m` = -1";
+				query_sql "UPDATE `faccaon` set `zenny_n` = -1";
+				query_sql "UPDATE `faccaol` set `zenny_l` = -1";
+				mes "O Ranking foi limpo!";
+				close;
+			
+					}
+					mes $@name$;
+					mes "Processo cancelado !";
+					close;
+
+			case 3:
+				mes $@name$;
+				mes "Você escolheu limpar o Ranking pontos em duelos, deseja prosseguir com essa ação?";
+				next;
+				if(select("Não:Sim") == 2){
+				mes $@name$;
+				query_sql "UPDATE `faccaom` set `pontos_gdf_m` = -1";
+				query_sql "UPDATE `faccaon` set `pontos_gdf_n` = -1";
+				query_sql "UPDATE `faccaol` set `pontos_gdf_l` = -1";
+				mes "O Ranking foi limpo!";
+				close;
+				
+					}
+					mes $@name$;
+					mes "Processo cancelado!";
+					close;
+
+			case 4:
+				mes $@name$;
+				mes "Você escolheu limpar o Ranking nivel do membro na facção, deseja prosseguir com essa ação?";
+				next;
+				if(select("Não:Sim") == 2){
+				mes $@name$;
+				query_sql "UPDATE `faccaom` set `nivel_m` = -1";
+				query_sql "UPDATE `faccaon` set `nivel_n` = -1";
+				query_sql "UPDATE `faccaol` set `nivel_l` = -1";
+				mes "O Ranking foi limpo!";
+				close;
+				
+					}
+					mes $@name$;
+					mes "Processo cancelado!";
+					close;
+
+	}
+
+Dellall:
+	mes $@name$;
+	mes "Comando usado: ^006400dellall^000000";
+	mes "Deseja limpar todos os Rankings ?";
+	next;
+	mes $@name$;
+	mes "^FF0000ATENÇÃO:^000000 Isso não vai limpar o Ranking da Fama.";
+	mes "E também não vai limpar o Ranking número de membros nas facções.";
+	next;
+	mes $@name$;
+	mes "Deseja prosseguir com essa ação?";
+	if(select("Não:Sim") == 2){ next;
+	mes $@name$;
+	query_sql "UPDATE `faccaom` set `nivel_m` = 0"; query_sql "UPDATE `faccaom` set `pontos_gdf_m` = 0";
+	query_sql "UPDATE `faccaon` set `nivel_n` = 0"; query_sql "UPDATE `faccaon` set `pontos_gdf_n` = 0";
+	query_sql "UPDATE `faccaol` set `nivel_l` = 0"; query_sql "UPDATE `faccaol` set `pontos_gdf_l` = 0";	
+	query_sql "UPDATE `faccaom` set `zenny_m` = 0"; query_sql "UPDATE `faccaom` set `zenny_m` = 0";
+	query_sql "UPDATE `faccaon` set `zenny_n` = 0"; query_sql "UPDATE `faccaon` set `zenny_n` = 0";
+	query_sql "UPDATE `faccaol` set `zenny_l` = 0"; query_sql "UPDATE `faccaol` set `zenny_l` = 0";	
+	query_sql "UPDATE `faccaom` set `kills_m` = 0"; query_sql "UPDATE `faccaom` set `death_m` = 0";	
+	query_sql "UPDATE `faccaon` set `kills_n` = 0"; query_sql "UPDATE `faccaon` set `death_n` = 0";	
+	query_sql "UPDATE `faccaol` set `kills_l` = 0"; query_sql "UPDATE `faccaol` set `death_l` = 0";		
+	query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_m` = 0"; query_sql "UPDATE `contagem_faccao` set `total_z_m` = 0";
+	query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_n` = 0"; query_sql "UPDATE `contagem_faccao` set `total_z_n` = 0";
+	query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_l` = 0"; query_sql "UPDATE `contagem_faccao` set `total_z_l` = 0";	
+	mes "Todos os rankings foram limpos!";
+	close;
+	
+		}
+		next;
+		mes $@name$;
+		mes "Processo cancelado!";
+		close;
+
+Dellfame:
+	mes $@name$;
+	mes "Comando usado: ^006400dellfame^000000";
+	mes "Deseja limpar o Ranking da Fama do site ?";
+	next; 
+	if(select("Não:Sim") == 2){
+	mes $@name$;
+	query_sql "UPDATE `faccaom` set `fama_m` = 'id_off'";
+	query_sql "UPDATE `faccaon` set `fama_n` = 'id_off'";
+	query_sql "UPDATE `faccaol` set `fama_l` = 'id_off'";
+	mes "O Ranking foi limpo!";
+	close;
+		
+		}
+		mes $@name$;
+		mes "Processo cancelado!";
+		close;		
+
+Closeduel:
+	mes $@name$;
+	mes "Comando usado: ^006400closeduel^000000";
+	mes "Deseja bloquear os duelos?";
+	next;
+	if(select("Não:Sim") == 2){	
+	mes $@name$;
+	$duel_bloq = 1;
+	mes "Os duelos estão bloqueados!";
+	mes "Quando quiser desbloquear os duelos, use o comando ^006400openduel^000000";
+	close;
+	
+		}
+		mes $@name$;
+		mes "Processo cancelado!";
+		close;
+
+Openduel:
+	mes $@name$;
+	mes "Comando usado: ^006400openduel^000000";
+	mes "Deseja desbloquear os duelos?";
+	next;
+	if(select("Não:Sim") == 2){		
+	mes $@name$;
+	$duel_bloq = 0;
+	mes "Os duelos estão desbloqueados!";
+	close;
+	
+		}
+		mes $@name$;
+		mes "Processo cancelado!";
+		close;
+		
+Closebau:
+	mes $@name$;
+	mes "Comando usado: ^006400closebau^000000";
+	mes "Deseja bloquear o baú das facções?";
+	next;
+	if(select("Não:Sim") == 2){		
+	mes $@name$;
+	$bau_bloq = 1;
+	mes "O baú está bloqueado!";
+	mes "Quando quiser desbloquear o baú use o comando ^006400openbau^000000";
+	close;
+	
+		}
+		mes $@name$;
+		mes "Processo cancelado!";
+		close;
+
+Openbau:
+	mes $@name$;
+	mes "Comando usado: ^006400openbau^000000";
+	mes "Deseja desbloquear o baú das facções?";
+	next;
+	if(select ("Não:Sim") == 2){	
+	mes $@name$;
+	$bau_bloq = 0;
+	mes "O baú está desbloqueado!";
+	close;
+	
+		}
+		mes $@name$;
+		mes "Processo cancelado!";
+		close;
+
+Talkfac:
+	mes $@name$;
+	mes "Comando usado: ^006400talkfac^000000";
+	mes "Esse comando é usado para deixar um recado para os membros das facções.";
+	next;
+	mes $@name$;
+	mes "O recado pode ser visualizado no menu das facções.";
+	next;
+	mes $@name$;
+	mes "Para qual facção você deseja mandar uma mensagem?";
+	switch(select("-> ^990000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000:")){ next;
+			
+		case 1:
+			dont:
+			mes $@name$;
+			mes "Escreva a mensagem.";
+			next;
+			input $talk_m$;	
+			mes "^FF0000Está certo?^000000";
+			mes $talk_m$;
+			if(select("Não:Sim") == 2){
+			next;
+			mes $@name$;
+			mes "Sua mensagem foi enviada.";
+			$data_m$ = ""+gettime(5)+"/"+gettime(6)+"/"+gettime(7)+"";
+			close;
+			
+				}
+				next; goto dont;
+
+		case 2:
+			dont2:
+			mes $@name$;
+			mes "Escreva a mensagem.";
+			next;
+			input $talk_n$;	
+			mes "^FF0000Está certo?^000000";
+			mes $talk_n$;
+			if(select("Não:Sim") == 2){	
+			next;
+			mes $@name$;
+			mes "Sua mensagem foi enviada.";
+			$data_n$ = ""+gettime(5)+"/"+gettime(6)+"/"+gettime(7)+"";
+			close;
+			
+				}
+				next; goto dont2;
+
+		case 3:			
+			dont3:
+			mes $@name$;
+			mes "Escreva a mensagem.";
+			next;
+			input $talk_l$;	
+			mes "^FF0000Está certo?^000000";
+			mes $talk_l$;
+			if(select ("Não:Sim") == 2){	
+			next;
+			mes $@name$;
+			mes "Sua mensagem foi enviada.";
+			$data_l$ = ""+gettime(5)+"/"+gettime(6)+"/"+gettime(7)+"";
+			close;
+			
+				}
+				next; goto dont3;	
+				
+	}
+	
+Closefac:
+	mes $@name$;
+	mes "Comando usado: ^006400closefac^000000";
+	mes "Qual faccão você deseja bloquear a entrada de membros?";
+	next;
+	switch(select("-> ^990000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000:")){
+
+		case 1:
+			mes $@name$;
+			mes "Deseja bloquear a entrada de membros na facção ^990000"+$nomem$+"^000000?";
+			if(select("Não:Sim") == 2){
+			next;
+			mes $@name$;
+			$bloq_m = 1;
+			mes "A entrada de membros foi bloqueada! Para desbloquear use o comando ^006400openfac^000000";
+			close;	
+			
+				}
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+				
+		case 2:
+			mes $@name$;
+			mes "Deseja bloquear a entrada de membros na facção ^0000FF"+$nomen$+"^000000?";
+			if(select("Não:Sim") == 2){		
+			next;
+			mes $@name$;
+			$bloq_n = 1;
+			mes "A entrada de membros foi bloqueada! Para desbloquea use o comando ^006400openfac^000000";
+			close;	
+			
+				}
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+				
+		case 3:
+			mes $@name$;
+			mes "Deseja bloquear a entrada de membros na facção ^33CC99"+$nomel$+"^000000?";
+			if(select ("Não:Sim") == 2){			
+			next;
+			mes $@name$;
+			$bloq_l = 1;
+			mes "A entrada de membros foi bloqueada! Para desbloquea use o comando ^006400openfac^000000";
+			close;
+			
+				}
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+		
+				
+	}
+
+Openfac:
+	mes $@name$;
+	mes "Comando usado: ^006400openfac^000000";
+	mes "Qual faccão você deseja desbloquea a entrada de membros?";
+	next;
+		switch(select("-> ^990000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000:")){
+
+		case 1:
+			mes $@name$;
+			mes "Deseja desbloquear a entrada de membros na facção ^990000"+$nomem$+"^000000?";
+			if(select("Não:Sim") == 2){
+			next;
+			mes $@name$;
+			$bloq_m = 0;
+			mes "A entrada de membros foi desbloqueada.";
+			close;	
+			
+				}
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+				
+		case 2:
+			mes $@name$;
+			mes "Deseja desbloquear a entrada de membros na facção ^0000FF"+$nomen$+"^000000?";
+			if(select ("Não:Sim") == 2){			
+			next;
+			mes $@name$;
+			$bloq_n = 0;
+			mes "A entrada de membros foi desbloqueada.";
+			close;	
+			
+				}
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+				
+		case 3:
+			mes $@name$;
+			mes "Deseja desbloquear a entrada de membros na facção ^33CC99"+$nomel$+"^000000?";
+			if(select("Não:Sim") == 2){		
+			next;
+			mes $@name$;
+			$bloq_l = 0;
+			mes "A entrada de membros foi desbloqueada.";
+			close;	
+			
+				}
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+				
+	}
+
+Addzeny:
+	mes $@name$;
+	mes "Comando usado: ^006400addzeny^000000";	
+	mes "Qual facção você deseja adicionar zeny?";
+	next;
+	switch(select("-> ^990000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000:")){
+		
+		case 1:
+			mes $@name$;
+			mes "Digite a quantidade de zeny que você deseja adicionar para riqueza da facção.";
+			mes "Exemplo: 10000";
+			input @zn;
+			next;
+			mes $@name$;
+			mes "Está certo?";
+			mes ""+@zn+"";
+			if(select("Não:Sim") == 2){
+			next;
+			mes $@name$;
+			mes "Zeny adicionado com sucesso.";
+			query_sql "UPDATE `contagem_faccao` set `total_z_m` = `total_z_m` +"+@zn+"";
+			close;
+			
+				}	
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+
+		case 2:
+			mes $@name$;
+			mes "Digite a quantidade de zeny que você deseja adicionar para riqueza da facção.";
+			mes "Exemplo: 10000";
+			input @zn;
+			next;
+			mes $@name$;
+			mes "Está certo?";
+			mes ""+@zn+"";
+			if(select("Não:Sim") == 2){
+			next;
+			mes $@name$;
+			mes "Zeny adicionado com sucesso.";
+			query_sql "UPDATE `contagem_faccao` set `total_z_n` = `total_z_n` +"+@zn+"";
+			close;
+			
+				}	
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+				
+		case 3:
+			mes $@name$;
+			mes "Digite a quantidade de zeny que você deseja adicionar para riqueza da facção.";
+			mes "Exemplo: 10000";
+			input @zn;
+			next;
+			mes $@name$;
+			mes "Está certo?";
+			mes ""+@zn+"";
+			if(select("Não:Sim") == 2){
+			next;
+			mes $@name$;
+			mes "Zeny adicionado com sucesso.";
+			query_sql "UPDATE `contagem_faccao` set `total_z_l` = `total_z_l` +"+@zn+"";
+			close;
+			
+				}	
+				next;
+				mes $@name$;
+				mes "Processo cancelado !";
+				close;
+	}
+}

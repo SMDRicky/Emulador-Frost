@@ -1,0 +1,70 @@
+// ================================
+// Script: Autoalimentação para Pets e Homúnculos
+// Descrição: Simula o jogador alimentando manualmente os pets/homúnculos.
+// ================================
+
+mainhall,83,159,5	script	Cuidador	839,{
+    mes "[Cuidador]";
+    mes "Olá! O que deseja fazer?";
+    next;
+    
+    switch(select("Ativar Cuidador","Desativar Cuidador","Sair")) {
+        
+        case 1:
+            // Ativar Cuidador
+            set #AUTOFEED_PET, 1;
+            set #AUTOFEED_HOMUN, 1;
+            mes "[Cuidador]";
+            mes "Autoalimentação ativada para seu Pet e Homúnculo!";
+            close;
+
+        case 2:
+            // Desativar Cuidador
+            set #AUTOFEED_PET, 0;
+            set #AUTOFEED_HOMUN, 0;
+            mes "[Cuidador]";
+            mes "Autoalimentação desativada.";
+            close;
+
+        case 3:
+            // Sair
+            mes "[Cuidador]";
+            mes "Até mais!";
+            close;
+    }
+	OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 52;
+	setunittitle getnpcid(0), "[VIP RAGNAFROST]";
+	end;
+}
+
+// =========================
+// ?? Sistema de Autoalimentação ??
+// =========================
+-	script	AutoFeed_System	-1,{
+    OnTimer300000: // Executa a cada 5 minutos
+        if (#AUTOFEED_PET && getpetinfo(PETINFO_INTIMATE) < 1000) {
+            if (Zeny >= 5000) { // Simula custo de comida automática (ajuste o valor se necessário)
+                set Zeny, Zeny - 5000;
+                atcommand "@petfriendly 10";
+                dispbottom "[Cuidador] Seu pet foi alimentado automaticamente! (-5000 Zeny)";
+            } else {
+                dispbottom "[Cuidador] Você não tem Zeny suficiente para alimentar seu pet!";
+            }
+        }
+        if (#AUTOFEED_HOMUN && gethominfo(HOMINFO_HUNGER) < 100) {
+            if (Zeny >= 5000) { // Simula custo de comida automática (ajuste o valor se necessário)
+                set Zeny, Zeny - 5000;
+                atcommand "@homfriendly 1";
+                dispbottom "[Cuidador] Seu homúnculo foi alimentado automaticamente! (-5000 Zeny)";
+            } else {
+                dispbottom "[Cuidador] Você não tem Zeny suficiente para alimentar seu homúnculo!";
+            }
+        }
+        initnpctimer;
+        end;
+    
+    OnInit:
+        initnpctimer;
+        end;
+}

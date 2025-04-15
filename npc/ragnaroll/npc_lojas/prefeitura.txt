@@ -1,0 +1,81 @@
+vendarea,92,99,5	script	Prefeitura RagnaFrost#1	833,{
+	mes "[^A020F0Licenças Compra/Venda^000000]";
+	mes "Gostaria de ver as Licenças Disponiveis?";
+	next;
+	switch(select("^32CD32[»]^000000 Sim !","^8B0000[»]^000000 Não, Obrigado")) {
+		case 1:
+		close2;
+		callshop "Mercador_Loja", 1;
+		end;
+		case 2:
+		mes "[^6666FFLicenças Compra/Venda^000000]";
+		mes "Volte quando precisar!!!";
+		end;
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 46;
+	setunittitle getnpcid(0), "[Licenças C> / V>]";
+	}
+}
+
+
+//Quests Ragnaroll
+moc_para01,51,49,3	script	Itens bRO#1	855,{
+	mes "[^A020F0Quests bRO Oficial^000000]";
+	mes "Gostaria de ver as Quests?";
+	next;
+	switch(select("^32CD32[»]^000000 Sim !","^8B0000[»]^000000 Não, Obrigado")) {
+		case 1:
+		close2;
+		callshop "Quests_Oficial_Alfheim", 1;
+		end;
+		case 2:
+		mes "[^6666FFQuests bRO Oficial^000000]";
+		mes "Volte quando precisar!!!";
+		end;
+	OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 97;
+   setunittitle getnpcid(0), "[Quests Oficiais]";
+	}
+}
+
+//Loja Instancia
+firstcity,217,267,5	script	Loja Instancia#1	654,{
+	mes "[^A020F0Loja de Instancia^000000]";
+	mes "Gostaria de ver a Loja de Instancia ?";
+	next;
+	switch(select("^32CD32[»]^000000Equipamentos","^8B0000[»]^000000Nada Obrigado")) {
+		case 1:
+		close2;
+		callshop "instancias", 1;
+		end;
+		case 2:
+		mes "[^6666FFLoja de Instancia^000000]";
+		mes "Volte quando precisar!!!";
+		end;
+	OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 53;
+    setunittitle getnpcid(0), "[Instancias RagnaFrost]";
+	}
+}
+
+//Eventos Staff
+//moc_para01,32,95,5	script	Mario Sanchez#Staff	712,{
+//	mes "[^A020F0Loja de Eventos^000000]";
+//	mes "Gostaria de ver a Loja de Evento da Staff ?";
+//	next;
+//	switch(select("^32CD32[»]^000000 Sim !","^8B0000[»]^000000 Não, Obrigado")) {
+//		case 1:
+//		close2;
+//		callshop "Loja_Pegapega", 1;
+//		end;
+//		case 2:
+//		mes "[^6666FFLoja de Eventos^000000]";
+//		mes "Volte quando precisar!!!";
+//		end;
+//	OnInit:
+//   setunitdata getnpcid(0), UNPC_GROUP_ID, 53;
+//	setunittitle getnpcid(0), "[Loja de Eventos]";
+//	}
+//}
+
+moc_para01,43,43,4	duplicate(Prefeitura RagnaFrost#1)	Prefeitura RagnaFrost#2	833,1,1

@@ -1,0 +1,51 @@
+prontera,3,4,5	script	FloatingRates	-1,{
+	// Evento agendado para aumentar as rates de EXP
+
+	OnClock1800: // Configura as rates de 06h00 até 20h00
+		set $@brate,1200;
+		set $@jrate,1200;
+		// Base exp
+		setbattleflag("base_exp_rate", $@brate);
+		// Job exp
+		setbattleflag("job_exp_rate", $@jrate);
+		announce "[HAPPY HOUR - EXP]: Novas rates 12x/12x/5x das 06H até 20H da noite", 0;
+		announce "Digite @rates e confira! - Bom jogo a todos!", 0;
+		end;
+
+	OnClock2000: // Finaliza as rates após 20h00
+		set $@brate,1000;
+		set $@jrate,1000;
+		// Base exp
+		setbattleflag("base_exp_rate", $@brate);
+		// Job exp
+		setbattleflag("job_exp_rate", $@jrate);
+		announce "[HAPPY HOUR - EXP] Finalizada!", bc_yellow;
+		announce "Até a próxima pessoal! Bom jogo a todos!", 0;
+		end;
+}
+
+prontera,3,4,5	script	dropsflutuante	-1,{
+	// Evento agendado para aumentar as rates de DROP
+
+	OnClock0000: // Configura as rates de drop de 00h00 até 01h00
+		set $@drate,700;
+		setbattleflag("item_rate_common", $@drate);
+		setbattleflag("item_rate_heal", $@drate);
+		setbattleflag("item_rate_use", $@drate);
+		setbattleflag("item_rate_equip", $@drate);
+		atcommand "@reloadmobdb";
+		announce "[HAPPY HOUR - DROP]: Novas rates 7x das 00H até 01H da manhã", 0;
+		announce "Digite @rates e confira! - Bom jogo a todos!", 0;
+		end;
+
+	OnClock0100: // Finaliza as rates após 01h00
+		set $@drate,500;
+		setbattleflag("item_rate_common", $@drate);
+		setbattleflag("item_rate_heal", $@drate);
+		setbattleflag("item_rate_use", $@drate);
+		setbattleflag("item_rate_equip", $@drate);
+		atcommand "@reloadmobdb";
+		announce "[HAPPY HOUR - DROP] Finalizada!", 0;
+		announce "Até a próxima pessoal! Bom jogo a todos!", 0;
+		end;
+}

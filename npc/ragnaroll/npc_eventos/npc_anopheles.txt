@@ -1,0 +1,44 @@
+hu_in01,257,389,4	script	Controle Premiado::bau	869,{
+
+if(getgroupid () > 90){
+
+mes "[ Controlador ]";
+mes "Olá "+strcharinfo(0)+", o que deseja fazer ?";
+next;
+switch(select("Invocar:Nada, obrigado...")){
+
+	case 1:
+		mes "[ Controlador ]";
+		mes "Certo, Então irei Começar !";
+		goto teste;
+		
+	case 2:
+		mes "[ Controlador ]";
+		mes "Ok, volte quando precisar de meus serviços!";
+		close;
+	}
+
+teste:
+monster	"prontera",0,0,	"Anopheles Premiado",1627,10,"bau::OnGanhou";
+announce "A Staff Soltou 10 Anopheles Premiados em algum aleatório lugar de Prontera !",bc_blue|bc_all;
+close;
+end;
+
+OnClock0830:
+OnClock1430:
+OnClock2030:
+OnClock1330:
+monster	"prontera",0,0,	"Anopheles Premiado",1627,10,"bau::OnGanhou";
+announce "Nasceu 10 Anopheles Premiados em algum lugar aleatório de Prontera !",bc_blue|bc_all;
+end;
+
+OnGanhou:
+getitem 35034,1;
+
+announce "Parabéns ao jogador "+strcharinfo(0)+" por matar um Anopheles Premiado !",bc_blue|bc_all;
+end;
+}
+mes "[ Controlador ]";
+mes "Sinto muito, somente membros da staff podem utilizar meus serviços.";
+close;
+}

@@ -1,0 +1,58 @@
+vip_lounge,152,135,4	script	UP Homunculus#0	4_M_ALCHE_E,{
+
+set .@lvlHabilidade,getskilllv( "AM_CALLHOMUN" );
+
+if ( !.@lvlHabilidade ){
+    mes "[ Sala Afkmista ]";
+    mes "Espera!!!";
+    mes "Eu só falo com quem tem ^f00e47Homunculus^000000, se você não tem um mandato judicial, eu não tenho mais nada para falar!";
+    end;
+}
+
+if (!getcharid(1)) {
+    mes "[ Sala Afkmista ]";
+    mes "Uau~ você precisa de um grupo.";
+    end;
+}
+    mes "[ Sala Afkmista ]";
+    mes "Você deseja ir para a sala afkmista?";
+    mes "Pague ^FE2E2E500.000z^000000 para alugar uma sala por ^FE2E2E4 horas.^000000";
+    mes "Lembrando que apenas o líder da PT precisa pagar.";
+    .@md_name$ = "Sala Afkmista";
+    if (instance_live_info(ILI_NAME, instance_id(IM_PARTY)) == .@md_name$) {
+        menu "^0084ff[»]^000000 Entrar na Sala",enter,"^ff0000[»]^000000 Cancelar",exit;
+    } else if (is_party_leader()) {
+        menu "^0084ff[»]^000000 Alugar uma Sala",rent,"^ff0000[»]^000000 Cancelar",exit;
+    }
+rent:
+    next;
+    mes "[ Sala Afkmista ]";
+    if (Zeny < 500000) {mes "Você não tem zenys suficiente."; end; }
+    mes "Clique em Entrar na Sala.";
+    instance_create(.@md_name$);
+    set Zeny, Zeny - 500000;
+    close;
+enter:
+    next;
+    switch( instance_enter(.@md_name$) ) {
+    case IE_OTHER:
+        mes "Ocorreu um erro desconhecido.";
+        close;
+    case IE_NOINSTANCE:
+        mes "Arachadura de ^ ff0000Time ainda não foi criada.^000000";
+        close;
+    case IE_NOMEMBER:
+        end;
+    case IE_OK:
+        mapannounce "force_1-1", "Membro do grupo" + strcharinfo(0) + "da parte" + getpartyname(getcharid(0)) + "insere" + .@md_name$ + ".", bc_map,0xFF9900;
+        end;
+    }
+    end;
+exit:
+    next;
+    end;
+OnInit:
+    .NPCName$ = callfunc("F_NpcInitStatus", "Sala Afkmista");
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 7;
+    end;
+}

@@ -1,0 +1,60 @@
+//===== Script do rAthena =====================================|
+//= Aparição do Poring Boss                                  =|
+//===== Por: ================================================|
+//= Script Gerado                                           =|
+//===== Descrição: =========================================|
+//= Faz o Poring Boss aparecer com atributos aprimorados    =|
+//================================================================|
+
+-    script    poring_boss_spawn    -1,{
+    // Evento OnInit para agendar o spawn do Poring Boss a cada minuto
+    OnInit:
+        // Define o intervalo de respawn em segundos (1 minuto = 60 segundos)
+        .respawn_time = 60;
+
+        // Agenda o spawn do Poring Boss
+        initnpctimer;
+        end;
+
+    // Timer acionado a cada .respawn_time segundos
+    OnTimer:
+        // Coordenadas e mapa para o spawn do Poring Boss
+        .map$ = "pay_fild04";
+        .x = 49; // Coordenada X fixa
+        .y = 178; // Coordenada Y fixa
+
+        // Detalhes do monstro Poring Boss
+        .mob_id = 1002; // ID base do Poring
+        .mob_name$ = "Poring Boss";
+        .mob_hp = 4 * 50; // Multiplicador de HP (HP padrão do Poring é ~50)
+        .mob_def = 4 * 10; // Multiplicador de DEF (DEF padrão é ~10)
+        .mob_atk = 4 * 10; // Multiplicador de ATK (ATK padrão é ~10)
+        .mob_exp = 4 * 5; // Multiplicador de EXP (EXP padrão é ~5)
+
+        // Spawn do Poring Boss aprimorado
+        monster .map$, .x, .y, .mob_name$, .mob_id, 1, strnpcinfo(3) + "::OnMobDeath";
+
+        // Tornar o Poring Boss brilhante e com tamanho dobrado
+        specialeffect2 EF_HASTEUP; // Efeito visual de brilho
+        sc_start SC_SIZECHANGE, 0, 2; // Dobrar o tamanho do monstro
+
+        // Anuncia a aparição do Poring Boss
+        announce "[Poring Boss] Um poderoso Poring apareceu em " + .map$ + "!", bc_all;
+
+        // Exibe no mapa (indicador no canto superior direito)
+        mapannounce .map$, "Poring Boss apareceu!", bc_map;
+
+        stopnpctimer;
+        initnpctimer; // Reinicia o timer
+        end;
+
+    OnMobDeath:
+        // Ações realizadas quando o Poring Boss é derrotado
+        announce "[Poring Boss] O Poring Boss foi derrotado!", bc_all;
+        
+        // Invoca 10 Porings Furiosos ao morrer
+        for (.@i = 0; .@i < 10; .@i++) {
+            monster .map$, rand(45, 55), rand(173, 183), "Poring Furioso", 1002, 1;
+        }
+        end;
+}

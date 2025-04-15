@@ -1,0 +1,44 @@
+-	script	pontosmvp	-1,{
+    OnNPCKillEvent:
+        // Lista de IDs dos monstros MVP
+        setarray .@monsterID[0],
+            1038,1039,1046,1059,1086,1087,1112,1115,1147,1150,1157,1159,1190,1251,1272,1312,1373,1389,1492,1511, // Lista 1
+            1583,1630,1658,1685,1719,1734,1751,1768,1779,1785,1832,1871,1252,1623,1418,1688,1885,1873,1651,1650,1649,1648,1647,1646,1874; // Lista 3
+
+        // Lista de nomes dos monstros MVP
+        setarray .@monsterName$, 
+            "Osíris","Bafomé","Doppelganger","Abelha Rainha","Besouro-Ladrão Dourado","Orc Herói","Drake","Eddga","Maya","Flor do Luar",
+            "Faraó","Freonii","Senhor dos Orcs","Cavaleiro Tempestade","Senhor das Trevas","General Tartaruga","Senhor da Morte","Drácula","Samurai Encarnado","Amon-Rá", // Lista 1
+            "Tao Gunka","Lady Branca","Egnigem Cenia","Vesper","Detardeurus","Kiel D-01","Valk Randgris","Pesar Noturno","Ktullanux","Atroce",
+            "Ifrit","Bispo Decadente","Hatii","RSX-0806","Serpente Suprema","Lady Tanee","Gorynych","Belzebu","High Wizard Katrinn","Sniper Cecil","High Priest Magaleta","Whitesmith Harword","Assassin Cross Eremes","Lord Knight Seyren","Belzebu"; // Lista 32
+
+        // Verifica se o mapa é Prontera ou qualquer um dos mapas de guilda de guild1 a guild60
+       	set .@currentMap$, strcharinfo(3);
+        if (.@currentMap$ == "prontera" || .@currentMap$ == "mvp_room"|| .@currentMap$ == "bossnia_01") {
+            end;
+        }
+        for (set .@i, 1; .@i <= 60; set .@i, .@i + 1) {
+            if (.@currentMap$ == "guild" + .@i || .@currentMap$ == "guilddun" + .@i) {
+                end;
+            }
+        }
+
+        for (set .@i, 0; .@i < getarraysize(.@monsterID); .@i++) {
+            if (killedrid == .@monsterID[.@i]) {
+                set @CID, getcharid(0);
+                query_sql "SELECT `name` FROM `mvp` WHERE `char_id`=" + @CID, .@name$;
+                
+                if ( .@name$ == "" ) {
+                    query_sql "INSERT INTO `mvp` (`char_id`,`account_id`,`name`,`mvps`,`pontos`) VALUES (" + @CID + "," + getcharid(3) + ",'" + strcharinfo(0) + "',1,1)";
+                    set #mvpoints, 1;
+                } else {
+                    query_sql "UPDATE `mvp` SET `mvps` = `mvps` + 1, `pontos` = `pontos` + 1 WHERE `char_id`=" + @CID;
+                    set #mvpoints, #mvpoints + 1;
+                }
+
+                message strcharinfo(0), "[#RagnaRoll]: Você possui " + #mvpoints + " ponto(s) de MvPs.";
+                announce "O jogador [" + strcharinfo(0) + "] matou o MVP " + .@monsterName$[.@i] + " no mapa " + strcharinfo(3), bc_all;
+                end;
+            }
+        }
+}

@@ -1,0 +1,82 @@
+// Bat Room
+bat_room02	mapflag	nobranch
+bat_room02	mapflag	nomemo
+bat_room02	mapflag	noteleport
+bat_room02	mapflag	nowarpto
+
+// Tierra
+bat_a01	mapflag	battleground	2
+bat_a02	mapflag	battleground	2
+
+// KvM
+bat_c01	mapflag	nobgskillcall
+bat_c02	mapflag	nobgskillcall
+bat_c03	mapflag	nobgskillcall
+
+// Kingdom
+bat_g01	mapflag	hidemobhpbar
+bat_g01	mapflag	nobranch
+bat_g01	mapflag	noicewall
+bat_g01	mapflag	nomemo
+bat_g01	mapflag	nopenalty
+bat_g01	mapflag	noreturn
+bat_g01	mapflag	nosave	SavePoint
+bat_g01	mapflag	noteleport
+bat_g01	mapflag	nowarp
+bat_g01	mapflag	nowarpto
+bat_g01	mapflag	skill_duration	HT_SKIDTRAP,400
+bat_g01	mapflag	skill_duration	HT_LANDMINE,400
+bat_g01	mapflag	skill_duration	HT_ANKLESNARE,400
+bat_g01	mapflag	skill_duration	HT_SHOCKWAVE,400
+bat_g01	mapflag	skill_duration	HT_SANDMAN,400
+bat_g01	mapflag	skill_duration	HT_FLASHER,400
+bat_g01	mapflag	skill_duration	HT_FREEZINGTRAP,400
+bat_g01	mapflag	skill_duration	HT_BLASTMINE,400
+bat_g01	mapflag	skill_duration	HT_CLAYMORETRAP,400
+bat_g01	mapflag	skill_duration	HT_TALKIEBOX,400
+bat_g01	mapflag	battleground	2
+
+bat_g02	mapflag	hidemobhpbar
+bat_g02	mapflag	nobranch
+bat_g02	mapflag	noicewall
+bat_g02	mapflag	nomemo
+bat_g02	mapflag	nopenalty
+bat_g02	mapflag	noreturn
+bat_g02	mapflag	nosave	SavePoint
+bat_g02	mapflag	noteleport
+bat_g02	mapflag	nowarp
+bat_g02	mapflag	nowarpto
+bat_g02	mapflag	skill_duration	HT_SKIDTRAP,400
+bat_g02	mapflag	skill_duration	HT_LANDMINE,400
+bat_g02	mapflag	skill_duration	HT_ANKLESNARE,400
+bat_g02	mapflag	skill_duration	HT_SHOCKWAVE,400
+bat_g02	mapflag	skill_duration	HT_SANDMAN,400
+bat_g02	mapflag	skill_duration	HT_FLASHER,400
+bat_g02	mapflag	skill_duration	HT_FREEZINGTRAP,400
+bat_g02	mapflag	skill_duration	HT_BLASTMINE,400
+bat_g02	mapflag	skill_duration	HT_CLAYMORETRAP,400
+bat_g02	mapflag	skill_duration	HT_TALKIEBOX,400
+bat_g02	mapflag	battleground	2
+
+// Valfreyja
+bat_v01	mapflag	hidemobhpbar
+bat_v01	mapflag	nobranch
+bat_v01	mapflag	nomemo
+bat_v01	mapflag	nopenalty
+bat_v01	mapflag	noreturn
+bat_v01	mapflag	nosave	SavePoint
+bat_v01	mapflag	noteleport
+bat_v01	mapflag	nowarp
+bat_v01	mapflag	nowarpto
+bat_v01	mapflag	skill_duration	HT_SKIDTRAP,400
+bat_v01	mapflag	skill_duration	HT_LANDMINE,400
+bat_v01	mapflag	skill_duration	HT_ANKLESNARE,400
+bat_v01	mapflag	skill_duration	HT_SHOCKWAVE,400
+bat_v01	mapflag	skill_duration	HT_SANDMAN,400
+bat_v01	mapflag	skill_duration	HT_FLASHER,400
+bat_v01	mapflag	skill_duration	HT_FREEZINGTRAP,400
+bat_v01	mapflag	skill_duration	HT_BLASTMINE,400
+bat_v01	mapflag	skill_duration	HT_CLAYMORETRAP,400
+bat_v01	mapflag	skill_duration	HT_TALKIEBOX,400
+bat_v01	mapflag	nobgskillcall
+bat_v01	mapflag	battleground	2

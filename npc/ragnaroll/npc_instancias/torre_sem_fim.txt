@@ -1,0 +1,99 @@
+moc_para01,33,174,6	script	Torre sem Fim#22	709,{
+
+	mes "^008800[ Torre Sem Fim ]";
+	mes "Bem-vindo, aventureiro!";
+	mes "Antes de entrar, escolha a dificuldade.";
+	next;
+
+	// Verifica se o jogador está em um grupo
+	if (getcharid(1) == 0) {
+		mes "Você precisa estar em um grupo para iniciar a instância!";
+		close;
+	}
+
+	// Verifica se o jogador é o líder da party
+	if (!is_party_leader()) {
+		mes "Apenas o líder do grupo pode iniciar a instância!";
+		close;
+	}
+
+	// Opções de dificuldade
+	mes "Selecione a dificuldade:";
+	set .@difficulty, select("Fácil (Monstros -20%):Normal (Padrão):Difícil (Monstros +50%):Insano (Monstros +100%)");
+
+	// Define a dificuldade corretamente
+	switch (.@difficulty) {
+		case 1: set .@mode, 0; break; // ID_EASY
+		case 2: set .@mode, 1; break; // ID_NORMAL
+		case 3: set .@mode, 2; break; // ID_HARD
+		case 4: set .@mode, 3; break; // ID_INSANE
+		default:
+			mes "Erro ao selecionar a dificuldade!";
+			close;
+	}
+
+	// Criando a instância e vinculando à party
+	set .@instance_name$, "Endless Tower";
+	set .@instance_id, instance_create(.@instance_name$, IM_PARTY);
+
+	if (.@instance_id < 0) {
+		mes "Erro ao criar a instância. Tente novamente.";
+		close;
+	}
+
+	// **Salva o nome da instância e o ID**
+	set etower_instance_id, .@instance_id;
+	set etower_instance_name$, .@instance_name$; // Salva o nome da instância corretamente
+	set etower_partyid, getcharid(1); // Salva a ID da Party vinculada à instância.
+
+	// Define a dificuldade na instância
+	if (!instance_setdifficulty(etower_instance_id, .@mode)) {
+		mes "Erro ao definir a dificuldade!";
+		instance_destroy(etower_instance_id);
+		close;
+	}
+
+	// Verifica se o jogador já tem a quest antes de adicionar
+	if (!checkquest(60200)) {
+		setquest 60200;
+	}
+	if (!checkquest(60201)) {
+		setquest 60201;
+	}
+
+	// Marca o tempo da instância
+	set etower_timer, gettimetick(2);
+
+	mes "Instância criada com sucesso!";
+	mes "Fale comigo novamente para entrar.";
+	close;
+}
+
+// NPC para entrar na instância após a criação
+e_tower,81,105,0	script	Entrada da Torre	406,{
+
+	mes "^008800[ Torre Sem Fim ]";
+	mes "Preparado para entrar?";
+
+	// Verifica se a instância foi criada corretamente
+	if (etower_instance_id <= 0 || etower_instance_name$ == "") {
+		mes "Sua instância não está ativa!";
+		close;
+	}
+
+	// Verifica se o jogador pertence à party correta antes de entrar
+	if (getcharid(1) != etower_partyid) {
+		mes "Apenas membros do grupo podem entrar!";
+		close;
+	}
+
+	// **Corrigido: Agora passa o nome da instância ao invés do ID**
+	if (instance_enter(etower_instance_name$) == IE_OK) {
+		mes "Bem-vindo à Torre Sem Fim!";
+		end;
+	} else {
+		mes "Erro ao entrar na instância.";
+		close;
+	}
+}
+

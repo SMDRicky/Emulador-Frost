@@ -1,0 +1,5 @@
+function	script	caixa_awkgrace#1	{
+setarray .@items[0], 50067,50068,50069,50070,50071,50072,50073,50074,50075,50076,50077;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

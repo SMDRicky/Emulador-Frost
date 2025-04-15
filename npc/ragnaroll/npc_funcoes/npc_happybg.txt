@@ -1,0 +1,18 @@
+-	script	happybg	-1,{
+    end;
+
+OnClock1400:
+    atcommand "@bghappyhourstart";
+    end;
+OnClock1700:
+    atcommand "@bghappyhourend";
+end;
+
+OnClock1900:
+    atcommand "@bghappyhourstart";
+    end;
+OnClock2200:
+    atcommand "@bghappyhourend";
+end;
+
+}

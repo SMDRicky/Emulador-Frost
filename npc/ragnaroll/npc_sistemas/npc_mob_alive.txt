@@ -1,0 +1,90 @@
+// Função Principal
+//==
+function	script	mobalive	{
+	
+	switch(getarg(0))
+	{
+		// Lista de MVPs com seus mapas fixos
+		case 1511: set .@map$,"moc_pryd06"; break;
+		case 1647: set .@map$,"lhz_dun03"; break;
+		case 1785: set .@map$,"ra_fild02,ra_fild03,ve_fild01"; break;
+		case 1630: set .@map$,"lou_dun03"; break;
+		case 1039: set .@map$,"prt_maze03"; break;
+		case 1873:
+		case 1874: set .@map$,"abbey03"; break;
+		case 2068: set .@map$,"bra_dun02"; break;
+		case 1272: set .@map$,"gl_chyard"; break;
+		case 1719: set .@map$,"abyss_03"; break;
+		case 1046: set .@map$,"gef_dun02"; break;
+		case 1389: set .@map$,"gef_dun01"; break;
+		case 1112: set .@map$,"treasure02"; break;
+		case 1115: set .@map$,"pay_fild11"; break;
+		case 1418: set .@map$,"gon_dun03"; break;
+		case 1871: set .@map$,"abbey02"; break;
+		case 1252: set .@map$,"xmas_fild01"; break;
+		case 1768: set .@map$,"ra_san05"; break;
+		case 2165: set .@map$,"dic_dun03"; break;
+		case 1086: set .@map$,"prt_sewb4"; break;
+		case 1885: set .@map$,"mosk_dun03"; break;
+		case 1649: set .@map$,"lhz_dun03"; break;
+		case 1651: set .@map$,"lhz_dun03"; break;
+		case 1832: set .@map$,"thor_v03"; break;
+		case 1492: set .@map$,"ama_dun03"; break;
+		case 1734: set .@map$,"kh_dun02"; break;
+		case 1251: set .@map$,"xmas_dun02"; break;
+		case 1688: set .@map$,"ayo_dun02"; break;
+		case 1646: set .@map$,"lhz_dun03"; break;
+		case 1373: set .@map$,"niflheim"; break;
+		case 1147: set .@map$,"anthell02"; break;
+		case 1059: set .@map$,"mjolnir_04"; break;
+		case 1150: set .@map$,"pay_dun04"; break;
+		case 1087: set .@map$,"gef_fild02,gef_fild14"; break;
+		case 1190: set .@map$,"gef_fild10"; break;
+		case 1038: set .@map$,"moc_pryd04"; break;
+		case 1157: set .@map$,"in_sphinx5"; break;
+		case 1159: set .@map$,"moc_fild17"; break;
+		case 2087: set .@map$,"dic_dun02"; break;
+		case 1623: set .@map$,"ein_dun02"; break;
+		case 1650: set .@map$,"lhz_dun03"; break;
+		case 1583: set .@map$,"beach_dun"; break;
+		case 1312: set .@map$,"tur_dun04"; break;
+		case 1751: set .@map$,"odin_tem03"; break;
+		case 1685: set .@map$,"jupe_core"; break;
+		case 1648: set .@map$,"lhz_dun03"; break;
+		case 1917: set .@map$,"moc_fild22"; break;
+		case 1658: set .@map$,"lhz_dun02"; break;
+		default: set .@erro,1; break;	
+	}
+	
+	if(.@erro){ message strcharinfo(0),"Não encontrado."; end; }
+	
+	explode(.@maps$,.@map$,",");
+	if(inarray(.@maps$[0],strcharinfo(3)) == -1){ message strcharinfo(0),"Mapa de origem diferente!."; end; }
+	
+	set .@status,mobalive(getarg(0),strcharinfo(3));
+	cutin ""+getarg(0)+"_"+strcharinfo(3)+"_"+(.@status < 1 ? "D":"A")+"",4;	
+	sleep2 2000;
+	cutin "",255;
+	end;
+}
+
+// NPC com Menu
+-	script	MobAliveNPC	-1,{
+	OnInit:
+		// Inicialização do NPC
+		bindatcmd "@mvp", strnpcinfo(3) + "::OnMenu";
+		end;
+
+	OnMenu:
+		mes "[MVP Status Checker]";
+		mes "Por favor, insira o ID do MVP que você deseja verificar:";
+		input .@id;
+		
+		if(getmonsterinfo(.@id, MOB_NAME) == "" || !.@id) {
+			mes "Erro: ID inválido ou monstro não encontrado.";
+			close;
+		}
+		
+		callfunc "mobalive", .@id, strcharinfo(3);
+		close;
+}

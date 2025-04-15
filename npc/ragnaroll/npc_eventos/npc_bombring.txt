@@ -1,0 +1,100 @@
+//===========================================================\\
+//          ____   __   _  _  __    ____   __   ____         //
+//         / ___) /  \ / )( \(  )  (  __) / _\ (_  _)        \\
+//         \___ \(  O )) \/ (/ (_/\ ) _) /    \  )(          //
+//         (____/ \__/ \____/\____/(____)\_/\_/ (__)         \\
+//                                                           //
+//================== www.souleat.com.br =====================\\
+//======================= by: Guru ==========================//
+cockpit,95,113,5	script	Bombring	1904,{
+
+OnWarpEvent:
+	if ( .start != 1 ) {
+		dispbottom "O Evento não está aberto no momento.";
+		end;
+	}
+	warp "quiz_02",306,251;
+	end;
+
+OnStart:
+	if ( .start ) end;
+	.round = 0;
+	.start = 1;
+	killmonsterall "quiz_02";
+	announce "[Evento Bombring] ~> Teremos um evento de Bombring em 5 minutos!",0;
+	sleep 60000;
+	announce "[Evento Bombring] ~> Faltam 4 minutos para começar [@bombring]!",0;
+	sleep 60000;
+	announce "[Evento Bombring] ~> Faltam 3 minutos para começar [@bombring]!",0;
+	sleep 60000;
+	announce "[Evento Bombring] ~> Faltam 2 minutos para começar [@bombring]!",0;
+	sleep 60000;
+	announce "[Evento Bombring] ~> Faltam 1 minuto para começar [@bombring]!",0;
+	sleep 60000;
+	announce "[Evento Bombring] A entrada está fechada!",bc_all,0x0ceedb;
+	if ( getmapusers("quiz_02") < 1 ) {
+		announce "[Evento Bombring] ~> Não há participantes suficientes.",bc_all,0x0ceedb;
+		.start = 0;
+		mapwarp "quiz_02", "prontera", 150, 180;
+		end;
+	}
+	.start = 2;
+	sleep 3500;
+	mapannounce "quiz_02","[Evento Bombring] ~> O evento vai começar!",bc_map,0x0ceedb;
+	sleep 2500;
+	while ( .round < 10 ) {
+		.@count = getmapusers("quiz_02");
+		.round++;
+		mapannounce "quiz_02","Round "+.round,bc_map,0x0ceedb;
+		areamonster "quiz_02", 286, 234, 321, 266, "Corra por sua vida", 1904, 5 * .@count * .round;
+		sleep 120000 - ( 10000*.round );
+	}
+	.@count = getmapusers("quiz_02");
+	if ( !.@count )
+		announce "[Evento Bombring] ~> Ninguém sobreviveu aos bombardeios.",bc_all,0x0ceedb;
+	else {
+		.@size = getmapunits(BL_PC,"quiz_02",.@aid);
+		if ( .@size > 1 ) announce "[Evento Bombring] ~> Muitos jogadores ganharam o Evento Bomba Poring.",bc_all,0x0ceedb;
+		for ( .@i = 0; .@i < getarraysize(.@aid); .@i++) {
+			attachrid .@aid[.@i];
+			if ( .@size == 1 ) announce strcharinfo(0)+" ganhou o Evento de Bomba Poring!",bc_all,0x0ceedb;
+			// Prêmios
+			getitem 35015, 5; // Item aleatório (exemplo: Yggdrasil Berry)
+		}
+		detachrid;
+	}
+	.start = 0;
+	sleep 5000;
+	mapwarp "quiz_02","prontera",156,189;
+	end;
+
+OnPCDieEvent:
+	if ( .start && strcharinfo(3) == "quiz_02" )
+		warp "prontera",156,189;
+	end;
+
+
+OnInit:
+	// Agendar para rodar 3x ao dia
+	bindatcmd "bombring",strnpcinfo(0)+"::OnWarpEvent";
+	bindatcmd "startevent",strnpcinfo(0)+"::OnStart";
+	
+	OnClock02_00:
+	OnClock06_00:
+	OnClock10_00:
+	OnClock18_00:
+		donpcevent strnpcinfo(0)+"::OnStart";
+		end;
+
+	// Mapflags
+	setarray .@mapflag,
+		mf_nowarp, mf_nowarpto, mf_noskill, mf_noteleport,
+		mf_nomemo, mf_nosave, mf_noicewall, mf_nobranch,
+		mf_noreturn, mf_nocommand;
+
+	for ( .@i = 0; .@i < getarraysize(.@mapflag); .@i++)
+		setmapflag "quiz_02", .@mapflag[.@i];
+		
+	end;
+
+}

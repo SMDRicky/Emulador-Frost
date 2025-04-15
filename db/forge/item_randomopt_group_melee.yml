@@ -1,0 +1,1782 @@
+Header:
+  Type: RANDOM_OPTION_GROUP
+  Version: 1
+
+Body:
+  # Espadas, Espadas de Duas Mãos, Machados, Machados de Duas Mãos lv 1
+  - Id: 326
+    Group: MELEE_GROUP_D_1
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 2
+            MaxValue: 5
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 7
+            MaxValue: 13
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 1
+            MaxValue: 5
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+    MaxRandom: 2
+    Random:
+      - Option: RACE_DAMAGE_NOTHING
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_UNDEAD
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANIMAL
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLANT
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_INSECT
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_FISHS
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_DEVIL
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_HUMAN
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANGEL
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_DRAGON
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLAYER_HUMAN
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+  - Id: 327
+    Group: MELEE_GROUP_C_1
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 7
+            MaxValue: 13
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 1
+            MaxValue: 5
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+    MaxRandom: 3
+    Random:
+      - Option: CLASS_DAMAGE_NORMAL_TARGET
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: CLASS_DAMAGE_BOSS_TARGET
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: DAMAGE_SIZE_SMALL_TARGET
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: DAMAGE_SIZE_MIDIUM_TARGET
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: DAMAGE_SIZE_LARGE_TARGET
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: DAMAGE_SIZE_PERFECT
+        Chance: 2500
+      - Option: VAR_PLUSAVOIDSUCCESSVALUE
+        MinValue: 1
+        MaxValue: 3
+        Chance: 2500
+  - Id: 328
+    Group: MELEE_GROUP_B_1
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 7
+            MaxValue: 13
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 1
+            MaxValue: 5
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 1
+            MaxValue: 3
+            Chance: 5000
+    MaxRandom: 4
+    Random:
+      - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+      - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+        MinValue: 5
+        MaxValue: 12
+        Chance: 2500
+  - Id: 329
+    Group: MELEE_GROUP_A_1
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 7
+            MaxValue: 13
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 1
+            MaxValue: 5
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 1
+            MaxValue: 3
+            Chance: 5000
+      - Slot: 4
+        Options:
+          - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+          - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+            MinValue: 5
+            MaxValue: 12
+            Chance: 5000
+
+
+  # Espadas, Espadas de Duas Mãos, Machados, Machados de Duas Mãos Lv 2
+  - Id: 330
+    Group: MELEE_GROUP_D_2
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+    MaxRandom: 2
+    Random:
+      - Option: RACE_DAMAGE_NOTHING
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_UNDEAD
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANIMAL
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLANT
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_INSECT
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_FISHS
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_DEVIL
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_HUMAN
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANGEL
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_DRAGON
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLAYER_HUMAN
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+  - Id: 331
+    Group: MELEE_GROUP_C_2
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+    MaxRandom: 3
+    Random:
+      - Option: CLASS_DAMAGE_NORMAL_TARGET
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: CLASS_DAMAGE_BOSS_TARGET
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: DAMAGE_SIZE_SMALL_TARGET
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: DAMAGE_SIZE_MIDIUM_TARGET
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: DAMAGE_SIZE_LARGE_TARGET
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500
+      - Option: DAMAGE_SIZE_PERFECT
+        Chance: 2500
+      - Option: VAR_PLUSAVOIDSUCCESSVALUE
+        MinValue: 3
+        MaxValue: 5
+        Chance: 2500  
+  - Id: 332
+    Group: MELEE_GROUP_B_2
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 3
+            MaxValue: 5
+            Chance: 5000  
+    MaxRandom: 4
+    Random:
+      - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+  - Id: 333
+    Group: MELEE_GROUP_A_2
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 3
+            MaxValue: 8
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 3
+            MaxValue: 6
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 3
+            MaxValue: 5
+            Chance: 5000    
+      - Slot: 4
+        Options:
+          - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+
+
+  # Espadas, Espadas de Duas Mãos, Machados, Machados de Duas Mãos Lv 3
+  - Id: 334
+    Group: MELEE_GROUP_D_3
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+    MaxRandom: 2
+    Random:
+      - Option: RACE_DAMAGE_NOTHING
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_UNDEAD
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANIMAL
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLANT
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_INSECT
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_FISHS
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_DEVIL
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_HUMAN
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANGEL
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_DRAGON
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLAYER_HUMAN
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+  - Id: 335
+    Group: MELEE_GROUP_C_3
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+    MaxRandom: 3
+    Random:
+      - Option: CLASS_DAMAGE_NORMAL_TARGET
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: CLASS_DAMAGE_BOSS_TARGET
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: DAMAGE_SIZE_SMALL_TARGET
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: DAMAGE_SIZE_MIDIUM_TARGET
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: DAMAGE_SIZE_LARGE_TARGET
+        MinValue: 10
+        MaxValue: 20
+        Chance: 2500
+      - Option: DAMAGE_SIZE_PERFECT
+        Chance: 2500
+      - Option: VAR_PLUSAVOIDSUCCESSVALUE
+        MinValue: 5
+        MaxValue: 10
+        Chance: 2500  
+  - Id: 336
+    Group: MELEE_GROUP_B_3
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000   
+    MaxRandom: 4
+    Random:
+      - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+        MinValue: 15
+        MaxValue: 20
+        Chance: 2500
+      - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+        MinValue: 15
+        MaxValue: 20
+        Chance: 2500
+      - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+        MinValue: 15
+        MaxValue: 20
+        Chance: 2500
+  - Id: 337
+    Group: MELEE_GROUP_A_3
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 7
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 10
+            MaxValue: 20
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 10
+            Chance: 5000   
+      - Slot: 4
+        Options:
+          - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+            MinValue: 15
+            MaxValue: 20
+            Chance: 5000
+          - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+            MinValue: 15
+            MaxValue: 20
+            Chance: 5000
+          - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+            MinValue: 15
+            MaxValue: 20
+            Chance: 5000
+
+  # Espadas, Espadas de Duas Mãos, Machados, Machados de Duas Mãos Lv 4
+  - Id: 338
+    Group: MELEE_GROUP_D_4
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 25
+            MaxValue: 40
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 15
+            MaxValue: 20
+            Chance: 5000
+    MaxRandom: 2
+    Random:
+      - Option: RACE_DAMAGE_NOTHING
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_UNDEAD
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANIMAL
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLANT
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_INSECT
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_FISHS
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_DEVIL
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_HUMAN
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_ANGEL
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_DRAGON
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: RACE_DAMAGE_PLAYER_HUMAN
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+  - Id: 339
+    Group: MELEE_GROUP_C_4
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 25
+            MaxValue: 40
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 15
+            MaxValue: 20
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLAYER_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+    MaxRandom: 3
+    Random:
+      - Option: CLASS_DAMAGE_NORMAL_TARGET
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: CLASS_DAMAGE_BOSS_TARGET
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: DAMAGE_SIZE_SMALL_TARGET
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: DAMAGE_SIZE_MIDIUM_TARGET
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: DAMAGE_SIZE_LARGE_TARGET
+        MinValue: 15
+        MaxValue: 25
+        Chance: 2500
+      - Option: DAMAGE_SIZE_PERFECT
+        Chance: 2500
+      - Option: VAR_PLUSAVOIDSUCCESSVALUE
+        MinValue: 5
+        MaxValue: 15
+        Chance: 2500  
+  - Id: 340
+    Group: MELEE_GROUP_B_4
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 25
+            MaxValue: 40
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 15
+            MaxValue: 20
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000
+    MaxRandom: 4
+    Random:
+      - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+        MinValue: 25
+        MaxValue: 30
+        Chance: 2500
+      - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+        MinValue: 25
+        MaxValue: 30
+        Chance: 2500
+      - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+        MinValue: 25
+        MaxValue: 30
+        Chance: 2500
+  - Id: 341
+    Group: MELEE_GROUP_A_4
+    Slots:
+      - Slot: 1
+        Options:
+          - Option: VAR_ATKPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_PLUSASPDPERCENT
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_CRITICAL_RATE
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: DAMAGE_CRI_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: MELEE_ATTACK_DAMAGE_TARGET
+            MinValue: 10
+            MaxValue: 15
+            Chance: 5000
+          - Option: VAR_ATTPOWER
+            MinValue: 25
+            MaxValue: 40
+            Chance: 5000      
+          - Option: VAR_AVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000    
+          - Option: VAR_HITSUCCESSVALUE
+            MinValue: 15
+            MaxValue: 20
+            Chance: 5000
+      - Slot: 2
+        Options:
+          - Option: RACE_DAMAGE_NOTHING
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_UNDEAD
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANIMAL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_PLANT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_INSECT
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_FISHS
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DEVIL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_HUMAN
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_ANGEL
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: RACE_DAMAGE_DRAGON
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+      - Slot: 3
+        Options:
+          - Option: CLASS_DAMAGE_NORMAL_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: CLASS_DAMAGE_BOSS_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_SMALL_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_LARGE_TARGET
+            MinValue: 15
+            MaxValue: 25
+            Chance: 5000
+          - Option: DAMAGE_SIZE_PERFECT
+            Chance: 5000
+          - Option: VAR_PLUSAVOIDSUCCESSVALUE
+            MinValue: 5
+            MaxValue: 15
+            Chance: 5000  
+      - Slot: 4
+        Options:
+          - Option: CLASS_IGNORE_DEF_PERCENT_NORMAL
+            MinValue: 25
+            MaxValue: 30
+            Chance: 5000
+          - Option: CLASS_IGNORE_DEF_PERCENT_BOSS
+            MinValue: 25
+            MaxValue: 30
+            Chance: 5000
+          - Option: RACE_IGNORE_DEF_PERCENT_PLAYER_HUMAN
+            MinValue: 25
+            MaxValue: 30
+            Chance: 5000

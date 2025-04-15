@@ -1,0 +1,183 @@
+cockpit,106,110,3	script	Evento Tarot	678,{
+
+	mes .namenpc$;
+	mes "Olá, "+strcharinfo(0)+"!";
+	mes "Está afim de testar sua sorte nas cartas?";
+	mes "Fique atento quando anunciar o início do evento.";
+	next;
+	switch(select("Participar do evento","Evento "+(!$tarot_status ? "Ligar" : "Desligar")+":Premiação:Cancelar")) {
+
+		case 1:
+			if (!$tarot_status) {
+				mes .namenpc$;
+				mes "O evento não está ativo no momento.";
+				close;
+			}
+
+			for (.@i = 0; .@i < getarraysize($@tarot_participantes$); .@i++) {
+				if ($@tarot_participantes$[.@i] == strcharinfo(0)) {
+					mes .namenpc$;
+					mes "Você já está registrado.";
+					close;
+				}
+			}
+
+			$@tarot_participantes$[getarraysize($@tarot_participantes$)] = strcharinfo(0);
+			announce "[Evento Tarot] ~> "+strcharinfo(0)+" se inscreveu para o evento.", bc_all;
+			close;
+
+		case 2:
+			if (getgroupid() < $@lvminGM) {
+				mes .namenpc$;
+				mes "Apenas GMs podem ligar/desligar o evento.";
+				close;
+			}
+			if ($tarot_status) {
+				donpcevent "Tarot_Event::OnStop";
+			} else {
+				donpcevent "Tarot_Event::OnStart";
+			}
+			close;
+
+		case 3:
+			mes .namenpc$;
+			mes "Premiação:";
+			for (.@i = 0; .@i < getarraysize($@premiacaoITEM); .@i++) {
+				mes $@premiacaoQUANT[.@i] + "x " + getitemname($@premiacaoITEM[.@i]);
+			}
+			close;
+
+		case 4:
+			close;
+	}
+
+OnInit:
+	.namenpc$ = "[^0055FFEvento Tarot^000000]";
+	setarray $@mapeventtarot$, "poring_w01", 102, 71;
+	$@mintarot_participantes = 1;
+	$@lvminGM = 60;
+	setarray $@premiacaoITEM, 35015;
+	setarray $@premiacaoQUANT, 5;
+	
+	callfunc("resetEventoTarot", $@tarot_participantes$, $@mapeventtarot$[0]);
+	setarray .mapflag, mf_nowarp, mf_nowarpto, mf_noskill, mf_noteleport, mf_nomemo, mf_nosave, mf_nobranch, mf_noreturn, mf_nocommand;
+	for (.@i = 0; .@i < getarraysize(.mapflag); .@i++)
+		setmapflag $@mapeventtarot$[0], .mapflag[.@i];
+	end;
+}
+
+-	script	Tarot_Event	-1,{
+
+OnClock0300:
+OnClock0700:
+OnClock1200:
+OnClock1600:
+OnClock2100:
+OnStart:
+	$tarot_status = 1;
+	for (.@t = 3; .@t > 0; .@t--) {
+		if (!$tarot_status || agitcheck() || agitcheck2()) {
+			callfunc("resetEventoTarot", $@tarot_participantes$, $@mapeventtarot$[0]);
+			end;
+		}
+		announce "[Evento Tarot] ~> Começa em "+(.@t*20)+" segundos!", bc_all;
+		sleep 20000;
+	}
+	
+	if (getarraysize($@tarot_participantes$) < $@mintarot_participantes) {
+		announce "[Evento Tarot] ~> Participantes insuficientes!", bc_all;
+		callfunc("resetEventoTarot", $@tarot_participantes$, $@mapeventtarot$[0]);
+		end;
+	}
+
+	$tarot_status = 0;
+	for (.@p = 0; .@p < getarraysize($@tarot_participantes$); .@p++) {
+		if (isloggedin(getcharid(3, $@tarot_participantes$[.@p])))
+			warpchar $@mapeventtarot$[0], atoi($@mapeventtarot$[1]), atoi($@mapeventtarot$[2]), getcharid(0, $@tarot_participantes$[.@p]);
+		else
+			deletearray $@tarot_participantes$[.@p], 1;
+	}
+	sleep 8000;
+	donpcevent "Cartomante::OnSpeak";
+	end;
+
+OnReturn:
+	while (getarraysize($@tarot_participantes$) > 1) {
+		sleep 2000;
+		for (.@i = 0; .@i < getarraysize($@tarot_participantes$); .@i++) {
+			attachrid(getcharid(3, $@tarot_participantes$[.@i]));
+			if (strcharinfo(3) == $@mapeventtarot$[0]) {
+				.@card = 522 + rand(1,14);
+				specialeffect2 .@card;
+				if (.@card == 531) {
+					deletearray $@tarot_participantes$[.@i], 1;
+					percentheal -99,-99;
+					sleep2 1500;
+					set @randtarot, rand(100,300);
+					#CASHPOINTS += @randtarot;
+					dispbottom "[Evento Tarot] ~> Você recebeu "+@randtarot+" CASHPOINTS por participar.";
+					warp "SavePoint",0,0;
+				}
+			}
+			detachrid;
+		}
+	}
+
+	sleep 2000;
+	if (getarraysize($@tarot_participantes$)) {
+		attachrid(getcharid(3, $@tarot_participantes$[0]));
+		if (strcharinfo(3) == $@mapeventtarot$[0]) {
+			announce "[Evento Tarot] ~> Vencedor: "+strcharinfo(0), bc_all;
+			for (.@i = 0; .@i < getarraysize($@premiacaoITEM); .@i++) {
+				getitem $@premiacaoITEM[.@i], $@premiacaoQUANT[.@i];
+				message strcharinfo(0), "Você recebeu "+$@premiacaoQUANT[.@i]+"x "+getitemname($@premiacaoITEM[.@i]);
+			}
+		}
+		detachrid;
+	}
+	callfunc("resetEventoTarot", $@tarot_participantes$, $@mapeventtarot$[0]);
+	end;
+
+OnStop:
+	announce "[Evento Tarot] ~> Evento cancelado!", bc_all;
+	callfunc("resetEventoTarot", $@tarot_participantes$, $@mapeventtarot$[0]);
+	end;
+}
+
+poring_w01,102,73,1	script	Cartomante	678,{
+
+OnSpeak:
+	setarray .msgs$, "Usarei as cartas do destino...", "A sorte está lançada!", "Boa sorte a todos!", "TAROT!";
+	for (.@i = 0; .@i < getarraysize(.msgs$); .@i++) {
+		npctalk .msgs$[.@i];
+		sleep 3000;
+	}
+	donpcevent "Tarot_Event::OnReturn";
+	end;
+}
+
+-	script	tarot_events	-1,{
+
+OnPCDieEvent:
+OnPCLogoutEvent:
+	if (strcharinfo(3) == $@mapeventtarot$[0]) {
+		for (.@i = 0; .@i < getarraysize($@tarot_participantes$); .@i++) {
+			if ($@tarot_participantes$[.@i] == strcharinfo(0)) {
+				deletearray $@tarot_participantes$[.@i], 1;
+				mapannounce $@mapeventtarot$[0], strcharinfo(0)+" está fora do evento.", bc_map;
+				warp getsavepoint(0), getsavepoint(1), getsavepoint(2);
+				sleep2 1500;
+				atcommand "@alive";
+				break;
+			}
+		}
+	}
+	end;
+}
+
+function	script	resetEventoTarot	{
+	deletearray getarg(0);
+	$tarot_status = 0;
+	mapwarp getarg(1), "prontera", 150, 150;
+	return;
+}

@@ -1,0 +1,28 @@
+# This file is a part of rAthena RSM Mod, redistribution prohibited.
+# Copyright (c) RomuloSM
+# Email: romulodevel@gmail.com
+# Facebook: https://facebook.com/RomuloDevel
+# Site: https://rsmdeveloper.com.br
+#
+###########################################################################
+# Extended Vending Item DataBase
+###########################################################################
+#
+# Extended Vending Item DataBase Settings
+#
+###########################################################################
+# - Item                  Item Aegisname.
+###########################################################################
+
+Header:
+  Type: ITEM_VENDING_DB
+  Version: 1
+
+Body:
+#  - Item: Gold_Coin_Moneybag
+#  - Item: Copper_Coin_Moneybag
+#  - Item: Mithril_Coin
+#  - Item: TCG_Card
+#  - Item: Mithril_Coin
+#  - Item: Silver_Coin
+#  - Item: Copper_Coin

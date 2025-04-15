@@ -1,0 +1,22 @@
+-	script	CashAutoDeliverer	-1,{
+
+OnPCLoginEvent:
+	// Pega o ID da conta
+	.@account_id = getcharid(3);
+
+	// Pega o cash da tabela login
+	query_sql("SELECT `cash` FROM `login` WHERE `account_id` = " + .@account_id, .@cash);
+
+	// Se tiver cash, entrega
+	if (.@cash > 0) {
+		// Soma com o #CASHPOINTS atual
+		#CASHPOINTS += .@cash;
+
+		// Zera o cash da conta na tabela login
+		query_sql("UPDATE `login` SET `cash` = 0 WHERE `account_id` = " + .@account_id);
+
+		// Mensagem ao jogador (opcional)
+		dispbottom "Você recebeu " + .@cash + " Cash Points.";
+	}
+	end;
+}

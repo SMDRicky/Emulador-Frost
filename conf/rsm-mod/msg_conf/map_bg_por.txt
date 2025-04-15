@@ -1,0 +1,91 @@
+// Copyright (c) RomuloSM
+// Site: https://www.rsmdeveloper.com.br
+// Email: romulodevel@gmail.com
+// Facebook: https://www.facebook.com/RomuloDevel
+// Description: Mensagens em Português (Brasil) 
+
+// Battleground Warfare
+// ------------------------------------------------------------------
+// System
+1650: Server : %s desistiu do jogo...
+1651: Server : %s está saindo do campo de batalha...
+1652: Server : %s foi removido por estar AFK..
+1653: Server : %s foi expulso por %s.
+1654: Batalhas Campais: Você é %s do %s.
+1655: Você iniciou a votação para expulsar o jogador %s.
+1656: Você já votou para expulsar o jogador %s.
+1657: Motivo da Expulsão: %s
+1658: Você deve informar o motivo por querer expulsar o jogador %s.
+1659: %s iniciou uma votação para expulsar %s.
+1660: Expulsar jogador %s.
+1661: %d/%d necessário para expulsão.
+1662: Batalhas Campais : %s ingressou nas Fileiras do Exército.
+1663: Batalhas Campais : Você foi expulso por inatividade.
+1664: Batalhas Campais : %s foi expulso por inatividade.
+
+// Exércitos
+1665: Exército de Guillaume
+1666: Gen. Guillaume Marollo
+1667: Leões Azuis
+1668: Somente a força de nosso Exército pode fortalecer o Reino de Maroll.
+1669: Líder de Guillaume
+1670: Soldado de Guillaume
+1671: Exército de Croix
+1672: Príncipe Croix Marollo
+1673: Águias Vermelhas
+1674: Ergam suas espadas pela última vez para o bem maior do Reino de Maroll.
+1675: Líder de Croix
+1676: Soldado de Croix
+
+// Outras Mensagens de Sistemas
+1677: Utilize o canal '%s' para comunicar-se com sua equipe.
+
+// BroadCast
+1678: O Jogador %s ingressou nas Batalhas Campais em %s, falta %d jogadores para começar a batalha.
+
+// Recompensas
+1679: Você recebeu (%d) %s como recompensa das Batalhas Campais.
+1680: Recompensas recarregada com sucesso!
+
+// Happy Hour
+1681: Happy Hour das Batalhas Campais foi ligado com  sucesso.
+1682: O Happy Hour das Batalhas Campais já está ligado.
+1683: Happy Hour das Batalhas Campais foi desligado com sucesso.
+1684: O Happy Hour das Batalhas Campais já está desligado.
+
+// Comandos
+1685: Você tem que estar em uma Batalha Campal para utilizar este comando.
+1686: Este comando é somente para os Capitães de Exército.
+1687: Você deve digitar a mensagem (usando: @bgorder <mensagem>).
+1688: Você deve entrar com o nome do Jogador (usando: @bgleader <char name>).
+1689: Você já é o Líder do Time.
+1690: O Jogador deve estar no seu time.
+1691: Você não pode nomear outro líder até que suas habilidades estejam liberada.
+1692: Troca de Líder realizada com sucesso!
+1693: O Posto de Líder foi transferido para '%s'.
+
+// BroadCast
+1694: O Jogador %s ingressou nas Batalhas Campais em %s, ainda há %d vagas na batalha.
+
+// Countdown
+1695: Countdown de Batalhas Campais ligado.
+1696: Countdown de Batalhas Campais desligado.
+
+// Ranking
+1697: Ranking não encontrado, tente novamente.
+
+// Dual IP
+1698: Você não pode usar dois cliente simultaneamente em Filas de Espera ou Batalhas Campais.
+
+// Channel
+1699: Você não pode entrar neste Canal por não estar no time designado para este canal.
+
+// Entry Reset
+1700: Você já pode se registrar novamente em uma Batalha.
+
+// Listen
+1701: Você receberá anúncios das Batalhas Campais.
+1702: Você não receberá anúncios das Batalhas Campais.
+
+// free 1703~1737
+// Reserved Atcommands Battleground and Future Systems

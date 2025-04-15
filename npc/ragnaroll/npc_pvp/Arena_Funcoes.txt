@@ -1,0 +1,193 @@
+//==============================================================
+//        _____ _           _ _                   
+//       / ____| |         | (_)                  
+//      | |  __| | __ _  __| |_ _   _ ___         
+//      | | |_ | |/ _` |/ _` | | | | / __|        
+//      | |__| | | (_| | (_| | | |_| \__ \        
+//       \_____|_|\__,_|\__,_|_|\__,_|___/        
+//                                                  
+//===== rAthena Script =========================================
+//= Arena PvP Normal, Extreme (Sem Ygg) e GVG
+//= Ranking Top 10 PvP e GvG
+//= Reset Automático todo dia 1 ou Manualmente
+//= Entrega premiação por RoDEX
+//= Os jogadores ganham 1 ponto por kill
+//= Possui loja para trocar pontos por itens
+//= Narrador PVP (Sons ao matar)
+//= Tabelas SQL com registro total
+//= Mostra a quantidade de jogadores nas arenas
+//= Mapa customizado EXCLUSIVO
+//= Remove Buffs selecionados pelo administrador
+//= Adicionado Delay de pontuação entre kills
+//= Adicionado restrição de kill consecutivo do mesmo jogador
+//= Adicionado horário para contabilizar os pontos de kill
+//===== Importante: ============================================
+//= Observação: NÃO ALTERE O NOME NO NPC
+//= Observação: Altere manualmente o mapa do Arena_Porteiro.txt
+//===== Créditos: ==============================================
+//= Gladius e FelipeFePa
+//===== Versao do NPC: =========================================
+//= 1.0
+//==============================================================
+
+-	script	Batalha#PvP	-1,{
+
+//============================================================
+// Função SQL - Kill 
+
+OnPCKillEvent:
+	.@mapa$[0] = getvariableofnpc(.pvpnormal$,"Arena de Batalha");
+	.@mapa$[1] = getvariableofnpc(.pvpextreme$,"Arena de Batalha");
+	getmapxy .@map$,.@x,.@y,BL_PC;
+
+	.@sizestart = getvariableofnpc(.maxhorariostart,"Arena de Batalha");
+	.@sizeend   = getvariableofnpc(.maxhorarioend,"Arena de Batalha");
+	
+	if(.@sizestart && .@sizeend){	
+		if(.@sizestart != .@sizeend){
+			if(.@sizestart > .@sizeend) .@sizestart = .@sizeend;
+			if(.@sizeend > .@sizestart) .@sizeend = .@sizestart;
+		}
+		for(.@h = 0; .@h < .@sizestart; .@h++){
+			.@horarioStart[.@h] = getvariableofnpc(.horarioStart[.@h],"Arena de Batalha");
+			.@horarioEnd[.@h] = getvariableofnpc(.horarioEnd[.@h],"Arena de Batalha");
+			if(.@horarioEnd[.@h] < .@horarioStart[.@h]){
+				.@controleend = 24 + .@horarioEnd[.@h];
+			} else .@controleend = .@horarioEnd[.@h];
+			for(.@i = .@horarioStart[.@h]; .@i < .@controleend; .@i++){
+				if(.@i <= 23) .@horacerta = .@i;
+				else if(.@i == 24) .@horacerta = 0;
+				else if(.@i > 24) .@horacerta += 1;
+				if(inarray(.@i,.@horario$) == -1)
+					.@horario$[getarraysize(.@horario$)] = .@horacerta;
+			}
+		}
+	}
+
+	if(!getarraysize(.@horario$)) end;
+	.@datetime$ = gettime(DT_HOUR);
+
+	if(inarray(.@horario$,.@datetime$) >= 0) {
+		if(inarray(.@mapa$, .@map$) >= 0){
+			@kill++;
+			if ( Delay_ArenaBatalha < gettimetick(2) && @killid != killedrid) {
+				callfunc "AddPointPVP";
+				
+				query_sql "SELECT `char_id`, `Matou`, `Morreu`, `Total`  FROM `ranking_pvp` ORDER BY `Total` DESC",.@char_id,.@matou,.@morreu,.@pontos;
+				.@num = inarray(.@char_id,getcharid(0));
+				dispbottom "[ PVP ] : +1 Ponto PvP [Posição: "+(.@num+1)+"º / Matou: "+.@matou+" / Morreu: "+.@morreu+" / Total: "+.@pontos+" / Pontos: "+#PONTOS_PVP+"].";
+				callfunc "LogKill",killedrid;
+				//@killid = killedrid;
+			}
+			callfunc "SonsPVP", .@map$;
+			if (.@map$ == .@mapa$[1]) percentheal 100,100;
+		}
+		if ( getmapflag(.@map$,MF_GVG) && Delay_ArenaBatalha < gettimetick(2)){
+			callfunc "AddPointGVG";
+			dispbottom "[ GVG ] : Você matou "+rid2name(killedrid)+" !";
+		}
+	}
+end;
+
+//============================================================
+// Função SQL - Die
+
+OnPCDieEvent:
+	.@mapa$[0] = getvariableofnpc(.pvpnormal$,"Arena de Batalha");
+	.@mapa$[1] = getvariableofnpc(.pvpextreme$,"Arena de Batalha");
+	getmapxy .@map$,.@x,.@y,BL_PC;
+	
+	.@sizestart = getvariableofnpc(.maxhorariostart,"Arena de Batalha");
+	.@sizeend   = getvariableofnpc(.maxhorarioend,"Arena de Batalha");
+	
+	if(.@sizestart && .@sizeend){			
+		if(.@sizestart != .@sizeend){
+			if(.@sizestart > .@sizeend) .@sizestart = .@sizeend;
+			if(.@sizeend > .@sizestart) .@sizeend = .@sizestart;
+		}
+		for(.@h = 0; .@h < .@sizestart; .@h++){
+			.@horarioStart[.@h] = getvariableofnpc(.horarioStart[.@h],"Arena de Batalha");
+			.@horarioEnd[.@h] = getvariableofnpc(.horarioEnd[.@h],"Arena de Batalha");
+			if(.@horarioEnd[.@h] < .@horarioStart[.@h]){
+				.@controleend = 24 + .@horarioEnd[.@h];
+			} else .@controleend = .@horarioEnd[.@h];
+			for(.@i = .@horarioStart[.@h]; .@i < .@controleend; .@i++){
+				if(.@i <= 23) .@horacerta = .@i;
+				else if(.@i == 24) .@horacerta = 0;
+				else if(.@i > 24) .@horacerta += 1;
+				if(inarray(.@i,atoi(.@horario$)) == -1)
+					.@horario$[getarraysize(.@horario$)] = .@horacerta;
+			}
+		}
+		
+	} else { debugmes "Nenhum horario configurado para sua Arena de Batalha."; end;}
+	if(!getarraysize(.@horario$)) end;
+	.@datetime$ = gettime(DT_HOUR);
+	if(inarray(.@horario$,.@datetime$) > -1) {
+		if(inarray(.@mapa$, .@map$) >= 0){
+			set @kill, 0;
+			callfunc "RemPointPVP";
+			warp "SavePoint",0,0;
+		}
+		if ( getmapflag(.@map$,MF_GVG)){
+			callfunc "RemPointGVG";
+			dispbottom "[ GVG ] : Você foi morto por "+rid2name(killerrid)+" !";
+		}
+	}
+end;
+}
+
+//============================================================
+// Anúncio de Kill + Sons PvP
+
+function	script	SonsPVP	{
+
+	.@mapa$ = getarg(0);
+	if(@kill == 1) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [First Blood] !",1; soundeffect "First Blood.wav",0; return; }
+	if(@kill == 2) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Double Kill] !",1; soundeffect "Double Kill.wav",0; return; }
+	if(@kill == 3) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Triple Kill] !",1; soundeffect "Triple Kill.wav",0; return; }
+	if(@kill == 4) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Mega Kill] !",1; soundeffect "Mega Kill.wav",0; return; }
+	if(@kill == 5) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Ultra Kill] !",1; soundeffect "Ultra Kill.wav",0; return; }
+	if(@kill == 6) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Monster Kill] !",1; soundeffect "Monster Kill.wav",0; return; }
+	if(@kill == 7) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Killing Spree] !",1; soundeffect "Killing Spree.wav",0; return; }
+	if(@kill == 8) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Holy Shit] !",1; soundeffect "Holy Shit.wav",0; return; }
+	if(@kill == 9) { mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Dominating] !",1; soundeffect "Dominating.wav",0; return; }
+	if(@kill == 10){ mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [Unstoppable] !",1; soundeffect "Unstoppable.wav",0; return; }
+	if(@kill == 11){ mapannounce .@mapa$,"[ PVP ] : O jogador "+strcharinfo(0)+" acaba de matar "+rid2name(killedrid)+" [God Like] !",1; soundeffect "God Like.wav",0; return; }
+	if(@kill > 11) if(rand(0,1)) mapannounce .@mapa$,"[ PVP ] : A matança de "+strcharinfo(0)+" não terá fim?!",1;
+	return;
+}
+
+//============================================================
+// Configurações do Sistema
+
+function	script	AddPointPVP	{
+	set Delay_ArenaBatalha,gettimetick(2)+getvariableofnpc(.delaykill,"Arena de Batalha");
+	query_sql "INSERT INTO `ranking_pvp` (`char_id`,`char_name`,`Matou`,`Total`) VALUES ("+getcharid(0)+",'"+strcharinfo(0)+"',1,1) ON DUPLICATE KEY UPDATE `Matou` = `Matou`+1, `Total` = `Total`+1";
+	#PONTOS_PVP += 1;
+	return;
+}
+
+function	script	AddPointGVG	{
+	set Delay_ArenaBatalha,gettimetick(2)+getvariableofnpc(.delaykill,"Arena de Batalha");
+	query_sql "INSERT INTO `ranking_gvg` (`guild_id`,`char_id`,`guild_name`,`Matou`,`Total`) VALUES ("+getcharid(2)+","+getcharid(0)+",'"+strcharinfo(2)+"',1,1) ON DUPLICATE KEY UPDATE `Matou` = `Matou`+1, `Total` = `Total`+1";
+	return;
+}
+
+function	script	RemPointPVP	{
+	query_sql "INSERT INTO `ranking_pvp` (`char_id`,`char_name`,`Morreu`,`Total`) VALUES ("+getcharid(0)+",'"+strcharinfo(0)+"',1,-1) ON DUPLICATE KEY UPDATE `Morreu` = `Morreu`+1, `Total` = `Total`-1";
+	return;
+}
+
+function	script	RemPointGVG	{
+	query_sql "INSERT INTO `ranking_gvg` (`guild_id`,`char_id`,`guild_name`,`Morreu`,`Total`) VALUES ("+getcharid(2)+","+getcharid(0)+",'"+strcharinfo(2)+"',1,-1) ON DUPLICATE KEY UPDATE `Morreu` = `Morreu`+1, `Total` = `Total`-1";
+	return;
+}
+
+function	script	LogKill	{
+	set .@hora$,gettime(5)+"/"+gettime(6)+"/"+gettime(7)+" - "+gettime(3)+":"+gettime(2)+":"+gettime(1);
+	query_sql "INSERT INTO `ranking_pvp_logs` (`Assassino`, `Alvo`, `Data`) VALUES ('"+strcharinfo(0)+"', '"+rid2name(getarg(0))+"', '"+.@hora$+"')";
+	return;
+}
+
+

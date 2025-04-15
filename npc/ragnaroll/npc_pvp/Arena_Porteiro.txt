@@ -1,0 +1,99 @@
+//==============================================================
+//        _____ _           _ _                   
+//       / ____| |         | (_)                  
+//      | |  __| | __ _  __| |_ _   _ ___         
+//      | | |_ | |/ _` |/ _` | | | | / __|        
+//      | |__| | | (_| | (_| | | |_| \__ \        
+//       \_____|_|\__,_|\__,_|_|\__,_|___/        
+//                                                  
+//===== rAthena Script =========================================
+//= Arena PvP Normal, Extreme (Sem Ygg) e GVG
+//= Ranking Top 10 PvP e GvG
+//= Reset Automático todo dia 1 ou Manualmente
+//= Entrega premiação por RoDEX
+//= Os jogadores ganham 1 ponto por kill
+//= Possui loja para trocar pontos por itens
+//= Narrador PVP (Sons ao matar)
+//= Tabelas SQL com registro total
+//= Mostra a quantidade de jogadores nas arenas
+//= Mapa customizado EXCLUSIVO
+//= Remove Buffs selecionados pelo administrador
+//= Adicionado Delay de pontuação entre kills
+//= Adicionado restrição de kill consecutivo do mesmo jogador
+//= Adicionado horário para contabilizar os pontos de kill
+//===== Importante: ============================================
+//= Observação: NÃO ALTERE O NOME NO NPC
+//= Observação: Altere manualmente o mapa do Arena_Porteiro.txt
+//===== Créditos: ==============================================
+//= Gladius e FelipeFePa
+//===== Versao do NPC: =========================================
+//= 1.0
+//==============================================================
+
+a_pvp,49,89,5	script	Segurança PvP#duplicate::Segurança PvP	105,{
+
+	mes "^00B2EE[Segurança]^000000";
+	mes (gettime(3)>= 6&&gettime(3)<= 12?"Bom dia":(gettime(3)>=13&&gettime(3)<=18?"Boa tarde":"Boa noite"))+", ^FFA500"+strcharinfo(0)+"^000000! Como posso ajuda-lo?";
+	switch(select("^3CB371[»]^000000 Sair da Sala PvP:^ff0000[»]^000000 Nada")) {
+
+		case 1:
+		next;
+		mes "^00B2EE[Segurança]^000000";
+		mes "Você tem certeza?";
+		if (select("^3CB371[»]^000000 Sim:^ff0000[»]^000000 Não") == 2) close;
+		next;
+		mes "^00B2EE[Segurança]^000000";
+		sleep2 1000;
+		mes "5 segundos";
+		sleep2 1000;
+		mes "4 segundos";
+		sleep2 1000;	
+		mes "3 segundos";
+		sleep2 1000;	
+		mes "2 segundos";
+		sleep2 1000;	
+		mes "1 segundo";
+		sleep2 1000;	
+		warp "SavePoint",0,0;
+		close;
+	
+		case 2:
+		next;
+		mes "^00B2EE[Segurança]^000000";
+		mes "Ok! Volte a falar comigo caso queira sair da Sala PvP.";
+		close;
+	}	
+}
+	
+a_pvp,10,49,5	duplicate(Segurança PvP)	Segurança PvP#A2	105
+a_pvp,89,50,3	duplicate(Segurança PvP)	Segurança PvP#A3	105
+a_pvp,50,10,1	duplicate(Segurança PvP)	Segurança PvP#A4	105
+
+b_pvp,49,89,5	duplicate(Segurança PvP)	Segurança PvP#B1	105
+b_pvp,10,49,5	duplicate(Segurança PvP)	Segurança PvP#B2	105
+b_pvp,89,50,3	duplicate(Segurança PvP)	Segurança PvP#B3	105
+b_pvp,50,10,1	duplicate(Segurança PvP)	Segurança PvP#B4	105
+
+c_pvp,49,89,5	duplicate(Segurança PvP)	Segurança PvP#C1	105
+c_pvp,10,49,5	duplicate(Segurança PvP)	Segurança PvP#C2	105
+c_pvp,89,50,3	duplicate(Segurança PvP)	Segurança PvP#C3	105
+c_pvp,50,10,1	duplicate(Segurança PvP)	Segurança PvP#C4	105
+
+//==============================================================
+//= Portais de Entrada do PvP
+
+a_pvp,50,19,0	warp	a_pvp_1	1,1,a_pvp,50,22
+a_pvp,50,80,0	warp	a_pvp_2	1,1,a_pvp,50,77
+a_pvp,19,49,0	warp	a_pvp_3	1,1,a_pvp,22,49
+a_pvp,80,49,0	warp	a_pvp_4	1,1,a_pvp,77,49
+
+b_pvp,50,19,0	warp	b_pvp_1	1,1,b_pvp,50,22
+b_pvp,50,80,0	warp	b_pvp_2	1,1,b_pvp,50,77
+b_pvp,19,49,0	warp	b_pvp_3	1,1,b_pvp,22,49
+b_pvp,80,49,0	warp	b_pvp_4	1,1,b_pvp,77,49
+
+c_pvp,50,19,0	warp	c_pvp_1	1,1,c_pvp,50,22
+c_pvp,50,80,0	warp	c_pvp_2	1,1,c_pvp,50,77
+c_pvp,19,49,0	warp	c_pvp_3	1,1,c_pvp,22,49
+c_pvp,80,49,0	warp	c_pvp_4	1,1,c_pvp,77,49
+

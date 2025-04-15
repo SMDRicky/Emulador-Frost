@@ -1,0 +1,150 @@
+Header:
+  Type: LAPHINE_CREATE_DB
+  Version: 1
+
+Body:
+  # ===============
+  # Machados
+  # ===============
+  - Item: Axe #1301
+    RequiredRequirementsCount: 4
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_1
+      - Option: MELEE_GROUP_B_1
+      - Option: MELEE_GROUP_C_1
+      - Option: MELEE_GROUP_A_1
+    Requirements:
+      - Item: Diagrama_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Iron #998
+        Amount: 10
+        Type: 1
+  - Item: Orcish_Axe #1304
+    RequiredRequirementsCount: 5
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_3
+      - Option: MELEE_GROUP_B_3
+      - Option: MELEE_GROUP_C_3
+      - Option: MELEE_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Steel #999
+        Amount: 30
+        Type: 1
+      - Item: Voucher_Of_Orcish_Hero #968
+        Amount: 1
+        Type: 1
+  - Item: War_Axe #1306
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: MELEE_GROUP_D_3
+      - Option: MELEE_GROUP_B_3
+      - Option: MELEE_GROUP_C_3
+      - Option: MELEE_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Steel #999
+        Amount: 12
+        Type: 1
+      - Item: Oridecon #984
+        Amount: 10
+        Type: 1
+      - Item: Evil_Horn #923
+        Amount: 3
+        Type: 1
+

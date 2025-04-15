@@ -1,0 +1,154 @@
+-	script	ComandoVIP	-1,{
+OnInit:
+	unbindatcmd "vip";
+	bindatcmd "vip",strnpcinfo(3)+"::OnVIP",0,100;
+    	set .intervalo,30;	// Tempo de intervalo para usar o comando novamente
+	end;
+	
+OnVIP:
+if(getgroupid() < 5){
+	message strcharinfo(0), "Você precisa ser um player VIP PREMIUM para usar esse comando.";
+} else { 
+	warp "mainhall",100,153;
+end;
+}
+}
+
+-	script	Comando Storage2	-1,{
+OnInit:
+	unbindatcmd "storage2";
+	bindatcmd "storage2",strnpcinfo(3)+"::OnStorage",0,100;
+	end;
+	
+OnStorage:
+	openstorage2(1,STOR_MODE_GET|STOR_MODE_PUT);
+end;
+
+}
+
+
+-	script	Comando Lojas	-1,{
+OnInit:
+	unbindatcmd "lojas";
+	bindatcmd "lojas",strnpcinfo(3)+"::OnLojas",0,100;
+    	set .intervalo,0;	// Tempo de intervalo para usar o comando novamente
+	end;
+	
+OnLojas:
+mes "[ Catálogo de Vendas ]";
+mes "Você realmente deseja abrir o catálogo de vendas?";
+mes "Aqui você pode procurar o item que está procurando para comprar dos mercadores e até comprar diretamente daqui.";
+mes "Há um custo de 20,000 zeny.";
+menu "Sim",sim,"Não",nao;
+
+Sim:
+next;
+set .cobrarzeny,20000;
+if (Zeny < .cobrarzeny) goto FALTA_ZENYS;
+
+	searchstores 10,1;
+	zeny -= .cobrarzeny;
+end;
+
+nao:
+next;
+mes "[ Catálogo de Vendas ]";
+mes "Volte quando quiser abrir o catálogo de vendas.";
+end;
+
+FALTA_ZENYS:
+dispbottom "Você não tem zeny suficiente para abrir o catálogo.";
+end;
+
+}
+
+
+
+-	script	Comando Return	-1,{
+OnInit:
+	unbindatcmd "return";
+	bindatcmd "return",strnpcinfo(3)+"::OnReturn",0,100;
+    	set .intervalo,0;	// Tempo de intervalo para usar o comando novamente
+	end;
+	
+OnReturn:
+	warp "SavePoint",0,0;
+end;
+
+}
+
+prt_in	mapflag	nomemo
+prt_in	mapflag	noteleport
+prt_in	mapflag	nowarpto
+prt_in	mapflag	nowarp
+prt_in	mapflag	pvp	off
+prt_in	mapflag	gvg	off
+prt_in	mapflag	noskill
+prt_in	mapflag	nosave	SavePoint
+prt_in	mapflag	novending
+prt_in	mapflag	noicewall
+
+
+-	script	hold	-1,{
+
+	OnInit:
+		bindatcmd("hold", strnpcinfo(3)+"::OnHold");
+		end;
+
+	OnHold:
+		if ( !@Hold ) {
+			set @Hold, 1;
+			message strcharinfo(0), "Modo Hold Ativo (Você esta Preso).";
+			pcblockmove getcharid(3), 1;
+		} else {
+			set @Hold, 0;
+			message strcharinfo(0), "Modo Hold Desativado (Você esta Livre).";
+			pcblockmove getcharid(3), 0;
+		}
+
+}
+
+-	script	HATEFFECT	-1,{
+
+OnHatEffect:
+	if(getgmlevel()>= 80){
+	input .@number;
+	if (.@number < 1) end;
+	if (.@number >= 301) end;
+	for(.@i = 1; .@i < 300; ++.@i)
+		hateffect .@i,false;
+	hateffect .@number,true;
+	end;
+	}
+
+	
+OnInit:
+	bindatcmd "efc",strnpcinfo(3)+"::OnHatEffect";
+	end;
+}
+
+-	script	Comando Eden	-1,{
+OnInit:
+	unbindatcmd "eden";
+	bindatcmd "eden",strnpcinfo(3)+"::Oneden",0,100;
+    	set .intervalo,5;	// Tempo de intervalo para usar o comando novamente
+	end;
+	
+Oneden:
+	warp "moc_para01",30,20;
+end;
+
+}
+
+-	script	Comando evento	-1,{
+OnInit:
+	unbindatcmd "evento";
+	bindatcmd "evento",strnpcinfo(3)+"::Onevento",0,100;
+    	set .intervalo,0;	// Tempo de intervalo para usar o comando novamente
+	end;
+	
+Onevento:
+	warp "cockpit",100,120;
+end;
+
+}

@@ -1,0 +1,15 @@
+function	script	F_NpcInitStatus	{
+    .@UID = getnpcid(0);
+    .@npcname$ = strnpcinfo(1);
+    .@npctitle$ = getarg(0);
+    if(getargcount() > 1) {
+        .@npcgroupid = getarg(1);
+    }
+
+    setunittitle(.@UID, sprintf("[ %s ]", .@npctitle$));
+    if(getargcount() > 1) {
+        setunitdata .@UID, UNPC_GROUP_ID, .@npcgroupid;
+    }
+
+    return sprintf("^00B2EE[ %s - %s ]^000000", .@npctitle$,.@npcname$);
+}

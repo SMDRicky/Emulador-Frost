@@ -1,0 +1,81 @@
+//=============================================   
+//== NPC Poring Falante =======================   
+//== Versão: 1.3   
+//== Autor: [Seu Nome]   
+//== Adaptado para rAthena ====================   
+//=============================================   
+prontera,156,189,5	script	Poring Falante	1002,{   
+  OnInit:   
+    // Define a posição inicial do NPC (x: 156, y: 189 em Prontera)   
+    enablenpc "Poring Falante";   
+    movenpc "Poring Falante", 156, 189;   
+   
+    // Inicia o timer para movimentação periódica (0.8 segundos)   
+    // 800 ms = 0.8 segundos   
+    addtimer 800, strnpcinfo(3) + "::OnMove"; 
+
+    // Inicia o timer para mensagens periódicas (1 minuto)   
+    // 60000 ms = 1 minuto   
+    addtimer 60000, strnpcinfo(3) + "::OnMessage";
+    end;   
+   
+  OnMove:   
+    // Define os limites de coordenadas para o centro de Prontera   
+    .@min_x = 150;   
+    .@max_x = 160;   
+    .@min_y = 180;   
+    .@max_y = 190;   
+   
+    // Gera coordenadas aleatórias dentro dos limites   
+    .@new_x = rand(.@min_x, .@max_x);   
+    .@new_y = rand(.@min_y, .@max_y);   
+
+    // Calcula a nova posição, movendo 2 quadros por vez
+    if (.@new_x > getnpcx("Poring Falante")) {
+        .@new_x = getnpcx("Poring Falante") + 2;
+    } else if (.@new_x < getnpcx("Poring Falante")) {
+        .@new_x = getnpcx("Poring Falante") - 2;
+    }
+
+    if (.@new_y > getnpcy("Poring Falante")) {
+        .@new_y = getnpcy("Poring Falante") + 2;
+    } else if (.@new_y < getnpcy("Poring Falante")) {
+        .@new_y = getnpcy("Poring Falante") - 2;
+    }
+
+    // Move o NPC para as novas coordenadas usando walkto para simular o pulo do monstro
+    walkto .@new_x, .@new_y;   
+   
+    // Reinicia o timer para a próxima movimentação   
+    addtimer 800, strnpcinfo(3) + "::OnMove";   
+    end;   
+   
+  OnMessage:   
+    // Define um array de mensagens de agradecimento   
+    setarray .@Greetings$,   
+      "Olá, " + strcharinfo(0) + "! É um prazer vê-lo por aqui.",   
+      "Bem-vindo ao Prontera! Que sua jornada seja incrível.",   
+      "Saudações, " + strcharinfo(0) + "! Que você encontre muitas aventuras.",   
+      "Fico feliz que você tenha escolhido nosso servidor. Divirta-se!",   
+      "Olá, " + strcharinfo(0) + "! Se precisar de ajuda, nosso Discord está aí para isso!.",   
+      "Bem-vindo ao mundo de RagnaRoLL! Aproveite sua estadia.",   
+      "Saudações! Que suas batalhas sejam vitoriosas.",   
+      "É ótimo ter você conosco! Boa sorte em suas missões.",   
+      "Olá! Que sua experiência aqui seja repleta de diversão.",   
+      "Bem-vindo, " + strcharinfo(0) + "! Explore e aproveite cada momento.",   
+      "Saudações, aventureiro! Que os ventos estejam a seu favor.",   
+      "Feliz em vê-lo! Que sua jornada seja memorável.",   
+      "Olá! Não hesite em me chamar se precisar de algo.",   
+      "Bem-vindo ao Prontera! Que você faça grandes conquistas aqui.",   
+      "Saudações, " + strcharinfo(0) + "! Que sua estadia seja fantástica.",   
+      "Fico contente que você esteja aqui! Aproveite cada momento.",   
+      "Olá, " + strcharinfo(0) + "! Que as aventuras te aguardem.";   
+   
+    // Seleciona uma mensagem aleatória   
+    .@randomIndex = rand(0, getarraysize(.@Greetings$)-1);   
+    announce .@Greetings$[.@randomIndex], bc_map;   
+   
+    // Reinicia o timer para a próxima mensagem   
+    addtimer 60000, strnpcinfo(3) + "::OnMessage";   
+    end;   
+}

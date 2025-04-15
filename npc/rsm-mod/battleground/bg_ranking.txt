@@ -1,0 +1,87 @@
+//===== rAthena Script =======================================
+//= BattleGround Expansion - Ranking
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Exibe um ranking dos jogadores das Batalhas Campais.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+-	script	Battleground#ranking	-1,{
+	.@MAX_RESULT = getbattleflag("bg_ranking_rows");
+	freeloop(1);
+	.@init = 0;
+	.@page = 1;
+	.@loop_1 = 1;
+	while(.@loop_1) {
+		deletearray .@charID;
+		query_sql "SELECT `r`.`char_id`, `r`.`wins`, `r`.`loss`, (`r`.`wins`-`r`.`loss`) AS `ration`, `c`.`name` FROM `bg_ranking` AS `r` LEFT JOIN `char` AS `c` ON `c`.`char_id`=`r`.`char_id` WHERE `r`.`bg_id`='0' ORDER BY `ration` DESC LIMIT " + .@init + ", " + .@MAX_RESULT, .@charID, .@Wins, .@Loss, .@Ration, .@Name$;
+	
+		if( getarraysize(.@charID) <= 0 ) {
+			mes "^FF0000[ Ranking Batalhas Campais ]^000000 ";
+			mes "Não há jogadores qualificados";
+			mes "no Ranking das Batalhas Campais.";
+			close;
+		}
+		
+		deletearray .@tmpCharID;
+		query_sql "SELECT COUNT(`r`.`char_id`) FROM `bg_ranking` AS `r` LEFT JOIN `char` AS `c` ON `c`.`char_id`=`r`.`char_id` WHERE `r`.`bg_id`='0'", .@count;
+		query_sql "SELECT `r`.`char_id` FROM `bg_ranking` AS `r` LEFT JOIN `char` AS `c` ON `c`.`char_id`=`r`.`char_id` WHERE `r`.`bg_id`='0' LIMIT " + (.@init+.@MAX_RESULT) + ", " + .@MAX_RESULT, .@tmpCharID;
+		.@next = getarraysize(.@tmpCharID) ? 1 : 0;
+		
+		.@back = 0;
+		if( .@init > 0 ) {
+			deletearray .@tmpCharID;
+			query_sql "SELECT `r`.`char_id` FROM `bg_ranking` AS `r` LEFT JOIN `char` AS `c` ON `c`.`char_id`=`r`.`char_id` WHERE `r`.`bg_id`='0' ORDER BY `r`.`char_id` DESC LIMIT " + (.@init-.@MAX_RESULT) + ", " + .@MAX_RESULT, .@tmpCharID;
+			.@back = getarraysize(.@tmpCharID) ? 1 : 0;
+		}
+		
+		.@size = getarraysize(.@charID);
+		mes "^FF0000[ Ranking Batalhas Campais ]^000000 ";
+		for( .@i=0; .@i < .@size; .@i++ ) {
+			.@pos = .@init+.@i+1;
+			mes "^0000FF" + .@pos + "º lugar: ^000000 " + .@Name$[.@i] + ".";
+			mes " - ^32CD32w.^000000" + .@Wins[.@i] + " ^363535/^000000 ^FF0000l.^000000" + .@Loss[.@i] + " ^363535/^000000 ^FF8C00r.^000000" + .@Ration[.@i];
+		}
+		mes " ";
+		mes "^0000FFLegendas:^000000 ^32CD32w. Vitórias^000000 / ^FF0000l. Derrotas^000000 / ^FF8C00r. Proporção^000000";
+		mes "Listando ^FF0000" + .@size + " resultados^000000 na ^0000FFpágina " + .@page + "^000000 do total de ^0000FF" + .@count + " resultados^000000.";
+		next;
+		if( .@next || .@back ) {
+			switch( select((.@next?"^0000FF- Próximo.^000000":"") + ":" + (.@back?"^0000FF- Voltar.^000000":"") + ":^FF0000- Saír.^000000") ) {
+				case 1:
+					.@init += .@MAX_RESULT;
+					.@page++;
+					break;
+				case 2:
+					.@init -= .@MAX_RESULT;
+					.@page--;
+					break;
+				default:
+					.@loop_1 = 0;
+					break;
+			}
+		}
+		else {
+			.@loop_1 = 0;
+			break;
+		}
+	}
+	
+	mes "^FF0000[ Ranking Batalhas Campais ]^000000 ";
+	mes "Volte sempre que desejar";
+	mes "visualizar as qualificações";
+	mes "das Batalhas Campais.";
+	close;
+}
+
+moc_para01,22,44,5	duplicate(Battleground#ranking)	Ranking Battleground#bat_room	4_BOARD3
+bat_room02,160,147,3	duplicate(Battleground#ranking)	Ranking#bat_room2	4_BOARD3

@@ -1,0 +1,82 @@
+
+-	script	ChannelJoin#atcommand	-1,{
+OnInit:
+	bindatcmd "@irc", "ChannelJoin#main::OnStart", 0, 99;
+	end;
+}
+
+// Chamada para o Atcommand e do npc físico.
+-	script	ChannelJoin#main	-1,{
+OnStart:
+	mes "[ Chat do Servidor ]";
+	mes "Bem-vindo ao sistema de chat servidor, em que posso ajudar?";
+	next;
+	switch( select("- Entrar em um Chat.", "- Saír de um Chat.", "^FF0000- Cancelar.^000000") ) {
+		case 1:
+			mes "[ Chat do Servidor ]";
+			mes "Em que chat você deseja entrar?";
+			next;
+			switch( select("- Chat Global.", "- Chat de Suporte.", "- Chat de Comércio.", "^FF0000- Cancelar.^000000") ) {
+				case 1:
+					atcommand "@join #global";
+					mes "[ Chat do Servidor ]";
+					mes "Você entrou no Chat Global.";
+					next;
+					break;
+				case 2:
+					atcommand "@join #suport";
+					mes "[ Chat do Servidor ]";
+					mes "Você entrou no Chat de Suporte.";
+					next;
+					break;
+				case 3:
+					atcommand "@join #trade";
+					mes "[ Chat do Servidor ]";
+					mes "Você entrou no Chat de Comércio.";
+					next;
+					break;
+				case 4:
+					break;
+			}
+			break;
+		case 2:
+			mes "[ Chat do Servidor ]";
+			mes "Em que chat você deseja saír?";
+			next;
+			switch( select("- Chat Global.", "- Chat de Suporte.", "- Chat de Comércio.", "^FF0000- Cancelar.^000000") ) {
+				case 1:
+					mes "[ Chat do Servidor ]";
+					mes "Para sair do Chat Basta Relogar ou digitar @channel leave #global.";
+					next;
+					break;
+				case 2:
+					mes "[ Chat do Servidor ]";
+					mes "Para sair do Chat Basta Relogar ou digitar @channel leave #support.";
+					next;
+					break;
+				case 3:
+					mes "[ Chat do Servidor ]";
+					mes "Para sair do Chat de Comércio Basta Relogaro u digitar @channel leave #trade.";
+					next;
+					break;
+				case 4:
+					break;
+			}
+			break;
+		case 3:
+			break;
+	}
+
+	mes "[ Chat do Servidor ]";
+	mes "Fale comigo quando desejar entrar em um Canal de Chat.";
+	close;
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 24;
+	setunittitle getnpcid(0), "[Comunicação]";
+	end;
+
+}
+
+// NPC Físico
+prontera,163,199,3	duplicate(ChannelJoin#main)	Chat do Servidor#npc	4_F_EDEN_OFFICER

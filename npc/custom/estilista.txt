@@ -1,0 +1,79 @@
+//===========================================================\\
+//          ____   __   _  _  __    ____   __   ____         //
+//         / ___) /  \ / )( \(  )  (  __) / _\ (_  _)        \\
+//         \___ \(  O )) \/ (/ (_/\ ) _) /    \  )(          //
+//         (____/ \__/ \____/\____/(____)\_/\_/ (__)         \\
+//                                                           //
+//================== www.souleat.com.br =====================\\
+//======================= by: Guru ==========================//
+
+prontera,140,169,6	script	[Estilista]#custom_stylist	4_EP16_NIHIL,{
+	setarray .@Styles[1],
+		getbattleflag("max_cloth_color"),
+		getbattleflag("max_hair_style"),
+		getbattleflag("max_hair_color");
+	setarray .@Look[1],
+		LOOK_CLOTHES_COLOR,
+		LOOK_HAIR,
+		LOOK_HAIR_COLOR;
+		if (#language == 0) {
+	set .@s, select("[^000033�^000000]^3300ccCor da Roupa^000000:[^9900ff�^000000]^cc33ccEstilo do Cabelo^000000:[^993366�^000000]^660033Cor do Cabelo^000000");
+	set .@Revert, getlook(.@Look[.@s]);
+	set .@Style,1;
+	while(1) {
+		setlook .@Look[.@s], .@Style;
+		message strcharinfo(0),"Estilo de numero: #"+.@Style+".";
+		set .@menu$, "[^66CC00�^000000]^663300Proximo^000000 (^66CC00"+((.@Style!=.@Styles[.@s])?.@Style+1:1)+"^000000):[^990000�^000000]^663300Anterior^000000 (^990000"+((.@Style!=1)?.@Style-1:.@Styles[.@s])+"^000000):[^3399FF�^000000]^663300Digitar^000000:[^66CCCC�^000000]^663300Resetar^000000 (^66CCCC"+.@Revert+"^000000)";
+		switch(select(.@menu$)) {
+		case 1:
+			set .@Style, ((.@Style != .@Styles[.@s]) ? .@Style+1 : 1);
+			break;
+		case 2:
+			set .@Style, ((.@Style != 1) ? .@Style-1 : .@Styles[.@s]);
+			break;
+		case 3:
+			message strcharinfo(0),"Escolha um estilo entre 1 - "+.@Styles[.@s]+".";
+			input .@Style,0,.@Styles[.@s];
+			if (!.@Style)
+				set .@Style, rand(1,.@Styles[.@s]);
+			break;
+		case 4:
+			set .@Style, .@Revert;
+			setlook .@Look[.@s], .@Revert;
+			break;
+		}
+	}
+		} else {
+set .@s, select("[^000033�^000000]^3300ccClothing Color^000000:[^9900ff�^000000]^cc33ccHairstyle^000000:[^993366�^000000]^660033Hair Color^000000");
+set .@Revert, getlook(.@Look[.@s]);
+set .@Style, 1;
+
+while(1) {
+	setlook .@Look[.@s], .@Style;
+	message strcharinfo(0),"Style number: #"+.@Style+".";
+	set .@menu$, "[^66CC00�^000000]^663300Next^000000 (^66CC00"+((.@Style!=.@Styles[.@s])?.@Style+1:1)+"^000000):[^990000�^000000]^663300Previous^000000 (^990000"+((.@Style!=1)?.@Style-1:.@Styles[.@s])+"^000000):[^3399FF�^000000]^663300Enter^000000:[^66CCCC�^000000]^663300Reset^000000 (^66CCCC"+.@Revert+"^000000)";
+
+	switch(select(.@menu$)) {
+		case 1:
+			set .@Style, ((.@Style != .@Styles[.@s]) ? .@Style+1 : 1);
+			break;
+		case 2:
+			set .@Style, ((.@Style != 1) ? .@Style-1 : .@Styles[.@s]);
+			break;
+		case 3:
+			message strcharinfo(0),"Choose a style between 1 - "+.@Styles[.@s]+".";
+			input .@Style,0,.@Styles[.@s];
+			if (!.@Style)
+				set .@Style, rand(1,.@Styles[.@s]);
+			break;
+		case 4:
+			set .@Style, .@Revert;
+			setlook .@Look[.@s], .@Revert;
+			break;
+	}
+}
+		}
+OnInit:
+    setunittitle (getnpcid(0), "");
+    end;
+}

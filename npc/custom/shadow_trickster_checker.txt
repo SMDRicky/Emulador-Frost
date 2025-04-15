@@ -1,0 +1,27 @@
+    - script    Shadow_Trickster_Check  -1,{
+
+OnInit:
+    end;
+
+OnCheckSkills:
+    if (!isequipped(210019)) {
+        end;
+    }
+
+    if (!getskilllv("WZ_STORMGUST")) skill "WZ_VERMILION",0;
+    if (!getskilllv("NJ_KOUENKA")) skill "NJ_HYOUSENSOU",0;
+    if (!getskilllv("NJ_BAKUENRYU")) skill "NJ_KAENSIN",0;
+    if (!getskilllv("MO_TRIPLEATTACK")) skill "WS_OVERTHRUSTMAX",0;
+    if (!getskilllv("CR_ACIDDEMONSTRATION")) skill "AM_DEMONSTRATION",0;
+    if (!getskilllv("KN_BOWLINGBASH")) skill "SM_PROVOKE",0;
+    if (!getskilllv("CR_GRANDCROSS")) skill "CR_HOLYCROSS",0;
+    if (!getskilllv("WZ_JUPITEL")) skill "WZ_METEOR",0;
+    if (!getskilllv("HT_LANDMINE")) skill "HT_BLASTMINE",0;
+    if (!getskilllv("AL_HEAL")) skill "PR_ASPERSIO",0;
+    if (!getskilllv("TK_JUMPKICK")) skill "TK_SEVENWIND",0;
+
+    sleep2 5000;
+    donpcevent "Shadow_Trickster_Check::OnCheckSkills"; // Chama o evento novamente
+
+    end;
+}

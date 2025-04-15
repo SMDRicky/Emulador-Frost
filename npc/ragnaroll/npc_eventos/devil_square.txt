@@ -1,0 +1,350 @@
+-	script	devillsquare	-1,{
+OnTalk:
+
+mes "[Guarda da Devil Square]";
+mes "Bem-Vindo para a porta da ^FF0000Devil Square^000000";
+mes "Caro aventureiro, sabemos que os Monstros são criaturas destemíeis, porem conseguimos de alguma forma trancar eles...";
+mes "Bom... Conseguimos fazer uma espécie de 'Prisão' para eles, trancafiando-os em uma espécie de sala.";
+mes "Porem eventualmente eles irão atacar a entrada e nossas defesas não irão durar para sempre, porem você pode ajudar neste combate.";
+mes "Eu sei que esta jornada pode não ser facil, mas te garanto que no final temos uma recompensa a sua altura.";
+mes "Caso você queira entrar, basta dizer, também caso surja dúvidas? Fique a vontade, e claro se isso não for para você basta não aceitar.";
+next;
+menu "[»] Sim, quero entrar",-,"[»] Me de Informações",Info,"[»] Acho melhor não",Cancel;
+
+if(Baselevel < 40) goto LReq;
+if($inf == 1) goto L_go;
+goto L_eror;
+
+LReq:
+mes "[Guarda da Devil Square]";
+mes "Vejo que está interessado, mas o nível necessário para ajudar neste confronto é no mínimo 40.";
+close;
+
+L_go:
+if (getmapusers("pvp_n_1-2.gat")==90) goto toomany;
+announce "O aventureiro "+strcharinfo(0)+" acabou de entrar para defesa da Devil Square",8;
+percentheal 100,100;
+dispbottom "Para Sair da Devil Square basta [Relogar] ou Procurar o NPC [Sair!]";
+warp "pvp_n_1-2",99,91;
+end;
+
+L_eror:
+mes "[Guarda da Devil Square]";
+mes "Olá no momento, os guardas fecharam o portão da Devil Square.";
+mes "Eventualmente esses malditos se soltam da prisão, fique sempre atento.";
+mes "Nós já estimamos alguns horários recorrentes quando surge esse tipo de problema, irei te falar.";
+mes "^FF0000Horas:^000000 12:00h, 20:00h";
+close;
+
+Info:
+mes "[Guarda da Devil Square]";
+mes "Pelo visto você busca algumas informações úteis, vamos lá!";
+mes "Dentro da ^FF0000Devil Square^000000 há 6 níveis de dificuldade.";
+mes "Cada nível ultrapassado, a dificuldade irá ficar cada vez maior !!";
+mes "Toda vez que essa onda de Monstros forem derrotados, cada vez mais irão surgir.";
+next;
+mes "[Guarda da Devil Square]";
+mes "Lembrando que participar desta defesa não será fácil. Por isso, prepare-se leve seus suprimentos porquê é um caminho sem volta.";
+mes "Caso você consiga defender a ^FF0000Devil Square^000000, será possível abrir ^FF8C0015 Caixas do Tesouro.^000000";
+mes "Garantindo a você alguns itens!!!";
+mes "Muito obrigado por participar, e desejo muita sorte a você, agora vamos lá";
+close;
+end;
+
+toomany:
+mes "[Guarda da Devil Square]";
+mes "Mil perdões, porem o esquadrão já foi formado para a ^FF0000Devil Square^000000 e está na sua lotação máxima!";
+mes "Peço que fique atento nas novas defesas que forem acontecer, existem horários que geralmente acontece isso.";
+mes "^FF0000Horas:^000000 12:00h, 280:00h";
+set $inf,1;
+close;
+end;
+
+Cancel:
+mes "[Guarda da Devil Square]";
+mes "Até logo, te vejo ná próxima formação.";
+close;
+
+}
+//Final da Devil Square
+
+pvp_n_1-2,182,183,5	script	Ceks	-1,{
+
+OnTimer30000:
+if($status == 1) end;
+if (getmapusers("pvp_n_1-2.gat") == 0) mapannounce "pvp_n_1-2", "Guarda: NÂO! NÂO! NÂO! Isso não pode estar acontecendo a defesa foi quebrada, homens VOLTEM. Tentaremos na próxima vez.",8;
+if (getmapusers("pvp_n_1-2.gat") == 0) set $status,1;
+if (getmapusers("pvp_n_1-2.gat") == 0) killmonsterall "pvp_n_1-2.gat";
+if (getmapusers("pvp_n_1-2.gat") == 0) end;
+mapannounce "pvp_n_1-2", getmapusers("pvp_n_1-2.gat") + " jogadores estão defendendo a Devil Square",8;
+initnpctimer;
+end;
+
+}
+
+pvp_n_1-2,182,183,5	script	HiddenNpcs	-1,{
+//Dias da Semana:
+//= 1= Segunda, 2=Terça, 3=Quarta, 4=Quinta, 5=Sexta, 6=Sábado e 0=Domingo
+
+//A configuração está nessa parte:
+OnClock1400:
+OnClock1900:
+OnClock2200:
+//O Evento inicia nesses horários somente na Segunda, Quarta, Sexta e Sábado. Os demais não tem evento
+
+dss_ONE:
+Announce "Guarda da Devil Square: Atenção aventureiros estamos convocando todos os guerreiros para defender a Devil Square basta usar o comando:[@evento]",8;
+Announce "Guarda da Devil Square: Iremos formar um grupo gigantesco para impedir o avanço desses monstros, partiremos em 5 MINUTOS, venham rápido após isso iremos fechar os portões.",8;
+disablenpc "Sair";
+initnpctimer;
+set $inf,1;
+set $status,0;
+killmonsterall "pvp_n_1-2";
+end;
+
+OnTimer60000:
+Announce "Guarda da Devil Square: A entrada para a Devil Square está aberta, e em 4 minutos ele irá se fechar e iremos seguir em frente, Basta usar comando @evento",8;
+end;
+
+OnTimer120000:
+Announce "Guarda da Devil Square: A entrada para a Devil Square está aberta, e em 3 minutos ele irá se fechar e iremos seguir em frente, Basta usar comando @evento",8;
+end;
+
+OnTimer180000:
+Announce "Guarda da Devil Square: A entrada para a Devil Square está aberta, e em 2 minutos ele irá se fechar e iremos seguir em frente, Basta usar comando @evento",8;
+end;
+
+OnTimer240000:
+Announce "Guarda da Devil Square: A entrada para a Devil Square está aberta, e em 1 minutos ele irá se fechar e iremos seguir em frente, Basta usar comando @evento",8;
+end;
+
+OnTimer300000:
+mapannounce "pvp_n_1-2", "Guarda da Devil Square: Fechem a entrada da prisão os MONSTROS ESTÂO VINDO, PREPAREM-SE !!",8;
+mapannounce "pvp_n_1-2", "Guarda da Devil Square: Iremos descer as esscadas, não se assustem fiquem todos juntos.",8;
+mapannounce "pvp_n_1-2", "Guarda da Devil Square: Chegamos ao local, EM FORMAÇÂO PREPAREM-SE !!,",8;
+initnpctimer "Ceks";
+set $inf,0;
+set $mob,116;
+atcommand "@skillon";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Abelha Rainha",1059,1,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Argiope",1099,10,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Orc Arqueiro",1189,15,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Arenoso",1165,10,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Gárgula",1253,15,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Minorous",1149,15,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Requiem",1164,10,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Mumia Anciã",1297,20,"HiddenNpcs::Ondevildeads";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Isis",1029,20,"HiddenNpcs::Ondevildeads";
+end;
+
+Ondevildeads:
+if ($status == 1) end;
+set $mob,$mob-1;
+if($mob == 100) mapannounce "pvp_n_1-2", "Guarda da Devil Square: ATENÇÂO! Restam apenas 100 monstros fiquem atentos",8;
+if($mob == 50) mapannounce "pvp_n_1-2", "Guarda da Devil Square: O que é isso? Restam apenas 50 monstros, porem vejo uma segunda onda chegando!",8;
+if($mob == 0) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Preparem-se! Está vindo a segunda ONDA DE MONSTROS, FIQUEM JUNTOS!",8;
+if($mob == 0) goto Ondevils2;
+end;
+
+Ondevils2:
+set $mob,101;
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Escaravelho",1211,25,"HiddenNpcs::Ondevildeads2";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Alarm",1193,10,"HiddenNpcs::Ondevildeads2";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] High Orc",1213,10,"HiddenNpcs::Ondevildeads2";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Injustice",1257,10,"HiddenNpcs::Ondevildeads2";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Mimico Antigo",1699,15,"HiddenNpcs::Ondevildeads2";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Aparição",1291,30,"HiddenNpcs::Ondevildeads2";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Flor do Luar",1150,1,"HiddenNpcs::Ondevildeads2";
+end;
+
+Ondevildeads2:
+if ($status == 1) end;
+set $mob,$mob-1;
+if($mob == 100) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Que estranho, esses monstros estavam aqui antes? Não me lembro.",8;
+if($mob == 50) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Droga! isso era uma armadilha, existe um necromante nesta sala !!",8;
+if($mob == 25) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Reunam-se todos no centro, todos os monstros que matamos até agora estão voltando, isso é terrivel !!",8;
+if($mob == 0) goto Ondevils3;
+end;
+
+Ondevils3:
+set $mob,121;
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Eddga",1115,1,"HiddenNpcs::Ondevildeads3";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Rybio",1201,20,"HiddenNpcs::Ondevildeads3";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Laurell Weinder",1657,15,"HiddenNpcs::Ondevildeads3";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Andarilho",1208,15,"HiddenNpcs::Ondevildeads3";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Diabinho",1292,20,"HiddenNpcs::Ondevildeads3";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Coringa",1131,15,"HiddenNpcs::Ondevildeads3";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Penomena",1216,15,"HiddenNpcs::Ondevildeads3";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Bongun",1188,20,"HiddenNpcs::Ondevildeads3";
+end;
+
+Ondevildeads3:
+if ($status == 1) end;
+set $mob,$mob-1;
+if($mob == 100) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Malditos!, tivemos muitas baixas nesse ataque, não esperava isso, mas ainda estamos em maior número.",8;
+if($mob == 50) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Parece que a brincadeira acabou, nós pensavamos que prender eles aqui seria uma boa idéia, mas eles estavam mais preparados que nunca!",8;
+if($mob == 0) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Preparem-se lá vem eles, parece um grupo de elite, façam uma formação defensiva",8;
+if($mob == 0) goto Ondevils4;
+end;
+
+Ondevils4:
+set $mob,202;
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Armeyer Dinze",1654,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Ktullanux",1779,1,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Rybio",1201,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Medusa",1148,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Carat",1267,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Loli Ruri",1505,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Strouf",1065,30,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Agressor",1315,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Exterminador",1384,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Palavra Morta",1698,10,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Nereida",1255,20,"HiddenNpcs::Ondevildeads4";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Osíris",1038,1,"HiddenNpcs::Ondevildeads4";
+end;
+
+Ondevildeads4:
+if ($status == 1) end;
+set $mob,$mob-1;
+if($mob == 70) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Todos estão bem? Ainda estamos sofrendo um ataque pesado, pelo visto mandaram seus melhores guerreiros.",8;
+if($mob == 40) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Estamos quase lá não devem durar muito.",8;
+if($mob == 1) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Hahahahahahaaaaaa!!! Esperem.... O que é isso? Os ossos estão se movendo... Mas que coisa bizarra é essa? PREPAREM-SE!",8;
+if($mob == 0) goto Ondevils5;
+end;
+
+Ondevils5:
+set $mob,292;
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Quimera",1283,1,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Kiel",1734,1,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Borboleta Sanguinária",1408,20,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Anjo Fajuto",1371,20,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Ferus Vermelho",1714,10,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Hodremlin",1773,20,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Isilla",1772,10,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Filhote de Hatii",1515,30,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Majoruros",1310,10,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Nove Caudas",1180,25,"HiddenNpcs::Ondevildeads5";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Cavaleiro Sanguinário",1268,10,"HiddenNpcs::Ondevildeads5";
+end;
+
+Ondevildeads5:
+if ($status == 1) end;
+set $mob,$mob-1;
+if($mob == 145) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Mas que bizarro, tenho a impressão que isso não tem fim...",8;
+if($mob == 85) mapannounce "pvp_n_1-2", "Guarda da Devil Square: É uma pilha de ossos gigantesca, vamos lá pessoal estamos quase lá! ",8;
+if($mob == 50) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Finalmente parece que está acabando, mas eles ainda são numerosos",8;
+if($mob == 25) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Vitória nossa! Eliminem o restante, parem essa Horda de mortos vivos e monstros bizarros...",8;
+if($mob == 1) mapannounce "pvp_n_1-2", "Guarda da Devil Square: O que estou vendo aqui?... Um ser grande não consigo ver nessa pilha de ossos mas parece problema e dos grandes, PREPAREM-SE!",8;
+if($mob == 0) goto Ondevils6;
+end;
+
+Ondevils6:
+set $mob,455;
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Odium de Thanatos",1704,1,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Senhor dos Orcs",1190,1,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Alarme",1193,25,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Dama de Guarda",1700,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Arclouse",1194,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Pesadelo Sombrio",1379,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Salamandra",1831,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Succubus",1370,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Acidus Azul",1716,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Egnigem Cenia",1652,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Laurell Weinder",1657,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Wickebine Tres",1653,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Kavach Icarus",1656,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Pesar de Thanatos",1707,1,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Bispo Decadente",1871,1,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Bafomé",1039,1,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Errende Ebecee",1655,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Armeyer Dinze",1656,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Venatu",1676,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Venatu",1677,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Venatu",1678,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Venatu",1679,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Dimik",1670,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Dimik",1671,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Dimik",1672,10,"HiddenNpcs::Ondevildeads6";
+areamonster "pvp_n_1-2",127,72,72,127,"[DS] Kasa",1833,15,"HiddenNpcs::Ondevildeads6";
+
+end;
+
+Ondevildeads6:
+if ($status == 1) end;
+set $mob,$mob-1;
+if($mob == 455) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Imaginava que isso estaria acontecendo não era possível...",8;
+if($mob == 120) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Eles possuíam um líder, e parece muito forte, ele é diferente dos outros.",8;
+if($mob == 100) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Mantenham a formação!",8;
+if($mob == 50) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Estamos quase lá pessoal, vamos derrotar essa horda de monstros e voltar para casa.",8;
+if($mob == 10) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Falta pouco, eu tenho esperanças, essa defesa para conter os monstros, está dando certo!",8;
+if($mob == 1) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Resta apenas 1 monstro, vamos acabar juntos com ele, a vitória é nossa!",8;
+if($mob == 0) mapannounce "pvp_n_1-2", "Guarda da Devil Square: Conseguimos parar o avanço deles, obrigado a todos que compareceram, aqui está algumas recompensas a vocês, aguardo vocês em uma próxima defesa.(s).",8;
+if($mob == 0) goto Ondevilfinals;
+end;
+
+Ondevilfinals:
+set $mob,24;
+mapannounce "pvp_n_1-2", "Os baús de premiação apareceram no centro da prisão.",8;
+atcommand "@skilloff";
+monster "pvp_n_1-2",72,127,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",95,127,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",104,127,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",127,127,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",120,105,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",120,94,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",127,72,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",105,72,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",94,72,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",72,72,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",79,74,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",79,105,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",115,115,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",115,105,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",115,94,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",115,84,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",84,84,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",87,94,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",87,105,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",84,115,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",94,67,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",105,67,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",94,132,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+monster "pvp_n_1-2",105,132,"Caixa do Tesouro",1325,1,"HiddenNpcs::Onboxdeads";
+enablenpc "Sair";
+end;
+
+Onboxdeads:
+if ($status == 1) end;
+set $mob,$mob-1;
+set .quantidade, rand(5, 15);
+set .quantidade2, rand(1, 10);
+getitem 35015, .quantidade;
+getitem 35004, .quantidade2;
+warp "prontera", 156, 191;
+Announce "Devil Square: " + strcharinfo(0) +" Abriu uma Caixa do Tesouro.",8;
+if($mob == 0) set $status,0;
+end;
+
+}
+
+// -- Mapflags de "pvp_n_1-2" (Mapa do DS)
+pvp_n_1-2	mapflag	nowarp
+pvp_n_1-2	mapflag	nowarpto
+pvp_n_1-2	mapflag	noteleport
+pvp_n_1-2	mapflag	nosave	SavePoint
+pvp_n_1-2	mapflag	nomemo
+//pvp_n_1-2	mapflag	pvp
+pvp_n_1-2	mapflag	nobranch
+pvp_n_1-2	mapflag	nopenalty
+// -- Fim dos Mapflags
+
+pvp_n_1-2,99,109,5	script	Sair	105,{
+mes "[Guarda da Devil Square]";
+mes "Você foi incrível nesta defesa, espero ver você em breve, pois uma hora eles irão tentar invadir os portões novamente.";
+next;
+getitem 35015,3;
+warp "prontera", 156, 191;
+close;
+}
+
+cockpit,102,114,3	duplicate(devillsquare)	Devil Square	856

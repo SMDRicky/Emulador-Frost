@@ -1,0 +1,83 @@
+welcome,54,57,4	script	Guardiã dos Fundadores	864,{
+
+    mes "[Agente Hinata - Entregadora de Pacotes]";
+    mes "Olá, "+strcharinfo(0)+"!";
+    mes "Sou responsável pela entrega dos Pacotes Fundadores.";
+    mes "Posso verificar se você tem algum pacote para resgatar?";
+    next;
+    
+    if(select("Sim, por favor!:Não, obrigado.") == 2) {
+        mes "[Entregador de Pacotes]";
+        mes "Tudo bem! Volte quando quiser verificar seus pacotes.";
+        close;
+    }
+    
+    // Verificar se há pacotes fundadores pendentes para entrega
+    query_sql "SELECT p.id, p.valor, p.pacote_id, p.item_id FROM payment p WHERE p.user_id = '"+getcharid(3)+"' AND p.status = 'approved' AND p.tipo = 1 LIMIT 1", .@id, .@valor, .@pacote_id$, .@item_id;
+    
+    if(.@id > 0) {
+        mes "[Agente Hinata - Entregadora de Pacotes]";
+        
+        if(.@pacote_id$ == "bronze") {
+            mes "Você tem um Pacote Bronze para resgatar!";
+        } else if(.@pacote_id$ == "prata") {
+            mes "Você tem um Pacote Prata para resgatar!";
+        } else if(.@pacote_id$ == "ouro") {
+            mes "Você tem um Pacote Ouro para resgatar!";
+        } else {
+            mes "Você tem um pacote fundador para resgatar!";
+        }
+        
+        mes "Deseja receber seu item agora?";
+        next;
+        
+        if(select("Sim, quero receber!:Não, volto mais tarde.") == 2) {
+            mes "[Entregador de Pacotes]";
+            mes "Tudo bem! Seu pacote continuará disponível para resgate.";
+            close;
+        }
+        
+        // Entregar o item do pacote fundador
+        getitem .@item_id, 1;
+        
+        // Atualizar status para entregue
+        query_sql "UPDATE payment SET status = 'delivered' WHERE id = "+.@id;
+        
+        // Registrar na tabela de logs
+        query_sql "INSERT INTO `logs_donates` (`acc_id`, `valor`, `resgatou`, `moeda`) VALUES (" + getcharid(3) + "," + .@valor + ", 1, 'FOUNDER')";
+        
+        mes "[Agente Hinata - Entregadora de Pacotes]";
+        if(.@pacote_id$ == "bronze") {
+            mes "Parabéns! Você recebeu seu item do Pacote Bronze!";
+        } else if(.@pacote_id$ == "prata") {
+            mes "Parabéns! Você recebeu seu item do Pacote Prata!";
+        } else if(.@pacote_id$ == "ouro") {
+            mes "Parabéns! Você recebeu seu item do Pacote Ouro!";
+        } else {
+            mes "Parabéns! Você recebeu seu item do pacote fundador!";
+        }
+        
+        mes "Obrigado por apoiar nosso servidor!";
+        close;
+    } else {
+        mes "[Agente Hinata - Entregadora de Pacotes]";
+        mes "Não encontrei nenhum pacote fundador pendente para você.";
+        mes "Se você acabou de fazer uma doação, aguarde alguns instantes para o pagamento ser processado.";
+        close;
+    }
+}
+
+-	script	founder_delivery	-1,{
+OnPCLoginEvent:
+    // Verificar se há pacotes fundadores pendentes para entrega
+    query_sql "SELECT COUNT(*) FROM payment WHERE user_id = '"+getcharid(3)+"' AND status = 'approved' AND tipo = 1", .@count;
+    
+    if(.@count > 0) {
+        message strcharinfo(0),"[Sistema de Doação]: Você tem "+.@count+" pacote(s) fundador(es) para resgatar! Fale com o Entregador de Pacotes.";
+    }
+    
+    end;
+}
+
+
+prontera,172,179,3	duplicate(Guardiã dos Fundadores)	Guardiã dos Fundadores#prontera	864

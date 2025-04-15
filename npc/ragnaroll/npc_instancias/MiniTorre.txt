@@ -1,0 +1,518 @@
+function	script	Chave_MiniTorre	{
+
+		mes"^C70847[Chave Menu]^000000";
+		mes"^C70847Olá vejo que você tem uma chave bem interessante^000000";
+		mes"^C70847Com ela a você pode resetar a Instancia Mini Torre sem Fim sabia?^000000";
+		mes"^C70847Você quer resetar a Instancia ?^000000";
+		switch(select("^C70847Resetar^000000:^C70847Não Quero^000000")){
+			case 1:
+				if(isbegin_quest(150000))
+					erasequest 150000;
+				if(isbegin_quest(150001))
+					erasequest 150001;
+				if(instance_id())
+					instance_destroy;
+				query_sql("SELECT `last_unique_id` FROM `login` WHERE `account_id` = '"+getcharid(3)+"'", .@last_unique_id$);
+				query_sql("delete from `MiniEtower` where `unique_id` = '"+.@last_unique_id$+"'");
+				close;
+			case 2:
+				mes"^C70847Okay volte quando precisar^000000";
+				mes"^C70847OAte jaja.^000000";
+				close;
+		}
+	}
+
+
+function	script	F_Mini_Endless_Tower_Rewards	{
+	getitem 35016,15;
+	getitem 25127,1;
+	getitem 25126,3;
+	
+	return;
+}
+firstcity,204,265,5	script	Torre do Pesadelo	712,{
+	if(getgroupid() >= 90 ){
+		mes"^C70847[STAFFS MENU]^000000";
+		mes"^C70847Olá vejo que você é da Staff^000000";
+		mes"^C70847você deseja redefinir a torre do seu personagem?^000000";
+		switch(select("^C70847Menu Player^000000:^C70847ResetarMT^000000:^C70847Destruir Instancia^000000:^C70847Gepard Reset")){
+			case 1:
+				break;
+			case 2:
+				if(isbegin_quest(150000))
+					erasequest 150000;
+				if(isbegin_quest(150001))
+					erasequest 150001;
+				close;
+			case 3:
+				if(instance_id())
+					instance_destroy;
+				close;
+			case 4:
+				query_sql("SELECT `last_unique_id` FROM `login` WHERE `account_id` = '"+getcharid(3)+"'", .@last_unique_id$);
+				query_sql("delete from `MiniEtower` where `unique_id` = '"+.@last_unique_id$+"'");
+				close;
+		}
+		next;
+	}
+	if(checkquest(150001,PLAYTIME) == 2){
+		erasequest 150000;
+		erasequest 150001;
+	}
+	if(!isbegin_quest(150001)){
+		set MiniEtower_partyid,0;
+	}
+	if(checkquest(150000,PLAYTIME) == 1 && checkquest(150001,PLAYTIME) == 0){
+		mes "Você tem o efeito Mini Torre Infinita";
+		mes "você não pode entrar novamente até que o efeito seja removido";
+		close;
+	}
+	if(!getcharid(1)){
+		mes "Este é seu Grupo ?";
+		close;
+	}
+	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
+		mes "Confirmado que o Grupo foi feito. Gostaria de reservar a entrada para a Mini Torre sem Fim?";
+		next;
+		switch(select("Gerar Mini Torre:Entrar:Cancelar")) {
+		case 1:
+			if(isbegin_quest(150001)){
+				mes "Você ainda esta em tempo de recarga";
+				mes "Por favor espere o tempo certo";
+				mes "para entrar na mini torre novamente";
+				close;
+			}
+			if (instance_create("Mini Endless Tower") < 0) {
+				mes "Nome do Grupo: "+ getpartyname(.@party_id);
+				mes "Lider do Grupo: "+strcharinfo(0);
+				mes "^0000ffMini Torre sem Fim ^000000- Falha na reserva!";
+				close;
+			}
+			mes "^0000ffMini Torre sem Fim ^000000 -> Instancia Reservada.";
+			mes "Após fazer a reserva, você deve falar com o NPC atrás e selecionar o menu ‘Entrar’ para entrar na Instancia.";
+			close;
+		case 2:
+			callsub L_Enter;
+		case 3:
+			close;
+		}
+	}
+	switch(select("Entrar:Cancel")) {
+	case 1:
+		callsub L_Enter;
+	case 2:
+		end;
+	}
+L_Enter:
+	if(MiniEtower_partyid != getcharid(1) && MiniEtower_partyid){
+		mes"Você mudou de grupo";
+		mes"eu não sou um tolo como você !";
+		close;
+	}
+	if(.gepard){
+		query_sql("SELECT `last_unique_id` FROM `login` WHERE `account_id` = '"+getcharid(3)+"'", .@last_unique_id$);
+		query_sql("SELECT `time`,`char_id` FROM `MiniEtower` WHERE `unique_id` = '"+.@last_unique_id$+"'", .@gptime ,.@charid);
+		.@all_time = (.@gptime - gettimetick(2));
+		if(.@all_time > 0 && .@charid != getcharid(1) ){
+			mes"Você ainda não pode entrar";
+			mes"você já entrou em outra conta";
+			.@hours   = .@all_time / 60 / 60;
+			.@minutes = (.@all_time % (60 * 60)) / 60;
+			.@seconds = .@all_time % 60;
+			mes "Por favor, volte " + sprintf("%02d:%02d:%02d", .@hours, .@minutes, .@seconds) + " horas." ;
+			close;
+		}
+	}
+	switch(instance_enter("Mini Endless Tower")) {
+	case IE_OTHER:
+		mes "Um erro desconhecido ocorreu.";
+		close;
+	case IE_NOINSTANCE:
+		mes "A Instancia Mini Torre sem Fim não existe.";
+		mes "O líder do grupo ainda não gerou a Instancia.";
+		close;
+	case IE_NOMEMBER:
+		mes "Você pode entrar na Instancia depois de fazer um Grupo.";
+		close;
+	case IE_OK:
+		mapannounce "e_tower", strcharinfo(0) +" do Grupo, "+ getpartyname( getcharid(1) ) +", Entrou na Instancia, Mini Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
+		if(checkquest(150001,PLAYTIME) == -1){
+			if(.gepard){
+				.@cooldown = (259200 + gettimetick(2));
+				query_sql("delete from `MiniEtower` where `unique_id` = '"+.@last_unique_id$+"'");
+				query_sql("INSERT INTO `MiniEtower` (`unique_id`,`time`,`char_id`) VALUES ('"+.@last_unique_id$+"', '"+.@cooldown+"', '"+getcharid(1)+"')");
+			}
+			set MiniEtower_partyid, getcharid(1);
+			setquest 150000;
+			setquest 150001;
+			set Floor21,0;
+			set Floor25,0;
+		}
+	}
+end;
+	
+OnInit:
+	.gepard = true;	//	Aqui você ativa e desativa a verificação Gepard (true ou false)
+	if(.gepard){
+		query_sql("CREATE TABLE IF NOT EXISTS `MiniEtower` (`unique_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0',`char_id` INT NOT NULL,`time` INT NOT NULL) ENGINE=MyISAM");
+	}
+}
+
+
+1@mtower,50,360,0	script	MImmortal Brazier#	844,{
+	if(getgroupid() >= 90 ){
+		mes"^C70847[STAFFS MENU]^000000";
+		mes"^C70847Ir para^000000";
+		if(select("^C70847Sim^000000:^C70847Não^000000") == 1){
+			input .@floor;
+			if(.@floor <= 25){
+				set .@map$, strnpcinfo(4);
+				set .@level,.@floor;
+				set .@level, atoi(replacestr(strnpcinfo(0),"FMGate102tower","")) +(.@floor - 1);
+				mapannounce strnpcinfo(4), "Todos os monstros no "+callfunc("F_GetNumSuffix",.@level)+" Nível foi derrotado.",bc_map,"0xffff00";
+				donpcevent instance_npcname(.@level+"FMGate102tower",instance_id())+"::OnEnable";
+				callfunc "F_Mini_Tower_Warp",.@floor,strnpcinfo(4);
+			}else{
+				mes"^C70847O máximo é 25^000000";
+				close;
+			}
+		}
+	}
+	end;
+OnInstanceInit:
+	initnpctimer;
+	end;
+
+OnTimer10000:
+	mapannounce instance_mapname("1@mtower",instance_id()), "Atenção :Não Domar um monstro pois não conta como derrotá-lo, Para evitar bug não dome.",bc_map,"0xff0000";
+	stopnpctimer;
+	end;
+}
+
+1@mtower,29,365,1	script	#1F MController	844,{
+	end;
+OnInstanceInit:
+	callfunc "F_Mini_Tower_Monster",
+		1,
+		instance_mapname("1@mtower",instance_id()),
+		instance_npcname("#1F MController",instance_id())+"::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	set .@map$, instance_mapname("1@mtower",instance_id());
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname("#1F MController",instance_id())+"::OnMyMobDead");
+	if (.@mob_dead_num < 1) {
+		initnpctimer;
+	} else
+		mapannounce .@map$, "Monstros Restantes no 1º Nível - "+.@mob_dead_num,bc_map,"0x00ff99";
+	end;
+
+OnTimer5000:
+	mapannounce instance_mapname("1@mtower",instance_id()), "Todos os monstros do 1º nível foram derrotados.",bc_map,"0xffff00";
+	donpcevent instance_npcname("1FMGate102tower",instance_id())+"::OnEnable";
+	stopnpctimer;
+	end;
+}
+
+1@mtower,12,393,0	script	1FMGate102tower	45,2,2,{
+	end;
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0),instance_id());
+	end;
+OnEnable:
+	enablenpc instance_npcname(strnpcinfo(0),instance_id());
+	callfunc "F_Mini_Tower_Monster",
+		atoi(replacestr(strnpcinfo(0),"FMGate102tower","")) + 1,
+		strnpcinfo(4),
+		instance_npcname(strnpcinfo(0),instance_id())+"::OnMyMobDead";
+	end;
+OnTouch_:
+	callfunc "F_Mini_Tower_Warp",
+		atoi(replacestr(strnpcinfo(0),"FMGate102tower","")) + 1,
+		strnpcinfo(4);
+	end;
+OnMyMobDead:
+	set .@map$, strnpcinfo(4);
+	set .@level, atoi(replacestr(strnpcinfo(0),"FMGate102tower","")) + 1;
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname(strnpcinfo(0),instance_id())+"::OnMyMobDead");
+	if (.@mob_dead_num < 1) {
+		initnpctimer;
+	} else
+		mapannounce .@map$, "Monstros restantes no "+callfunc("F_GetNumSuffix",.@level)+" Nível - "+.@mob_dead_num,bc_map,"0x00ff99";
+	end;
+OnTimer5000:
+	set .@level, atoi(replacestr(strnpcinfo(0),"FMGate102tower","")) + 1;
+	mapannounce strnpcinfo(4), "Todos os monstros no "+callfunc("F_GetNumSuffix",.@level)+" Nível foi derrotado.",bc_map,"0xffff00";
+	if(.@level != 25){
+		donpcevent instance_npcname(.@level+"FMGate102tower",instance_id())+"::OnEnable";
+	}else{
+		enablenpc instance_npcname("Warper#25FMGate102tower",instance_id());
+		mapannounce strnpcinfo(4), "Todos os monstros em todos os níveis foram derrotados.",bc_map,"0xffff00";
+		sleep 3000;
+		mapannounce strnpcinfo(4), "Até a próxima!.",bc_map,"0xffff00";
+	}
+	stopnpctimer;
+	end;
+}
+1@mtower,96,393,0	duplicate(1FMGate102tower)	2FMGate102tower	45,2,2
+1@mtower,184,393,0	duplicate(1FMGate102tower)	3FMGate102tower	45,2,2
+1@mtower,270,393,0	duplicate(1FMGate102tower)	4FMGate102tower	45,2,2
+1@mtower,355,393,0	duplicate(1FMGate102tower)	5FMGate102tower	45,2,2
+1@mtower,12,309,0	duplicate(1FMGate102tower)	6FMGate102tower	45,2,2
+1@mtower,96,309,0	duplicate(1FMGate102tower)	7FMGate102tower	45,2,2
+1@mtower,184,309,0	duplicate(1FMGate102tower)	8FMGate102tower	45,2,2
+1@mtower,270,309,0	duplicate(1FMGate102tower)	9FMGate102tower	45,2,2
+1@mtower,355,309,0	duplicate(1FMGate102tower)	10FMGate102tower	45,2,2
+1@mtower,12,222,0	duplicate(1FMGate102tower)	11FMGate102tower	45,2,2
+1@mtower,96,222,0	duplicate(1FMGate102tower)	12FMGate102tower	45,2,2
+1@mtower,184,222,0	duplicate(1FMGate102tower)	13FMGate102tower	45,2,2
+1@mtower,270,222,0	duplicate(1FMGate102tower)	14FMGate102tower	45,2,2
+1@mtower,355,222,0	duplicate(1FMGate102tower)	15FMGate102tower	45,2,2
+1@mtower,12,138,0	duplicate(1FMGate102tower)	16FMGate102tower	45,2,2
+1@mtower,96,138,0	duplicate(1FMGate102tower)	17FMGate102tower	45,2,2
+1@mtower,184,138,0	duplicate(1FMGate102tower)	18FMGate102tower	45,2,2
+1@mtower,270,138,0	duplicate(1FMGate102tower)	19FMGate102tower	45,2,2
+1@mtower,355,138,0	duplicate(1FMGate102tower)	20FMGate102tower	45,2,2
+1@mtower,12,51,0	duplicate(1FMGate102tower)	21FMGate102tower	45,2,2
+1@mtower,96,51,0	duplicate(1FMGate102tower)	22FMGate102tower	45,2,2
+1@mtower,184,51,0	duplicate(1FMGate102tower)	23FMGate102tower	45,2,2
+1@mtower,270,51,0	duplicate(1FMGate102tower)	24FMGate102tower	45,2,2
+
+
+1@mtower,353,48,4	script	Warper#25FMGate102tower	874,{
+	if(getpartyleader(getcharid(1),2) == getcharid(0)){
+		mes"Tem certeza que quer sair daqui ?";
+		if(select("Não:Sim") == 1)
+			close;
+	}
+	callfunc "F_Mini_Endless_Tower_Rewards";
+	completequest 150000;
+	warp "SavePoint",0,0;
+	end;
+	
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0),instance_id());
+	end;
+}
+
+1@mtower,71,4,0	script	#MBroadcast Mode1	844,{
+	end;
+
+OnInstanceInit:
+	initnpctimer;
+	end;
+
+OnTimer15000:
+OnTimer60000:
+	mapannounce instance_mapname("1@mtower",instance_id()), "Atenção : Em qualquer situação anormal onde você derrota um monstro, você não pode avançar para o próximo nível!",bc_map,"0xff0000";
+	end;
+OnTimer120000:
+	mapannounce instance_mapname("1@mtower",instance_id()), "Atenção : Em qualquer situação anormal onde você derrota um monstro, você não pode avançar para o próximo nível!",bc_map,"0xff0000";
+	stopnpctimer;
+	end;
+}
+
+function	script	F_Mini_Tower_Warp	{
+
+	set .@level, getarg(0);
+	set .@map$, getarg(1);
+
+	switch(.@level) {
+		case 2: warp .@map$,136,354; break;
+		case 3: warp .@map$,224,354; break;
+		case 4: warp .@map$,310,354; break;
+		case 5: warp .@map$,395,354; break;
+		case 6: warp .@map$,52,270; break;
+		case 7: warp .@map$,136,270; break;
+		case 8: warp .@map$,224,270; break;
+		case 9: warp .@map$,310,270; break;
+		case 10: warp .@map$,395,270; break;
+		case 11: warp .@map$,52,183; break;
+		case 12: warp .@map$,136,183; break;
+		case 13: warp .@map$,224,183; break;
+		case 14: warp .@map$,310,183; break;
+		case 15: warp .@map$,395,183; break;
+		case 16: warp .@map$,52,99; break;
+		case 17: warp .@map$,136,99; break;
+		case 18: warp .@map$,224,99; break;
+		case 19: warp .@map$,310,99; break;
+		case 20: warp .@map$,395,99; break;
+		case 21: warp .@map$,52,12; break;
+		case 22: warp .@map$,136,12; break;
+		case 23: warp .@map$,224,12; break;
+		case 24: warp .@map$,310,12; break;
+		case 25: warp .@map$,395,12; break;
+	}
+	return;
+}
+
+function	script	F_Mini_Tower_Monster	{
+
+	set .@level, getarg(0);
+	set .@map$, getarg(1);
+	set .@label$, getarg(2);
+
+	switch(.@level) {
+	case 1:
+		areamonster .@map$,7,351,17,387,"[MT] Hatii",1252,1,.@label$;
+		areamonster .@map$,7,351,17,387,"[MT] Bebe Hatii",1515,25,.@label$;
+		areamonster .@map$,7,351,17,387,"[MT] Cavaleiro da Tempestade",1251,1,.@label$;
+		areamonster .@map$,7,351,17,387,"[MT] Congelador",1312,25,.@label$;
+		areamonster .@map$,7,351,17,387,"[MT] Titã De Gelo",1777,15,.@label$;
+		break;
+	case 2:
+		areamonster .@map$,93,351,103,387,"[MT] Senhor dos Orcs",1190,1,.@label$;
+		areamonster .@map$,93,351,103,387,"[MT] Orc Herói",1087,1,.@label$;
+		areamonster .@map$,93,351,103,387,"[MT] Guerreiro Orc",1023,15,.@label$;
+		areamonster .@map$,93,351,103,387,"[MT] Senhora Orc",1273,15,.@label$;
+		areamonster .@map$,93,351,103,387,"[MT] Orc Arqueiro",154473,15,.@label$;
+		break;
+	case 3:
+		areamonster .@map$,181,351,191,387,"[MT] Serpente Suprema",1418,1,.@label$;
+		areamonster .@map$,181,351,191,387,"[MT] Abelha-Rainha",1059,1,.@label$;
+		areamonster .@map$,181,351,191,387,"[MT] Zangão",1004,10,.@label$;
+		areamonster .@map$,181,351,191,387,"[MT] Zangão Gigante",1303,10,.@label$;
+		areamonster .@map$,181,351,191,387,"[MT] Ermitão Maligno",1412,10,.@label$;
+		areamonster .@map$,181,351,191,387,"[MT] Ninfa Perversa",1416,10,.@label$;
+		break;
+	case 4:
+		areamonster .@map$,267,351,277,387,"[MT] Egnigem Cenia",1658,1,.@label$;
+		areamonster .@map$,267,351,277,387,"[MT] Samurai Encarnado",1492,1,.@label$;
+		areamonster .@map$,267,351,277,387,"[MT] Wickebine Tres",1653,10,.@label$;
+		areamonster .@map$,267,351,277,387,"[MT] Eremes Guile",1635,5,.@label$;
+		areamonster .@map$,267,351,277,387,"[MT] Laurell Weinder",1657,10,.@label$;
+		areamonster .@map$,267,351,277,387,"[MT] Shinobi",1560,10,.@label$;
+		areamonster .@map$,267,351,277,387,"[MT] Papel",1375,10,.@label$;
+		break;
+	case 5:
+		areamonster .@map$,352,351,362,387,"[MT] General Tartaruga",1312,1,.@label$;
+		areamonster .@map$,352,351,362,387,"[MT] Bafomé",1039,1,.@label$;
+		areamonster .@map$,352,351,362,387,"[MT] Bafomé Jr.",1101,25,.@label$;
+		areamonster .@map$,352,351,362,387,"[MT] Ghostring",1120,1,.@label$;
+		areamonster .@map$,352,351,362,387,"[MT] Permeter",1314,25,.@label$;
+		areamonster .@map$,352,351,362,387,"[MT] Assaulter",1315,25,.@label$;
+		break;
+	case 6:
+		areamonster .@map$,9,267,19,303,"[MT] Maya",1147,1,.@label$;
+		areamonster .@map$,9,267,19,303,"[MT] Maya Macho",1289,1,.@label$;
+		areamonster .@map$,9,267,19,303,"[MT] Atroce",1785,2,.@label$;
+		areamonster .@map$,9,267,19,303,"[MT] Vitata",1176,25,.@label$;
+		areamonster .@map$,9,267,19,303,"[MT] Piere",1160,20,.@label$;
+		areamonster .@map$,9,267,19,303,"[MT] Deniro",1105,20,.@label$;
+		areamonster .@map$,9,267,19,303,"[MT] Andre",1095,20,.@label$;
+		areamonster .@map$,9,267,19,303,"[MT] Galion",1783,10,.@label$;
+		break;
+	case 7:
+		areamonster .@map$,93,267,103,303,"[MT] Drácula",1389,1,.@label$;
+		areamonster .@map$,93,267,103,303,"[MT] Lady Branca",1630,1,.@label$;
+		areamonster .@map$,93,267,103,303,"[MT] Jakk",1130,25,.@label$;
+		areamonster .@map$,93,267,103,303,"[MT] Drainliar",1111,20,.@label$;
+		areamonster .@map$,93,267,103,303,"[MT] Donzela Verde",1631,15,.@label$;
+		areamonster .@map$,93,267,103,303,"[MT] Zhu Po Long",1630,10,.@label$;
+		areamonster .@map$,93,267,103,303,"[MT] Yao Jun",1512,10,.@label$;
+		break;
+	case 8:
+		areamonster .@map$,181,267,191,303,"[MT] RSX-0806",1623,1,.@label$;
+		areamonster .@map$,181,267,191,303,"[MT] Osíris",1038,1,.@label$;
+		areamonster .@map$,181,267,191,303,"[MT] Fornalha Velha",1617,15,.@label$;
+		areamonster .@map$,181,267,191,303,"[MT] Obsidiana",1615,15,.@label$;
+		areamonster .@map$,181,267,191,303,"[MT] Múmia Anciã",1297,25,.@label$;
+		areamonster .@map$,181,267,191,303,"[MT] Múmia",1041,10,.@label$;
+		break;
+	case 9:
+		areamonster .@map$,267,267,277,303,"[MT] Lady Tanee",1688,1,.@label$;
+		areamonster .@map$,267,267,277,303,"[MT] Menblatt",2363,30,.@label$;
+		areamonster .@map$,267,267,277,303,"[MT] Petal",2364,30,.@label$;
+		areamonster .@map$,267,267,277,303,"[MT] Pesar Noturno",1768,1,.@label$;
+		areamonster .@map$,267,267,277,303,"[MT] Isilla",1772,20,.@label$;
+		areamonster .@map$,267,267,277,303,"[MT] Echio",1770,20,.@label$;
+		areamonster .@map$,267,267,277,303,"[MT] Agav",1769,20,.@label$;
+		break;
+	case 10:
+		areamonster .@map$,352,267,362,303,"[MT] Detardeurus",1719,1,.@label$;
+		areamonster .@map$,352,267,362,303,"[MT] Senhor das Trevas",1272,1,.@label$;
+		areamonster .@map$,352,267,362,303,"[MT] Acidus Azul",1716,15,.@label$;
+		areamonster .@map$,352,267,362,303,"[MT] Acidus Amarelo",1713,20,.@label$;
+		areamonster .@map$,352,267,362,303,"[MT] Ilusão das Trevas",1302,5,.@label$;
+		areamonster .@map$,352,267,362,303,"[MT] Aparição",1291,25,.@label$;
+		break;
+	case 11:
+		areamonster .@map$,9,180,19,216,"[MT] Kiel D-01",1734,1,.@label$;
+		areamonster .@map$,9,180,19,216,"[MT] Faraó",1157,1,.@label$;
+		break;
+	case 12:
+		areamonster .@map$,93,180,103,216,"[MT] Senhor dos Mortos",1373,1,.@label$;
+		areamonster .@map$,93,180,103,216,"[MT] Vesper",1685,1,.@label$;
+		break;
+	case 13:
+		areamonster .@map$,181,180,191,216,"[MT] Amon-Ra",1511,1,.@label$;
+		areamonster .@map$,181,180,191,216,"[MT] Ktullanux",1779,1,.@label$;
+		break;
+	case 14:
+		areamonster .@map$,267,180,277,216,"[MT] Memória de Thanatos",1708,1,.@label$;
+		areamonster .@map$,267,180,277,216,"[MT] Naght Sieger",1956,1,.@label$;
+		break;
+	case 15:
+		areamonster .@map$,352,180,362,216,"[MT] Valquíria Randgris",1751,1,.@label$;
+		areamonster .@map$,352,180,362,216,"[MT] Besouro-Ladrão Dourado",1086,1,.@label$;
+		break;
+	case 16:
+		areamonster .@map$,9,96,19,132,"[MT] Ifrit",1832,1,.@label$;
+		areamonster .@map$,9,96,19,132,"[MT] Doppelganger",20852,1,.@label$;
+		break;
+	case 17:
+		areamonster .@map$,93,96,103,132,"[MT] Sombra de Nidhogg",2022,1,.@label$;
+		areamonster .@map$,93,96,103,132,"[MT] Gorynych",1885,1,.@label$;
+		break;
+	case 18:
+		areamonster .@map$,181,96,191,132,"[MT] Suma-Sacerdotiza Magaleta",1649,1,.@label$;
+		areamonster .@map$,181,96,191,132,"[MT] Bispo Decadente",1871,1,.@label$;
+		break;
+	case 19:
+		areamonster .@map$,267,96,277,132,"[MT] Algoz Eremes",1647,1,.@label$;
+		areamonster .@map$,267,96,277,132,"[MT] Boitatá",2068,1,.@label$;
+		break;
+	case 20:
+		areamonster .@map$,352,96,362,132,"[MT] Lorde Seyren",1646,1,.@label$;
+		areamonster .@map$,352,96,362,132,"[MT] Ktullanux",1779,1,.@label$;
+		break;
+	case 21:
+		areamonster .@map$,9,9,19,45,"[MT] Mestre-Ferreiro Howard",1648,1,.@label$;
+		areamonster .@map$,9,9,19,45,"[MT] Naght Sieger",1956,1,.@label$;
+		break;
+	case 22:
+		areamonster .@map$,93,9,103,45,"[MT] Atiradora de Elite Cecil",1650,1,.@label$;
+		areamonster .@map$,93,9,103,45,"[MT] Morroc Ferido",1917,1,.@label$;
+
+		break;
+	case 23:
+		areamonster .@map$,181,9,191,45,"[MT] Arquimaga Kathryne",1651,1,.@label$;
+		areamonster .@map$,181,9,191,45,"[MT] Morroc Criança",3096,1,.@label$;
+		break;
+	case 24:
+		areamonster .@map$,267,9,277,45,"[MT] Entweihen Crothen",1957,1,.@label$;
+		areamonster .@map$,267,9,277,45,"[MT] Deus Morroc",3097,1,.@label$;
+		break;
+	case 25:
+		areamonster .@map$,352,9,362,45,"[MT] Dark Lord Corrompido",20422,1,.@label$;
+		areamonster .@map$,352,9,362,45,"[MT] Betegeuse",20994,1,.@label$;
+		break;
+	}
+	return;
+}
+
+
+1@mtower	mapflag	noreturn
+1@mtower	mapflag	restricted	6
+1@mtower	mapflag	partylock
+1@mtower	mapflag	nobranch
+1@mtower	mapflag	noteleport
+1@mtower	mapflag	nowarpto
+1@mtower	mapflag	pvp	off
+1@mtower	mapflag	nosave	SavePoint
+1@mtower	mapflag	nosave	SavePoint
+1@mtower	mapflag	nowarp
+1@mtower	mapflag	nomemo
+1@mtower	mapflag	nochat
+1@mtower	mapflag	novending
+1@mtower	mapflag	monster_noteleport

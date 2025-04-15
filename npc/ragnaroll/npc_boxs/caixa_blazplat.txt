@@ -1,0 +1,5 @@
+function	script	caixa_blazplat#1	{
+setarray .@items[0], 50121,50122,50123,50124,50125,50126,50127,50128,50129,50130;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

@@ -1,0 +1,66 @@
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|				
+//|§§§§§§§§§§§§§§§§§§§§§  "Original é o que cria não é aquele que copia".  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§  ragnaproxy ©2017 - TODOS OS DIREITOS RERSEVADOS  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|					 
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§\    \§§§§§§§§/    /§§\    \§§§§§§/    /TM°§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§§\    \§§§§§§/    /§§§§\    \§§§§/    /§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|            |§§§§\    \§§§§/    /§§§§§§\    \§§/    /§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§\    \§§/    /§§§§§§§§\    \/    /§§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§§\    \/    /§§§§§§§§§§\        /§§§§§§§§§§§§|
+//|§§|            |§§§|            \§§§§§|   |§§§§|   |§§§§§§§\        /§§§§§§§§§§§§\      /§§§§§§§§§§§§§|
+//|§§|            |§§§|             \§§§§|   |§§§§|   |§§§§§§§§\      /§§§§§§§§§§§§§§\    /§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§\    |§§§|   |§§§§|   |§§§§§§§§/      \§§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§§/        \§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§/    /\    \§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§/    /§§\    \§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|	                                                                                       
+//| =====================================================================================================|
+//|   Script Criando por ragnaproxy | Cronus | Por Favor, Não Retire Os Créditos.              		 
+//| ==================================================================================================== |
+//|   Sistema de Facções VERSÃO: 4.0p							       		 
+//| ==================================================================================================== |
+
+moc_para01,26,92,5	script	Guia Facções	416,{
+
+	mes "[^FF0000Guia das Facções^000000]";
+	mes "Olá, eu sou o Ferraz, o guia das facções.";
+	mes "Eu sei tudo sobre Elas!!!";
+	next; mn2:
+	mes "[^FF0000Guia das Facções^000000]";
+	mes "Qual informação você deseja saber mais ?";
+	switch(select("-> ^000080Sobre as facções^000000:-> ^000080Sobre os duelos^000000:-> ^000080Sobre o Baú das Facções^000000:-> ^000080Sair^000000" )){ next;
+		
+		case 1:
+			mes "[^FF0000Sobre as Facções^000000]";
+			mes "O sistema de facções é dividido em 3 facções.";
+			mes "^990000"+$nomem$+"^000000";
+			mes "^0000FF"+$nomen$+"^000000";
+			mes "^33CC99"+$nomel$+"^000000";
+			next;
+			mes "[^FF0000Sobre as Facções^000000]";
+			mes "Os guerreiros de cada facção tem que fazer duelos com guerreiros das outras facções,";
+			mes "Cada duelo que você ganhar para sua facção, você vai adquirir pontos, quando você obter uma certa quantia de pontos,";
+			mes "você poderá abrir o baú da sua facção é pega os itens.";
+			mes "Os membros das facções pode também doar zeny para facção almentando a riqueza da facção, e melhorando sua posição no rank doador de zeny.";
+			next; goto mn2;
+			
+		case 2:
+			mes "[^FF0000Sobre os duelos^000000]";
+			mes "Para participa de um duelo é fácil, procure o npc duelo das facções, após entrar no mapa inscreva-se,";
+			mes "Espere os membros das outras 2 facções se inscrever também, quando as 3 facções estiverem prontas, é iniciado o duelo.";
+			mes "Quem mata as outras 2 facções é o vencedor.";
+			next; goto mn2;
+
+		case 3:
+			mes "[^FF0000Sobre o Baú^000000]";
+			mes "O baú das facções só é liberado quando você tiver pontos suficiente para abri-lo.";
+			mes "O itens do baú são gerenciado pelo administrador, para ver os itens disponíveis  basta acessar o menu da sua facção.";
+			next; goto mn2;
+			
+		case 4:
+		close;
+		
+	}
+}	

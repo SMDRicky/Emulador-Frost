@@ -1,0 +1,186 @@
+que_temsky,103,147,4	script	Ragna Frost#004	4_M_RAGI,{
+	mes "[Guardião da Cheffenia]";
+	mes "Bem-vindo à entrada da Cheffenia!";
+	mes "Aqui você pode acessar duas salas diferentes.";
+	mes "Para entrar, você precisa do passe correto para a sala desejada.";
+	mes "<b>^FF0000Leia as Informações antes de entrar!^000000</b>";
+	next;
+	
+	// Opções do NPC
+	.@choice = select("[»] Sala Normal:[»] Sala Pesadelo:[»] Informações:[»] Sair");
+
+	if (.@choice == 1) { // Sala Normal (bossnia_01)
+		if (rentalcountitem(40000) > 0) {
+			mes "[Guardião da Cheffenia]";
+			mes "Você possui o ^008000Passe Cheffenia Normal^000000.";
+			mes "Você está autorizado a entrar!";
+			close2;
+			warp "bossnia_01", 130, 121; // Coordene conforme necessário
+		} else {
+			mes "[Guardião da Cheffenia]";
+			mes "Você precisa do ^FF0000Passe Cheffenia Normal (ID: 40000)^000000 para entrar!";
+			mes "Esse passe ^FF0000não será consumido^000000, apenas verificado.";
+		}
+	} else if (.@choice == 2) { // Sala Pesadelo (gld2_ald)
+		if (rentalcountitem(40001) > 0) {
+			mes "[Guardião da Cheffenia]";
+			mes "Você possui o ^800080Passe Cheffenia Pesadelo^000000.";
+			mes "Você está autorizado a entrar!";
+			close2;
+			warp "gld2_ald", 100, 100; // Coordene conforme necessário
+		} else {
+			mes "[Guardião da Cheffenia]";
+			mes "Você precisa do ^FF0000Passe Cheffenia Pesadelo (ID: 40001)^000000 para entrar!";
+			mes "Esse passe ^FF0000não será consumido^000000, apenas verificado.";
+		}
+	} else if (.@choice == 3) { // [»] Explicação do sistema de drop personalizado
+		mes "[Guardião da Cheffenia]";
+		mes "^0099FF[»] SISTEMA DE DROP PERSONALIZADO^000000";
+		mes "Aqui dentro da Cheffenia, os monstros possuem um sistema especial de drop!";
+		next;
+		mes "^FFA500[»] Como funciona o sistema de drop?^000000";
+		mes "~> Apenas os monstros dentro deste mapa têm ^FF0000drops especiais^000000.";
+		mes "~> A chance de drop ^008000não é afetada pelo sistema normal do jogo^000000.";
+		mes "~> Você precisa de um ^FF0000passe para entrar^000000, mas ele ^008000não será consumido^000000, apenas verificado.";
+		next;
+		mes "^008B8B[»] Bônus de Drop e Como Melhorar Suas Chances:^000000";
+		mes "Se você ativar um dos itens abaixo, suas chances de drop aumentarão:";
+		mes "^C71585[»] Sem buff:^000000 Drop normal.";
+		mes "^000080[»] Goma de Mascar (100%):^000000 Chance dobrada.";
+		mes "^FF1493[»] Chiclete de Bola (200%):^000000 Chance triplicada!";
+		next;
+		mes "^00FFFF[»] Como a Taxa de Drop Personalizada Funciona?^000000";
+		mes "A chance de drop muda conforme a rate escolhida pelo jogador:";
+		mes "Quanto ^FF0000menor a rate^000000, ^008000maior a chance de drop^000000!";
+		next;
+		mes "^FFD700[»] Exemplo Prático:^000000";
+		mes "[»] Se um item tem ^FF000010% de drop base^000000:";
+		mes "^000080[»] Jogador com rate ^0000801x^000080 + Chiclete de Bola (200%) [»] Chance final: ^FF000030%^000000";
+		mes "^4169E1[»] Jogador com rate ^4169E15x^4169E1 + Chiclete de Bola (200%) [»] Chance final: ^FF00006%^000000";
+		mes "^4682B4[»] Jogador com rate ^4682B425x^4682B4 + Chiclete de Bola (200%) [»] Chance final: ^FF00001.2%^000000";
+		next;
+		mes "^800080[»] Importante:^000000";
+		mes "Quando um jogador recebe um item raro, um ^008B8Banúncio será feito no mapa^000000!";
+		mes "Assim, todos saberão quem foi sortudo!";
+		mes "Boa sorte e bons drops!";
+	} else {
+		mes "[Guardião da Cheffenia]";
+		mes "Volte quando estiver pronto!";
+	}
+	close;
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 8;
+	setunittitle getnpcid(0), "[Guardião da Cheffenia]";
+    end;
+
+
+}
+
+//Eventos Staff
+que_temsky,96,147,5	script	Loja Cheffenia#005	10467,{
+	mes "[^A020F0Loja Cheffenia^000000]";
+	mes "Olá, eu sou responsavel por todos os itens da [Cheffenia] ";
+	mes "Qual loja você Gostaria de ver ?";
+	next;
+	switch(select("^32CD32[»] ^000000Elmos","^32CD32[»] ^000000Armaduras","^32CD32[»] ^000000Escudos","^32CD32[»] ^000000Acessorios","^8B0000[»]^000000 Consumiveis","^8B0000[»]^000000 Nenhuma")) {
+		case 1:
+		close2;
+		callshop "LOJA_CHEFFENIA_ELMOS", 1;
+		end;
+		case 2:
+		close2;
+		callshop "LOJA_CHEFFENIA_ARMADURAS", 1;
+		end;
+		case 3:
+		close2;
+		callshop "LOJA_CHEFFENIA_ESCUDOS", 1;
+		end;
+		case 4:
+		close2;
+		callshop "LOJA_CHEFFENIA_ACESSORIOS", 1;
+		end;
+		case 5:
+		close2;
+		callshop "CHEFFENIA_VALE_STUFF", 1;
+		end;
+		case 6:
+		mes "[^6666FFLoja de Eventos^000000]";
+		mes "Volte quando precisar!!!";
+		end;
+
+	OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 68;
+	setunittitle getnpcid(0), "[Cheffenia RagnaFrost]";
+	end;
+	}
+}
+
+function	script	F_CheffeniaStatus	{
+	// getarg(0): tipo (0 = normal, 1 = difícil)
+	.@icon = 2000; // ícone de efeito visual
+	.@time_left = (getarg(0) == 0 ? #CHEFFENIA_NORMAL : #CHEFFENIA_HARD) - gettimetick(2);
+	.@ms = .@time_left * 1000;
+	if (.@ms > 2147483647)
+		.@ms = 2147483647;
+
+	fstatus(getcharid(0), .@icon, 0, 0); // remove
+	sleep2 10;
+	fstatus(getcharid(0), .@icon, .@ms, 1); // aplica com tempo restante
+	end;
+}
+
+function	script	F_Cheffenia_Activate	{
+	// getarg(0): tipo (0 = normal, 1 = difícil)
+	// getarg(1): duração em horas (ex: 1 = 1 hora)
+
+	.@type = getarg(0);
+	.@hours = getarg(1);
+	.@seconds = .@hours * 3600;
+
+	if (.@type == 0) {
+		// Cheffenia Normal
+		if (#CHEFFENIA_NORMAL > gettimetick(2))
+			set #CHEFFENIA_NORMAL, #CHEFFENIA_NORMAL + .@seconds;
+		else
+			set #CHEFFENIA_NORMAL, gettimetick(2) + .@seconds;
+		callfunc("F_CheffeniaStatus", 0);
+		dispbottom "[ Cheffenia - Normal ] : Acesso concedido por " + .@hours + " hora(s).";
+	} else if (.@type == 1) {
+		// Cheffenia Difícil
+		if (#CHEFFENIA_HARD > gettimetick(2))
+			set #CHEFFENIA_HARD, #CHEFFENIA_HARD + .@seconds;
+		else
+			set #CHEFFENIA_HARD, gettimetick(2) + .@seconds;
+		callfunc("F_CheffeniaStatus", 1);
+		dispbottom "[ Cheffenia - Difícil ] : Acesso concedido por " + .@hours + " hora(s).";
+	}
+
+	end;
+}
+
+-	script	Cheffenia_LoginCheck	-1,{
+
+OnPCLoginEvent:
+OnHour0000:
+
+	// Verifica acesso à Cheffenia NORMAL
+	if (#CHEFFENIA_NORMAL > gettimetick(2)) {
+		callfunc("F_CheffeniaStatus", 0);
+		dispbottom "[ Cheffenia - Normal ] : Acesso ativo até: " + callfunc("Time2Str", #CHEFFENIA_NORMAL) + ".";
+	} else if (#CHEFFENIA_NORMAL) {
+		set #CHEFFENIA_NORMAL, 0;
+		dispbottom "[ Cheffenia - Normal ] : Seu acesso expirou.";
+	}
+
+	// Verifica acesso à Cheffenia DIFÍCIL
+	if (#CHEFFENIA_HARD > gettimetick(2)) {
+		callfunc("F_CheffeniaStatus", 1);
+		dispbottom "[ Cheffenia - Difícil ] : Acesso ativo até: " + callfunc("Time2Str", #CHEFFENIA_HARD) + ".";
+	} else if (#CHEFFENIA_HARD) {
+		set #CHEFFENIA_HARD, 0;
+		dispbottom "[ Cheffenia - Difícil ] : Seu acesso expirou.";
+	}
+
+	end;
+}

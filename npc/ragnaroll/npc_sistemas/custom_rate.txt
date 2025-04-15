@@ -1,0 +1,207 @@
+//-	script	Custom_Rate#main	-1,{
+//OnInit:
+//	// Lista de Rates
+//	setarray .CustomRates$, "[»] Rate 1x", "[»] Rates 5x", "[»] Rates 20x";
+//
+//	//			<base>,<job>,<drop>,<efst_icon>,<item_id>,<achievement_id>
+//	setarray .CustomRates_1, 1, 1, 100, 1600, 30000, 150000; // Vermelho - Título 1500
+//	setarray .CustomRates_2, 5, 5, 50, 1601, 30001, 150001; // Verde - Título 1501
+//	setarray .CustomRates_3, 20, 20, 1, 1602, 30002, 150002; // Azul - Título 1502
+//
+//	// Bind Commands
+//	bindatcmd "cratereset", "Custom_Rate#main::OnResetVar", 99, 99;
+//	bindatcmd "cratecall", "Custom_Rate#main::OnCallSet", 99, 99;
+//	end;
+//
+//OnResetVar:
+//	CUSTOM_RATE_STATE = 0;
+//	CUSTOM_RATE_BASE = 1;
+//	CUSTOM_RATE_JOB = 1;
+//	CUSTOM_RATE_DROP = 1;
+//	CUSTOM_RATE_EFST = 0;
+//	CUSTOM_RATE_ITEM = 0;
+//	CUSTOM_RATE_COLOR = 0;
+//	set_custom_rate CUSTOM_RATE_BASE, CUSTOM_RATE_JOB, CUSTOM_RATE_DROP, CUSTOM_RATE_EFST;
+//	dispbottom "[Sistema de Rate]: Rate resetada com sucesso.";
+//	end;
+//
+//OneTimeSetRate:
+//	if (CUSTOM_RATE_STATE == 1)
+//		end;
+//	
+//	if (getcharid(1) > 0) {
+//		mes "[Sistema de Rate]: Você está em um grupo.";
+//		mes "Para escolher uma rate, primeiro saia do grupo!";
+//		close;
+//	}
+//
+//	cutin "ratescustom.png", 1;
+//	mes "^0099FF[»] Bem-vindo ao sistema de Rates Personalizadas!^000000";
+//	mes "Aqui, você pode escolher como será o seu progresso no jogo.";
+//	mes "---------------------------------------";
+//	mes "^FFD700[»] O que significa cada taxa?^000000";
+//	mes "^0099FF• Experiência Base:^000000 Quanto mais alta, mais rápido seu personagem sobe de nível.";
+//	mes "^0099FF• Experiência de Job:^000000 Afeta a velocidade com que você ganha pontos de habilidade.";
+//	mes "^0099FF• Drop de Itens:^000000 Quanto mais alto, mais fácil conseguir equipamentos e itens raros.";
+//	mes "---------------------------------------";
+//	mes "^FF4500[»] Escolha com sabedoria! Após definir sua rate, você NÃO poderá alterá-la.^000000";
+//	next;
+//	mes "^00FF00[»] ^000000^0000FF[RATES 1x]^000000";
+//	mes "^FF1493• Exp Base: ^FF00001x^777777 (Evolução mais lenta)";
+//	mes "^FF1493• Exp Job: ^FF00001x^777777 (Pontos de habilidade demorados)";
+//	mes "^FF1493• Drop: ^00FF00+100%^777777 (Chance maior de conseguir itens raros)";
+//	mes "^FF1493• Estilo: ^FF0000Desafio extremo^777777 (Para jogadores hardcore)";
+//	next;
+//	mes "^00FF00[»] ^000000^0000FF[RATES 25x]^000000";
+//	mes "^FF1493• Exp Base: ^00FF005x^777777 (Evolução equilibrada)";
+//	mes "^FF1493• Exp Job: ^00FF005x^777777 (Ganho de habilidades moderado)";
+//	mes "^FF1493• Drop: ^00FF00+50%^777777 (Boa chance de encontrar equipamentos)";
+//	mes "^FF1493• Estilo: ^FFFF00Balanceado^777777 (Experiência de jogo clássica)";
+//	next;
+//	mes "^00FF00[»] ^000000^0000FF[RATES 50x]^000000";
+//	mes "^FF1493• Exp Base: ^00FF0020x^777777 (Subir de nível rápido)";
+//	mes "^FF1493• Exp Job: ^00FF0020x^777777 (Ganho de habilidades acelerado)";
+//	mes "^FF1493• Drop: ^00FF00Sem bonificação de Drop^777777 (Itens um pouco mais difíceis de obter)";
+//	mes "^FF1493• Estilo: ^00FF00Jogador casual^777777 (Para quem quer upar rápido)";
+//	next;
+//	mes "^FF4500[»] Após escolher sua rate, ela será PERMANENTE!^000000";
+//	mes "Tem certeza de sua escolha?";
+//
+//OnCallSet:
+//	.@rates$ = "";
+//	for (.@i = 0; .@i < getarraysize(.CustomRates$); .@i++)
+//		.@rates$ += .CustomRates$[.@i] + ":"; 
+//	.@r = select(.@rates$);
+//
+//	if (.@r == 0) {
+//		mes "[Sistema de Rate]: Você precisa escolher uma Rate para continuar jogando!";
+//		close2;
+//		goto OneTimeSetRate;
+//	}
+//
+//	CUSTOM_RATE_BASE = getd(".CustomRates_" + .@r + "[0]");
+//	CUSTOM_RATE_JOB = getd(".CustomRates_" + .@r + "[1]");
+//	CUSTOM_RATE_DROP = getd(".CustomRates_" + .@r + "[2]");
+//	CUSTOM_RATE_EFST = getd(".CustomRates_" + .@r + "[3]");
+//	CUSTOM_RATE_ITEM = getd(".CustomRates_" + .@r + "[4]");
+//	.@achieve_id = getd(".CustomRates_" + .@r + "[5]");
+//	CUSTOM_RATE_STATE = 1;
+//
+//	getitem CUSTOM_RATE_ITEM, 1;
+//
+//	// Atribui título pela conquista
+//	achievementcomplete(.@achieve_id);
+//
+//	cutin "", 255;
+//
+//OnPCLoginEvent:
+//	if (CUSTOM_RATE_STATE == 1) {
+//		set_custom_rate CUSTOM_RATE_BASE, CUSTOM_RATE_JOB, CUSTOM_RATE_DROP, CUSTOM_RATE_EFST;
+//		message strcharinfo(0), "[Sistema de Rate]: Ajustando taxas para: "+CUSTOM_RATE_BASE+"x/"+CUSTOM_RATE_JOB+"x/"+CUSTOM_RATE_DROP+"x.";
+//	} else
+//		goto OneTimeSetRate;
+//	end;
+//}
+
+
+-	script	Custom_Rate#main	-1,{
+	OnInit:
+		// Lista de Rates
+		setarray .CustomRates$, "[»] Rates 1x", "[»] Rates 5x", "[»] Rates 25x";
+
+		//			<base>,<job>,<drop>,<efst_icon>,<item_id>
+		setarray .CustomRates_1, 1, 1, 900, 1600, 30000;
+		setarray .CustomRates_2, 5, 5, 400, 1601, 30001;
+		setarray .CustomRates_3, 25, 25, 1, 1602, 30002;
+
+		// Bind Commands
+		bindatcmd "cratereset", "Custom_Rate#main::OnResetVar", 99, 99;
+		bindatcmd "cratecall", "Custom_Rate#main::OnCallSet", 99, 99;
+		end;
+
+	OnResetVar:
+		CUSTOM_RATE_STATE = 0;
+		CUSTOM_RATE_BASE = 1;
+		CUSTOM_RATE_JOB = 1;
+		CUSTOM_RATE_DROP = 1;
+		CUSTOM_RATE_EFST = 0;
+		CUSTOM_RATE_ITEM = 0;
+		dispbottom "[Sistema de Rate]: Rate resetada com sucesso.";
+		end;
+
+	OneTimeSetRate:
+		if (CUSTOM_RATE_STATE == 1)
+			end;
+		
+		if (getcharid(1) > 0) {
+			mes "[Sistema de Rate]: Você está em um grupo.";
+			mes "Para escolher uma rate, primeiro saia do grupo!";
+			close;
+		}
+
+		cutin "ratescustom.png", 1;
+		mes "^0099FF[»] Bem-vindo ao sistema de Rates Personalizadas!^000000";
+		mes "Aqui, você pode escolher como será o seu progresso no jogo.";
+		mes "---------------------------------------";
+		mes "^FFD700[»] O que significa cada taxa?^000000";
+		mes "^0099FF• Experiência Base:^000000 Quanto mais alta, mais rápido seu personagem sobe de nível.";
+		mes "^0099FF• Experiência de Job:^000000 Afeta a velocidade com que você ganha pontos de habilidade.";
+		mes "^0099FF• Drop de Itens:^000000 Quanto mais alto, mais fácil conseguir equipamentos e itens raros.";
+		mes "---------------------------------------";
+		mes "^FF4500[»] Escolha com sabedoria! Após definir sua rate, você NÃO poderá alterá-la.^000000";
+		mes "Agora, veja as opções disponíveis:";
+		next;
+
+		mes "^00FF00[»] ^000000^0000FF[RATES 1x]^000000";
+		mes "^FF1493• Exp Base: ^FF00001x^777777 (Evolução mais lenta)";
+		mes "^FF1493• Exp Job: ^FF00001x^777777 (Pontos de habilidade demorados)";
+		mes "^FF1493• Drop: ^00FF0010x^777777 (Chance maior de conseguir itens raros)";
+		mes "^FF1493• Estilo: ^FF0000Desafio extremo^777777 (Para jogadores hardcore)";
+		next;
+
+		mes "^00FF00[»] ^000000^0000FF[RATES 25x]^000000";
+		mes "^FF1493• Exp Base: ^00FF005x^777777 (Evolução equilibrada)";
+		mes "^FF1493• Exp Job: ^00FF005x^777777 (Ganho de habilidades moderado)";
+		mes "^FF1493• Drop: ^00FF005x^777777 (Boa chance de encontrar equipamentos)";
+		mes "^FF1493• Estilo: ^FFFF00Balanceado^777777 (Experiência de jogo clássica)";
+		next;
+
+		mes "^00FF00[»] ^000000^0000FF[RATES 50x]^000000";
+		mes "^FF1493• Exp Base: ^00FF0025x^777777 (Subir de nível rápido)";
+		mes "^FF1493• Exp Job: ^00FF0025x^777777 (Ganho de habilidades acelerado)";
+		mes "^FF1493• Drop: ^00FF0001x^777777 (Itens um pouco mais difíceis de obter)";
+		mes "^FF1493• Estilo: ^00FF00Jogador casual^777777 (Para quem quer upar rápido)";
+		next;
+
+		mes "^FF4500[»] Após escolher sua rate, ela será PERMANENTE!^000000";
+		mes "Tem certeza de sua escolha?";
+	OnCallSet:
+		.@rates$ = "";
+		for (.@i = 0; .@i < getarraysize(.CustomRates$); .@i++)
+			.@rates$ += .CustomRates$[.@i] + ":";	
+		.@r = select(.@rates$);
+
+		if (.@r == 0) {
+			mes "[Sistema de Rate]: Você precisa escolher uma Rate para continuar jogando!";
+			close2;
+			goto OneTimeSetRate;
+		}
+
+		CUSTOM_RATE_BASE = getd(".CustomRates_" + .@r + "[0]");
+		CUSTOM_RATE_JOB = getd(".CustomRates_" + .@r + "[1]");
+		CUSTOM_RATE_DROP = getd(".CustomRates_" + .@r + "[2]");
+		CUSTOM_RATE_EFST = getd(".CustomRates_" + .@r + "[3]");
+		CUSTOM_RATE_ITEM = getd(".CustomRates_" + .@r + "[4]");
+		CUSTOM_RATE_STATE = 1;
+
+		getitem CUSTOM_RATE_ITEM, 1;
+
+		cutin "", 255;
+	OnPCLoginEvent:
+		if (CUSTOM_RATE_STATE == 1) {
+			set_custom_rate CUSTOM_RATE_BASE, CUSTOM_RATE_JOB, CUSTOM_RATE_DROP, CUSTOM_RATE_EFST;
+			message strcharinfo(0), "[Sistema de Rate]: Ajustando taxas para: "+CUSTOM_RATE_BASE+"x/"+CUSTOM_RATE_JOB+"x/"+CUSTOM_RATE_DROP+"%.";
+		} else
+			goto OneTimeSetRate;
+		end;
+}

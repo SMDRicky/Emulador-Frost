@@ -1,0 +1,93 @@
+vip_lounge,164,126,4	script	Nick Premium Colorido	509,{
+	mes "[^8B4513Nick Colorido^000000]";
+	mes "Olá! Eu posso alterar a cor do seu nick.";
+	mes "Tenho 7 opções disponíveis.";
+	mes "Deseja prosseguir?";
+	switch(select("^8B4513[»]^000000 Sim:^3CB371[»]^000000 Não")) {
+		case 1:
+			next;
+			mes "[^8B4513Nick Colorido^000000]";
+			mes "Você deseja trocar para qual cor?";
+			switch(select("[»] ^8B4513Marrom^000000:[»] ^0000FFAzul^000000:[»] ^FFFF00Amarelo^000000:[»] ^008000Verde^000000:[»] ^FFC0CBRosa^000000:[»] ^FF0000Vermelho^000000:[»] ^A020F0Roxo^000000:[»] Resetar Cor")) {
+				case 1:
+					next;
+					mes "[^8B4513Nick Colorido^000000]";
+					if (#marrom == 1) { mes "Você ja tem essa cor!"; set_color_nick(1); end; }
+					set_color_nick(1);
+					set #marrom,1;
+					npctalk "Feito!";
+					close;
+				case 2:
+next;
+					mes "[^8B4513Nick Colorido^000000]";
+					if (#azul == 1) { mes "Você ja tem essa cor!"; set_color_nick(2); end; }
+					set_color_nick(2);
+					npctalk "Feito!";
+					set #azul,1;
+					close;
+				case 3:
+next;
+					mes "[^8B4513Nick Colorido^000000]";
+					if (#Amarelo == 1) { mes "Você ja tem essa cor!"; set_color_nick(3); end; }
+					set_color_nick(3);
+					npctalk "Feito!";
+					set #amarelo,1;
+					close;
+				case 4:
+next;
+					mes "[^8B4513Nick Colorido^000000]";
+					if (#verde == 1) { mes "Você ja tem essa cor!"; set_color_nick(4); end; }
+					set_color_nick(4);
+					npctalk "Feito!";
+					set #verde,1;
+					close;
+				case 5:
+next;
+					mes "[^8B4513Nick Colorido^000000]";
+					if (#rosa == 1) { mes "Você ja tem essa cor!"; set_color_nick(5); end; }
+					set_color_nick(5);
+					npctalk "Feito!";
+					set #rosa,1;
+					close;
+
+				case 6:
+next;
+					mes "[^8B4513Nick Colorido^000000]";
+					if (#vermelho == 1) { mes "Você ja tem essa cor!"; set_color_nick(6); end; }
+					set_color_nick(6);
+					npctalk "Feito!";
+					set #vermelho,1;
+					close;
+				case 7:
+next;
+					mes "[^8B4513Nick Colorido^000000]";
+					if (#roxo == 1) { mes "Você ja tem essa cor!"; set_color_nick(7); end; }
+					set_color_nick(7);
+					npctalk "Feito!";
+					set #roxo,1;
+					close;
+				case 8:
+next;
+					mes "[^8B4513Nick Colorido^000000]";
+					mes "Sua cor foi resetada com sucesso.";
+					set_color_nick(0);
+					close;
+
+
+
+			}
+		case 2:
+			next;
+			mes "[^8B4513Nick Colorido^000000]";
+			mes "Ok, quando quiser trocar a cor do seu nick, só me procure.";
+			break;
+	}
+	close;
+
+	L_Cash:
+	next;
+	mes "[^8B4513Nick Colorido^000000]";
+	mes "Parece que você não tem ^FF1493Cash Points^000000 suficientes.";
+	close;
+	end;
+}

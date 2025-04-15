@@ -1,0 +1,5 @@
+function	script	caixa_divineaur	{
+	setarray .@items[0], 50156,50157,50158,50159,50160,50161,50162,50163,50164,50165,50166;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

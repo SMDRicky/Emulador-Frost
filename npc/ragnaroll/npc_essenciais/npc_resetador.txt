@@ -1,0 +1,119 @@
+prontera,126,212,5	script	Resetador de Status#Template	963,{
+
+if (!#Resetadors) {
+	mes "^339966[ Resetador de Status ]^000000";
+	mes "Você pode realizar um reset de graça uma vez.";
+	mes "Gostaria de resetar agora?";
+	switch(select("[»] ^0000CDSim^000000","[»] ^40E0D0Não^000000")) {
+		case 1:
+			resetstatus;
+			resetskill;
+			set #Resetadors, 1;
+			mes "^339966[ Resetador de Status ]^000000";
+			mes "Seu reset foi realizado com sucesso!";
+			close;
+		case 2:
+			mes "^339966[ Resetador de Status ]^000000";
+			mes "Tudo bem, volte quando quiser!";
+			close;
+	}
+}
+	function SF_showRequirements;
+	function SF_checkRequirements;
+	function SF_resetCharacter;
+	mes "^339966[ Resetador de Status ]^000000";
+	mes (gettime(3)>= 6&&gettime(3)<= 12?"Bom-dia":(gettime(3)>=13&&gettime(3)<=18?"Boa-tarde":"Boa-noite"))+", ^008aff"+strcharinfo(0)+"^000000 !";
+	mes "Eu posso ajudá-lo a re-aprender seus atributos e/ou habilidades!";
+	next;
+	mes "^339966[ Resetador de Status ]^000000";
+	SF_showRequirements();
+	mes "Você está de acordo?";
+	next;
+	if(select("^3CB371[»]^000000 Sim:^ff0000[»]^000000 Não") == 2) {
+		mes "^339966[ Resetador de Status ]^000000";
+		mes "Tudo bem, você sabe onde me encontrar caso mude de ideia! ^~^";
+		close2;
+		emotion 19;
+		end;
+	}
+	if(SF_checkRequirements()) {
+		mes "^339966[ Resetador de Status ]^000000";
+		mes "Tem certeza, mesmo!?";
+		next;
+		if(select("^3CB371[»]^000000 Sim, anda logo com isso!:^ff0000[»]^000000 Não, espera...") == 2) {
+			mes "^339966[ Resetador de Status ]^000000";
+			mes "Odeio pessoas indecisas... ¬¬";
+			close2;
+			emotion 29;
+			end;
+		}
+		mes "^339966[ Resetador de Status ]^000000";
+		mes "E, o que você gostaria de re-aprender?";
+		next;
+		switch(select("^3CB371[»]^000000 Atributos:^3CB371[»]^000000 Habilidades:^ff0000[»]^000000 Ambos")) {
+			case 1: SF_resetCharacter(1); break;
+			case 2: SF_resetCharacter(2); break;
+			case 3: SF_resetCharacter(3); break;
+		}
+	}
+	close; //Body
+	// void
+	function SF_showRequirements {
+		if(.reset_configs[0]) {
+			mes "No entanto, preciso de ^0000FF1^000000 ^0000FF"+getitemname(.reset_configs[0])+"^000000 para ser utilizado como parte do pagamento.";
+		}
+		if(.reset_configs[1]) {
+			mes "Costumo cobrar uma quantia simbólica de ^0000FF"+.reset_configs[1]+"^000000 Zenys pelo serviço prestado.";
+		}
+		if(.reset_configs[2]) {
+			mes "^FF0000OBS: Esta operação só pode ser realizada "+.reset_configs[2]+" "+(.reset_configs[2] > 1 ? "vezes" : "vez") + "!^000000";
+		}
+		return;
+	}
+	// int
+	function SF_checkRequirements {
+		if (((Weight * 100) / MaxWeight) > 49) {
+			mes "Parece que você está carregando muitas coisas consigo, guarde algumas delas e volte a falar comigo!";
+			return 0;
+		}
+		if(countitem(.reset_configs[0]) < 1) {
+			mes "^339966[ Resetador de Status ]^000000";
+			mes "Meu caro aventureir"+(Sex ? "o" : "a")+", onde está o ^0000FF"+getitemname(.reset_configs[0])+"^000000!?";
+			return 0;
+		}
+		if(Zeny < .reset_configs[1]) {
+			mes "^339966[ Resetador de Status ]^000000";
+			mes "Zenys, preciso de Zenys para ajuda-l"+(Sex ? "o!" : "a!");
+			return 0;
+		}
+		//if(reset >= .reset_configs[2]) {
+		//	mes "^339966[ Resetador de Status ]^000000";
+		//	mes "Espera aí, você não pode realizar este procedimento novamente!Só tem direito de um Reset.";
+		//	return 0;
+		//}
+		return 1;
+	}
+	// void
+	// Arg(0): type (1: Atributos, 2: Skills, 3: Ambos)
+	function SF_resetCharacter {
+		// Deleta os requirimentos
+		delitem .reset_configs[0], 1;
+		set Zeny, Zeny - .reset_configs[1];
+		// Seta a variável de reset permanente
+		set reset, reset + 1;
+		if(getarg(0) & 1) {
+			resetstatus;
+		}
+		if(getarg(0) & 2) {
+			resetskill;
+		}
+		return;
+	}
+OnInit:
+	// ID do catalisador necessário
+	set .reset_configs[0], 12213;
+	// Zeny necessário
+	set .reset_configs[1], 3000000;
+	// Número de vezes que o reset pode ser realizado
+	//set .reset_configs[2], 5;
+}

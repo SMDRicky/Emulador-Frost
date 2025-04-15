@@ -1,0 +1,5 @@
+prontera,150,152,5	script	insasvi	-1,{
+mes "oi";
+end;
+
+}

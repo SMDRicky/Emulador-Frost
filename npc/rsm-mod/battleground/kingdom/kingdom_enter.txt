@@ -1,0 +1,352 @@
+//===== rAthena Script =======================================
+//= BattleGround Expansion - Entrada da Kingdom
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Npc's responsável pela entrada nas Batalhas Kingdom.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+// Oficiais Kingdom Kriemhild
+//============================================================
+bat_room02,141,178,5	script	Oficial Kingdom#01a	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Guillaume]";
+	mes "Vamos mostrar o poder do Exército de Guillaume para aqueles Croixs fedorentos!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Guillaume]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@KingdomBG1_MinBaseLevel && BaseLevel > $@KingdomBG1_MinBaseLevel) || ($@KingdomBG1_MaxBaseLevel && BaseLevel < $@KingdomBG1_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Guillaume]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				set .@mapcount2,getmapusers("bat_g01");
+				if (.@mapcount2 > 0) {
+					mes "[Oficial do Exército de Guillaume]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Croixs.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@KingdomBG1 > 0) {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Croixs o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",57,223;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Guillaume]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,141,121,1	script	Oficial Kingdom#01b	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Croix]";
+	mes "Vamos mostrar aos Guillaumes o poder do Exército Croix!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Croix]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@KingdomBG1_MinBaseLevel && BaseLevel > $@KingdomBG1_MinBaseLevel) || ($@KingdomBG1_MaxBaseLevel && BaseLevel < $@KingdomBG1_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Croix]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				set .@mapcount2,getmapusers("bat_g01");
+				if (.@mapcount2 > 0) {
+					mes "[Oficial do Exército de Croix]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Guillaume.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@KingdomBG1 > 0) {
+						mes "[Oficial do Exército de Croix]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Croix]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Guillaumes o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",58,207;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Croix]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,143,178,5	script	Cavaleiro de Guillaume#g01_a_1	-1,{
+	mes "[Cavaleiro de Guillaume]";
+	mes "Esta é uma replica da Guerra do Emperium no Castelo de Kriemhild.";
+	mes "O castelo começa desocupado, e ambas equipe devem batalhar pelo dominio do castelo.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "Após uma das equipes dominarem o castelo destruíndo o Emperium, ela passa a defende-lo, utilizando guardiões para fortalecer as barreiras do castelo.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "A Batalha dura " + $@KingdomBG1_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Guillaume]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}
+
+bat_room02,143,121,1	script	Cavaleiro de Croix#g01_b_1	-1,{
+	mes "[Cavaleiro de Croix]";
+	mes "Esta é uma replica da Guerra do Emperium no Castelo de Kriemhild.";
+	mes "O castelo começa desocupado, e ambas equipe devem batalhar pelo dominio do castelo.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "Após uma das equipes dominarem o castelo destruíndo o Emperium, ela passa a defende-lo, utilizando guardiões para fortalecer as barreiras do castelo.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "A Batalha dura " + $@KingdomBG1_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Croix]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}
+
+// Oficiais Kingdom Arbor
+//============================================================
+bat_room02,149,178,5	script	Oficial Kingdom#02a	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Guillaume]";
+	mes "Vamos mostrar o poder do Exército de Guillaume para aqueles Croixs fedorentos!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Guillaume]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@KingdomBG2_MinBaseLevel && BaseLevel > $@KingdomBG2_MinBaseLevel) || ($@KingdomBG2_MaxBaseLevel && BaseLevel < $@KingdomBG2_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Guillaume]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Croix, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				set .@mapcount2,getmapusers("bat_g02");
+				if (.@mapcount2 > 0) {
+					mes "[Oficial do Exército de Guillaume]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Croixs.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@KingdomBG2 > 0) {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Guillaume]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Croixs o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",114,223;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Guillaume]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,149,121,1	script	Oficial Kingdom#02b	-1,{
+	if (getbattleflag("feature.bgqueue"))
+		end;
+	if (checkweight(1201,1) == 0) {
+		mes "- Espere um minuto !! -";
+		mes "- Atualmente você está carregando -";
+		mes "- muitos itens com você. -";
+		mes "- Por favor, tente novamente -";
+		mes "- depois de perder algum peso. -";
+		close;
+	}
+	mes "[Oficial do Exército de Croix]";
+	mes "Vamos mostrar aos Guillaumes o poder do Exército Croix!";
+	next;
+	switch(select("Eu quero me juntar ao seu exército!:Terminar Conversa")) {
+	case 1:
+		if ((BaseJob == Job_Novice) || (BaseJob == Job_Super_Novice)) {
+			mes "[Oficial do Exército de Croix]";
+			mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+		}
+		else {
+			if( ($@KingdomBG2_MinBaseLevel && BaseLevel > $@KingdomBG2_MinBaseLevel) || ($@KingdomBG2_MaxBaseLevel && BaseLevel < $@KingdomBG2_MaxBaseLevel) ) {
+				mes "[Oficial do Exército de Croix]";
+				mes "Estou muito contente por você querer se juntar a nós e lutar contra o Exército de Guillaume, mas sinto muito: não posso enviar um novato como você para morrer em um cruel campo de batalha.";
+			}
+			else {
+				set .@mapcount2,getmapusers("bat_g02");
+				if (.@mapcount2 > 0) {
+					mes "[Oficial do Exército de Croix]";
+					mes "Recebi um relatório informando que um corpo de elite já foi enviado para o campo de batalha lutando contra os Guillaume.";
+					mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+				}
+				else {
+					if ($@KingdomBG2 > 0) {
+						mes "[Oficial do Exército de Croix]";
+						mes "Um corpo de elite já está pronto para ser enviado ao campo de batalha.";
+						mes "Por que você não vai esperar um pouco? Eu sugiro que por enquanto você afie suas armas e prepare seus suprimentos.";
+					}
+					else {
+						mes "[Oficial do Exército de Croix]";
+						mes "Você definitivamente parece estar pronto para a batalha!";
+						mes "Vá mostrar aos Guillaumes o que o medo realmente significa!";
+						mes "Hoje, nosso grito de vitória deve ecoar por todo o campo de batalha!";
+						close2;
+						warp "bat_room02",114,207;
+						end;
+					}
+				}
+			}
+		}
+		break;
+	case 2:
+		mes "[Oficial do Exército de Croix]";
+		mes "Hoje, seremos vitoriosos!";
+		break;
+	}
+	close;
+}
+
+bat_room02,151,178,5	script	Cavaleiro de Guillaume#g02_a_1	-1,{
+	mes "[Cavaleiro de Guillaume]";
+	mes "Esta é uma replica da Guerra do Emperium no Castelo de Arbor.";
+	mes "O castelo começa desocupado, e ambas equipe devem batalhar pelo dominio do castelo.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "Após uma das equipes dominarem o castelo destruíndo o Emperium, ela passa a defende-lo, utilizando guardiões para fortalecer as barreiras do castelo.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	mes "A Batalha dura " + $@KingdomBG2_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Guillaume]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Guillaume]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}
+
+bat_room02,151,121,1	script	Cavaleiro de Croix#g02_b_1	-1,{
+	mes "[Cavaleiro de Croix]";
+	mes "Esta é uma replica da Guerra do Emperium no Castelo de Arbor.";
+	mes "O castelo começa desocupado, e ambas equipe devem batalhar pelo dominio do castelo.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "Após uma das equipes dominarem o castelo destruíndo o Emperium, ela passa a defende-lo, utilizando guardiões para fortalecer as barreiras do castelo.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	mes "A Batalha dura " + $@KingdomBG2_BattleTimer + " minutos, e equipe que tiver mais pontos vence a batalha.";
+	next;
+	mes "[Cavaleiro de Croix]";
+	if (getbattleflag("feature.bgqueue")) {
+		mes "Se você estiver pronto, clique no ^0000FFbotão de batalha em sua interface^000000.";
+		next;
+		mes "[Cavaleiro de Croix]";
+		mes "Lembre-se de que, depois de cancelar, ^0000FFvocê não poderá se inscrever novamente por 1 minuto^000000!";
+	}
+	else {
+		mes "Você está pronto para a batalha? Inscreva-se com o recrutador ao meu lado!";
+	}
+	close;
+}

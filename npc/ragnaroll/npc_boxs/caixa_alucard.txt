@@ -1,0 +1,5 @@
+function	script	caixa_alucard#1	{
+setarray .@items[0], 50000,50001,50002;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

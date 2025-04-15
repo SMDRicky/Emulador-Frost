@@ -1,0 +1,5 @@
+function	script	caixa_sorcerer_hx	{
+	setarray .@items[0], 50251,50252,50253,50254,50255,50256,50257;
+	getitem .@items[rand(getarraysize(.@items))], 1;
+	end;
+}

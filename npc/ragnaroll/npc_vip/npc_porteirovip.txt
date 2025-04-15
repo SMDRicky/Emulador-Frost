@@ -1,0 +1,87 @@
+mainhall,100,12,5	script	salavippremium	45,1,1,{
+if(getgroupid() < 5){
+	message strcharinfo(0), "Voc� precisa ser um player VIP PREMIUM para ir a prontera.";
+} else { 
+	warp "prontera",156,184;
+}
+end;
+}
+
+prontera,171,167,5	script	entradavip	45,1,1,{
+	if(getgroupid() < 5){
+		message strcharinfo(0), "Voc� precisa ser um player VIP PREMIUM para ir.";
+	} else { 
+		warp "mainhall",100,153;
+	}
+	end;
+
+}
+
+prontera,173,167,5	script	Entrada	1789,{
+OnInit:
+	waitingroom "Sala VIP",0;
+	end;
+}
+
+prontera,130,180,5	script	Entrada#1	1789,{
+OnInit:
+	waitingroom "Sala do Eden",0;
+	end;
+}
+
+mainhall	mapflag	nomemo
+mainhall	mapflag	nowarp
+mainhall	mapflag	nosave
+
+
+
+
+prontera,150,150,4	script	Status Checker	4_JOB_NOVICE,{
+	mes "[Status Checker]";
+	mes "Ol� " + strcharinfo(0) + "! Vamos verificar seus privil�gios...";
+	next;
+
+	// Verifica GM
+	.@gm = getgmlevel();
+
+	if (.@gm == 8) {
+		mes "^00CCFFVoc� � um Streamer!^000000";
+		mes "N�vel de GM: ^FF00FF8 (Streamer)^000000";
+	} else if (.@gm > 0) {
+		mes "Voc� � um ^0000FFGM^000000.";
+		mes "N�vel de GM: ^FF0000" + .@gm + "^000000";
+	} else {
+		mes "Voc� � um jogador ^00FF00comum^000000.";
+	}
+
+	next;
+
+	// Verifica VIP
+	if (#VIP_Level == 2 && gettimetick(2) < #VIP_Expire) {
+		mes "Voc� � um ^FF9900VIP Premium^000000.";
+		mes "Expira em: " + callfunc("TimeToDate", #VIP_Expire);
+	} else if (#VIP_Level == 1 && gettimetick(2) < #VIP_Expire) {
+		mes "Voc� � um ^00CCFFVIP comum^000000.";
+		mes "Expira em: " + callfunc("TimeToDate", #VIP_Expire);
+	} else {
+		mes "Voc� n�o possui status VIP ativo.";
+	}
+	close;
+}
+
+// Converte timestamp para dias restantes
+function	script	TimeToDate	{
+	.@t = getarg(0) - gettimetick(2);
+	if (.@t <= 0) return "expirado.";
+
+	.@s = .@t % 60;
+	.@t /= 60;
+	.@m = .@t % 60;
+	.@t /= 60;
+	.@h = .@t % 24;
+	.@t /= 24;
+	.@d = .@t;
+
+	return "" + .@d + "d " + .@h + "h " + .@m + "m restantes.";
+}
+

@@ -1,0 +1,268 @@
+// Arquivo: npc/custom/resgate_itens_npc.txt
+moc_para01,174,118,3    script    Resgate de Itens    562,{
+
+    // Exibe o nome do NPC acima da cabeça
+    npctalk "Resgate de Itens";
+
+    // Verifique se o jogador é um administrador
+    if (getgmlevel() >= 99) {
+        // Menu para administradores
+        mes "[Resgate de Itens]";
+        mes "Bem-vindo, administrador!";
+        mes "O que você deseja fazer hoje?";
+        next;
+        switch(select("Adicionar Itens:Adicionar Zeny:Adicionar Cash:Ver Resgates:Cancelar")) {
+        case 1:
+            callfunc("AddItem");
+            break;
+        case 2:
+            callfunc("AddZeny");
+            break;
+        case 3:
+            callfunc("AddCash");
+            break;
+        case 4:
+            callfunc("ViewRedeems");
+            break;
+        case 5:
+            mes "Até a próxima!";
+            close;
+        }
+    } else {
+        // Menu para jogadores
+        callfunc("RedeemItems");
+    }
+}
+
+// Função para adicionar item
+function script AddItem {
+    mes "[Resgate de Itens]";
+    mes "Digite o userid da conta do jogador:";
+    input .@userid$;
+    set .@userid$, trimspace(.@userid$);
+
+    // Validação do userid
+    if (!strreg(.@userid$, "^[A-Za-z0-9_]+$")) {
+        mes "Userid inválido. Por favor, tente novamente.";
+        close;
+    }
+
+    mes "Digite o ID do item que deseja adicionar:";
+    input .@item_id;
+    set .@item_id, floor(.@item_id);
+
+    // Verificação do ID do item
+    if (.@item_id <= 0 || getitemname(.@item_id) == "") {
+        mes "ID de item inválido. Por favor, tente novamente.";
+        close;
+    }
+
+    mes "Digite a quantidade do item:";
+    input .@amount;
+    set .@amount, floor(.@amount);
+
+    // Verificação da quantidade
+    if (.@amount <= 0) {
+        mes "Quantidade inválida. Por favor, tente novamente.";
+        close;
+    }
+
+    // Adiciona item à tabela
+    if (query_sql("INSERT INTO redeem_list (userid, item_id, amount) VALUES ('" + escape_sql(.@userid$) + "', " + .@item_id + ", " + .@amount + ")")) {
+        mes "Item adicionado com sucesso para o usuário ^0000FF" + .@userid$ + "^000000!";
+    } else {
+        mes "Ocorreu um erro ao adicionar o item. Por favor, tente novamente.";
+    }
+    close;
+}
+
+// Função para adicionar zeny
+function script AddZeny {
+    mes "[Resgate de Itens]";
+    mes "Digite o userid da conta do jogador:";
+    input .@userid$;
+    set .@userid$, trimspace(.@userid$);
+
+    // Validação do userid
+    if (!strreg(.@userid$, "^[A-Za-z0-9_]+$")) {
+        mes "Userid inválido. Por favor, tente novamente.";
+        close;
+    }
+
+    mes "Digite a quantidade de zeny:";
+    input .@zeny;
+    set .@zeny, floor(.@zeny);
+
+    // Verificação da quantidade
+    if (.@zeny <= 0) {
+        mes "Quantidade de zeny inválida. Por favor, tente novamente.";
+        close;
+    }
+
+    // Adiciona zeny à tabela
+    if (query_sql("INSERT INTO redeem_list (userid, zeny) VALUES ('" + escape_sql(.@userid$) + "', " + .@zeny + ")")) {
+        mes "Zeny adicionados com sucesso para o usuário ^0000FF" + .@userid$ + "^000000!";
+    } else {
+        mes "Ocorreu um erro ao adicionar zeny. Por favor, tente novamente.";
+    }
+    close;
+}
+
+// Função para adicionar cash
+function script AddCash {
+    mes "[Resgate de Itens]";
+    mes "Digite o userid da conta do jogador:";
+    input .@userid$;
+    set .@userid$, trimspace(.@userid$);
+
+    // Validação do userid
+    if (!strreg(.@userid$, "^[A-Za-z0-9_]+$")) {
+        mes "Userid inválido. Por favor, tente novamente.";
+        close;
+    }
+
+    mes "Digite a quantidade de cash:";
+    input .@cash;
+    set .@cash, floor(.@cash);
+
+    // Verificação da quantidade
+    if (.@cash <= 0) {
+        mes "Quantidade de cash inválida. Por favor, tente novamente.";
+        close;
+    }
+
+    // Adiciona cash à tabela
+    if (query_sql("INSERT INTO redeem_list (userid, cash) VALUES ('" + escape_sql(.@userid$) + "', " + .@cash + ")")) {
+        mes "Cash adicionados com sucesso para o usuário ^0000FF" + .@userid$ + "^000000!";
+    } else {
+        mes "Ocorreu um erro ao adicionar cash. Por favor, tente novamente.";
+    }
+    close;
+}
+
+// Função para visualizar resgates
+function script ViewRedeems {
+    mes "[Resgate de Itens]";
+    mes "Lista de resgates:";
+    next;
+
+    // Consulta para obter os resgates
+    set .@num_rows, query_sql("SELECT userid, item_id, amount, zeny, cash, resgatado FROM redeem_list ORDER BY userid", .@userid$, .@item_id, .@amount, .@zeny, .@cash, .@resgatado);
+
+    // Verifica se há resultados
+    if (.@num_rows > 0) {
+        for (set .@i, 0; .@i < .@num_rows; set .@i, .@i + 1) {
+            mes "^0000FFID: " + .@userid$[.@i] + "^000000";
+            if (.@item_id[.@i] > 0 && .@amount[.@i] > 0) {
+                mes "Item: " + .@amount[.@i] + "x " + getitemname(.@item_id[.@i]);
+            }
+            if (.@zeny[.@i] > 0) {
+                mes "Zeny: " + .@zeny[.@i];
+            }
+            if (.@cash[.@i] > 0) {
+                mes "Cash: " + .@cash[.@i];
+            }
+            mes "Resgatado: " + (.@resgatado[.@i] ? "^00FF00Sim^000000" : "^FF0000Não^000000");
+            next;
+        }
+    } else {
+        mes "Nenhum resgate encontrado.";
+    }
+    close;
+}
+
+// Função para resgatar itens
+function script RedeemItems {
+    mes "[Resgate de Itens]";
+    mes "Olá ^0000FF" + strcharinfo(0) + "^000000!";
+    mes "Vamos verificar se você tem algo para resgatar.";
+    next;
+
+    // Pegue o userid do jogador
+    set .@userid$, getaccountname();
+
+    // Consulta para verificar resgates não resgatados
+    set .@num_rows, query_sql("SELECT id, item_id, amount, zeny, cash FROM redeem_list WHERE userid = '" + escape_sql(.@userid$) + "' AND resgatado = 0 ORDER BY data_resgate ASC", .@id, .@item_id, .@amount, .@zeny, .@cash);
+
+    // Verifica se há resgates disponíveis
+    if (.@num_rows > 0) {
+        // Mostrar resgates disponíveis
+        for (set .@i, 0; .@i < .@num_rows; set .@i, .@i + 1) {
+            mes "Resgate #" + (.@i + 1) + ":";
+            if (.@item_id[.@i] > 0 && .@amount[.@i] > 0) {
+                mes " - Item: " + .@amount[.@i] + "x " + getitemname(.@item_id[.@i]);
+            }
+            if (.@zeny[.@i] > 0) {
+                mes " - Zeny: " + .@zeny[.@i];
+            }
+            if (.@cash[.@i] > 0) {
+                mes " - Cash: " + .@cash[.@i];
+            }
+            next;
+        }
+        next;
+
+        // Perguntar qual resgate deseja processar
+        mes "Selecione o número do resgate que deseja processar ou 0 para cancelar:";
+        input .@choice;
+
+        // Verifica a escolha
+        if (.@choice < 1 || .@choice > .@num_rows) {
+            mes "Opção inválida. Resgate cancelado.";
+            close;
+        }
+
+        set .@index, .@choice - 1;
+
+        // Detalhes do resgate escolhido
+        set .@selected_id, .@id[.@index];
+        set .@selected_item_id, .@item_id[.@index];
+        set .@selected_amount, .@amount[.@index];
+        set .@selected_zeny, .@zeny[.@index];
+        set .@selected_cash, .@cash[.@index];
+
+        mes "Você selecionou o Resgate #" + .@choice + ". Deseja confirmar?";
+        if (select("Sim:Não") == 1) {
+            // Iniciar transação
+            if (query_sql("START TRANSACTION")) {
+                // Resgate os itens
+                if (.@selected_item_id > 0 && .@selected_amount > 0) {
+                    if (!getitem .@selected_item_id, .@selected_amount) {
+                        mes "Erro ao adicionar item. A transação será revertida.";
+                        query_sql("ROLLBACK");
+                        close;
+                    }
+                    mes "Você recebeu ^0000FF" + .@selected_amount + "x^000000 do item ^0000FF" + getitemname(.@selected_item_id) + "^000000.";
+                }
+                // Resgate o zeny
+                if (.@selected_zeny > 0) {
+                    setmoney .@selected_zeny;
+                    mes "Você recebeu ^0000FF" + .@selected_zeny + "^000000 zeny.";
+                }
+                // Resgate o cash
+                if (.@selected_cash > 0) {
+                    // Assumindo que #CASHPOINTS é a variável correta para cash points
+                    setitem 0, 0, #CASHPOINTS + .@selected_cash; // Ajuste conforme a lógica do seu servidor
+                    mes "Você recebeu ^0000FF" + .@selected_cash + "^000000 cash points.";
+                }
+                // Marcar como resgatado
+                if (!query_sql("UPDATE redeem_list SET resgatado = 1 WHERE id = " + .@selected_id)) {
+                    mes "Erro ao atualizar status de resgate. A transação será revertida.";
+                    query_sql("ROLLBACK");
+                    close;
+                }
+                // Confirmar transação
+                query_sql("COMMIT");
+                mes "Resgate concluído com sucesso!";
+            } else {
+                mes "Erro ao iniciar transação. Por favor, tente novamente mais tarde.";
+            }
+        } else {
+            mes "Resgate cancelado.";
+        }
+    } else {
+        mes "Até o momento você não tem nada disponível para resgatar.";
+    }
+
+    close;
+}

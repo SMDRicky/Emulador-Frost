@@ -1,0 +1,19 @@
+prontera,149,193,5	script	Pack Iniciante	123,{
+	if (##recebeu_item_por_conta) {
+		mes "[Pack Iniciante]";
+		mes "Você já recebeu seu Pack Iniciante!";
+		close;
+	}
+
+	mes "[NPC]";
+	mes "Olá, aventureiro!";
+	mes "Aqui está seu Pack Iniciante.";
+	next;
+
+	getitem 310, 1; // Muda o ID para o item que quiser
+	##recebeu_item_por_conta = 1;
+
+	mes "[Pack Iniciante]";
+	mes "Pack Iniciante Entregue com sucesso!";
+	close;
+}

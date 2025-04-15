@@ -1,0 +1,48 @@
+﻿prontera,150,150,4    script    Quiz Staff    90,{
+    mes "[Quiz Staff]";
+    mes "Olá, bravo aventureiro!";
+    mes "Eu sou responsavel pelo evento de Quizz";
+    next;
+
+    mes "Por favor, Digite a resposta :";
+    input .@code$;
+
+    // Verifica o código no banco de dados
+    set .@result, query_sql("SELECT pack_type, redeemed FROM donation_codes WHERE code = '"+escape_sql(.@code$)+"'", .@pack$, .@redeemed);
+
+    if (.@result == 0) {
+        mes "Hum... Parece que esta resposta é inválida.";
+        mes "Verifique se o digitou corretamente.";
+        close;
+    }
+
+    if (.@redeemed) {
+        mes "Essa resposta ja foi em outra rodada.";
+        mes "Caso tenha algum problema, entre em contato com o suporte!";
+        close;
+    }
+
+    // Agradecimento e entrega dos pacotes
+    mes "Parabens Você acertou a resposta do Evento";
+    next;
+
+    if (.@pack$ == "basic") {
+        mes "Você escolheu a ^00FF00Resposta Correta^000000!";
+        mes "Parabeéns.";
+        getitem 501, 1; // Item exemplo
+        getitem 502, 1;
+    } else if (.@pack$ == "ultimate") {
+        mes "Você escolheu a ^00FF00Resposta Correta^000000!";
+        mes "Parabeéns.";
+        getitem 503, 1; // Item exemplo
+        getitem 504, 1;
+        mes "Sua coragem e apoio nos inspiram a continuar melhorando o mundo de RagnaRoLL!";
+    }
+
+    // Atualiza status do código
+    query_sql("UPDATE donation_codes SET redeemed = 1 WHERE code = '"+escape_sql(.@code$)+"'");
+
+    mes "Mais uma vez, nosso muito obrigado!";
+    mes "Divirta-se e continue ajudando a construir este incrível mundo!";
+    close;
+}

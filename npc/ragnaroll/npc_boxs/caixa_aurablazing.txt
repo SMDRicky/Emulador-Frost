@@ -1,0 +1,5 @@
+function	script	caixa_aurablazing#1	{
+setarray .@items[0], 50023,50024,50025,50026,50027,50028,50029,50030,50031,50032;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

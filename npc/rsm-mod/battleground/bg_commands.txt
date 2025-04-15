@@ -1,0 +1,573 @@
+//===== rAthena Script =======================================
+//= Battleground Commands
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Comandos de alistamento das Batalhas Campais.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+-	script	Battleground#commands	-1,{
+OnInit:
+	// Id of Arenas allowed for registration application.
+	setarray .Arenas[0],
+		3,
+		12	// KVM (Level 80 and up)
+	;
+	
+	// Filter.
+	// How do you want to filter the arena?
+	//	0: Normal (by battleground_db.yml).
+	//	1: In the order designated in the setup above.
+	.Filter = 1;
+	
+	// Announce player entry?
+	.Announce = 1;
+	
+	// Apply time penalty when leaving command queue?
+	.QueuePenalty = 0;
+	
+	// Desert Map Back.
+	setarray .DesertMap$[0], "prontera", 150, 150;
+	
+	// Bind Commands.
+	bindatcmd "joinbg", "Battleground#commands::OnJoin", 0, 0;
+	bindatcmd "bgregister", "Battleground#commands::OnRegister", 0, 0;
+	bindatcmd "bgleave", "Battleground#commands::OnLeave", 0, 0;
+	bindatcmd "bgdesert", "Battleground#commands::OnDesert", 0, 0;
+	end;
+	
+OnJoin:
+	// Check Queue Block
+	// Flag 1 default messages from source.
+	if( bg_queue_check_delay(1) )
+		end;
+
+	// Create Battleground List
+	.@a = 0;
+	.@b = 0;
+	deletearray .@bg_join1;
+	deletearray .@bg_join2;
+	
+	if( .Filter == 0 )
+		bg_queue_list;
+	else {
+		deletearray $@arena_bgid;
+		copyarray $@arena_bgid[0], .Arenas[0], getarraysize(.Arenas);
+		$@arena_count = getarraysize($@arena_bgid);
+	}
+
+	for( .@i=0; .@i < $@arena_count; .@i++ ) {
+		.@bg_id = $@arena_bgid[.@i];
+		.@queue_id = bg_queue_info(.@bg_id, BG_QUEUE_ID);
+		.@required = bg_queue_info(.@bg_id, BG_QUEUE_REQUIRED_PLAYERS);
+		.@accepts = bg_queue_info(.@bg_id, BG_QUEUE_ACCEPTED_PLAYERS);
+		.@maxplayers = bg_queue_info(.@bg_id, BG_QUEUE_MAX_PLAYERS)*2;
+		.@state = bg_queue_info(.@bg_id, BG_QUEUE_STATE);
+		.@size1 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMA_SIZE);
+		.@size2 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMB_SIZE);
+		
+		// Check Arena
+		if( .Filter == 0 && inarray(.Arenas, .@bg_id) == -1 )
+			continue;
+		
+		// Check Queue
+		if( .@state == QUEUE_STATE_SETUP_DELAY || .@state == QUEUE_STATE_ENDED )
+			continue;
+		
+		// Check Joinable
+		if( bg_queue_check_join(.@bg_id) != BG_APPLY_ACCEPT ) {
+			continue;
+		}
+		
+		// Check Max Players
+		if( (.@size1+.@size2) >= .@maxplayers )
+			continue;
+		
+		if( .@state == QUEUE_STATE_ACTIVE ) {
+			.@bg_join1[.@a] = .@bg_id;
+			.@a++;
+		}
+		else {
+			.@bg_join2[.@b] = .@bg_id;
+			.@b++;
+		}
+	}
+	
+	// Reset Var
+	.@bg_id = 0;
+	.@size1 = 0;
+	.@size2 = 0;
+
+	// Join an existing battleground.
+	if( .@a ) {
+		for( .@i=0; .@i < .@a; .@i++ ) {
+			.@size1 = bg_queue_info(.@bg_join1[.@i], BG_QUEUE_TEAMA_SIZE);
+			.@size2 = bg_queue_info(.@bg_join1[.@i], BG_QUEUE_TEAMB_SIZE);
+			
+			if( .@size1 <= .@size2 || .@size2 <= .@size1 ) {
+				.@bg_id = .@bg_join1[.@i];
+				break;
+			}
+		}
+		
+		if( .@bg_id <= 0 )
+			.@bg_id = .@bg_join1[rand(0,getarraysize(.@bg_join1))];
+		
+		// Entry attempt.
+		.@maxplayers = bg_queue_info(.@bg_id, BG_QUEUE_MAX_PLAYERS)*2;
+		.@size1 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMA_SIZE);
+		.@size2 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMB_SIZE);
+		.@arenaname1$ = bg_queue_info(.@bg_id, BG_QUEUE_ARENA_NAME);
+		.@join1_result = bg_queue_join(.@bg_id);
+		
+		if( .@join1_result == BG_APPLY_ACCEPT ) {
+			dispbottom "Você entrou na Batalha Campal " + .@arenaname1$ + ".", 0xFFFF00;
+			if( .Announce ) {
+				announce "[Battleground]: " + strcharinfo(0) + " entrou na batalha de " + .@arenaname1$ + ".",bc_yellow|bc_all;
+				.@rest = .@maxplayers - (.@size1+.@size2) - 1;
+				if( .@rest > 0 ) {
+					announce "[Battleground]: Ainda restam " + .@rest + " vagas na " + .@arenaname1$ + ".",bc_yellow|bc_all;
+				}
+			}
+			end;
+		}
+		
+		// Free Battleground Error.
+		.@bg_id = 0;
+	}
+	
+	// Enter a battleground that is awaiting players.
+	if( .@bg_id <= 0 && .@b ) {
+		for( .@i=0; .@i < .@b; .@i++ ) {
+			.@bg_id2 = .@bg_join2[.@i];
+			.@size1 = bg_queue_info(.@bg_id2, BG_QUEUE_TEAMA_SIZE) + bg_queue_info(.@bg_id2, BG_QUEUE_TEAMB_SIZE);
+			.@size2 = bg_queue_info(.@bg_id2, BG_QUEUE_REQUIRED_PLAYERS);
+			if( .@bg_id <= 0 || (.@size2-.@size1) < .@max ) {
+				.@bg_id = .@bg_id2;
+				.@max = .@size2;
+			}
+		}
+		
+		if( .@bg_id <= 0 )
+			.@bg_id = .@bg_join2[rand(0,getarraysize(.@bg_join2))];
+		
+		// Entry attempt.
+		.@maxplayers = bg_queue_info(.@bg_id, BG_QUEUE_MAX_PLAYERS)*2;
+		.@size1 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMA_SIZE);
+		.@size2 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMB_SIZE);
+		.@arenaname2$ = bg_queue_info(.@bg_id, BG_QUEUE_ARENA_NAME);
+		.@join2_result = bg_queue_join(.@bg_id);
+		
+		if( .@join2_result == BG_APPLY_ACCEPT ) {
+			dispbottom "Você entrou na Batalha Campal " + .@arenaname2$ + ".", 0xFFFF00;
+			if( .Announce ) {
+				announce "[Battleground]: " + strcharinfo(0) + " entrou na batalha de " + .@arenaname2$ + ".",bc_yellow|bc_all;
+				.@rest = .@maxplayers - (.@size1+.@size2) - 1;
+				
+				if( .@rest > 0 ) {
+					announce "[Battleground]: Ainda restam " + .@rest + " vagas na " + .@arenaname2$ + ".",bc_yellow|bc_all;
+				}
+			}
+			end;
+		}
+	}
+	
+	if( .@join1_result ) {
+		.@error = .@join1_result;
+		.@arenaname$ = .@arenaname1$;
+	}
+	else if( @join2_result ) {
+		.@error = .@join2_result;
+		.@arenaname$ = .@arenaname2$;
+	}
+	else
+		.@error = BG_APPLY_NONE;
+	
+	// Display Error.
+	switch( .@error ) {
+		case BG_APPLY_QUEUE_FINISHED:
+			.@message$ = "A fila da " + .@arenaname$ + " terminou.";
+			break;
+		case BG_APPLY_INVALID_NAME:
+			.@message$ = "A arena selecionada pelo sistema é inválida.";
+			break;
+		case BG_APPLY_INVALID_APP:
+			.@message$ = "Aplicação inválida.";
+			break;
+		case BG_APPLY_PLAYER_COUNT:
+			.@message$ = "Muitos jogadores em seu clã ou grupo.";
+			break;
+		case BG_APPLY_PLAYER_LEVEL:
+			.@message$ = "Seu nível não corresponde aos requisitos da arena.";
+			break;
+		case BG_APPLY_DUPLICATE:
+			.@message$ = "Aplicação duplicada.";
+			break;
+		case BG_APPLY_RECONNECT:
+			.@message$ = "Recrie a aplicação";
+			break;
+		case BG_APPLY_PARTYGUILD_LEADER:
+			.@message$ = "Somente o Líder do Clã ou do Grupo pode se inscrever.";
+			break;
+		case BG_APPLY_PLAYER_CLASS:
+			.@message$ = "Sua classe não pode se inscrever nesta batalha.";
+			break;
+		default:
+		case BG_APPLY_NONE:
+			.@message$ = "Ocorreu um erro ao aplicar a uma fila.";
+			break;
+	}
+	
+	dispbottom "[Battleground]: " + .@message$, 0xFF0000;
+	dispbottom "[Battleground]: Por favor, tente novamente.", 0xFF0000;
+	end;
+	
+OnRegister:
+	// Check Queue Block
+	// Flag 1 default messages from source.
+	if( bg_queue_check_delay(1) )
+		end;
+
+	// Create Battleground List
+	if( .Filter == 0 )
+		bg_queue_list;
+	else {
+		deletearray $@arena_bgid;
+		copyarray $@arena_bgid[0], .Arenas[0], getarraysize(.Arenas);
+		$@arena_count = getarraysize($@arena_bgid);
+	}
+	
+	.@loop_1 = 1;
+	while(.@loop_1) {
+		.@a = 0;
+		.@b = 0;
+		deletearray .@bg_join1;
+		deletearray .@bg_join2;
+		for( .@i=0; .@i < $@arena_count; .@i++ ) {
+			.@bg_id = $@arena_bgid[.@i];
+			.@queue_id = bg_queue_info(.@bg_id, BG_QUEUE_ID);
+			.@required = bg_queue_info(.@bg_id, BG_QUEUE_REQUIRED_PLAYERS);
+			.@accepts = bg_queue_info(.@bg_id, BG_QUEUE_ACCEPTED_PLAYERS);
+			.@maxplayers = bg_queue_info(.@bg_id, BG_QUEUE_MAX_PLAYERS)*2;
+			.@state = bg_queue_info(.@bg_id, BG_QUEUE_STATE);
+			.@size1 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMA_SIZE);
+			.@size2 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMB_SIZE);
+			
+			// Check Arena
+			if( .Filter == 0 && inarray(.Arenas, .@bg_id) == -1 )
+				continue;
+			
+			// Check Queue
+			if( .@state == QUEUE_STATE_SETUP_DELAY || .@state == QUEUE_STATE_ENDED )
+				continue;
+			
+			if( .@state == QUEUE_STATE_ACTIVE ) {
+				.@bg_join1[.@a] = .@bg_id;
+				.@a++;
+			}
+			else {
+				.@bg_join2[.@b] = .@bg_id;
+				.@b++;
+			}
+		}
+
+		mes "^FF0000[Battleground]^000000";
+		mes "Você quer entrar em uma batalha já em andamento ou em uma batalha que ainda não começou?";
+		next;
+		switch( select("- Junte-se a uma batalha não iniciada.", "^0000FF- Junte-se a uma batalha em andamento.^000000", "^FF0000- Cancelar.^000000") ) {
+			case 1:
+				.@loop_2 = 1;
+				while(.@loop_2) {
+					if( .@b <= 0 ) {
+						mes "^FF0000[Battleground]^000000";
+						mes "Nenhuma batalha encontrada em seus requisitos.";
+						next;
+						.@loop_2 = 0;
+						break;
+					}
+					
+					.@buildmenu$ = "";
+					for( .@i=0; .@i < .@b; .@i++ ) {
+						.@maxplayers = bg_queue_info(.@bg_join2[.@i], BG_QUEUE_REQUIRED_PLAYERS)*2;
+						.@size1 = bg_queue_info(.@bg_join2[.@i], BG_QUEUE_TEAMA_SIZE);
+						.@size2 = bg_queue_info(.@bg_join2[.@i], BG_QUEUE_TEAMB_SIZE);
+						.@buildmenu$ += "- " + bg_queue_info(.@bg_join2[.@i], BG_QUEUE_ARENA_NAME) + " ^FF0000[" + (.@size1+.@size2) + "/" + .@maxplayers + "]^000000.:";
+					}
+					
+					mes "^FF0000[Battleground]^000000";
+					mes "Selecione uma arena:";
+					next;
+					.@i = select(.@buildmenu$+"^FFA500- Voltar.^000000:^FF0000- Cancelar.^000000")-1;
+					
+					// Back
+					if( .@i == .@b ) {
+						.@loop_2 = 0;
+						break;
+					}
+					
+					// Cancel
+					if( .@i >= .@b ) {
+						.@loop_1 = 0;
+						.@loop_2 = 0;
+						break;
+					}
+					
+					.@bg_id = .@bg_join2[.@i];
+					.@arenaname$ = bg_queue_info(.@bg_id, BG_QUEUE_ARENA_NAME);
+					mes "^FF0000[Battleground]^000000";
+					mes "Tem certeza que deseja entrar na batalha ^0000FF" + .@arenaname$ + "^000000?";
+					next;
+					switch( select("- Sim, continuar.", "^FFA500- Não, voltar.^000000", "^FF0000- Cancelar.^000000") ) {
+						case 1:
+							.@maxplayers = bg_queue_info(.@bg_id, BG_QUEUE_MAX_PLAYERS)*2;
+							.@size1 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMA_SIZE);
+							.@size2 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMB_SIZE);
+							
+							// Check Joinable
+							if( bg_queue_check_join(.@bg_id) != BG_APPLY_ACCEPT ) {
+								mes "^FF0000[Battleground]^000000";
+								mes "Você não tem os requisitos para entrar nesta batalha.";
+								next;
+								break;
+							}
+							
+							// Check Max Players
+							if( (.@size1+.@size2) >= .@maxplayers ) {
+								mes "^FF0000[Battleground]^000000";
+								mes "A batalha já ultrapassou o número máximo de jogadores.";
+								mes "Você pode se registrar assim que acabar, que tal?";
+								next;
+								break;
+							}
+								
+							.@result = bg_queue_join(.@bg_id);
+							mes "^FF0000[Battleground]^000000";
+							switch( .@result ) {
+								case BG_APPLY_ACCEPT:
+									mes "Você entrou na Battleground " + .@arenaname$ + ".";
+									if( .Announce ) {
+										announce "[Battleground]: " + strcharinfo(0) + " entrou na batalha em " + .@arenaname$ + ".",bc_yellow|bc_all;
+										.@rest = .@maxplayers - (.@size1+.@size2) - 1;
+										if( .@rest > 0 ) {
+											announce "[Battleground]: Ainda restam " + .@rest + " vagas na " + .@arenaname$ + ".",bc_yellow|bc_all;
+										}
+									}
+									close;
+								case BG_APPLY_QUEUE_FINISHED:
+									mes "A fila da " + .@arenaname$ + " terminou.";
+									break;
+								case BG_APPLY_INVALID_NAME:
+									mes "A arena selecionada pelo sistema é inválida.";
+									break;
+								case BG_APPLY_INVALID_APP:
+									mes "Aplicação inválida.";
+									break;
+								case BG_APPLY_PLAYER_COUNT:
+									mes "Muitos jogadores em seu clã ou grupo.";
+									break;
+								case BG_APPLY_PLAYER_LEVEL:
+									mes "Seu nível não corresponde aos requisitos da arena.";
+									break;
+								case BG_APPLY_DUPLICATE:
+									mes "Aplicação duplicada.";
+									break;
+								case BG_APPLY_RECONNECT:
+									mes "Recrie a aplicação";
+									break;
+								case BG_APPLY_PARTYGUILD_LEADER:
+									mes "Somente o Líder do Clã ou do Grupo pode se inscrever.";
+									break;
+								case BG_APPLY_PLAYER_CLASS:
+									mes "Sua classe não pode se inscrever nesta batalha.";
+									break;
+								default:
+								case BG_APPLY_NONE:
+									mes "Ocorreu um erro ao aplicar a uma fila.";
+									break;
+							}
+							next;
+							break;
+						case 2:
+							break;
+						case 3:
+							.@loop_2 = 0;
+							.@loop_1 = 0;
+							break;
+					}
+				}
+				break;
+			case 2:
+				.@loop_2 = 1;
+				while(.@loop_2) {
+					if( .@a <= 0 ) {
+						mes "^FF0000[Battleground]^000000";
+						mes "Nenhuma batalha encontrada em seus requisitos.";
+						next;
+						.@loop_2 = 0;
+						break;
+					}
+					
+					.@buildmenu$ = "";
+					for( .@i=0; .@i < .@a; .@i++ ) {
+						.@maxplayers = bg_queue_info(.@bg_join1[.@i], BG_QUEUE_MAX_PLAYERS)*2;
+						.@size1 = bg_queue_info(.@bg_join1[.@i], BG_QUEUE_TEAMA_SIZE);
+						.@size2 = bg_queue_info(.@bg_join1[.@i], BG_QUEUE_TEAMB_SIZE);
+						.@buildmenu$ += "- " + bg_queue_info(.@bg_join1[.@i], BG_QUEUE_ARENA_NAME) + " ^FF0000[" + (.@size1+.@size2) + "/" + .@maxplayers + "]^000000.:";
+					}
+					
+					mes "^FF0000[Battleground]^000000";
+					mes "Selecione uma arena:";
+					next;
+					.@i = select(.@buildmenu$+"^FFA500- Voltar.^000000:^FF0000- Cancelar.^000000")-1;
+					
+					// Back
+					if( .@i == .@a ) {
+						.@loop_2 = 0;
+						break;
+					}
+					
+					// Cancel
+					if( .@i >= .@a ) {
+						.@loop_1 = 0;
+						.@loop_2 = 0;
+						break;
+					}
+					
+					.@bg_id = .@bg_join1[.@i];
+					.@arenaname$ = bg_queue_info(.@bg_id, BG_QUEUE_ARENA_NAME);
+					mes "^FF0000[Battleground]^000000";
+					mes "Tem certeza que deseja entrar na batalha de ^0000FF" + .@arenaname$ + "^000000?";
+					next;
+					switch( select("- Sim, continuar.", "^FFA500- Não, Voltar.^000000", "^FF0000- Cancelar.^000000") ) {
+						case 1:
+							.@maxplayers = bg_queue_info(.@bg_id, BG_QUEUE_MAX_PLAYERS)*2;
+							.@size1 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMA_SIZE);
+							.@size2 = bg_queue_info(.@bg_id, BG_QUEUE_TEAMB_SIZE);
+							
+							// Check Joinable
+							if( bg_queue_check_join(.@bg_id) != BG_APPLY_ACCEPT ) {
+								mes "^FF0000[Battleground]^000000";
+								mes "Você não tem os requisitos para entrar nesta batalha.";
+								next;
+								break;
+							}
+							
+							// Check Max Players
+							if( (.@size1+.@size2) >= .@maxplayers ) {
+								mes "^FF0000[Battleground]^000000";
+								mes "A batalha já ultrapassou o número máximo de jogadores.";
+								mes "Você pode se registrar assim que acabar, que tal?";
+								next;
+								break;
+							}
+								
+							.@result = bg_queue_join(.@bg_id);
+							mes "^FF0000[Battleground]^000000";
+							switch( .@result ) {
+								case BG_APPLY_ACCEPT:
+									mes "Você entrou na Battleground " + .@arenaname$ + ".";
+									if( .Announce ) {
+										announce "[Battleground]: " + strcharinfo(0) + " entered the battle on " + .@arenaname$ + ".",bc_yellow|bc_all;
+										.@rest = .@maxplayers - (.@size1+.@size2) - 1;
+										if( .@rest > 0 ) {
+											announce "[Battleground]: There are still " + .@rest + " spots left in the " + .@arenaname$ + " arena.",bc_yellow|bc_all;
+										}
+									}
+									close;
+								case BG_APPLY_QUEUE_FINISHED:
+									mes "A fila da " + .@arenaname$ + " terminou.";
+									break;
+								case BG_APPLY_INVALID_NAME:
+									mes "A arena selecionada pelo sistema é inválida.";
+									break;
+								case BG_APPLY_INVALID_APP:
+									mes "Aplicação inválida.";
+									break;
+								case BG_APPLY_PLAYER_COUNT:
+									mes "Muitos jogadores em seu clã ou grupo.";
+									break;
+								case BG_APPLY_PLAYER_LEVEL:
+									mes "Seu nível não corresponde aos requisitos da arena.";
+									break;
+								case BG_APPLY_DUPLICATE:
+									mes "Aplicação duplicada.";
+									break;
+								case BG_APPLY_RECONNECT:
+									mes "Recrie a aplicação";
+									break;
+								case BG_APPLY_PARTYGUILD_LEADER:
+									mes "Somente o Líder do Clã ou do Grupo pode se inscrever.";
+									break;
+								case BG_APPLY_PLAYER_CLASS:
+									mes "Sua classe não pode se inscrever nesta batalha.";
+									break;
+								default:
+								case BG_APPLY_NONE:
+									mes "Ocorreu um erro ao aplicar a uma fila.";
+									break;
+							}
+							next;
+							break;
+						case 2:
+							break;
+						case 3:
+							.@loop_2 = 0;
+							.@loop_1 = 0;
+							break;
+					}
+				}
+				break;
+			case 3:
+				.@loop_1 = 0;
+				break;
+		}
+	}
+	
+	mes "^FF0000[Battleground]^000000";
+	mes "Volte quando quiser se juntar a uma batalha.";
+	close;
+	
+OnLeave:
+	.@result = bg_queue_leave(.QueuePenalty);
+	if( .@result == 1 )
+		.@message$ = "Você foi removido da fila.";
+	else if( .@result == 0 )
+		.@message$ = "Você não está em uma fila.";
+	else
+		.@message$ = "Falha ao removê-lo da fila, tente novamente.";
+	
+	dispbottom "[Battleground]: " + .@message$, .@result == 1 ? 0x00FF00 : 0xFF0000;
+	end;
+	
+OnDesert:
+	if( getcharid(4) <= 0 ) {
+		dispbottom "[Battleground]: Você não está em uma batalha para desertar.", 0xFF0000;
+		end;
+	}
+	
+	mes "^FF0000[Battleground]^000000";
+	mes "Quer desertar da batalha atual?";
+	mes "^FF0000Você pode sofrer alguma penalidade.^000000";
+	next;
+	if( select("- Sim, por favor.", "- Não, obrigado.") == 1 ) {
+		bg_desert;
+		mes "^FF0000[Battleground]^000000";
+		mes "Você abandonou a batalha.";
+		close2;
+		warp .DesertMap$[0], atoi(.DesertMap$[1]), atoi(.DesertMap$[2]);
+		end;
+	}
+	
+	mes "^FF0000[Battleground]^000000";
+	mes "Tudo bem, boa batalha.";
+	close;
+}

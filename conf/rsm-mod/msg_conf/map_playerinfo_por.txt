@@ -1,0 +1,52 @@
+// Copyright (c) RomuloSM
+// Site: https://www.rsmdeveloper.com.br
+// Email: romulodevel@gmail.com
+// Facebook: https://www.facebook.com/RomuloDevel
+// Description: Mensagens em Português (Brasil) 
+
+// Player Info
+// -------------------------------------------------------------------
+1878: Informações Gerais
+1879: Posição: %d
+1880: Posição: %d (+%d)
+1881: Vitórias
+1882: Derrotas
+1883: Empates
+1884: Proporção
+1885: Score de Vitórias
+1886: Score de Derrotas
+1887: Score de Empates
+1888: Informações de Batalha (VS Jogadores)
+1889: Eliminações
+1890: Mortes
+1891: Dano Dado
+1892: Dano Recebido
+1893: Habilidades
+1894: Suporte Sucedidos
+1895: Suporte Falhos
+1896: HP Curado
+1897: SP Curado
+1898: HP Curado Por Itens
+1899: SP Curado Por Itens
+1900: Informações de Batalha (VS Guardiões)
+1901: Objetivos
+1902: Cristais Destruídos
+1903: Dano Causado
+1904: Suprimentos Destruídos
+1905: Bandeiras Destruídos
+1906: Bandeiras Capturadas
+1907: Bandeiras Recapturadas
+1908: Emperium Destruídos
+1909: Barricadas Eliminadas
+1910: Reparadas
+1911: Runas Guardiãs Destruídas
+1912: Sucedida
+1913: Falha
+1914: Atual
+1915: Pontos Atual
+1916: Pontos Ganho
+1917: Pontos Perdidos
+1918: Não definido
+1919: Grupo
+1920: Posição Global: %d
+1921: Posição Global: %d (+%d)

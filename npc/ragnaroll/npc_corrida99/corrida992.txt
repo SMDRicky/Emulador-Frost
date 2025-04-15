@@ -1,0 +1,152 @@
+//#########################################################
+//######- Corrida de N?vel para jogadores com Rate 5x####
+//########################################################
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//(  ____ \(  ___  )( \      ( \      (  ____ \(  ___ \ //
+//| (    \/| (   ) || (      | (      | (    \/| (   ) )//
+//| |      | (___) || |      | |      | (__    | (__/ / //
+//| |      |  ___  || |      | |      |  __)   |  __ (  //
+//| |      | (   ) || |      | |      | (      | (  \ \ //
+//| (____/\| )   ( || (____/\| (____/\| (____/\| )___) )//
+//(_______/|/     \|(_______/(_______/(_______/|/ \___/ //
+//////////////////////////////////////////////////////////                                        
+//////////////////////////////////////////////////////////
+
+prontera,158,181,3	script	Corrida RagnaFrost#2	811,{
+
+OnTalk:
+	if (CUSTOM_RATE_BASE != 5 || CUSTOM_RATE_JOB != 5) {
+		mes "^FF0000[ Corrida 5x - Acesso Negado ]^000000";
+		mes "Este evento é exclusivo para jogadores com rate 5x.";
+		close;
+	}
+	mes "^00BFFF[ Corrida de Nível 5x ]^000000";
+	mes "Bem-vindo à ^FF4500Corrida RagnaFrost 5x^000000!";
+	mes "Aqui você disputa para ser o ^0000FFPrimeiro de sua classe^000000";
+	mes "a alcançar o nível ^00FF0099/70^000000!";
+	mes "Recompensas únicas aguardam os campeões.";
+	switch(select("^006400[»] Minha Progressão^000000:^B8860B[»] Ver ganhadores da corrida^000000")) {
+		case 1:
+			if (BaseLevel >= .max_base && JobLevel >= .max_job) {
+				callsub L_CheckReward;
+			} else {
+				next;
+				mes "^0080FF[ Progresso na Corrida ]^000000";
+				mes "Você ainda não atingiu o nível necessário.";
+				mes "Alcance ^00FF0099/70^000000 para tentar conquistar o prêmio!";
+				close;
+			}
+			break;
+		case 2:
+			callsub L_ShowStatus;
+			break;
+	}
+	close;
+
+OnWhisperGlobal:
+	if (getgmlevel() >= 90) {
+		mes "[Admin - Corrida 5x]";
+		switch(select("Resetar corrida:Ver ganhadores:Sair")) {
+			case 1:
+				query_sql "DELETE FROM `race_winners_5x`";
+				announce "A Corrida 5x foi reiniciada por um GM!", bc_all;
+				mes "Corrida reiniciada.";
+				break;
+			case 2:
+				callsub L_ShowStatus;
+				break;
+			default:
+				break;
+		}
+		close;
+	}
+	end;
+
+L_CheckReward:
+	.@class = Class;
+	query_sql "SELECT `char_name` FROM `race_winners_5x` WHERE `class_id` = " + .@class, .@winner$;
+	if (.@winner$ != "") {
+		next;
+		mes "^00BFFF[ Corrida de Nível 5x ]^000000";
+		mes "Já houve um vencedor para sua Classe : [»] ^00FF00[" + .@winner$+ "]^000000";
+		close;
+	}
+	query_sql "SELECT COUNT(*) FROM `race_winners_5x` WHERE `char_name` = '" + escape_sql(strcharinfo(0)) + "' AND `class_id` = " + .@class, .@already;
+	if (.@already > 0) {
+		mes "^00BFFF[ Corrida de Nível 5x ]^000000";
+		mes "Você já recebeu a recompensa por essa classe.";
+		close;
+	}
+	query_sql "INSERT INTO `race_winners_5x` (`class_id`, `char_name`) VALUES (" + .@class + ", '" + escape_sql(strcharinfo(0)) + "')";
+	mes "Parabéns! Você foi o primeiro(a) " + jobname(.@class) + " a atingir " + .max_base + "/" + .max_job + "!";
+	mes "Receba sua recompensa especial da corrida 5x!";
+	for (.@j = 0; .@j < getarraysize(.rewards_5x); .@j += 7) {
+		if (.rewards_5x[.@j] == .@class) {
+			getitem .rewards_5x[.@j+1], .rewards_5x[.@j+2];
+			getitem .rewards_5x[.@j+3], .rewards_5x[.@j+4];
+			getitem .rewards_5x[.@j+5], .rewards_5x[.@j+6];
+			break;
+		}
+	}
+	announce strcharinfo(0) + " venceu a Corrida 5x como " + jobname(.@class) + "!", bc_all;
+	close;
+
+L_ShowStatus:
+	next;
+	mes "^0000FF[ Status Geral da Corrida 5x ]^000000";
+	for (.@i = 0; .@i < getarraysize(.classes); .@i++) {
+		.@job = .classes[.@i];
+		deletearray .@winner$[0], getarraysize(.@winner$);
+		query_sql "SELECT `char_name` FROM `race_winners_5x` WHERE `class_id` = " + .@job, .@winner$;
+		if (getarraysize(.@winner$) == 0) {
+			mes "^00BFFF[»] " + jobname(.@job) + "^000000: ^777777[Disponível]^000000";
+		} else {
+			mes "^00BFFF[»] " + jobname(.@job) + "^000000: ^00FF00[" + .@winner$[0] + "]^000000";
+		}
+	}
+	close;
+
+OnInit:
+	// Criação da tabela SQL (executar isso manualmente uma vez no banco de dados):
+	// CREATE TABLE IF NOT EXISTS `race_winners_5x` (
+	//   `class_id` INT PRIMARY KEY,
+	//   `char_name` VARCHAR(30) NOT NULL
+	// );
+
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 2001;
+	setunittitle getnpcid(0), "[Corrida Rate 5x]";
+
+	setarray .classes,
+		Job_Lord_Knight, Job_High_Priest, Job_High_Wizard, Job_Whitesmith, Job_Sniper,
+		Job_Assassin_Cross, Job_Paladin, Job_Champion, Job_Professor, Job_Stalker,
+		Job_Creator, Job_Clown, Job_Gypsy,
+		Job_Soul_Linker, Job_Star_Gladiator, Job_SuperNovice,
+		Job_Ninja, Job_Gunslinger;
+
+	set .max_base, 99;
+	set .max_job, 70;
+
+	setarray .rewards_5x,
+		Job_Lord_Knight,     50397,1,23820,5,616,5,
+		Job_High_Priest,     50400,1,23820,5,616,5,
+		Job_High_Wizard,     50403,1,23820,5,616,5,
+		Job_Whitesmith,      50367,1,23820,5,616,5,
+		Job_Sniper,          50396,1,23820,5,616,5,
+		Job_Assassin_Cross,  50391,1,23820,5,616,5,
+		Job_Paladin,         50393,1,23820,5,616,5,
+		Job_Champion,        50398,1,23820,5,616,5,
+		Job_Professor,       50401,1,23820,5,616,5,
+		Job_Stalker,         50309,1,23820,5,616,5,
+		Job_Creator,         50453,1,23820,5,616,5,
+		Job_Clown,           50392,1,23820,5,616,5,
+		Job_Gypsy,           50394,1,23820,5,616,5,
+		Job_Soul_Linker,     50358,1,23820,5,616,5,
+		Job_Star_Gladiator,  50402,1,23820,5,616,5,
+		Job_SuperNovice,     50362,1,23820,5,616,5,
+		Job_Ninja,           50399,1,23820,5,616,5,
+		Job_Gunslinger,      50395,1,23820,5,616,5;
+	end;
+}
+
+

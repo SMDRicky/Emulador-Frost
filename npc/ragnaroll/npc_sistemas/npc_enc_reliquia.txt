@@ -1,0 +1,126 @@
+// Enchant
+prontera,146,232,5	script	Encantador Relicario#0	4_F_02,2,2,{
+
+	mes "[Encantador Relicario]";
+	mes "50 Jellopy e 20,000 zenys são tudo que você precisa para obter um encantamento especial em seu item!";
+	next;
+	mes "[Encantador Relicario]";
+	mes "Encantar e redefinir não tem mais chance de falha! Invista seu vegetal com confiança!";
+	next;
+
+	switch( select( "Quanto eu preciso para encantar?", "Encantar o Poring Village Veggie", "Reiniciar Poring Village Veggie" ) ) {
+	case 1:
+		mes "[Encantador Relicario]";
+		mes "Você pode conseguir Cebola Verde ou Cenoura de Poring Village se for um pouco mais para o oeste a partir daqui.";
+		next;
+		mes "[Encantador Relicario]";
+		mes "Eu encanto o vegetal fresco.";
+		next;
+		mes "[Encantador Relicario]";
+		mes "Encantar ou Reiniciar requer 20.000z e 50 Jellopy! Não é ruim, é?";
+		next;
+		mes "[Encantador Relicario]";
+		mes "E agora não há risco de fracasso!";
+		close;
+	
+	case 2:
+		.@equip_id = getequipid(EQI_COSTUME_GARMENT);
+
+		// Lista de itens permitidos
+		setarray .@allowed_items[0],8885,8886,8887,8888,23030,23031,23032,23033,23034,23035,23036,23037,23038,23039,8885;
+
+		if (.@equip_id == -1) {
+			mes "[Encantador Relicario]";
+			mes "Por favor, equipe o item que deseja encantar primeiro.";
+			close;
+		}
+
+		// Verifica se o item está na lista permitida
+		if (!inarray(.@allowed_items, .@equip_id)) {
+			mes "[Encantador Relicario]";
+			mes "Isso não é um vegetal encantável!";
+			close;
+		}
+
+		if (getequipcardid(EQI_COSTUME_GARMENT,3) > 0) {
+			mes "[Encantador Relicario]";
+			mes "Este vegetal já foi encantado!";
+			close;
+		}
+
+		if (countitem(909) < 50 || Zeny < 20000) {
+			mes "[Encantador Relicario]";
+			mes "Você precisa de 50 Jellopy e 20.000z para encantar o item.";
+			close;
+		}
+
+		// Remove os requisitos
+		delequip EQI_COSTUME_GARMENT;
+		delitem 909,50; // Jellopy
+		Zeny -= 20000;
+
+		// Encantamento sempre bem-sucedido
+		.@r = rand(5356);
+		if (.@r < 160) .@card = 4795;	// HP100
+		else if (.@r < 200) .@card = 4796;	// HP200
+		else if (.@r < 1000) .@card = 4928;	// SP10
+		else if (.@r < 1400) .@card = 4870;	// SP25
+		else if (.@r < 1480) .@card = 4800;	// SP50
+		else if (.@r < 1880) .@card = 4700;	// Strength1
+		else if (.@r < 2280) .@card = 4730;	// Agility1
+		else if (.@r < 3410) .@card = 4740;	// Vitality1
+		else if (.@r < 3810) .@card = 4710;	// Inteligence1
+		else if (.@r < 4210) .@card = 4720;	// Dexterity1
+		else if (.@r < 5340) .@card = 4750;	// Luck1
+		else if (.@r < 5348) .@card = 4992;	// HPdrain1
+		else if (.@r < 5356) .@card = 4993;	// SPdrain1
+
+		getitem2 .@equip_id,1,1,0,0,0,0,0,.@card;
+		mes "[Encantador Relicario]";
+		mes "O encantamento está completo! Confira seu vegetal encantado.";
+		specialeffect2 EF_REPAIRWEAPON;
+		close;
+
+	case 3:
+		.@equip_id = getequipid(EQI_COSTUME_GARMENT);
+
+		if (.@equip_id == -1) {
+			mes "[Encantador Relicario]";
+			mes "Por favor, equipe o item que deseja resetar primeiro.";
+			close;
+		}
+
+		if (!inarray(.@allowed_items, .@equip_id)) {
+			mes "[Encantador Relicario]";
+			mes "Isso não é um vegetal encantável!";
+			close;
+		}
+
+		if (getequipcardid(EQI_COSTUME_GARMENT,3) == 0) {
+			mes "[Encantador Relicario]";
+			mes "Este item nunca foi encantado!";
+			close;
+		}
+
+		if (countitem(909) < 50 || Zeny < 20000) {
+			mes "[Encantador Relicario]";
+			mes "Você precisa de 50 Jellopy e 20.000z para resetar o encantamento.";
+			close;
+		}
+
+		delitem 909,50;	// Jellopy
+		Zeny -= 20000;
+
+		// Reset bem-sucedido
+		getitem .@equip_id,1;
+		mes "[Encantador Relicario]";
+		mes "O encantamento foi removido com sucesso!";
+		specialeffect2 EF_REPAIRWEAPON;
+		close;
+	}
+	end;
+
+OnTouch:
+	npctalk "Encantador Relicario: Deixe seu equipamento encantado!", "", bc_self;
+	end;
+}

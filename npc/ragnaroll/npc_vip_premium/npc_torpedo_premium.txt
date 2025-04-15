@@ -1,0 +1,573 @@
+vip_lounge,158,138,4	script	Arnold Procurador#premium	125,{
+// ========================================================
+// Configurações ******************************************
+// ========================================================
+// Nível do Jogador VIP (Padrão 10)
+   set .viplvl, 1;
+// Delay de Re-envio Jogador Não-Vip (Padrão 600/10Minutos)
+   set @delaynvip, 300;
+// Delay de Re-envio Jogador Vip (Padrão 300/5Minutos)
+   set @delayvip, 150;
+// Nome do NPC (Padrão Arnold Procurador)
+   set .nome$, "^339966[ Arnold Procurador ]^000000";
+// ========================================================
+if(#espera >= gettimetick(2)){
+	if(getgroupid() < 5){
+		mes .nome$;
+		mes "Você não pode enviar mensagens";
+		mes "constantemente. Você só deverá";
+		mes "enviar uma mensagem a cada "+@delaynvip/60+"";
+		mes "minutos.";
+		close;
+	}
+	else{
+		mes .nome$;
+		mes "Você não pode enviar mensagens";
+		mes "constantemente. Você só deverá";
+		mes "enviar uma mensagem a cada "+@delayvip/60+"";
+		mes "minutos.";
+		close;
+	}
+}
+mes .nome$;
+mes (gettime(3)>= 6&&gettime(3)<= 12?"Bom-dia":(gettime(3)>=13&&gettime(3)<=18?"Boa-tarde":"Boa-noite"))+", ^008aff"+strcharinfo(0)+"^000000 !";
+mes "Escolha o serviço:";
+switch(select("^339966[»]^000000 Grupo.","^339966[»]^000000 Clã.","^339966[»]^000000 Comércio.","^ff0000[»]^000000 Sair.")){
+	case 1:
+	next;
+	menu "^339966[»]^000000 Preciso de grupo.",L_QG,"^339966[»]^000000 Recruto pra grupo.",L_RG,"^ff0000[»]^000000 Cancelar.",L_Exit;
+	L_QG:
+		announce "O jogador "+strcharinfo(0)+" procura um grupo. Classe: "+jobname(Class)+". Nível: "+BaseLevel+".",bc_all,0xFF6666;
+		if(getgroupid() < 5){
+			set #espera, gettimetick(2) + @delaynvip;
+		}
+		else{
+			set #espera, gettimetick(2) + @delayvip;
+		}
+		close;
+	L_RG:
+		if(getcharid(1) == 0){
+			mes .nome$;
+			mes "Você precisa estar em um";
+			mes "grupo para poder usar esta";
+			mes "função do anunciador.";
+			close;
+		}
+		else{
+			next;
+			mes .nome$;
+			mes "Qual classe você está recrutando?";
+			menu "^339966[»]^000000 Classes 1-1",L_11,"^339966[»]^000000 Classes 2-1",L_21,"^339966[»]^000000 Classes 2-2",L_22,"^339966[»]^000000 Super Aprendiz",L_SA1,"^ff0000[»]^000000 Cancelar.",L_Exit;
+			L_11:
+				next;
+				menu "Arqueiro.",L_Arc,"Mercador.",L_Merca,"Mago.",L_Mago,"Espadachim.",L_Espa,"Noviço.",L_Nov,"Gatuno.",L_Gat,"Cancelar",L_Exit;
+	
+				L_Arc:	
+					set @Classe$,"Arqueiro";
+					callfunc("anuncio_recparty");
+					end;
+				L_Merca: 
+					set @Classe$,"Mercador";
+					callfunc("anuncio_recparty");
+					end;
+					
+				L_Mago: 
+					set @Classe$,"Mago";
+					callfunc("anuncio_recparty");
+					end;
+					
+				L_Espa: 
+					set @Classe$,"Espadachim";
+					callfunc("anuncio_recparty");
+					end;
+				L_Nov:  
+					announce "O jogador "+strcharinfo(0)+" de nível "+BaseLevel+" está recrutando Noviço para o grupo "+strcharinfo(1)+".",bc_all,0xFF6666;
+					if(getgroupid() < 5){
+						set #espera, gettimetick(2) + @delaynvip;
+					}
+					else{
+						set #espera, gettimetick(2) + @delayvip;
+					}
+					close;
+					end;
+				L_Gat:  
+					set @Classe$,"Gatuno";
+					callfunc("anuncio_recparty");
+					end;
+				L_SA:
+					close;
+			L_21:
+				next;
+				menu "Caçador.",L_Caca,"Ferreiro.",L_Fer,"Bruxo.",L_Bru,"Cavaleiro.",L_Cav,"Sacerdote.",L_Sac,"Mercenário.",L_Mer,"Cancelar.",L_Exit;
+				
+				L_Caca:	
+					announce "O jogador "+strcharinfo(0)+" de nível "+BaseLevel+" está recrutando Caçador para o grupo "+strcharinfo(1)+".",bc_all,0xFF6666;
+					if(getgroupid() < 5){
+						set #espera, gettimetick(2) + @delaynvip;
+					}
+					else{
+						set #espera, gettimetick(2) + @delayvip;
+					}
+					close;
+					end;
+				L_Fer:  
+					set @Classe$,"Ferreiro";
+					callfunc("anuncio_recparty");
+					end;
+				L_Bru:  
+					set @Classe$,"Bruxo";
+					callfunc("anuncio_recparty");
+					end;
+				L_Cav:  
+					set @Classe$,"Cavaleiro";
+					callfunc("anuncio_recparty");
+					end;
+	
+				L_Sac:  
+					set @Classe$,"Sacerdote";
+					callfunc("anuncio_recparty");
+					end;
+				L_Mer: 
+					announce "O jogador "+strcharinfo(0)+" de nível "+BaseLevel+" está recrutando Mercenário para o grupo "+strcharinfo(1)+".",bc_all,0xFF6666;
+					if(getgroupid() < 5){
+						set #espera, gettimetick(2) + @delaynvip;
+					}
+					else{
+						set #espera, gettimetick(2) + @delayvip;
+					}
+					close;
+					end;
+			L_22:
+			next;
+			menu "Bardo",L_Bar,"Odalisca",L_Oda,"Alquimista",L_Alq,"Sábio",L_Sage,"Templário",L_Tem,"Monge",L_Mon,"Arruaceiro",L_Arru,"Cancelar",L_Exit;
+				L_Bar:	
+					set @Classe$,"Bardo";
+					callfunc("anuncio_recparty");
+					end;
+				L_Oda:	
+					set @Classe$,"Odalisca";
+					callfunc("anuncio_recparty");
+					end;
+				L_Alq:	
+					set @Classe$,"Alquimista";
+					callfunc("anuncio_recparty");
+					end;
+				L_Sage:	
+					announce "O jogador "+strcharinfo(0)+" de nível "+BaseLevel+" está recrutando Sábio para o grupo "+strcharinfo(1)+".",bc_all,0xFF6666;
+					if(getgroupid() < 5){
+						set #espera, gettimetick(2) + @delaynvip;
+					}
+					else{
+						set #espera, gettimetick(2) + @delayvip;
+					}
+					close;
+					end;
+				L_Tem:	
+					announce "O jogador "+strcharinfo(0)+" de nível "+BaseLevel+" está recrutando Templário para o grupo "+strcharinfo(1)+".",bc_all,0xFF6666;
+					if(getgroupid() < 5){
+						set #espera, gettimetick(2) + @delaynvip;
+					}
+					else{
+						set #espera, gettimetick(2) + @delayvip;
+					}
+					close;
+					end;
+				L_Mon:	
+					set @Classe$,"Monge";
+					callfunc("anuncio_recparty");
+					end;
+				L_Arru:	
+					set @Classe$,"Arruaceiro";
+					callfunc("anuncio_recparty");
+					end;
+				L_SA1:
+					set @Classe$,"Super Aprendiz";
+					callfunc("anuncio_recparty");
+					end;
+		}
+		case 2:
+		next;
+		menu "Preciso de clã.",L_QC,"Recruto para clã.",L_RC,"Cancelar.",L_Exit;
+		L_QC:
+			announce "O jogador "+strcharinfo(0)+" procura um clã. Classe: "+jobname(Class)+". Nível: "+BaseLevel+".",bc_all,0xFF6666;
+			if(getgroupid() < 5){
+				set #espera, gettimetick(2) + @delaynvip;
+			}
+			else{
+				set #espera, gettimetick(2) + @delayvip;
+			}
+			close;
+			end;
+		L_RC:	
+			if(getcharid(2) == 0){
+				mes .nome$;
+				mes "Você precisa estar em um";
+				mes "clã para poder usar esta";
+				mes "função do anunciador.";
+				close;
+			}
+			else{
+				next;
+				mes .nome$;
+				mes "Digite um nível mínimo para";
+				mes "o recrutamento.";
+				input @nivelmin;
+				if(@nivelmin > 99){
+					next;
+					mes .nome$;
+					mes "Este nível não existe.";
+					close;
+				}
+				else{
+					next;
+					mes .nome$;
+					mes "Qual classe você está recrutando?";
+					menu "Classes 1-1",L_11c,"Classes 2-1",L_21c,"Classes 2-2",L_22c,"Super Aprendiz",L_SA2,"Cancelar.",L_Exit;
+					
+					L_11c:
+						next;
+						menu "Arqueiro.",L_Arcc,"Mercador.",L_Mercac,"Mago.",L_Magoc,"Espadachim.",L_Espac,"Noviço.",L_Novc,"Gatuno.",L_Gatc,"Cancelar",L_Exit;
+						
+						L_Arcc:
+							set @Classe$,"Arqueiro";
+							callfunc("anuncio_recguild");
+							end;
+						L_Mercac:
+							set @Classe$,"Mercador";
+							callfunc("anuncio_recguild");
+							end;
+						L_Magoc:
+							set @Classe$,"Mago";
+							callfunc("anuncio_recguild");
+							end;
+						L_Espac:
+							set @Classe$,"Espadachim";
+							callfunc("anuncio_recguild");
+							end;
+						L_Novc:  
+							announce "O jogador "+strcharinfo(0)+" está recrutando Noviço de nível "+@nivelmin+" ou maior para o clã "+strcharinfo(2)+".",bc_all,0xFF6666;
+							if(getgroupid() < 5){
+								set #espera, gettimetick(2) + @delaynvip;
+							}
+							else{
+								set #espera, gettimetick(2) + @delayvip;
+							}
+							close;
+							end;
+						L_Gatc:
+							set @Classe$,"Gatuno";
+							callfunc("anuncio_recguild");
+							end;
+					
+						L_SA2:
+							set @Classe$,"Super Aprendiz";
+							callfunc("anuncio_recguild");
+							end;
+					L_21c:
+						next;
+						menu "Caçador.",L_Cacac,"Ferreiro.",L_Ferc,"Bruxo.",L_Bruc,"Cavaleiro.",L_Cavc,"Sacerdote.",L_Sacc,"Mercenário.",L_Mercc,"Cancelar.",L_Exit;
+						
+						L_Cacac:	
+							announce "O jogador "+strcharinfo(0)+" está recrutando Caçador de nível "+@nivelmin+" ou maior para o clã "+strcharinfo(2)+".",bc_all,0xFF6666;
+							if(getgroupid() < 5){
+								set #espera, gettimetick(2) + @delaynvip;
+							}
+							else{
+								set #espera, gettimetick(2) + @delayvip;
+							}
+							close;
+							end;
+						L_Ferc:
+							set @Classe$,"Ferreiro";
+							callfunc("anuncio_recguild");
+							end;
+						L_Bruc:
+							set @Classe$,"Bruxo";
+							callfunc("anuncio_recguild");
+							end;
+						L_Cavc:
+							set @Classe$,"Cavaleiro";
+							callfunc("anuncio_recguild");
+							end;
+						L_Sacc:
+							set @Classe$,"Sacerdote";
+							callfunc("anuncio_recguild");
+							end;
+						L_Mercc: 
+							announce "O jogador "+strcharinfo(0)+" está recrutando Mercenário de nível "+@nivelmin+" ou maior para o clã "+strcharinfo(2)+".",bc_all,0xFF6666;
+							if(getgroupid() < 5){
+								set #espera, gettimetick(2) + @delaynvip;
+							}
+							else{
+								set #espera, gettimetick(2) + @delayvip;
+							}
+							close;
+							end;
+					L_22c:
+						next;
+						menu "Bardo",L_Barc,"Odalisca",L_Odac,"Alquimista",L_Alqc,"Sábio",L_Sagec,"Templário",L_Temc,"Monge",L_Monc,"Arruaceiro",L_Arruc,"Cancelar",L_Exit;
+		
+						L_Barc:
+							set @Classe$,"Bardo";
+							callfunc("anuncio_recguild");
+							end;
+						L_Odac:
+							set @Classe$,"Odalisca";
+							callfunc("anuncio_recguild");
+							end;
+						L_Alqc:
+							set @Classe$,"Alquimista";
+							callfunc("anuncio_recguild");
+							end;
+						L_Sagec:	
+							announce "O jogador "+strcharinfo(0)+" está recrutando Sábio de nível "+@nivelmin+" ou maior para o clã "+strcharinfo(2)+".",bc_all,0xFF6666;
+							if(getgroupid() < 5){
+								set #espera, gettimetick(2) + @delaynvip;
+							}
+							else{
+								set #espera, gettimetick(2) + @delayvip;
+							}
+							close;
+							end;
+						L_Temc:	
+							announce "O jogador "+strcharinfo(0)+" está recrutando Templário de nível "+@nivelmin+" ou maior para o clã "+strcharinfo(2)+".",bc_all,0xFF6666;
+							if(getgroupid() < 5){
+								set #espera, gettimetick(2) + @delaynvip;
+							}
+							else{
+								set #espera, gettimetick(2) + @delayvip;
+							}
+							close;
+							end;
+						L_Monc:
+							set @Classe$,"Monge";
+							callfunc("anuncio_recguild");
+							end;
+						L_Arruc:
+							set @Classe$,"Arruaceiro";
+							callfunc("anuncio_recguild");
+							end;
+			L_Exit:
+				next;
+				mes .nome$;
+				mes "Volte quando precisar dos meus";
+				mes "serviços. Estarei por aqui.";
+				close;
+		}
+	}
+	case 3:
+		next;
+		mes .nome$;
+		mes "Digite o ID do item. Caso você";
+		mes "deseje cancelar, digite 0.";
+		input @itemid;
+		if(@itemid == 0){
+			next;
+			mes .nome$;
+			mes "Anúncio cancelado.";
+			close;
+		}
+		else{
+			if(getitemname(@itemid) == "null"){
+				next;
+				mes .nome$;
+				mes "ID Inválido.";
+				close;
+			}
+			else{
+				set @anItmName$, getitemname(@itemid);
+				close2;
+				announce "Precisa-se de "+@anItmName$+", tratar com o jogador "+strcharinfo(0)+".",bc_all,0xFF6666;
+				if(getgroupid() < 5){
+					set #espera, gettimetick(2) + @delaynvip;
+				}
+				else{
+					set #espera, gettimetick(2) + @delayvip;
+				}
+				end;
+			}
+		}
+	case 4:
+		next;
+		mes .nome$;
+		mes "Volte quando precisar dos meus";
+		mes "serviços. Estarei por aqui.";
+		close;
+	}
+}
+function	script	anuncio_recparty	{
+	announce "O jogador "+strcharinfo(0)+" de nível "+BaseLevel+" está recrutando "+@Classe$+" para o grupo "+strcharinfo(1)+".",bc_all,0xFF6666;
+	if(getgroupid() < 5){
+		set #espera, gettimetick(2) + @delaynvip;
+	}
+	else{
+		set #espera, gettimetick(2) + @delayvip;
+	}
+	close;
+}
+function	script	anuncio_recguild	{
+	announce "O jogador "+strcharinfo(0)+" está recrutando "+@Classe$+" de nível "+@nivelmin+" ou maior para o clã "+strcharinfo(2)+".",bc_all,0xFF6666;
+	if(getgroupid() < 5){
+		set #espera, gettimetick(2) + @delaynvip;
+	}
+	else{
+		set #espera, gettimetick(2) + @delayvip;
+	}
+	close;
+}
+function	script	time	{
+	set .@Time_Left, getarg(0) - gettimetick(2);
+	set .@Dias, .@Time_Left / 86400;
+	set .@Time_Left, .@Time_Left - (.@Dias * 86400);
+	set .@Horas, .@Time_Left / 3600;
+	set .@Time_Left, .@Time_Left - (.@Horas * 3600);
+	set .@Minutos, .@Time_Left / 60;
+	set .@Time_Left, .@Time_Left - (.@Minutos * 60);
+	set .@Time$, "";
+	if( .@Dias > 1 )
+		set .@Time$, .@Time$ + .@Dias + " dias, ";
+	else if( .@Dias > 0 )
+		set .@Time$, .@Time$ + .@Dias + " dia, ";
+	if( .@Horas > 1 )
+		set .@Time$, .@Time$ + .@Horas + " horas, ";
+	else if( .@Horas > 0 )
+		set .@Time$, .@Time$ + .@Horas + " hora, ";
+	if( .@Minutos > 1 )
+		set .@Time$, .@Time$ + .@Minutos + " minutos, ";
+	else if( .@Minutos > 0 )
+		set .@Time$, .@Time$ + .@Minutos + " minuto, ";
+	if( .@Time_Left > 1 || .@Time_Left == 0 )
+		set .@Time$, .@Time$ + .@Time_Left + " segundos.";
+	else if( .@Time_Left == 1 )
+		set .@Time$, .@Time$ + .@Time_Left + " segundo.";
+	
+	return .@Time$;
+}
+
+prt_in,122,37,4	script	Anuncia Live	888,{
+ 
+//-- Delay para enviar torpedo?
+set .@DelayAnn,20;
+//--
+//-- Usar zenys para enviar mensagens? [1: Sim/2: Nâo]
+set .@Zeny,2;
+//--
+//-- Valor cobrado por torpedo?
+set .@ZenyValor,0;        
+//--
+//-- Configuração dos palavrões
+set .@anuncio_palavrao$[0],"puta";
+set .@anuncio_palavrao$[1],"gay";
+set .@anuncio_palavrao$[2],"viadinho";
+set .@anuncio_palavrao$[3],"prostituta";
+set .@anuncio_palavrao$[4],"cuzão";
+set .@anuncio_palavrao$[5],"fdp";
+set .@anuncio_palavrao$[6],"caralho";
+set .@anuncio_palavrao$[7],"caraleo";
+set .@anuncio_palavrao$[8],"lixo";
+set .@anuncio_palavrao$[9],"mãe";
+set .@anuncio_palavrao$[10],"mae";
+set .@anuncio_palavrao$[11],"pai";
+set .@anuncio_palavrao$[12],"tnc";
+set .@anuncio_palavrao$[13],"lixos";
+set .@anuncio_palavrao$[14],"noob";
+ 
+//-- Configuração dos sites
+set .@anuncio_sites$[0],"olocomeuss";
+set .@anuncio_sites$[1],"oloco";
+set .@anuncio_sites$[2],"olocos";
+set .@anuncio_sites$[3],"olocomeus";
+set .@anuncio_sites$[4],"olocomeuss";
+set .@anuncio_sites$[5],"olocomeuss";
+set .@anuncio_sites$[6],"olocomeuss";
+ 
+function	DelayAnnounce;
+if(!DelayAnnounce("DelayGet",getcharid(3),.@DelayAnn))
+{
+dispbottom "Me desculpe, mas você deve esperar: "+.@DelayAnn+" minutos para poder enviar outro torpedo !";
+close;
+}
+if(#streamer != 1){
+mes "Desculpe, você não é um Streamer.";
+close;
+}
+mes "[Torpedo]";
+mes "Olá "+strcharinfo(0)+" ! deseja enviar uma mensagem?";
+mes "Total Enviados: ^0000FF"+#envio+"^000000";
+mes "Delay: ^0000FF"+.@DelayAnn+" minutos.^000000";
+if(select("- Sim:- Não") == 2) close;
+
+next;
+Restart:
+mes "[Torpedo]";
+mes "Use esse exemplo de mensagem: Live ON - twitch.tv/seucanal";
+input @msg$;
+next;
+ 
+for(set .@num,0; .@num < getarraysize(.@anuncio_palavrao$); set .@num, .@num + 1)
+{
+if(compare(@msg$,.@anuncio_palavrao$[.@num]))
+{
+mes "[Torpedo]";
+mes "Me desculpe, mais não é permitido palavrões no anuncio !";
+close;
+}
+}
+ 
+for(set .@num,0; .@num < getarraysize(.@anuncio_sites$); set .@num, .@num + 1)
+{
+if(compare(@msg$,.@anuncio_sites$[.@num]))
+{
+mes "[Torpedo";
+mes "Me desculpe, mais não é permitido divulgação de sites aqui !";
+close;
+}
+}
+ 
+if (.@Zeny == 0)
+{
+if(Zeny<.@ZenyValor)
+{
+mes "[Torpedo]";
+mes "Me desculpe mas você não tem zenys suficientes para usar";
+mes "os serviços de torpedos !";
+next;
+mes "[Torpedo]";
+mes "Você irá precisar de: ^FF0000"+.@ZenyValor+"z^000000.";
+close;
+}
+}
+ 
+mes "[Torpedo [VIP]";
+mes "Você digitou:";
+mes "'^FF0000"+@msg$+"^000000'";
+switch(select("- Sim","- Não"))
+        {
+case 1:
+announce "[Twitch]: "+@msg$+".",2;
+DelayAnnounce("DelaySet",getcharid(3));
+set Zeny,Zeny-.@ZenyValor;
+set #envio,#envio+1;
+end;
+close;
+ 
+case 2:
+close2;
+goto Restart;
+}
+ 
+function	DelayAnnounce	{
+ 
+if( getarg(0) == "DelaySet" )
+{
+setd "$anndelay_"+getarg(1),gettime(4)*24*60 + gettime(6)*60 + gettime(2);
+return 0;
+}
+else
+if( getarg(0) == "DelayGet" )
+{
+set .@check, gettime(4)*24*60 + gettime(6)*60 + gettime(2) - getd("$anndelay_"+getarg(1));
+return !(.@check >= 0 && .@check < getarg(2) );
+}
+}
+}

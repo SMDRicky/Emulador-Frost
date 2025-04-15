@@ -1,0 +1,284 @@
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|				
+//|§§§§§§§§§§§§§§§§§§§§§  "Original é o que cria não é aquele que copia".  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§  ragnaproxy ©2017 - TODOS OS DIREITOS RERSEVADOS  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|					 
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§\    \§§§§§§§§/    /§§\    \§§§§§§/    /TM°§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§§\    \§§§§§§/    /§§§§\    \§§§§/    /§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|            |§§§§\    \§§§§/    /§§§§§§\    \§§/    /§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§\    \§§/    /§§§§§§§§\    \/    /§§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§§\    \/    /§§§§§§§§§§\        /§§§§§§§§§§§§|
+//|§§|            |§§§|            \§§§§§|   |§§§§|   |§§§§§§§\        /§§§§§§§§§§§§\      /§§§§§§§§§§§§§|
+//|§§|            |§§§|             \§§§§|   |§§§§|   |§§§§§§§§\      /§§§§§§§§§§§§§§\    /§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§\    |§§§|   |§§§§|   |§§§§§§§§/      \§§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§§/        \§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§/    /\    \§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§/    /§§\    \§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|	                                                                                       
+//| =====================================================================================================|
+//|   Script Criando por ragnaproxy | Cronus | Por Favor, Não Retire Os Créditos.              		 
+//| ==================================================================================================== |
+//|   Sistema de Facções VERSÃO: 4.0p							       		 
+//| ==================================================================================================== |
+
+function	script	QuestMorte	{
+
+		mes "[^990000Quests anjos da morte^000000]";
+		mes "Escolha uma quest.";
+		for(.@p = 0; getd ("$morte_quest_"+ .@p); .@p = .@p + 1)
+		.@menu$ = .@menu$ + "- " + getd ("$morte_quest_"+.@p+"[1]") +"x "+ getitemname(getd("$morte_quest_"+.@p)) + ":";
+		.@p = select( .@menu$) - 1;
+		.@size = getarraysize(getd("$morte_quest_"+.@p));
+		next;
+		mes "[^990000Quests anjos da morte^000000]";
+		mes "Os itens que eu quero para essa quest são:";
+		for(.@w = 3; .@w < .@size; .@w = .@w + 2)
+		mes "- " + getd ("$morte_quest_"+.@p+"["+(.@w+1)+"]") + "x " + getitemname(getd ("$morte_quest_"+.@p+"["+.@w+"]"));
+		if(getd( "$morte_quest_"+.@p+"[2]"))
+		mes  "- " + getd("$morte_quest_"+.@p+"[2]") + " Zenies";
+		next;
+		mes "[^990000Quests anjos da morte^000000]";
+		mes "você já tem os itens ?";
+		if(select("Sim:Não") == 1){ next;
+	
+			for(.@w = 3; .@w < .@size; .@w = .@w + 2 )
+			if(countitem(getd("$morte_quest_"+.@p+"["+.@w+"]")) < getd("$morte_quest_"+.@p+"["+(.@w+1)+"]") || Zeny < getd("$morte_quest_"+.@p+"[2]")){
+				
+				mes "[^990000Quests anjos da morte^000000]";
+				mes "você não tem os itens, volte quando você tive todos.";
+				close;
+				
+					}
+					for(.@w = 3 ; .@w<.@size ; .@w = .@w+2 ) 
+					delitem getd("$morte_quest_"+.@p+"["+.@w+"]"), getd("$morte_quest_"+.@p+"["+(.@w+1)+"]");
+					getitem getd("$morte_quest_"+.@p+"[0]"), getd("$morte_quest_"+.@p+"[1]");
+					Zeny = Zeny - getd( "$morte_quest_"+.@p+"[2]"); 
+					mes "[^990000Quests anjos da morte^000000]";
+					mes "Aí está a sua recompensa.";
+					close;
+					
+						}
+						next;
+						mes "[^990000Quests anjos da morte^000000]";
+						mes "Então não posso fazer nada por você, volte quando tiver todos os itens.";
+						close;
+						
+}
+function	script	QuestNoite	{
+
+		mes "[^0000FFQuests anjos da noite^000000]";
+		mes "Escolha uma quest.";
+		for(.@p = 0; getd("$noite_quest_"+ .@p); .@p = .@p + 1)
+		.@menu$ = .@menu$ + "- " + getd("$noite_quest_"+.@p+"[1]") +"x "+ getitemname(getd("$noite_quest_"+.@p)) + ":";
+		.@p = select(.@menu$ ) - 1;
+		.@size = getarraysize ( getd ("$noite_quest_"+.@p));
+		next;
+		mes "[^0000FFQuests anjos da noite^000000]";
+		mes "Os itens que eu quero para essa quest são:";
+		for(.@w = 3; .@w < .@size; .@w = .@w + 2)
+		mes "- " + getd("$noite_quest_"+.@p+"["+(.@w+1)+"]") + "x " + getitemname(getd("$noite_quest_"+.@p+"["+.@w+"]"));
+		if(getd("$noite_quest_"+.@p+"[2]"))
+		mes  "- " + getd("$noite_quest_"+.@p+"[2]") + "Zenies";
+		next;
+		mes "[^0000FFQuests anjos da noite^000000]";
+		mes "você já tem os itens ?";
+		if(select("Sim:Não") == 1){ next;
+	
+			for(.@w = 3; .@w < .@size; .@w = .@w + 2 )
+			if(countitem(getd("$noite_quest_"+.@p+"["+.@w+"]") ) < getd("$noite_quest_"+.@p+"["+(.@w+1)+"]") || Zeny < getd("$noite_quest_"+.@p+"[2]")){
+				
+				mes "[^0000FFQuests anjos da noite^000000]";
+				mes "você não tem os itens, volte quando você tive todos.";
+				close;
+				
+					}
+					for(.@w = 3 ; .@w<.@size ; .@w = .@w+2) 
+					delitem getd("$noite_quest_"+.@p+"["+.@w+"]"), getd("$noite_quest_"+.@p+"["+(.@w+1)+"]");
+					getitem getd("$noite_quest_"+.@p+"[0]"), getd("$noite_quest_"+.@p+"[1]");
+					Zeny = Zeny - getd("$noite_quest_"+.@p+"[2]"); 
+					mes "[^0000FFQuests anjos da noite^000000]";
+					mes "Aí está a sua recompensa.";
+					close;
+					
+						}
+						next;
+						mes "[^0000FFQuests anjos da noite^000000]";
+						mes "Então não posso fazer nada por você, volte quando tiver todos os itens.";
+						close;
+						
+}
+function	script	QuestLuz	{
+
+		mes "[^33CC99Quests anjos da luz^000000]";
+		mes "Escolha uma quest.";
+		for(.@p = 0; getd("$luz_quest_"+ .@p); .@p = .@p + 1)
+		.@menu$ = .@menu$ + "- " + getd ("$luz_quest_"+.@p+"[1]") +"x "+ getitemname(getd("$luz_quest_"+.@p)) + ":";
+		.@p = select(.@menu$) - 1;
+		.@size = getarraysize(getd("$luz_quest_"+.@p));
+		next;
+		mes "[^33CC99Quests anjos da luz^000000]";
+		mes "Os itens que eu quero para essa quest são:";
+		for(.@w = 3; .@w < .@size; .@w = .@w + 2)
+		mes "- " + getd("$luz_quest_"+.@p+"["+(.@w+1)+"]") + "x " + getitemname(getd("$luz_quest_"+.@p+"["+.@w+"]"));
+		if(getd("$luz_quest_"+.@p+"[2]"))
+		mes  "- " + getd ("$luz_quest_"+.@p+"[2]") + " Zenies";
+		next;
+		mes "[^33CC99Quests anjos da luz^000000]";
+		mes "você já tem os itens ?";
+		if (select("Sim:Não") == 1){ next;
+	
+			for(.@w = 3; .@w < .@size; .@w = .@w + 2 )
+			if(countitem(getd("$luz_quest_"+.@p+"["+.@w+"]")) < getd("$luz_quest_"+.@p+"["+(.@w+1)+"]") || Zeny < getd("$luz_quest_"+.@p+"[2]")){
+				
+				mes "[^33CC99Quests anjos da luz^000000]";
+				mes "você não tem os itens, volte quando você tive todos.";
+				close;
+					}
+					for(.@w = 3 ; .@w<.@size ; .@w = .@w+2) 
+					delitem getd("$luz_quest_"+.@p+"["+.@w+"]"), getd("$luz_quest_"+.@p+"["+(.@w+1)+"]");
+					getitem getd("$luz_quest_"+.@p+"[0]"), getd("$luz_quest_"+.@p+"[1]");
+					Zeny = Zeny - getd ( "$luz_quest_"+.@p+"[2]"); 
+					mes "[^33CC99Quests anjos da luz^000000]";
+					mes "Aí está a sua recompensa.";
+					close;
+						}
+						next;
+						mes "[^33CC99Quests anjos da luz^000000]";
+						mes "Então não posso fazer nada por você, volte quando tiver todos os itens.";
+						close;
+						
+}
+function	script	BauMorte	{
+
+		if($bau_bloq == 1){
+		mes "[^990000Baú "+$nomem$+"^000000]";
+		mes "O báu está desativado no momento!";
+		close;
+		
+			}
+			mes "[^990000Baú "+$nomem$+"^000000]";
+			mes "Gostaria de recolher os itens do Baú?";
+			next;
+			mes "[^990000Baú "+$nomem$+"^000000]";
+			mes "Você precisa de ^006400"+$bau_morte_point+"^000000 pontos de duelo para abrir o báu.";
+			query_sql "SELECT bau_points FROM faccaom WHERE `char_id` ='"+getcharid (0)+"'",@bau_point;
+			mes "Você tem ^006400"+@bau_point+"^000000 ponto(s) de duelo.";
+			next;
+			switch(select("-> ^000080Abri baú^000000:-> ^000080Ver itens do baú^000000:-> ^000080Depois eu pego^000000")){
+		
+				case 1:
+					if(@bau_point >= $bau_morte_point){
+					mes "[^990000Baú "+$nomem$+"^000000]";
+					mes "Obrigado, continue fazendo duelos para ganhar mais itens do Baú.";
+					for(@c = 0; $bau_morte_premios[@c]; @c = @c + 1 )
+					getitem $bau_morte_premios[@c], $quant_morte;
+					query_sql "UPDATE `faccaom` set `bau_points` = `bau_points` -'"+$bau_morte_point+"' WHERE `char_id`='"+getcharid (0)+"'";
+					close;
+					
+						}
+						mes "[^990000Baú "+$nomem$+"^000000]";
+						mes "Você não tem pontos suficiente para pega os itens do baú. Continue duelando para ganhar mais pontos.";
+						close;
+				
+				case 2:
+					mes "[^990000Lista dos itens do báu^000000]";
+					for (@c = 0; $bau_morte_premios[@c]; @c = @c + 1)
+					mes "^FF0000"+getitemname($bau_morte_premios[@c]);
+					close;
+
+				case 3:
+				mes "[^990000Baú "+$nomem$+"^000000]";
+				mes "Ok, quando precisar é só voltar.";
+				close;	
+				
+	}	
+}
+function	script	BauNoite	{
+		
+		if($bau_bloq == 1){
+		mes "[^990000Baú "+$nomen$+"^000000]";
+		mes "O báu está desativado no momento!";
+		close;
+		
+			}
+ 			mes "[^990000Baú "+$nomen$+"^000000]";
+			mes "Gostaria de recolher os itens do Baú?";
+			next;
+			mes "[^990000Baú "+$nomen$+"^000000]";
+			mes "Você precisa de ^006400"+$bau_noite_point+"^000000 pontos de duelo para abrir o baú.";
+			query_sql "SELECT bau_points FROM faccaon WHERE `char_id` ='"+getcharid (0)+"'",@bau_point;
+			mes "Você tem ^006400"+@bau_point+"^000000 ponto(s) de duelo.";
+			next;
+			switch(select("-> ^000080Abri baú^000000:-> ^000080Ver itens do baú^000000:-> ^000080Depois eu pego^000000")){
+		
+				case 1:
+					if(@bau_point >= $bau_noite_point){
+					mes "[^990000Baú "+$nomen$+"^000000]";
+					mes "Obrigado, continue fazendo duelos para ganhar mais itens do Baú.";
+					for(@c = 0; $bau_noite_premios[@c]; @c = @c + 1 )
+					getitem $bau_noite_premios[@c], $quant_noite;
+					query_sql "UPDATE `faccaon` set `bau_points` = `bau_points` -'"+$bau_morte_point+"' WHERE `char_id`='"+getcharid (0)+"'";
+					close;
+					
+						}
+						mes "[^990000Baú "+$nomen$+"^000000]";
+						mes "Você não tem pontos suficiente para pega os itens do baú. Continue duelando para ganhar mais pontos.";
+						close;
+				
+				case 2:
+					mes "[^990000Lista dos itens do báu^000000]";
+					for(@c = 0; $bau_noite_premios[@c]; @c = @c + 1)
+					mes "^FF0000"+getitemname($bau_noite_premios[@c]);
+					close;
+
+				case 3:
+				mes "[^990000Baú "+$nomen$+"^000000]";
+				mes "Ok, quando precisar é só voltar.";
+				close;
+				
+	}	
+}
+function	script	BauLuz	{
+		
+		if($bau_bloq == 1){
+		mes "[^990000Baú "+$nomel$+"^000000]";
+		mes "O báu está desativado no momento!";
+		close;
+		
+			}
+			mes "[^990000Baú "+$nomel$+"^000000]";
+			mes "Gostaria de recolher os itens do Baú?";
+			mes "Você precisa de ^006400"+$bau_luz_point+"^000000 pontos de duelo para abrir o baú.";
+			query_sql "SELECT bau_points FROM faccaom WHERE `char_id` ='"+getcharid (0)+"'",@bau_point;
+			mes "Você tem ^006400"+@bau_point+"^000000 ponto(s) de duelo.";
+			next;
+			switch(select("-> ^000080Abri baú^000000:-> ^000080Ver itens do baú^000000:-> ^000080Depois eu pego^000000")){
+		
+				case 1:
+					if(@bau_point >= $bau_luz_point){
+					mes "[^990000Baú "+$nomel$+"^000000]";
+					mes "Obrigado, continue fazendo duelos para ganhar mais itens do Baú.";
+					for(@c = 0; $bau_luz_premios[@c]; @c = @c + 1)
+					getitem $bau_luz_premios[@c], $quant_luz;
+					query_sql "UPDATE `faccaom` set `bau_points` = `bau_points` -'"+$bau_morte_point+"' WHERE `char_id`='"+getcharid (0)+"'";
+					close;
+					
+						}
+						mes "[^990000Baú "+$nomel$+"^000000]";
+						mes "Você não tem pontos suficiente para pega os itens do baú. Continue duelando para ganhar mais pontos.";
+						close;
+				
+				case 2:
+					mes "[^990000Lista dos itens do báu^000000]";
+					for(@c = 0; $bau_luz_premios[@c]; @c = @c + 1)
+					mes "^FF0000"+getitemname($bau_luz_premios[@c]);
+					close;
+
+				case 3:
+					mes "[^990000Baú "+$nomel$+"^000000]";
+					mes "Ok, quando precisar é só voltar.";
+					close;	
+					
+	}	
+}

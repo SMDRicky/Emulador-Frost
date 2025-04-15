@@ -1,0 +1,8 @@
+-	script	Kalliope	-1,{
+
+OnClick:
+callshop "pontospresenca";
+end;
+}
+
+-	pointshop	pontospresenca	10435,#Goldpc_Points,35034:5,12263:4,14592:4,7621:3,7776:5,12213:15,23821:30,23822:50

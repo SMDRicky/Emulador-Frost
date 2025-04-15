@@ -1,0 +1,185 @@
+//===== rAthena Script =======================================
+//= BattleGround Expansion - Funções da Valfreyja
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Funções de funcionalidade das Arenas Valfreyja.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+
+// Função para Dropar uma Bandeira caso o jogador morra ou seja desconectado.
+//
+// * callfunc("F_BG_DropFlag", <arena_num>, "<mapname>", <team>, <freeloop>);
+//    Arg(0): Arena n°
+//    Arg(1): Mapname
+//    Arg(2): Team (0: A / 1: B)
+//    Arg(3): Freeloop (0: no / 1: yes)
+function	script	F_BG_DropFlag	{
+	.@n_ = getarg(0);
+	.@mapname_$ = getarg(1);
+	
+	if( getarg(3) )
+		freeloop(1);
+	
+	if( getarg(2) ) {
+		.@s_$ = "b";
+		.@team_$ = "Croix";
+	}
+	else {
+		.@s_$ = "a";
+		.@team_$ = "Guillaume";
+	}
+	
+	getmapxy .@m_$, .@x_, .@y_, BL_PC;
+	.@d_ = getchardir();
+	.@c_ = 0;
+	for( .@i_=1; .@i_ <= 5; .@i_++ ) {
+		.@status_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[7]");
+		.@cid_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[8]");
+		
+		if( .@status_ == 1 && .@cid_ == getcharid(0) ) {
+			if( .@m_$ != .@mapname_$ ) {
+				.@x_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[4]");
+				.@y_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[5]");
+				.@d_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[6]");
+				.@ib_ = callfunc("F_BG_CheckRespawn", .@x_, .@y_);
+				
+				if( .@x_ == 0 && .@y_ == 0 || .@ib_ ) {
+					.@x_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[1]");
+					.@y_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[2]");
+					.@d_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[3]");
+				}
+			}
+			else {
+				.@ib_ = callfunc("F_BG_CheckRespawn", .@x_, .@y_);
+				if( .@ib_ ) {
+					.@x_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[4]");
+					.@y_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[5]");
+					.@d_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[6]");
+				}
+				
+				if( .@x_ == 0 && .@y_ == 0 ) {
+					.@x_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[1]");
+					.@y_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[2]");
+					.@d_ = getd("$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[3]");
+				}
+			}
+			
+			stopnpctimer .@i_+"ª Base de "+.@team_$+"#"+.@mapname_$;
+			enablenpc .@i_+"ª Bandeira de "+.@team_$+"#"+.@mapname_$;
+			movenpc .@i_+"ª Bandeira de "+.@team_$+"#"+.@mapname_$, .@x_, .@y_, .@d_;
+			setd "$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[4]", .@x_;
+			setd "$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[5]", .@y_;
+			setd "$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[6]", .@d_;
+			setd "$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[7]", 0;
+			setd "$@valfreyja_"+.@n_+"f"+.@i_+.@s_$+"[8]", 0;
+			.@c_++;
+		}
+	}
+	
+	if( getarg(3) )
+		freeloop(0);
+	return .@c_;
+}
+
+// Checa se o jogador pegou uma bandeira de um determinado time.
+//
+// * callfunc("F_BG_CheckFlag", <arena_num>, <team>, <char_id>, <freeloop>);
+//    Arg(0): Arena n°
+//    Arg(1): Team (0: A / 1: B)
+//    Arg(2): Char Id
+//    Arg(3): Freeloop (0: no / 1: yes)
+function	script	F_BG_CheckFlag	{
+	.@s_$ = getarg(1) ? "b" : "a";
+
+	if( getarg(3) )
+		freeloop(1);
+
+	for( .@i=1; .@i <= 5; .@i++ ) {
+		.@status_ = getd("$@valfreyja_"+getarg(0)+"f"+.@i+.@s_$+"[7]");
+		.@cid_ = getd("$@valfreyja_"+getarg(0)+"f"+.@i+.@s_$+"[8]");
+		
+		if( .@status_ && .@cid_ == getarg(2) )
+			return .@i;
+	}
+	
+	if( getarg(3) )
+		freeloop(0);
+	return 0;
+}
+
+// Sinaliza para os jogadores os pontos no mini-mapa.
+//
+// * callfunc "F_BG_ClearViewPoint", <TeamID>, <freeloop>;
+//    Arg(0): TeamID
+//    Arg(1): Freeloop (0: no / 1: yes)
+function	script	F_BG_ClearViewPoint	{
+	.@TeamID_ = getarg(0);
+	deletearray $@arenamembers;
+	bg_get_data .@TeamID_, 1;
+	
+	if( getarg(1) )
+		freeloop(1);
+		
+	for( .@i_=0; .@i_ < $@arenamemberscount; .@i_++ ) {
+		.@Name_$ = rid2name($@arenamembers[.@i_]);
+		.@CID_ = getcharid(0,.@Name_$);
+		for( .@n_=1; .@n_ <= 10; .@n_++ ) {
+			viewpoint 0,0,0,.@n_,0xFFFF00, .@CID_;
+			viewpoint 0,0,0,.@n_,0xFF0000, .@CID_;
+			viewpoint 0,0,0,.@n_,0x0000FF, .@CID_;
+		}
+	}
+	
+	if( getarg(1) )
+		freeloop(0);
+	return;
+}
+
+// Sinaliza para os jogadores os pontos no mini-mapa.
+//
+// * callfunc "F_BG_ClearViewPoint_Unit", <TeamID>, <flag num>, <freeloop>;
+//    Arg(0): TeamID
+//    Arg(1): Flag num
+//    Arg(2): Freeloop (0: no / 1: yes)
+function	script	F_BG_ClearViewPoint_Unit	{
+	.@TeamID_ = getarg(0);
+	.@n_ = getarg(1);
+	deletearray $@arenamembers;
+	bg_get_data .@TeamID_, 1;
+	
+	if( getarg(2) )
+		freeloop(1);
+	
+	for( .@i_=0; .@i_ < $@arenamemberscount; .@i_++ ) {
+		.@Name_$ = rid2name($@arenamembers[.@i_]);
+		.@CID_ = getcharid(0,.@Name_$);
+		viewpoint 0,0,0,.@n_,0xFFFF00, .@CID_;
+		viewpoint 0,0,0,.@n_,0xFF0000, .@CID_;
+		viewpoint 0,0,0,.@n_,0x0000FF, .@CID_;
+	}
+	
+	if( getarg(2) )
+		freeloop(0);
+	return;
+}
+
+// Sinaliza para os jogadores os pontos no mini-mapa.
+//
+// * callfunc("F_BG_CheckRespawn", .@x, .@y);
+//    Arg(0): Coordinate X
+//    Arg(1): Coordinate Y
+function	script	F_BG_CheckRespawn	{
+	.@x__ = getarg(0);
+	.@y__ = getarg(1);
+	
+	return ((.@x__ >= 36 && .@x__ <= 47) && (.@y__ >= 42 && .@y__ <= 53) || (.@x__ >= 352 && .@x__ <= 363 ) && (.@y__ >= 42 && .@y__ <= 53));
+}

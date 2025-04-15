@@ -1,0 +1,202 @@
+/*
+  _  ____      _____          
+ | |/ /\ \    / /   \ _____ __
+ | ' <  \ \/\/ /| |) / -_) V /
+ |_|\_\  \_/\_/ |___/\___|\_/ 
+                                                                  
+*/
+//Sistema de Doação InGame | by Kleber Washington (KWDev)
+//Gateway: Mercado pago
+//Telegram: @KWDE_V
+//Discord: kwdz7
+
+-	script	gerenciar_cupom#AsgardWallet	-1,{
+OnCupom_Donate:
+
+set .@nameNPC$, "^0000ff[Gerenciador de Cupons]^000000";
+
+if(getgroupid() == 99){
+    
+    mes .@nameNPC$;
+    mes "Bem-vindo ao "+.@nameNPC$;
+    mes "O que você gostaria de fazer?";
+    
+    switch(select("Criar Cupom:Editar Cupom:Excluir Cupom")) {
+        case 1:
+            clear;
+            mes .@nameNPC$;
+            mes "Por favor, insira as informações do cupom.";
+            
+
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o código do cupom:";
+            
+            input .@cupom$;
+
+            // Verificar se o cupom existe
+            if(query_sql("SELECT id FROM cupom_donate WHERE cupom = '" + .@cupom$ + "'", .@cupom_id)) {
+                clear;
+                mes .@nameNPC$;
+                mes "Cupom ja existe!, tente editar ou crie outro";
+                close;
+            }
+
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o nome do STREAMER:";
+            
+            input .@streamer$;
+
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o status do cupom (1 para ativo, 0 para inativo):";
+            
+            input .@status, 0, 1;
+
+            clear;
+            mes .@nameNPC$;
+            mes "Digite quantos dias de validade terá o cupom:";
+            
+
+            input .@dias;
+
+            .@total = (.@dias * 24 * 60 * 60) + gettimetick(2);
+
+            .@validade$ = gettimestr("%Y-%m-%d %H:%M:%S",21,.@total);
+
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o percentual de desconto do cupom:";
+            
+            input .@percentual;
+
+            // Inserir o cupom na tabela cupom_donate
+            query_sql "INSERT INTO cupom_donate (streamer, cupom, status, criado, validade, percentual) VALUES ('" + .@streamer$ + "','" + .@cupom$ + "', " + .@status + ", NOW(), '" + .@validade$ + "', " + .@percentual + ")";
+
+            clear;
+            mes .@nameNPC$;
+            mes "Cupom '"+.@cupom$+"' criado com sucesso!";
+            close;
+        case 2:
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o código do cupom que você deseja editar:";
+            
+            input .@cupom$;
+            
+            // Verificar se o cupom existe
+            if(!query_sql("SELECT id FROM cupom_donate WHERE cupom = '" + .@cupom$ + "'", .@cupom_id)) {
+                clear;
+                mes .@nameNPC$;
+                mes "Cupom não encontrado!";
+                close;
+            }
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o novo status do cupom (1 para ativo, 0 para inativo):";
+            
+            input .@status, 0, 1; 
+
+            clear;
+            mes .@nameNPC$;
+            mes "Digite a nova quantidade de dias que o cupom terá validade:";
+            
+            input .@dias;
+
+            .@total = (.@dias * 24 * 60 * 60) + gettimetick(2);
+
+            .@validade$ = gettimestr("%Y-%m-%d %H:%M:%S",21,.@total);
+
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o novo percentual de desconto do cupom:";
+            
+            input .@percentual;
+
+            // Atualizar o cupom na tabela cupom_donate
+            query_sql "UPDATE cupom_donate SET status = " + .@status + ", validade = '" + .@validade$ + "', percentual = " + .@percentual + " WHERE id = " + .@cupom_id;
+
+            clear;
+            mes .@nameNPC$;
+            mes "Cupom atualizado com sucesso!";
+            close;
+        case 3:
+            clear;
+            mes .@nameNPC$;
+            mes "Digite o código do cupom que você deseja excluir:";
+            
+            input .@cupom$;
+            
+            // Verificar se o cupom existe
+            if(!query_sql("SELECT id FROM cupom_donate WHERE cupom = '" + .@cupom$ + "'", .@cupom_id)) {
+                clear;
+                mes .@nameNPC$;
+                mes "Cupom não encontrado!";
+                close;
+            }
+
+            clear;
+            mes .@nameNPC$;
+            // Confirmar a exclusão
+            mes "Tem certeza de que deseja excluir o cupom '" + .@cupom$ + "'?";
+            if(select("Sim:Não") == 2) {
+                clear;
+                mes .@nameNPC$;
+                mes "Exclusão cancelada.";
+                close;
+            }
+
+            // Excluir o cupom da tabela cupom_donate
+            query_sql "DELETE FROM cupom_donate WHERE id = " + .@cupom_id;
+
+            clear;
+            mes .@nameNPC$;
+            mes "Cupom excluído com sucesso!";
+            close;
+            break;
+    }
+}else{
+    set .@pass_script$,12345; //Senha do NPC
+    mes .@nameNPC$;
+    mes "Por favor insira a senha do script para prosseguir!";
+    input .@senha$;
+
+    if(.@senha$ != .@pass_script$){
+        clear;
+        mes .@nameNPC$;
+        mes "Acesso negado!"; 
+        close;
+    }
+
+    clear;
+    mes .@nameNPC$;
+    mes "Bem-vindo ao sistema de informações sobre doações por cupom!";
+    mes "Por favor, insira o código do cupom que deseja verificar:";
+    
+
+    input .@cupom_desc$;
+    query_sql "SELECT SUM(valor) FROM logs_cupom_donate WHERE cupom_utilizado = '" + .@cupom_desc$ + "' AND retorno_pag = 'approved' AND MONTH(data) = MONTH(NOW())", .@soma_valor;
+
+    clear;
+    mes .@nameNPC$;
+    if(.@soma_valor == NULL || .@soma_valor == 0) {
+        mes "Não foram encontradas doações com o código de cupom informado.";
+        close;
+    } else {
+        mes "A soma total das doações com o código de cupom '" + .@cupom_desc$ + "' é: ^080b70" + .@soma_valor + "^000000";
+        mes "Por favor, insira a porcentagem que deseja calcular:";
+        
+        input .@porcentagem;
+
+        .@valor_porcentagem = (.@porcentagem * .@soma_valor) / 100;
+        clear;
+        mes .@nameNPC$;
+        mes "O valor de " + .@porcentagem + "% do total é: ^080b70" + .@valor_porcentagem + "^000000";
+    }
+    close;
+}
+OnInit:
+ bindatcmd "cupom",strnpcinfo(3)+"::OnCupom_Donate";
+end;
+}

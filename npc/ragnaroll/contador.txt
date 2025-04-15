@@ -1,0 +1,62 @@
+prontera,150,150,5	script	oi	710,{
+    
+    OnPCLoginEvent:
+    
+        // Aguardar 1 segundo para garantir que a lista de usuários esteja atualizada
+        sleep 1000;
+        
+        // Obter o número atual de jogadores online
+        .onlineusers = getusers(1);
+        
+        // Obter a data atual no formato YYYY-MM-DD
+        .date$ = gettime(DT_YEAR)+"-"+gettime(DT_MONTH)+"-"+gettime(DT_DAYOFMONTH);
+        
+        // Consultar o maior número de jogadores já registrado no banco de dados
+        query_sql("SELECT users FROM " + .sqltable$ + " ORDER BY users DESC LIMIT 1",.@countusers);
+        
+        if(getarraysize(.@countusers) == 0) {
+            // Se não houver registros, criar um novo com o número atual de jogadores
+            query_sql("INSERT INTO " + .sqltable$ + " (users, date) VALUES (" + .onlineusers + ", '" + .date$ + "')");
+        } else {
+            if(.onlineusers > .@countusers[0]) {
+                // Verificar se deve anunciar um novo pico
+                if(.displaypeakannounce == 1){
+                    announce "🎉 Chegamos a um novo pico de jogadores! Agora temos "+.onlineusers+" online!", bc_all;
+                }
+                // Atualizar o registro no banco de dados com o novo pico
+                query_sql("UPDATE " + .sqltable$ + " SET users = " + .onlineusers + ", date = '" + .date$ + "'");
+            }
+        }
+        
+        // Verificar se o número de jogadores online é 12 ou mais
+        if(.onlineusers >= 12) {
+            announce "👥 Atualmente, temos "+.onlineusers+" jogadores online!", bc_all;
+        }
+    
+    end;
+    
+    OnInit:
+        // CONFIGURAÇÕES
+        
+        // Nome da tabela SQL
+        .sqltable$ = "cp_onlinepeak";
+        
+        // Deseja anunciar quando atingir um novo pico de jogadores?
+        // 1 = Sim
+        // 0 = Não
+        .displaypeakannounce = 1;
+        
+        // Fim das CONFIGURAÇÕES
+    
+    }
+
+
+-	script	VendingBlockNotice	-1,{
+OnPCUseSkillEvent:
+	if (getmapflag(strcharinfo(3), mf_nomarket) && getskillid() == 83) {
+	mes "[Sistema]";
+	mes "Você não pode abrir uma loja em nenhum mapa!";
+	close;
+	end;
+	}
+}

@@ -1,0 +1,43 @@
+force_1-1,25,29,5	script	Invocador	614,{
+
+menu "^339966[»]^000000 Ovo de Andre",ovo,"^339966[»]^000000 Zenorc",zenorc,"^339966[»]^000000 Orc Zumbi",orc;
+
+ovo:
+            mes "Olá, aventureiro! Quantos Ovos de Andre você deseja invocar?";
+        mes "Limite de 30 Mobs.";
+            next;
+            input @Quantidade, 1, 30;
+        atcommand "@killmonster";
+            atcommand "@monster 1097 "+ @Quantidade;
+            npctalk "Pronto! Invocados "+ @Quantidade +" Ovo de Andre. Se precisar de mais, é só falar comigo.";
+end;
+
+zenorc:
+            mes "Olá, aventureiro! Quantos Zenorc você deseja invocar?";
+        mes "Limite de 30 Mobs.";
+            next;
+            input @Quantidade, 1, 30;
+        atcommand "@killmonster";
+            atcommand "@monster 1177 "+ @Quantidade;
+            npctalk "Pronto! Invocados "+ @Quantidade +" Zenorc. Se precisar de mais, é só falar comigo.";
+end;
+
+orc:
+            mes "Olá, aventureiro! Quantos Orc Zumbi você deseja invocar?";
+        mes "Limite de 30 Mobs.";
+            next;
+            input @Quantidade, 1, 30;
+        atcommand "@killmonster";
+            atcommand "@monster 1153 "+ @Quantidade;
+            npctalk "Pronto! Invocados "+ @Quantidade +" Orc Zumbi. Se precisar de mais, é só falar comigo.";
+
+    end;
+
+}
+
+force_1-1	mapflag	nosave	SavePoint
+force_1-1	mapflag	noloot
+force_1-1	mapflag	nomobloot
+force_1-1	mapflag	nomvploot
+force_1-1	mapflag	nodrop
+force_1-1	mapflag	nojobexp

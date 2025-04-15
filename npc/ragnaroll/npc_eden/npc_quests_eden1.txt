@@ -1,0 +1,348 @@
+moc_para01,32,58,4	script	Missão Eden#2	4_vr_book_blue,{
+
+	if(c_run2==1){
+		mes "<b>[^FF7700Missões Eden^000000]</b>";
+		mes "^0000FF"+getd("." + currentquest2$ + "_collectionname$")+"^000000";
+		mes "--------------------------------";
+		for( set .@j, 0; .@j < getarraysize(getd("."+ currentquest2$ + "_collectionitem")); set .@j,.@j+2){
+			mes "^FF0000"+getitemname(getd("."+currentquest2$+"_collectionitem["+.@j+"]"))+" - "+countitem(getd("."+currentquest2$+"_collectionitem["+.@j+"]"))+"/"+getd("."+currentquest2$+"_collectionitem["+(.@j+1)+"]")+" ea.^000000";
+		}
+		mes "--------------------------------";
+		mes "[Premiação]";
+		mes "Item: ^0000FF"+((getd("." +currentquest2$+"_collectionprize"))?getitemname(getd("." +currentquest2$+"_collectionprize"))+" - "+getd("." +currentquest2$+"_collectionamount")+" ea.^000000":"Nothing^000000");
+		mes "Zeny: ^0000FF"+getd("." +currentquest2$+"_collectionzeny")+"^000000";
+		mes "Base EXP: ^0000FF"+getd("." +currentquest2$+"_collectionexp["+0+"]")+"^000000";
+		mes "Job EXP: ^0000FF"+getd("." +currentquest2$+"_collectionexp["+1+"]")+"^000000";
+		next;
+		if(select("Entregar:Cancelar") == 2){
+			mes "<b>[^FF7700Missões Eden^000000]</b>";
+			mes "Missão Cancelada.";
+			set currentquest2$, "";
+			set c_run2, 0;
+			close;
+		}
+		goto L_checkitems;
+	}
+	
+	if(h_run2==1){
+		mes "<b>[^FF7700Missões Eden^000000]</b>";
+		mes "^0000FF"+getd("." + currentquest2$ + "_huntingname$")+"^000000";
+		mes "--------------------------------";
+		for( set .@j, 0; .@j < getarraysize(getd("."+ currentquest2$ + "_huntingmob")); set .@j,.@j+2){
+			set .@currentmob, getd("."+currentquest2$+"_huntingmob["+(.@j)+"]");
+			mes "^FF0000"+strmobinfo(1,getd("."+currentquest2$+"_huntingmob["+.@j+"]"))+" - "+getd(currentquest2$+"_"+.@currentmob+"_"+(.@j+1)+"_killcount")+"/"+getd("."+currentquest2$+"_huntingmob["+(.@j+1)+"]")+" ea.^000000";
+		}
+		mes "--------------------------------";
+		mes "[Premiação]";
+		mes "Item: ^0000FF"+((getd("." +currentquest2$+"_huntingprize"))?getitemname(getd("." +currentquest2$+"_huntingprize"))+" - "+getd("." +currentquest2$+"_huntingamount")+" ea.^000000":"Nothing^000000");
+		mes "Zeny: ^0000FF"+getd("." +currentquest2$+"_huntingzeny")+"^000000";
+		mes "Base EXP: ^0000FF"+getd("." +currentquest2$+"_huntingexp["+0+"]")+"^000000";
+		mes "Job EXP: ^0000FF"+getd("." +currentquest2$+"_huntingexp["+1+"]")+"^000000";
+		next;
+	if(select("Entregar:Cancelar") == 2){
+		mes "<b>[^FF7700Missões Eden^000000]</b>";
+		mes "Missão Cancelada.";
+	
+		// Zera os killcounts da missão cancelada (h_run2)
+		for(set .@x, 1; .@x < getarraysize(getd("."+currentquest2$+"_huntingmob")); set .@x,.@x+2){
+			set .@currentmob, getd("."+currentquest2$+"_huntingmob["+(.@x-1)+"]");
+			setd(currentquest2$+"_"+.@currentmob+"_"+.@x+"_killcount", 0);
+		}
+	
+		erasequest(getd("." + currentquest2$ + "_questid")); // Remove a quest do banco de dados
+		set currentquest2$, "";
+		set h_run2, 0;
+		close;
+	}
+		goto L_checkmobs;
+	}
+
+	mes "<b>[^FF7700Missões Eden^000000]</b>";
+	mes "<b>Selecione o Tipo de missão :</b>";
+	next;
+	
+	switch(select((.collection)?"Missão de Coleta":"",
+				  (.hunting)?"Missão de Caça":"",
+				  "Nada")) {
+
+case 1:
+	set .@collectmenu$, "";
+	for( set .@i,0; .@i < .collectionquestcount; set .@i,.@i+1){
+		if (.@i) set .@collectmenu$,.@collectmenu$+":";
+		set .@collectmenu$, .@collectmenu$ + "[" + getd("." +(.@i+1)+"_collectionmin") + " - " + getd("." +(.@i+1)+"_collectionmax") + "] " + getd("." + (.@i+1) + "_collectionname$");
+	}
+	set .@selection,select(.@collectmenu$);
+	if(.quest_repeat == 1){
+		if(gettimetick(2) < getd(.@selection + "_collection_delay")){
+			set .@time_left, getd(.@selection + "_collection_delay")-gettimetick(2);
+			mes "<b>[^FF7700Missões Eden^000000]</b>";
+			if(.@time_left < 60) mes "Você tem que esperar ^0000FF"+.@time_left+" Segundos^000000 para fazer essa missão novamente.";
+			if(.@time_left < 3600) mes "Você tem que esperar ^0000FF"+.@time_left/60+" Minutos^000000 para fazer essa missão novamente.";
+			mes "Você tem que esperar ^0000FF"+.@time_left/60/60+" Horas^000000 para fazer essa missão novamente.";
+			close;
+		}
+	}
+	else{
+		if(getd(.@selection + "_collection_repeat") == 1){
+			mes "<b>[^FF7700Missões Eden^000000]</b>";
+			mes "Você já fez essa missão.";
+			mes "Por favor escolha outra.";
+			close;
+		}
+	}
+	mes "<b>[^FF7700Missões Eden^000000]</b>";
+	mes "^0000FF"+getd("." + .@selection + "_collectionname$")+"^000000";
+	mes "--------------------------------";
+	for( set .@j, 0; .@j < getarraysize(getd("."+ .@selection + "_collectionitem")); set .@j,.@j+2){
+		mes "^FF0000"+getitemname(getd("."+.@selection+"_collectionitem["+.@j+"]"))+" - "+getd("."+.@selection+"_collectionitem["+(.@j+1)+"]")+" ea.^000000";
+	}
+	mes "--------------------------------";
+	mes "[Premiação]";
+	mes "Item: ^0000FF"+((getd("." +.@selection+"_collectionprize"))?getitemname(getd("." +.@selection+"_collectionprize"))+" - "+getd("." +.@selection+"_collectionamount")+" ea.^000000":"Nothing^000000");
+	mes "Zeny: ^0000FF"+getd("." +.@selection+"_collectionzeny")+"^000000";
+	mes "Base EXP: ^0000FF"+getd("." +.@selection+"_collectionexp["+0+"]")+"^000000";
+	mes "Job EXP: ^0000FF"+getd("." +.@selection+"_collectionexp["+1+"]")+"^000000";
+	next;
+	if(select("Aceita:Recusa") == 2){
+		close;
+	}
+	if(BaseLevel >= getd("." +.@selection+"_collectionmin") && BaseLevel <= getd("." +.@selection+"_collectionmax")){
+		mes "<b>[^FF7700Missões Eden^000000]</b>";
+		mes "Missão Aceita.";
+		set c_run2, 1;
+		set currentquest2$, .@selection;
+		close;
+	}
+	else{
+		mes "<b>[^FF7700Missões Eden^000000]</b>";
+		mes "Você não tem o Nivel necessário";
+		mes "Para fazer esta missão.";
+		close;
+	}
+	
+case 2:
+	set .@huntmenu$, "";
+	for( set .@i,0; .@i < .huntingquestcount2; set .@i,.@i+1){
+		if (.@i) set .@huntmenu$,.@huntmenu$+":";
+		set .@huntmenu$, .@huntmenu$ + "[" + getd("." +(.@i+1)+"_huntingmin") + " - " + getd("." +(.@i+1)+"_huntingmax") + "] " + getd("." + (.@i+1) + "_huntingname$");
+	}
+	set .@selection,select(.@huntmenu$);
+
+
+	if (BaseLevel < getd("." +.@selection+"_huntingmin") || BaseLevel > getd("." +.@selection+"_huntingmax")) {
+		mes "<b>[^FF7700Missões Eden^000000]</b>";
+		mes "Você não tem o nível necessário para aceitar esta missão.";
+		mes "Missões para este desafio estão disponíveis para níveis: "+getd("." +.@selection+"_huntingmin")+" - "+getd("." +.@selection+"_huntingmax")+".";
+		close;
+	}
+
+	mes "Missão Aceita!";
+	set h_run2, 1;
+	set currentquest2$, .@selection;
+	setquest(getd("." + .@selection + "_questid")); // Registrar missão no quest_db
+	close;
+
+case 3:
+	mes "<b>[^FF7700Missões Eden^000000]</b>";
+	mes "Okay, ate mais";
+	mes "A Gente se ver por aqui.;";
+	close;
+
+	
+L_checkmobs:
+	set .@goal, (getarraysize(getd("."+currentquest2$+"_huntingmob"))/2);
+	for(set .@i, 1; .@i < getarraysize(getd("."+currentquest2$+"_huntingmob")); set .@i,.@i+2){
+		set .@currentmob, getd("."+currentquest2$+"_huntingmob["+(.@i-1)+"]");
+		if(getd(currentquest2$+"_"+.@currentmob+"_"+.@i+"_killcount")==getd("."+currentquest2$+"_huntingmob["+.@i+"]")){
+			set .@checkmonster, .@checkmonster+1;
+			if(.@checkmonster==.@goal){
+				goto L_checkmobs2;
+			}
+			continue;
+		}
+		goto L_checkmobs2;
+	}
+
+L_checkmobs2:
+	if(.@checkmonster<.@goal){
+		mes "<b>[^FF7700Missões Eden^000000]</b>";
+		mes "Você não matou tudo.";
+		close;
+	}
+
+	mes "<b>[^FF7700Missões Eden^000000]</b>";
+	mes "Parabéns! Aqui está sua recompensa.";
+
+	// ?? Zera a contagem dos monstros mortos da missão antes de resetar a quest
+	for(set .@x, 1; .@x < getarraysize(getd("."+currentquest2$+"_huntingmob")); set .@x,.@x+2){
+		set .@currentmob, getd("."+currentquest2$+"_huntingmob["+(.@x-1)+"]");
+		setd(currentquest2$+"_"+.@currentmob+"_"+.@x+"_killcount", 0); // ?? Zera a contagem dos monstros
+	}
+
+	.@rate_multiplier2 = 0; // Inicializa a variável
+
+	if (CUSTOM_RATE_BASE == 1) .@rate_multiplier2 = 5; // 1x = 10%
+	else if (CUSTOM_RATE_BASE == 5) .@rate_multiplier2 = 1; // 25x = 35%
+	else if (CUSTOM_RATE_BASE == 25) .@rate_multiplier2 = 1; // 50x = 60%
+
+// Aplica a taxa correta ao ganho de experiência
+getexp ((getd("." +currentquest2$+"_huntingexp["+0+"]") * .@rate_multiplier2) / 250), 
+       ((getd("." +currentquest2$+"_huntingexp["+1+"]") * .@rate_multiplier2) / 250);
+
+	// ?? Entrega os prêmios da missão
+	if(getd("." +currentquest2$+"_huntingprize")!=0) 
+		getitem(getd("." +currentquest2$+"_huntingprize"),getd("." +currentquest2$+"_huntingamount"));
+
+	set Zeny, Zeny+getd("." +currentquest2$+"_huntingzeny");
+
+	// ?? Remove a missão do quest_db para permitir que o jogador a refaça
+	erasequest(getd("." + currentquest2$ + "_questid"));
+
+	// ?? Resetando a variável no NPC para que o jogador tenha que refazer a missão do zero
+	set currentquest2$, "";
+	set h_run2, 0;
+	close;
+
+OnNPCKillEvent:
+	if(h_run2!=1) end;
+	for(set .@i, 1; .@i < getarraysize(getd("."+currentquest2$+"_huntingmob")); set .@i,.@i+2){
+		if(killedrid==getd("."+currentquest2$+"_huntingmob["+(.@i-1)+"]")){
+			set .@currentmob, getd("."+currentquest2$+"_huntingmob["+(.@i-1)+"]");
+			if(getd(currentquest2$+"_"+.@currentmob+"_"+.@i+"_killcount")>=getd("."+currentquest2$+"_huntingmob["+.@i+"]")) end;
+			setd(currentquest2$+"_"+.@currentmob+"_"+.@i+"_killcount", getd(currentquest2$+"_"+.@currentmob+"_"+.@i+"_killcount")+1);
+			if(getcharid(1) != 0 && .party_support == 1){
+				getmapxy(.@map1$,.@x1,.@y1);
+				set .@killerid, getcharid(3);
+				set .@currentquest2$, currentquest2$;
+				getpartymember getcharid(1),1;
+				getpartymember getcharid(1),2;
+				for(set .@j, 0; .@j < $@partymembercount; .@j++){
+					if(isloggedin($@partymemberaid[.@j], $@partymembercid[.@j])){
+						if(attachrid($@partymemberaid[.@j])){
+							if(h_run2==1 && getcharid(3) != .@killerid && .@currentquest2$ == currentquest2$ && HP > 0){
+								getmapxy(.@map2$,.@x2,.@y2);
+								if(.@map1$ == .@map2$ && distance(.@x1,.@y1,.@x2,.@y2) < .party_range){
+									if(getd(.@currentquest2$+"_"+.@currentmob+"_"+.@i+"_killcount")<getd("."+.@currentquest2$+"_huntingmob["+.@i+"]"))
+									{
+										setd(.@currentquest2$+"_"+.@currentmob+"_"+.@i+"_killcount", getd(.@currentquest2$+"_"+.@currentmob+"_"+.@i+"_killcount")+1);
+									}
+								}
+							}
+						}
+					}
+				}
+				attachrid(.@killerid);
+			}
+		}
+		continue;
+	}
+	end;
+	
+OnInit:
+	setunitdata getnpcid(0), UNPC_GROUP_ID, 61;
+	setunittitle getnpcid(0), "[NV 61 a 80]";
+	function AddCollection2;
+	function AddHunting2;
+
+	// Ativar/Desativar categorias de miss?es (1 - ativado, 0 - desativado)
+	set .collection, 0;   // Ativar miss?es de coleta
+	set .hunting, 1;      // Ativar miss?es de ca?a
+	
+	// Delay de Miss?es (em segundos)
+	// Exemplo: 24 horas = 86400 segundos
+	set .quest_delay, 1; // Configurado para 24 horas
+
+	// Ativar/Desativar repeti??o de miss?es (1 - ativado, 0 - desativado)
+	set .quest_repeat, 1;  // Ativar miss?es repet?veis
+
+	// Ativar/Desativar suporte a grupo (1 - ativado, 0 - desativado)
+	set .party_support, 1; // Ativar suporte a grupo
+	
+	// Alcance m?ximo para o suporte a grupo (em coordenadas x & y)
+	set .party_range, 50;  // Definido para 25 c?lulas de alcance
+	
+	//Add Missão de Coleta here (You can add as many required items as you want)
+	//AddCollection2("<Quest Name>",<Min Lvl>,<Max Lvl>,<Reward|Item ID>,<Reward|Item Amount>,<Zeny Reward>,<Base EXP>,<Job EXP>,<Item ID>,<Item Amount>,...);
+
+	//Add Hunting Quests here (You can add as many required mobs as you want)
+	//AddHunting2("<Quest Name>",<Min Lvl>,<Max Lvl>,<Reward|Item ID>,<Reward|Item Amount>,<Zeny Reward>,<Base EXP>,<Job EXP>,<Monster ID>,<Monster Amount>,...);
+		AddHunting2("~> Injustiçado", 61, 80, 25341, 20, 2000, 1694400, 595200, 1257, 85, 30070);
+		AddHunting2("~> Vento da Colina", 61, 80, 25341, 20, 2000, 1705600, 137760, 1680, 85, 30071);
+		AddHunting2("~> Alma Penada", 61, 80, 25341, 20, 2000, 1759200, 439600, 1192, 85, 30072);
+		AddHunting2("~> Siroma", 61, 80, 25341, 20, 2000, 1784000, 804000, 1776, 85, 30073);
+		AddHunting2("~> Leshij", 61, 80, 25341, 20, 2000, 1760800, 124160, 1880, 85, 30074);
+		AddHunting2("~> Kapha", 61, 80, 25341, 20, 2000, 1822400, 620800, 1406, 85, 30075);
+		AddHunting2("~> Poltergeist", 61, 80, 25341, 20, 2000, 1851200, 518800, 1510, 85, 30076);
+		AddHunting2("~> Grand Peco", 61, 80, 25341, 20, 2000, 1909600, 544400, 1369, 85, 30077);
+		AddHunting2("~> Breeze", 61, 80, 25341, 20, 2000, 1912000, 107200, 1692, 85, 30078);
+		AddHunting2("~> Grove", 61, 80, 25341, 20, 2000, 1920000, 164000, 1687, 85, 30079);
+		AddHunting2("~> Estrondo", 61, 80, 25341, 20, 2000, 1923200, 656800, 1383, 85, 30080);
+		AddHunting2("~> Esqueleto Prisioneiro", 61, 80, 25341, 20, 2000, 1972800, 624800, 1196, 85, 30081);
+		AddHunting2("~> Bathory", 61, 80, 25341, 20, 2000, 2002400, 413600, 1102, 85, 30082);
+		AddHunting2("~> Pessegueira Encantada", 61, 80, 25341, 20, 2000, 2072800, 719600, 1410, 85, 30083);
+		AddHunting2("~> Zumbi Prisioneiro", 61, 80, 25341, 20, 2000, 2108000, 689600, 1197, 85, 30084);
+		AddHunting2("~> Baphomé Jr.", 61, 80, 25341, 20, 2000, 2164800, 592000, 1101, 85, 30085);
+		AddHunting2("~> Minorous", 61, 80, 25341, 20, 2000, 2200000, 551600, 1149, 85, 30086);
+		AddHunting2("~> Dríade", 61, 80, 25341, 20, 2000, 2210400, 597200, 1493, 85, 30087);
+		AddHunting2("~> Mascarado", 61, 80, 25341, 20, 2000, 2252000, 767600, 1506, 85, 30088);
+		AddHunting2("~> Druida Malígno", 61, 80, 25341, 20, 2000, 2312000, 730800, 1117, 85, 30089);
+		AddHunting2("~> Isilla", 61, 80, 25341, 20, 2000, 2400800, 240080, 1772, 85, 30090);
+		AddHunting2("~> Grizzly", 61, 80, 25341, 20, 2000, 2672800, 804800, 1381, 85, 30091);
+		AddHunting2("~> Bode", 61, 80, 25341, 20, 2000, 2685600, 806000, 1372, 85, 30092);
+		AddHunting2("~> Relógio", 61, 80, 25341, 20, 2000, 2728000, 116160, 1269, 85, 30093);
+		AddHunting2("~> Harpia", 61, 80, 25341, 20, 2000, 2849600, 853200, 1376, 85, 30094);
+		AddHunting2("~> Lavadeira", 61, 80, 25341, 20, 2000, 2869600, 581200, 1321, 85, 30095);
+		AddHunting2("~> Rochoso", 61, 80, 25341, 20, 2000, 2882400, 857600, 1386, 85, 30096);
+		AddHunting2("~> Congelador", 61, 80, 25341, 20, 2000, 2932000, 878800, 1319, 85, 30097);
+		AddHunting2("~> Kaho", 61, 80, 25341, 20, 2000, 3192000, 180000, 1072, 85, 30098);
+		AddHunting2("~> Cão Infernal", 61, 80, 25341, 20, 2000, 3200000, 2400000, 1866, 85, 30099);
+		AddHunting2("~> Árvore Maldita", 61, 80, 25341, 20, 2000, 3208800, 729600, 1503, 85, 30100);
+	end;
+	
+
+function AddCollection2{
+	set .collectionquestcount,.collectionquestcount+1;
+	setd ("." +.collectionquestcount+"_collectionname$", getarg(0));
+	setd ("." +.collectionquestcount+"_collectionmin", getarg(1));
+	setd ("." +.collectionquestcount+"_collectionmax", getarg(2));
+	setd ("." +.collectionquestcount+"_collectionprize", getarg(3));
+	setd ("." +.collectionquestcount+"_collectionamount", getarg(4));
+	setd ("." +.collectionquestcount+"_collectionzeny", getarg(5));
+	set .@argcount, 6;
+	set .@size, getarraysize(getd("."+ .collectionquestcount + "_collectionexp"));
+	setd ("." +.collectionquestcount+"_collectionexp["+.@size+"]",getarg(.@argcount)); 
+	setd ("." +.collectionquestcount+"_collectionexp["+(.@size+1)+"]",getarg(.@argcount+1)); 
+	set .@argcount, .@argcount+2;
+	while(getarg(.@argcount,-1)!=-1 && getarg(.@argcount+1,-1)!=-1){
+		set .@size, getarraysize(getd("."+ .collectionquestcount + "_collectionitem"));
+		setd ("."+.collectionquestcount+"_collectionitem["+.@size+"]",getarg(.@argcount)); 
+		setd ("."+.collectionquestcount+"_collectionitem["+(.@size+1)+"]",getarg(.@argcount+1));
+		set .@argcount,.@argcount+2;
+	}
+	return;
+}
+
+function AddHunting2{
+	set .huntingquestcount2,.huntingquestcount2+1;
+	setd ("." +.huntingquestcount2+"_huntingname$", getarg(0));
+	setd ("." +.huntingquestcount2+"_huntingmin", getarg(1));
+	setd ("." +.huntingquestcount2+"_huntingmax", getarg(2));
+	setd ("." +.huntingquestcount2+"_huntingprize", getarg(3));
+	setd ("." +.huntingquestcount2+"_huntingamount", getarg(4));
+	setd ("." +.huntingquestcount2+"_huntingzeny", getarg(5));
+	set .@size, getarraysize(getd("."+ .huntingquestcount2 + "_huntingexp"));
+	set .@argcount, 6;
+	setd ("." +.huntingquestcount2+"_huntingexp["+.@size+"]",getarg(.@argcount));
+	setd ("." +.huntingquestcount2+"_huntingexp["+(.@size+1)+"]",getarg(.@argcount+1)); 
+	set .@argcount, .@argcount+2;
+	while(getarg(.@argcount,-1)!=-1 && getarg(.@argcount+1,-1)!=-1){
+		set .@size, getarraysize(getd("."+ .huntingquestcount2 + "_huntingmob"));
+		setd ("."+.huntingquestcount2+"_huntingmob["+.@size+"]",getarg(.@argcount)); 
+		setd ("."+.huntingquestcount2+"_huntingmob["+(.@size+1)+"]",getarg(.@argcount+1));
+		set .@argcount, .@argcount+2;
+	}
+	setd ("." + .huntingquestcount2 + "_questid", getarg(.@argcount)); // Adicionando ID da quest
+	return;
+}
+		  }
+			}

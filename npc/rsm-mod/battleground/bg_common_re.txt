@@ -1,0 +1,27 @@
+//===== rAthena Script =======================================
+//= BattleGround Expansion - NPC's Comuns
+//===== Por: =================================================
+//= RomuloSM (sbk_)
+//===== Versão Atual: ========================================
+//= 1.0
+//===== Compátivel com: ======================================
+//= rAthena RSM Mod
+//===== Descrição: ===========================================
+//= Scripts comuns do salão de batalha e funções comuns.
+//===== Comentários Adicional: ===============================
+//= 1.0 Primeira versão.[RomuloSM]
+//===== Contato: =============================================
+//= Email: romulodevel@gmail.com
+//= Facebook: https://www.facebook.com/RomuloDevel
+//============================================================
+  
+morocc,145,82,3	duplicate(BatRecruit)	Emissária de Maroll::BatRecruit8	72
+
+-	script	BG_RENEWAL	-1,{
+OnInit:
+	if( !checkre(0) ) {
+		//
+	}
+	disablenpc "BatRecruit8";
+	end;
+}

@@ -1,0 +1,227 @@
+# This file is a part of rAthena.
+#   Copyright(C) 2021 rAthena Development Team
+#   https://rathena.org - https://github.com/rathena
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+###########################################################################
+# Mob Availability and Alias Database
+###########################################################################
+#
+# Mob Availability and Alias Settings
+#
+###########################################################################
+# - Mob                     Mob to adjust.
+#   Sprite                  Sprite which will be sent to the client instead of Mob.
+#   Sex                     Sex (if Sprite is a player). (Default: Female)
+#   HairStyle               Hair Style ID (if Sprite is a player). (Default: 0)
+#   HairColor               Hair Color ID (if Sprite is a player). (Default: 0)
+#   ClothColor              Cloth Color ID (if Sprite is a player). (Default: 0)
+#   Weapon                  Item name of weapon (if Sprite is a player). (Default: 0)
+#   Shield                  Item name of shield (if Sprite is a player). (Default: 0)
+#   HeadTop                 Item name of headgear (if Sprite is a player). (Default: 0)
+#   HeadMid                 Item name of headgear (if Sprite is a player). (Default: 0)
+#   HeadLow                 Item name of headgear (if Sprite is a player). (Default: 0)
+#   Robe                    Item name of robe (if Sprite is a player). (Default: 0)
+#   PetEquip                Item name of pet equipment (if Mob is a valid pet). (Default: 0)
+#   Options:                Set an option for an object. (Optional)
+#     <Option>: bool
+###########################################################################
+
+Header:
+  Type: MOB_AVAIL_DB
+  Version: 1
+
+Body:
+  - Mob: PLASMA_SPT
+    Sprite: JOB_PRIEST
+    Sex: Female
+    HairStyle: 1
+    HairColor: 68
+    ClothColor: 90
+    Weapon: Bible
+    HeadTop: Lightning_Cloud
+    HeadMid: C_Devil_Whisper  
+    Robe: C_Rudra_Wing 
+
+  - Mob: PLASMA_ARCH
+    Sprite: JOB_HIGH_PRIEST
+    Sex: Male
+    HairStyle: 22
+    HairColor: 1
+    ClothColor: 86
+    Weapon: Bible
+    HeadTop: Rainbow
+    HeadMid: C_Shiba_Inu
+    HeadLow: Chicken_Beak
+    Robe: C_Wing_Of_Happiness
+
+  - Mob: REGINLEIF_MVP
+    Sprite: JOB_PALADIN
+    Sex: Male
+    HairStyle: 6
+    HairColor: 6
+    ClothColor: 3
+    Weapon: Sword
+    Shield: Shield
+    Options:
+      Riding: true
+
+  - Mob: INGRID_MVP
+    Sprite: JOB_CRUSADER
+    Sex: Male
+    HairStyle: 6
+    HairColor: 6
+    ClothColor: 3
+    Weapon: Sword
+    Shield: Shield
+    Options:
+      Riding: true
+
+  - Mob: SKELION
+    Sprite: JOB_PROFESSOR
+    Sex: Male
+    HairStyle: 6
+    HairColor: 6
+    ClothColor: 3
+    Weapon: Staff
+
+  - Mob: DEATH_WITCH
+    Sprite: JOB_SAGE
+    Sex: Male
+    HairStyle: 6
+    HairColor: 6
+    ClothColor: 3
+    Weapon: Staff
+
+  - Mob: IMMORTAL_CORPS3
+    Sprite: JOB_CLOWN
+    Sex: Male
+    HairStyle: 6
+    HairColor: 6
+    ClothColor: 3
+    Weapon: Guitar
+
+  - Mob: EP17_2_BETA_GUARDS
+    Sprite: JOB_BARD
+    Sex: Male
+    HairStyle: 6
+    HairColor: 6
+    ClothColor: 3
+    Weapon: Guitar
+
+  - Mob: TAO_GUNKA_DIFICIL
+    Sprite: TAO_GUNKA
+  - Mob: GARM_DIFICIL
+    Sprite: GARM
+  - Mob: EDDGA_DIFICIL
+    Sprite: EDDGA
+  - Mob: TURTLE_GENERAL_DIFICIL
+    Sprite: TURTLE_GENERAL
+  - Mob: RSX_0806_DIFICIL
+    Sprite: RSX_0806
+  - Mob: MD_ED_B_YGNIZEM_DIFICIL
+    Sprite: MD_ED_B_YGNIZEM
+  - Mob: DARK_LORD_DIFICIL
+    Sprite: DARK_LORD
+  - Mob: LORD_OF_DEATH_DIFICIL
+    Sprite: LORD_OF_DEATH
+  - Mob: DRAKE_DIFICIL
+    Sprite: DRAKE
+  - Mob: PHARAOH_DIFICIL
+    Sprite: PHARAOH
+  - Mob: BAPHOMET_DIFICIL
+    Sprite: BAPHOMET
+  - Mob: MISTRESS_DIFICIL
+    Sprite: MISTRESS
+  - Mob: DOPPELGANGER_DIFICIL
+    Sprite: DOPPELGANGER
+  - Mob: ORC_LORD_DIFICIL
+    Sprite: ORC_LORD
+  - Mob: AMON_RA_DIFICIL
+    Sprite: AMON_RA
+  - Mob: APOCALIPS_H_DIFICIL
+    Sprite: APOCALIPS_H
+  - Mob: KIEL__DIFICIL
+    Sprite: KIEL_
+  - Mob: THANATOS_DIFICIL
+    Sprite: THANATOS
+  - Mob: KTULLANUX_DIFICIL
+    Sprite: KTULLANUX
+  - Mob: XM_CELINE_KIMI_DIFICIL
+    Sprite: XM_CELINE_KIMI
+  - Mob: DETALE_DIFICIL
+    Sprite: DETALE
+  - Mob: GOPINICH_DIFICIL
+    Sprite: GOPINICH
+  - Mob: KUBLIN_DIFICIL
+    Sprite: KUBLIN
+  - Mob: IFRIT_DIFICIL
+    Sprite: IFRIT
+  - Mob: GLOOMUNDERNIGHT_DIFICIL
+    Sprite: GLOOMUNDERNIGHT
+  - Mob: BOITATA_DIFICIL
+    Sprite: BOITATA
+# Examples
+#  - Mob: PORING
+#    Sprite: BAPHOMET
+#  - Mob: E_OBEAUNE
+#    Sprite: PORING
+#    PetEquip: Backpack
+
+  # Easter Event Monsters
+#  - Mob: MOROCC_3
+#    Sprite: DOPPELGANGER
+#  - Mob: MOROCC_4
+#    Sprite: ECLIPSE
+
+  # rAthena Dev Team
+  # Valaris
+#  - Mob: BOW_GUARDIAN_
+#    Sprite: JOB_ASSASSIN_CROSS
+#    Sex: Male
+#    HairStyle: 1
+#    HairColor: 1
+#    ClothColor: 1
+#    Weapon: Jamadhar
+#    HeadTop: Sahkkat
+#    HeadMid: Sunglasses
+#    HeadLow: Cigar
+#    Robe: Archangel_Wing
+#    Options:
+#      Falcon: true
+  # Valaris Worshiper
+#  - Mob: E_CONDOR
+#    Sprite: JOB_THIEF
+#    Sex: Male
+#    HairStyle: 1
+#    HairColor: 1
+#    ClothColor: 1
+#    Weapon: Gladius
+#    Shield: Guard
+#    HeadTop: Sahkkat
+#    HeadMid: Sunglasses
+#    HeadLow: Cigar
+  # MC Cameri
+#  - Mob: E_TREASURE1
+#    Sprite: JOB_CRUSADER
+#    Sex: Male
+#    HairStyle: 6
+#    HairColor: 6
+#    ClothColor: 3
+#    Weapon: Sword
+#    Shield: Shield
+#    Options:
+#      Riding: true
+  # Poki#3

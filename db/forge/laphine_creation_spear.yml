@@ -1,0 +1,241 @@
+Header:
+  Type: LAPHINE_CREATE_DB
+  Version: 1
+
+Body:
+  # ===============
+  # Lanças
+  # ===============
+  - Item: Javelin #1401
+    RequiredRequirementsCount: 4
+    RandomOptionsGroup:
+      - Option: SPEAR_GROUP_D_1
+      - Option: SPEAR_GROUP_C_1
+      - Option: SPEAR_GROUP_B_1
+      - Option: SPEAR_GROUP_A_1
+    Requirements:
+      - Item: Diagrama_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Iron #998
+        Amount: 3
+        Type: 1
+  - Item: Pike #1407
+    RequiredRequirementsCount: 4
+    RandomOptionsGroup:
+      - Option: SPEAR_GROUP_D_1
+      - Option: SPEAR_GROUP_C_1
+      - Option: SPEAR_GROUP_B_1
+      - Option: SPEAR_GROUP_A_1
+    Requirements:
+      - Item: Diagrama_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Iron #998
+        Amount: 70
+        Type: 1
+  - Item: Spear #1404
+    RequiredRequirementsCount: 4
+    RandomOptionsGroup:
+      - Option: SPEAR_GROUP_D_1
+      - Option: SPEAR_GROUP_C_1
+      - Option: SPEAR_GROUP_B_1
+      - Option: SPEAR_GROUP_A_1
+    Requirements:
+      - Item: Diagrama_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_1
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Iron #998
+        Amount: 35
+        Type: 1
+  - Item: Pole_Axe #1417
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: SPEAR_GROUP_D_3
+      - Option: SPEAR_GROUP_C_3
+      - Option: SPEAR_GROUP_B_3
+      - Option: SPEAR_GROUP_A_3
+    Requirements:
+      - Item: Diagrama_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_3
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 15
+        Type: 1
+      - Item: Steel #999
+        Amount: 30
+        Type: 1
+      - Item: Cardinal_Jewel #723 
+        Amount: 3
+        Type: 1
+        Type: 1
+  - Item: Gungnir #1413
+    RequiredRequirementsCount: 6
+    RandomOptionsGroup:
+      - Option: SPEAR_GROUP_D_4
+      - Option: SPEAR_GROUP_C_4
+      - Option: SPEAR_GROUP_B_4
+      - Option: SPEAR_GROUP_A_4
+    Requirements:
+      - Item: Diagrama_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Diagrama_Avancado_Armas_4
+        Amount: 1
+        Type: 0
+      - Item: Anvil
+        Amount: 1
+        Type: 2
+      - Item: Oridecon_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Golden_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Emperium_Anvil
+        Amount: 1
+        Type: 2
+      - Item: Reator
+        Amount: 1
+        Type: 3
+      - Item: Reator_Inflamavel
+        Amount: 1
+        Type: 3
+      - Item: Reator_Glacial
+        Amount: 1
+        Type: 3
+      - Item: Reator_Eletrico
+        Amount: 1
+        Type: 3
+      - Item: Reator_Terreno
+        Amount: 1
+        Type: 3
+      - Item: Oridecon #984
+        Amount: 15
+        Type: 1
+      - Item: Steel #999
+        Amount: 65
+        Type: 1
+      - Item: Aloe #704 
+        Amount: 3
+        Type: 1

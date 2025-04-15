@@ -1,0 +1,158 @@
+prontera,147,160,5	script	Pontos de Venda	89,{
+for( set .@i,1; .@i <= .count; set .@i,.@i + 1 ){
+	getmapxy( .@map$,.@x,.@y,1,"#vend_slot"+.@i );
+	if( !getareausers( .map$,.@x,.@y,.@x,.@y ) && .@x > 1 && .@y > 1 ){
+		set .@available,.@available + 1;
+		set .@menu$,.@menu$ + "Slot - "+.@i+":";
+	}else{
+		set .@menu$,.@menu$ + ":";
+	}
+}
+
+if( !.@available ){
+	mes "Este slot está ocupado.";
+}else if( !getskilllv("MC_VENDING") ){
+	mes "Você não possui a habilidade ^0055FFComércio^000000.";
+}else{
+	mes "Slot Disponível: "+.@available;
+	mes "Por favor, escolha o seu Ponto de Venda.";
+	set .@i,select( .@menu$ );
+	getmapxy( .@map$,.@x,.@y,1,"#vend_slot"+.@i );
+	if( .@x == 1 || .@y == 1 ){
+		mes "Este NPC está em local inválido...";
+	}else{
+		warp .@map$,.@x,.@y;
+		hideonnpc "#vend_slot"+.@i;
+	}
+}
+close;
+
+OnInit:
+sleep 1000;
+// Map for vending
+set .map$,"prontera";
+setcell .map$,0,0,284,365,cell_novending,1;
+
+// x and y horizone ..
+setarray .x_line,148,153,158,163;
+setarray .y_line,156,152,148,144,140,136,132,125,121,117,113,109,105,101,97,93;
+
+set .x_line_size,getarraysize( .x_line );
+set .y_line_size,getarraysize( .y_line );
+set .count,1;
+for( set .@x,0; .@x < .x_line_size; set .@x,.@x + 1 )
+	for( set .@y,0; .@y < .y_line_size; set .@y,.@y + 1 )
+		if( checkcell( .map$,.x_line[.@x],.y_line[.@y],cell_chkpass ) ){
+			movenpc "#vend_slot"+.count,.x_line[.@x],.y_line[.@y];
+			setcell .map$,.x_line[.@x],.y_line[.@y],.x_line[.@x],.y_line[.@y],cell_novending,0;
+			set .count,.count + 1;
+		}
+npctalk "Ponto de Venda: "+.count;
+donpcevent "::OnSetup";
+end;
+}
+
+-	script	vend_slot	-1,{
+getmapxy( .@map$,.@x,.@y,1 );
+if( !getskilllv("MC_VENDING") ){
+	mes "Você não possui a habilidade ^0055FFComércio^000000.";
+}else if( getareausers( .@map$,.@x,.@y,.@x,.@y ) ){
+	mes "Alguém já escolheu este local.";
+}else{
+	mes "Ponto de Venda : ^777777Disponível^000000";
+	mes "^0055FF[ Regras dos Pontos de Venda]^000000";
+	mes "^FF0000 ~ Nome adequado à loja.^000000";
+	mes "^FF0000 ~ Não ocupar espaço com vendas inúteis.^000000";
+	mes " ";
+	mes "^777777Os players que não seguirem estas regras serão devidamente punidos.^000000";
+	if( select( "Escolha o Ponto de Venda","Cancelar" ) == 1 ){
+		warp .@map$,.@x,.@y;
+		hideonnpc strnpcinfo(0);
+	}
+}
+close;
+
+OnSetup:
+getmapxy( .@map$,.@x,.@y,1 );
+set .@npcname$,strnpcinfo(0);
+while( .@map$ != "" ){
+	if( getareausers( .@map$,.@x,.@y,.@x,.@y ) ){
+		hideonnpc .@npcname$;
+	}else{
+		hideoffnpc .@npcname$;
+		// specialeffect 313;
+	}
+	sleep 5000;
+}
+end;
+}
+
+// Add more if needed.
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot1	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot2	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot3	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot4	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot5	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot6	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot7	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot8	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot9	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot10	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot11	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot12	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot13	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot14	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot15	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot16	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot17	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot18	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot19	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot20	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot21	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot22	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot23	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot24	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot25	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot26	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot27	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot28	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot29	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot30	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot31	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot32	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot33	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot34	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot35	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot36	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot37	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot38	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot39	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot40	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot41	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot42	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot43	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot44	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot45	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot46	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot47	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot48	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot49	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot50	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot51	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot52	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot53	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot54	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot55	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot56	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot57	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot58	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot59	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot60	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot61	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot62	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot63	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot64	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot65	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot66	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot67	858
+prontera,1,1,4	duplicate(vend_slot)	#vend_slot68	858

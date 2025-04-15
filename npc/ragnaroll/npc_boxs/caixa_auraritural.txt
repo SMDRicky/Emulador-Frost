@@ -1,0 +1,5 @@
+function	script	caixa_auraritual#1	{
+setarray .@items[0], 50037,50038,50039,50040,50041,50042,50043,50044,50045,50046;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

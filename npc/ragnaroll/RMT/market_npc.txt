@@ -1,0 +1,453 @@
+prontera,148,199,5	script	Mercado Frost	10210,{
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Sistema de Mercado ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "Como posso ajudar você hoje?";
+	next;
+	
+	menu 
+		"^339966[»]^000000 Vender um item",M_Sell,
+		"^A020F0[»]^000000 Ver meus itens à venda",M_ListMySales,
+		"^00B2EE[»]^000000 Histórico de vendas",M_SalesHistory,
+		"^FF0000[»]^000000 Cancelar",-;
+	close;
+
+M_ListMySales:
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Itens à Venda ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	next;
+	
+	query_sql("SELECT item_id, amount, price_each*100 as price_raw, total_price*100 as total_raw, refine FROM market_items WHERE seller_char_id = " + getcharid(0) + " AND status = 'active'", .@item_id, .@amount, .@price_raw, .@total_raw, .@refine);
+	
+	if (!.@item_id) {
+		mes "^777777Você não tem nenhum item à venda no momento.^000000";
+		close;
+	}
+	
+	for (set .@i, 0; .@i < getarraysize(.@item_id); set .@i, .@i + 1) {
+		// Formata os preços
+		set .@reais, .@price_raw[.@i] / 100;
+		set .@centavos, .@price_raw[.@i] % 100;
+		set .@total_reais, .@total_raw[.@i] / 100;
+		set .@total_centavos, .@total_raw[.@i] % 100;
+		
+		if (.@i == 0) mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+		
+		if (.@refine[.@i] > 0) {
+			mes "^0075E9[»]^000000 ^FF0000+" + .@refine[.@i] + " ^0075E9" + getitemname(.@item_id[.@i]) + "^000000";
+		} else {
+			mes "^0075E9[»]^000000 ^0075E9" + getitemname(.@item_id[.@i]) + "^000000";
+		}
+		mes "^777777•^000000 ^0075E9ID:^000000 " + .@item_id[.@i];
+		mes "^777777•^000000 ^0075E9Quantidade:^000000 " + .@amount[.@i] + " unidades";
+		
+		if (.@centavos < 10) {
+			mes "^777777•^000000 ^0075E9Preço:^000000 ^00B200R$ " + .@reais + ",0" + .@centavos + "^000000 cada";
+		} else {
+			mes "^777777•^000000 ^0075E9Preço:^000000 ^00B200R$ " + .@reais + "," + .@centavos + "^000000 cada";
+		}
+		
+		if (.@total_centavos < 10) {
+			mes "^777777•^000000 ^0075E9Total:^000000 ^00B200R$ " + .@total_reais + ",0" + .@total_centavos + "^000000";
+		} else {
+			mes "^777777•^000000 ^0075E9Total:^000000 ^00B200R$ " + .@total_reais + "," + .@total_centavos + "^000000";
+		}
+		mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	}
+	close;
+
+M_SalesHistory:
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Histórico de Vendas ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	
+	query_sql("SELECT COUNT(*) as total FROM market_items WHERE seller_id = " + getcharid(3) + " AND status = 'sold'", .@total_sold);
+	mes "Total de vendas realizadas: " + .@total_sold;
+	
+	query_sql("SELECT item_id, amount, price_each, total_price FROM market_items WHERE seller_id = " + getcharid(3) + " AND status = 'sold'", 
+		.@item_id, .@amount, .@price_each, .@total_price);
+	
+	if (.@total_sold > 0) {
+		for (set .@i, 0; .@i < getarraysize(.@item_id); set .@i, .@i + 1) {
+			mes "^777777• " + getitemname(.@item_id[.@i]) + " x" + .@amount[.@i] + " - R$ " + .@total_price[.@i] + "^000000";
+		}
+	}
+	
+	close;
+
+M_Sell:
+	// Verifica se já passou o tempo de delay
+	if (#market_delay > gettimetick(2)) {
+		mes "[^FF8400Comerciante do Mercado^000000]";
+		mes "^FF0000Aguarde " + (#market_delay - gettimetick(2)) + " segundos";
+		mes "antes de colocar outro item à venda.^000000";
+		close;
+	}
+	
+	// Variável para controlar a página atual
+	if (!.@page) set .@page, 0;
+	
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Vender Item ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "Selecione o item que deseja vender:";
+	next;
+	
+	// Lista os itens do inventário
+	getinventorylist;
+	if (@inventorylist_count == 0) {
+		mes "^FF0000Você não possui nenhum item no inventário.^000000";
+		close;
+	}
+	
+	// Obtém as configurações do mercado
+	query_sql("SELECT allow_expired_items, allow_bound_items FROM market_settings WHERE id = 1", .@allow_expired, .@allow_bound);
+	
+	// Cria o menu com os itens do inventário
+	setarray .@menu_list$[0], "";
+	setarray .@valid_index[0], 0;
+	set .@menu_size, 0;
+	
+	for(set .@i,0; .@i<@inventorylist_count; set .@i,.@i+1) {
+		set .@can_sell, 1; // Flag para verificar se pode vender
+		
+		// Verifica se o item está na blacklist
+		query_sql("SELECT COUNT(*) as cnt FROM item_blacklist WHERE item_id = " + @inventorylist_id[.@i], .@blacklist_count);
+		if (.@blacklist_count > 0) {
+			set .@can_sell, 0;
+			continue;
+		}
+		
+		// Verifica regras de expire_time
+		if (@inventorylist_expire_time[.@i] > 0 && .@allow_expired != 1) {
+			set .@can_sell, 0;
+			continue;
+		}
+		
+		// Verifica regras de bound
+		if (@inventorylist_bound[.@i] > 0 && .@allow_bound != 1) {
+			set .@can_sell, 0;
+			continue;
+		}
+		
+		// Se passou em todas as verificações, adiciona ao menu
+		if (.@can_sell) {
+			set .@menu_text$, "";
+			
+			// Adiciona o nome do item com refinamento
+			if (@inventorylist_refine[.@i] > 0) {
+				set .@menu_text$, "^0075E9[»]^000000 ^FF0000+" + @inventorylist_refine[.@i] + " ^0075E9" + getitemname(@inventorylist_id[.@i]) + "^000000";
+			} else {
+				set .@menu_text$, "^0075E9[»]^000000 ^0075E9" + getitemname(@inventorylist_id[.@i]) + "^000000";
+			}
+			
+			// Adiciona informações de cards se houver
+			if (@inventorylist_card1[.@i] > 0) {
+				set .@menu_text$, .@menu_text$ + " ^777777[";
+				if (@inventorylist_card1[.@i] > 0) set .@menu_text$, .@menu_text$ + getitemname(@inventorylist_card1[.@i]);
+				if (@inventorylist_card2[.@i] > 0) set .@menu_text$, .@menu_text$ + ", " + getitemname(@inventorylist_card2[.@i]);
+				if (@inventorylist_card3[.@i] > 0) set .@menu_text$, .@menu_text$ + ", " + getitemname(@inventorylist_card3[.@i]);
+				if (@inventorylist_card4[.@i] > 0) set .@menu_text$, .@menu_text$ + ", " + getitemname(@inventorylist_card4[.@i]);
+				set .@menu_text$, .@menu_text$ + "]^000000";
+			}
+			
+			// Adiciona a quantidade
+			set .@menu_text$, .@menu_text$ + " ^777777[" + @inventorylist_amount[.@i] + "]^000000";
+			
+			set .@menu_list$[.@menu_size], .@menu_text$;
+			set .@valid_index[.@menu_size], .@i;
+			set .@menu_size, .@menu_size + 1;
+		}
+	}
+	
+	if (.@menu_size == 0) {
+		mes "^FF0000Você não possui nenhum item que possa ser vendido no mercado.^000000";
+		mes "^777777Possíveis motivos:^000000";
+		mes "^777777• Item na lista negra^000000";
+		if (.@allow_expired != 1) mes "^777777• Item com tempo de expiração^000000";
+		if (.@allow_bound != 1) mes "^777777• Item vinculado^000000";
+		close;
+	}
+	
+	// Calcula o total de páginas
+	set .@items_per_page, 8; // 8 itens por página para deixar espaço para navegação
+	set .@total_pages, (.@menu_size + .@items_per_page - 1) / .@items_per_page;
+	
+	// Adiciona opções de navegação
+	set .@start_idx, .@page * .@items_per_page;
+	set .@end_idx, min(.@start_idx + .@items_per_page - 1, .@menu_size - 1);
+	
+	// Cria menu temporário com itens da página atual
+	setarray .@temp_menu$[0], "";
+	setarray .@temp_index[0], 0;
+	set .@temp_size, 0;
+	
+	// Adiciona itens da página atual
+	for (set .@i, .@start_idx; .@i <= .@end_idx; set .@i, .@i + 1) {
+		set .@temp_menu$[.@temp_size], .@menu_list$[.@i];
+		set .@temp_index[.@temp_size], .@valid_index[.@i];
+		set .@temp_size, .@temp_size + 1;
+	}
+	
+	// Adiciona separador visual se houver mais de uma página
+	if (.@total_pages > 1) {
+		set .@temp_menu$[.@temp_size], "^777777-----------------^000000";
+		set .@temp_index[.@temp_size], -99; // índice inválido para separador
+		set .@temp_size, .@temp_size + 1;
+	}
+	
+	// Adiciona opções de navegação
+	if (.@total_pages > 1) {
+		if (.@page > 0) {
+			set .@temp_menu$[.@temp_size], "^0075E9[»]^000000 Página Anterior";
+			set .@temp_index[.@temp_size], -1;
+			set .@temp_size, .@temp_size + 1;
+		}
+		if (.@page < .@total_pages - 1) {
+			set .@temp_menu$[.@temp_size], "^0075E9[»]^000000 Próxima Página";
+			set .@temp_index[.@temp_size], -2;
+			set .@temp_size, .@temp_size + 1;
+		}
+	}
+	
+	// Adiciona opção de cancelar sempre por último
+	set .@temp_menu$[.@temp_size], "^777777[»] Cancelar^000000";
+	set .@temp_index[.@temp_size], -3;
+	
+	// Mostra informação da página atual
+	if (.@total_pages > 1) {
+		mes "^777777Página " + (.@page + 1) + " de " + .@total_pages + "^000000";
+	}
+	
+	// Mostra o menu
+	set .@selected, select(.@temp_menu$[0], .@temp_menu$[1], .@temp_menu$[2], .@temp_menu$[3], .@temp_menu$[4], 
+		.@temp_menu$[5], .@temp_menu$[6], .@temp_menu$[7], .@temp_menu$[8], .@temp_menu$[9]);
+	
+	set .@selected_index, .@temp_index[.@selected - 1];
+	
+	// Ignora o separador
+	if (.@selected_index == -99) goto M_Sell;
+	
+	// Trata navegação
+	if (.@selected_index == -1) { // Página anterior
+		set .@page, .@page - 1;
+		goto M_Sell;
+	}
+	if (.@selected_index == -2) { // Próxima página
+		set .@page, .@page + 1;
+		goto M_Sell;
+	}
+	if (.@selected_index == -3) close; // Cancelar
+	
+	// Continua com o item selecionado
+	set .@index, .@selected_index;
+	set .@item_id, @inventorylist_id[.@index];
+	
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Item Selecionado ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	
+	if (@inventorylist_refine[.@index] > 0) {
+		mes "^0075E9[»]^000000 ^FF0000+" + @inventorylist_refine[.@index] + " ^0075E9" + getitemname(.@item_id) + "^000000";
+	} else {
+		mes "^0075E9[»]^000000 ^0075E9" + getitemname(.@item_id) + "^000000";
+	}
+	
+	mes "^777777•^000000 ^0075E9ID:^000000 " + .@item_id;
+	
+	// Mostra informações de cards se houver
+	if (@inventorylist_card1[.@index] > 0) {
+		mes "^777777•^000000 ^0075E9Cards:^000000";
+		if (@inventorylist_card1[.@index] > 0) mes "  - " + getitemname(@inventorylist_card1[.@index]);
+		if (@inventorylist_card2[.@index] > 0) mes "  - " + getitemname(@inventorylist_card2[.@index]);
+		if (@inventorylist_card3[.@index] > 0) mes "  - " + getitemname(@inventorylist_card3[.@index]);
+		if (@inventorylist_card4[.@index] > 0) mes "  - " + getitemname(@inventorylist_card4[.@index]);
+	}
+	
+	mes "^777777•^000000 ^0075E9Quantidade Disponível:^000000 " + @inventorylist_amount[.@index] + " unidades";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "Digite a quantidade que deseja vender:";
+	next;
+	input .@amount;
+	
+	if (.@amount <= 0) {
+		mes "[^FF8400Comerciante do Mercado^000000]";
+		mes "^FF0000A quantidade deve ser maior que zero.^000000";
+		close;
+	}
+	
+	if (.@amount > @inventorylist_amount[.@index]) {
+		mes "[^FF8400Comerciante do Mercado^000000]";
+		mes "^FF0000Você não possui essa quantidade.^000000";
+		close;
+	}
+	
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Definir Preço ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "Digite o valor com os centavos";
+	mes "^777777Exemplo: Digite 15050 para R$ 150,50^000000";
+	next;
+	input .@price_raw;
+	
+	if (.@price_raw <= 0) {
+		mes "[^FF8400Comerciante do Mercado^000000]";
+		mes "^FF0000O preço deve ser maior que zero.^000000";
+		close;
+	}
+	
+	// Separa reais e centavos
+	set .@reais, .@price_raw / 100;
+	set .@centavos, .@price_raw % 100;
+	
+	// Calcula preço total
+	set .@total_raw, .@price_raw * .@amount;
+	set .@total_reais, .@total_raw / 100;
+	set .@total_centavos, .@total_raw % 100;
+	
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 Confirmação ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	
+	if (@inventorylist_refine[.@index] > 0) {
+		mes "^0075E9[»]^000000 ^FF0000+" + @inventorylist_refine[.@index] + " ^0075E9" + getitemname(.@item_id) + "^000000";
+	} else {
+		mes "^0075E9[»]^000000 ^0075E9" + getitemname(.@item_id) + "^000000";
+	}
+	
+	// Mostra informações de cards se houver
+	if (@inventorylist_card1[.@index] > 0) {
+		mes "^777777•^000000 ^0075E9Cards:^000000";
+		if (@inventorylist_card1[.@index] > 0) mes "  - " + getitemname(@inventorylist_card1[.@index]);
+		if (@inventorylist_card2[.@index] > 0) mes "  - " + getitemname(@inventorylist_card2[.@index]);
+		if (@inventorylist_card3[.@index] > 0) mes "  - " + getitemname(@inventorylist_card3[.@index]);
+		if (@inventorylist_card4[.@index] > 0) mes "  - " + getitemname(@inventorylist_card4[.@index]);
+	}
+	
+	mes "^777777•^000000 ^0075E9Quantidade:^000000 " + .@amount + " unidades";
+	
+	if (.@centavos < 10) {
+		mes "^777777•^000000 ^0075E9Preço:^000000 ^00B200R$ " + .@reais + ",0" + .@centavos + "^000000 cada";
+	} else {
+		mes "^777777•^000000 ^0075E9Preço:^000000 ^00B200R$ " + .@reais + "," + .@centavos + "^000000 cada";
+	}
+	
+	if (.@total_centavos < 10) {
+		mes "^777777•^000000 ^0075E9Total:^000000 ^00B200R$ " + .@total_reais + ",0" + .@total_centavos + "^000000";
+	} else {
+		mes "^777777•^000000 ^0075E9Total:^000000 ^00B200R$ " + .@total_reais + "," + .@total_centavos + "^000000";
+	}
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	next;
+	
+	menu 
+		"^00B200[»] Confirmar Venda^000000",M_Confirm,
+		"^777777[»] Cancelar^000000",-;
+	close;
+
+M_Confirm:
+	// Obtém informações detalhadas do item
+	set .@identify, @inventorylist_identify[.@index];
+	set .@refine, @inventorylist_refine[.@index];
+	set .@attribute, @inventorylist_attribute[.@index];
+	set .@card0, @inventorylist_card1[.@index];
+	set .@card1, @inventorylist_card2[.@index];
+	set .@card2, @inventorylist_card3[.@index];
+	set .@card3, @inventorylist_card4[.@index];
+	set .@option_id0, @inventorylist_option_id0[.@index];
+	set .@option_val0, @inventorylist_option_val0[.@index];
+	set .@option_parm0, @inventorylist_option_parm0[.@index];
+	set .@option_id1, @inventorylist_option_id1[.@index];
+	set .@option_val1, @inventorylist_option_val1[.@index];
+	set .@option_parm1, @inventorylist_option_parm1[.@index];
+	set .@option_id2, @inventorylist_option_id2[.@index];
+	set .@option_val2, @inventorylist_option_val2[.@index];
+	set .@option_parm2, @inventorylist_option_parm2[.@index];
+	set .@option_id3, @inventorylist_option_id3[.@index];
+	set .@option_val3, @inventorylist_option_val3[.@index];
+	set .@option_parm3, @inventorylist_option_parm3[.@index];
+	set .@option_id4, @inventorylist_option_id4[.@index];
+	set .@option_val4, @inventorylist_option_val4[.@index];
+	set .@option_parm4, @inventorylist_option_parm4[.@index];
+	set .@expire_time, @inventorylist_expire_time[.@index];
+	set .@bound, @inventorylist_bound[.@index];
+	set .@unique_id, @inventorylist_unique_id[.@index];
+	set .@enchantgrade, @inventorylist_enchantgrade[.@index];
+	
+	// Insere o item no mercado com TODAS as características
+	query_sql("INSERT INTO market_items (item_id, amount, price_each, total_price, seller_id, seller_name, seller_char_id, status, " + 
+		"identify, refine, attribute, card0, card1, card2, card3, " + 
+		"option_id0, option_val0, option_parm0, " + 
+		"option_id1, option_val1, option_parm1, " + 
+		"option_id2, option_val2, option_parm2, " + 
+		"option_id3, option_val3, option_parm3, " + 
+		"option_id4, option_val4, option_parm4, " + 
+		"expire_time, bound, unique_id, enchantgrade, " + 
+		"source_char_id, source_type, original_amount, created_at, updated_at) VALUES (" + 
+		.@item_id + "," + 
+		.@amount + "," + 
+		"(" + .@price_raw + "/100.0)" + "," +
+		"(" + .@total_raw + "/100.0)" + "," +
+		getcharid(3) + ",'" + 
+		strcharinfo(0) + "'," + 
+		getcharid(0) + "," + 
+		"'active'," + 
+		.@identify + "," + 
+		.@refine + "," + 
+		.@attribute + "," + 
+		.@card0 + "," + 
+		.@card1 + "," + 
+		.@card2 + "," + 
+		.@card3 + "," + 
+		.@option_id0 + "," + 
+		.@option_val0 + "," + 
+		.@option_parm0 + "," + 
+		.@option_id1 + "," + 
+		.@option_val1 + "," + 
+		.@option_parm1 + "," + 
+		.@option_id2 + "," + 
+		.@option_val2 + "," + 
+		.@option_parm2 + "," + 
+		.@option_id3 + "," + 
+		.@option_val3 + "," + 
+		.@option_parm3 + "," + 
+		.@option_id4 + "," + 
+		.@option_val4 + "," + 
+		.@option_parm4 + "," + 
+		.@expire_time + "," + 
+		.@bound + "," + 
+		.@unique_id + "," + 
+		.@enchantgrade + "," + 
+		getcharid(0) + "," + 
+		"'inventory'," + 
+		.@amount + "," + 
+		"NOW(), NOW())");
+	
+	// Remove o item do inventário
+	delitemidx @inventorylist_idx[.@index], .@amount;
+	
+	// Define o delay de 30 segundos
+	set #market_delay, gettimetick(2) + 30;
+	
+	mes "[^FF8400Comerciante do Mercado^000000]";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^0075E9|^000000 ^00B200Sucesso!^000000 ^0075E9|^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	mes "^00B200Item enviado para venda";
+	mes "no Mercado com sucesso!^000000";
+	mes "^0075E9+=-=-=-=-=-=-=-=-=-=-=+^000000";
+	close;
+
+OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 66;
+    setunittitle getnpcid(0), "[Assistente RMT]";
+end;
+}

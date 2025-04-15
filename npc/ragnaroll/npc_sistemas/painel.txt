@@ -1,0 +1,38 @@
+-	script	web_cmd_bridge	-1,{
+
+    OnInit:
+        initnpctimer;
+        end;
+
+    OnTimer60:
+        .@count = query_sql(
+            "SELECT id, command, param FROM web_commands WHERE executed=0",
+            .@id, .@cmd$, .@param$
+        );
+
+        for (.@i = 0; .@i < .@count; .@i++) {
+
+            if (.@cmd$[.@i] == "announce") {
+                announce .@param$[.@i], bc_all;
+            }
+            // ==>> AQUI entra a parte do "jail"
+            else if (.@cmd$[.@i] == "jail") {
+                // Chama o atcommand @jail <param>
+                // Exemplo: param = "Fulano"
+                atcommand("@jail " + .@param$[.@i]);
+            }
+            // ==>> AQUI entra a parte do "unjail"
+            else if (.@cmd$[.@i] == "unjail") {
+                // Chama o atcommand @unjail <param>
+                // Exemplo: param = "Fulano"
+                atcommand("@unjail " + .@param$[.@i]);
+            }
+
+            // Marca como executado
+            query_sql("UPDATE web_commands SET executed=1 WHERE id=" + .@id[.@i]);
+        }
+
+        stopnpctimer;
+        initnpctimer;
+        end;
+}

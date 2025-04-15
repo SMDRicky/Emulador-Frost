@@ -1,0 +1,1542 @@
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|				
+//|§§§§§§§§§§§§§§§§§§§§§  "Original é o que cria não é aquele que copia".  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§  ragnaproxy ©2017 - TODOS OS DIREITOS RERSEVADOS  §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|					 
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§\    \§§§§§§§§/    /§§\    \§§§§§§/    /TM°§§§§§|
+//|§§|            |§§§|            |§§§§§|            |§§§\    \§§§§§§/    /§§§§\    \§§§§/    /§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|            |§§§§\    \§§§§/    /§§§§§§\    \§§/    /§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§\    \§§/    /§§§§§§§§\    \/    /§§§§§§§§§§§|
+//|§§|   |§§§§|   |§§§|   |§§§§|   |§§§§§|   |§§§§|   |§§§§§§\    \/    /§§§§§§§§§§\        /§§§§§§§§§§§§|
+//|§§|            |§§§|            \§§§§§|   |§§§§|   |§§§§§§§\        /§§§§§§§§§§§§\      /§§§§§§§§§§§§§|
+//|§§|            |§§§|             \§§§§|   |§§§§|   |§§§§§§§§\      /§§§§§§§§§§§§§§\    /§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§\    |§§§|   |§§§§|   |§§§§§§§§/      \§§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§§/        \§§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§§/    /\    \§§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§|   |§§§§§§§§§§§§|   |§§§§§§|   |§§§|            |§§§§§/    /§§\    \§§§§§§§§§§§|    |§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|
+//|§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§|	                                                                                       
+//| =====================================================================================================|
+//|   Script Criando por ragnaproxy | Cronus | Por Favor, Não Retire Os Créditos.              		 
+//| ==================================================================================================== |
+//|   Sistema de Facções VERSÃO: 4.0p							       		 
+//| ==================================================================================================== |
+//|											       		 								     											     			
+//| changelog: 										       		 
+//|										       	        	 									     
+//|[10/12/2010] Script lançado versão 1.0p 										(ragnaproxy)   	   
+//|[06/06/2011] Lançamento da versão 2.0p 										(ragnaproxy)     
+//| ---------   				           				      		      
+//|[05/07/2011]									  	      		    	
+//| * Lançamento da versão 3.op.			                     				(ragnaproxy)	 
+//| * Correções de alguns pequenos bugs.			               				(ragnaproxy)	       	
+//| * Algumas mudanças nas falas.				        						(ragnaproxy) 	          
+//| * Script organizado, adicionado Prefixo no nome dos membros.         		(ragnaproxy)          
+//| * Adicionado opção para o ADM ativar ou desativar o Prefixo no nome.       	(ragnaproxy) 	      
+//| * Adicionado as quests das facções.                                  		(ragnaproxy)     
+//| * Adicionado opção de retirar os buffs após entrar no duelo.        		(ragnaproxy)     
+//| * Adicionado configuração no limite de visualização dos ranks.       		(ragnaproxy)     
+//| * Corrigido limite de vizualização da lista de membros.		       			(ragnaproxy)     
+//| * Lançamento do site Rankings do sistema das facções.     					(ragnaproxy)     
+//| * Adicionado sistema de fama. 												(ragnaproxy)     
+//| * Adicionado comandos administrativos.										(ragnaproxy)  
+//| -----------  
+//|[25/08/2017] 
+//| * Lançamento da versão 4.0p													(ragnaproxy)
+//| * Correção de varios erros. 									  			(ragnaproxy)
+//| * Script atualizado para funcionar no novo emulador							(ragnaproxy)
+//|	* Adcionado tempo para termino na sala de cadastro e no duelo				(ragnaproxy)
+//| -----------  
+//|[29/08/2017] 
+//| *Troca do sistema OnWhisperGlobal bindatcmd no sistema de administração		(Pixel)
+//| ==================================================================================================== | 
+//|													 
+//| 					Lista de comandos administrativos"		 
+//|     											                  		  
+//|   Utilize @faction <opção>                 		  
+//|   <dellrank>  -> limpa um ranking.
+//|   <dellall>   -> limpa todos os rankings.
+//|   <dellfame>  -> limpa o ranking da fama do site.
+//|   <closeduel> -> bloqueia os duelos.
+//|   <openduel>  -> desbloqueia os duelos.
+//|   <closebau>  -> bloqueia o bau.";
+//|   <openbau>   -> desbloqueia o bau.";
+//|   <talkfac>   -> manda uma mensagem para uma facção.
+//|   <closefac>  -> bloqueia entrada de membros nas facções.
+//|   <openfac>   -> desbloquea entrada de membros nas facções.
+//|   <ajuda>     -> mostra está lista de comandos.
+//|   <addzeny>   -> adiciona zeny para riqueza de uma facção.					 
+//| 						                                              		         
+//|======================================================================================================|
+-	script	CONFIG#Proxy	-1,{
+
+//|======================================================================================================|
+//| 										Configurações  	
+//| 	
+OnInit:							    		 			  
+//| => Nome das facções                                                        		                                       		  	    						
+$nomem$ = "Anjos da Morte"; 									          								                                
+$nomen$ = "Anjos da Noite";  										  			      
+$nomel$ = "Anjos da Luz";  									          
+//|															  
+//| => Level mínimo de GM para usar os comandos administrativos, (Padrão 99).						  
+$admin_lvl = 99;													  
+//|															  
+//| => Nivel para entrar no duelo. 	    		      							  	  
+$nvl = 1;														  
+//|															  
+//| => Retirar os buffs quando o jogador entrar no duelo, (1 Sim 0 Não).						  
+$buff_off = 1;												 	  
+//|															  
+//| => Bloquea os duelos no horário da WoE, (1 Sim 0 Não).								  
+$woe_close_duel = 0;													  
+//|															  
+//| => Qual limite para o Ranking Matador? O máximo é 127. 								  
+$lmt_matador = 10;													  
+//|															  
+//| => Qual limite para o Ranking Doador de Zenny? O máximo é 127.							  
+$limit_doador = 10;													  
+//|															  
+//| => Qual limite para o Ranking de Pontos em Duelos? O máximo é 127.							  
+$limit_duelos = 10;													  
+//|															  
+//| => Qual limite para o Ranking de nivel? O máximo é 127.								  
+$limit_nivel = 10;													  
+//|  			                                                						  
+//| => Até onde a lista de membro será vizualizada? O máximo é 127.					 		  
+$limit_menber_list = 126;												  
+//|															  
+//| => Deseja ativa o prefixo no nome dos membros das facções? (1 Sim 0 Não).						  					              
+$prefixo = 0; 													  
+//|															  
+//| => Qual o prefixo para os membros das facções. EX: (AM)Proxy. Só vai funcionar se a opção acima estiver ativada.   	                                                          	                                                                                                                   
+$prefixom$ = "(AM)";              											               
+$prefixon$ = "(AN)";													                           
+$prefixol$ = "(AL)";								                                          	                         	
+//|															  										                                      		      
+//| => Quantidade de pontos para abrir o Bau da facção.									  						      
+$bau_morte_point = 10;   	   		      									  
+$bau_noite_point = 10;          			      								  	
+$bau_luz_point = 10;           			      								  
+//|														          
+//| => IDs dos itens do Bau das facções, você pode colocar até 127 itens.						  													      														    
+setarray $bau_morte_premios[0], 25341,882,547,526;									  							   
+setarray $bau_noite_premios[0], 25341,882,547,526;									  
+setarray $bau_luz_premios[0], 25341,882,547,526;
+//|  														          
+//| => Quantidade em que os itens do báu serão dados.							                    		      
+$quant_morte = 20;   													      			      															          			      
+$quant_noite = 20;    												  	     			      															     															      		      
+$quant_luz = 20;   													               			      
+//|															  											      									
+//|														          
+//| => Exemplo de como configurar as quests das facções:                           				          
+//|															  
+//| Você não pode adicionar mais de 1(um) prêmio, você pode adicionar até 63 itens requeridos para fazer uma quest.	  
+//| Caso você queira adicionar mais quests, é so copiar e colar a setarray em baixo da última, mudando apenas o numero final.  
+//| Veja o exemplo abaixo:												  
+//| setarray $morte_quest_6, 5315,1,0,714,1,1061,100,1095,50,618,2,1551,1,727,20,671,10;													  
+//| setarray $morte_quest_7, 5315,1,0,714,1,1061,100,1095,50,618,2,1551,1,727,20,671,10;												  
+//| Vejá também o grafico de como configurar os itens das quests:							  
+//|------------------------------------------------------------------------------|					  
+//|                      Grafico ensinando a configurar as quests:		 		        	  
+//|										 			          
+//|            I = ID do premio. 					 					  
+//|			   Q = Quantidade do premio.				 				  
+//|			   R = ID dos itens requeridos.				 					  
+//|			   K = Quantidade dos itens requeridos.			 					  
+//|			   N = Não mexa.					 					  
+//|										 				  
+//|				   			   I  Q N   R   K   R   K  R  K  R   K   R   K	 				  
+//|				   			   ^  ^ ^   ^   ^   ^   ^  ^  ^  ^   ^   ^   ^	 					  
+//|				   			   ^  ^ ^   ^   ^   ^   ^  ^  ^  ^   ^   ^   ^	 					  
+//|	setarray $morte_quest_0, 5286,1,0,7101,100,2233,1,980,1,978,1000,671,10; 					  
+//|------------------------------------------------------------------------------|					  
+//|															  
+//| => Quests anjos da morte												  
+setarray $morte_quest_0, 5286,1,0,7101,100,2233,1,980,1,978,1000,671,10;						  
+setarray $morte_quest_1, 5361,1,0,2219,20,5005,20,7216,500,671,10;							  
+setarray $morte_quest_2, 5466,1,0,5167,1,601,500,975,1,2286,2,671,10;							  
+setarray $morte_quest_3, 5401,1,0,2203,1,2243,1,983,2,7315,200,671,10;							  
+setarray $morte_quest_4, 5506,1,0,1034,500,510,350,991,100,978,3,671,10;						  												
+setarray $morte_quest_5, 5210,1,0,7094,150,7063,100,7347,100,2254,2,671,10;						  
+setarray $morte_quest_6, 5315,1,0,714,1,1061,100,1095,50,618,2,1551,1,727,20,671,10;					  
+//|															  
+//| => Quests anjos da noite												  
+setarray $noite_quest_0, 5286,1,0,7101,100,2233,1,980,1,978,1000,671,10;						  
+setarray $noite_quest_1, 5361,1,0,2219,20,5005,20,7216,500,671,10;							  
+setarray $noite_quest_2, 5466,1,0,5167,1,601,500,975,1,2286,2,671,10;							  
+setarray $noite_quest_3, 5401,1,0,2203,1,2243,1,983,2,7315,200,671,10;							  
+setarray $noite_quest_4, 5506,1,0,1034,500,510,350,991,100,978,3,671,10;						  
+setarray $noite_quest_5, 5210,1,0,7094,150,7063,100,7347,100,2254,2,671,10;						  
+setarray $noite_quest_6, 5315,1,0,714,1,1061,100,1095,50,618,2,1551,1,727,20,671,10;					  
+//|															  
+//| => Quests anjos da luz												  
+setarray $luz_quest_0, 5286,1,0,7101,100,2233,1,980,1,978,1000,671,10;							  
+setarray $luz_quest_1, 5361,1,0,2219,20,5005,20,7216,500,671,10;							  
+setarray $luz_quest_2, 5466,1,0,5167,1,601,500,975,1,2286,2,671,10;							  
+setarray $luz_quest_3, 5401,1,0,2203,1,2243,1,983,2,7315,200,671,10;							  
+setarray $luz_quest_4, 5506,1,0,1034,500,510,350,991,100,978,3,671,10;							  
+setarray $luz_quest_5, 5210,1,0,7094,150,7063,100,7347,100,2254,2,671,10;						  
+setarray $luz_quest_6, 5315,1,0,714,1,1061,100,1095,50,618,2,1551,1,727,20,671,10;				          	
+//|															  
+//|XXXXXAtenção não mexa aquiXXXX											  
+$fama_1$ = "id_001";	      //X											  
+$fama_2$ = "id_002";	      //X											  
+$fama_3$ = "id_003";	      //X											  
+$fama_4$ = "id_004";	      //X											  
+$fama_5$ = "id_005";	      //X											  										
+$fama_6$ = "id_006";	      //X											  
+$fama_7$ = "id_007";	      //X											  
+$fama_8$ = "id_008";	      //X											  
+$fama_9$ = "id_009";	      //X											  
+$fama_10$ ="id_010";      	  //X		 								  
+//|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX											  
+//|															  
+//| O sistema de ranking da fama funciona da seguinte maneira. Quando o jogador atingir uma certa quantidade de kills nos	  
+//|duelos ele é promovido! A quantidade de kills para cada nível de fama pode ser configurado por você abaixo.	  	  
+//|															  
+//| => Fama [noob]													  
+$fama_noob = 1; 													  
+//|															  
+//| => Fama [normal] 													  
+$fama_normal = 10;													  
+//|															  
+//| => Fama [boa]													  
+$fama_boa = 50;													  
+//|															  
+//| => Fama [otima]													  
+$fama_otima = 100;													  
+//|															  
+//| => Fama [mestre] 													  
+$fama_mestre = 200;													  
+//|														  	  
+//| => Fama [rei]													  
+$fama_rei = 500;													  
+//|															  
+//| => Fama [deus* 1º Estrela]											  
+$fama_deus1 = 1000;													  
+//|															  
+//| => Fama [deus**  2º Estrela]											  
+$fama_deus2 = 2000;													  
+//|															  
+//| => Fama [deus*** 3º Estrela]											  
+$fama_deus3 = 3000;													  
+//| 															  
+//| => Fama [deus****  4º Estrela]											  
+$fama_deus4 = 5000;													  
+//| 
+end;	
+}														  
+//|=========================================================================================================================|
+
+moc_para01,31,92,3	script	Facções	419,{
+
+if(trueM == 1) callfunc "AnjoMorte";	 
+if(trueN == 1) callfunc "AnjoNoite";	 
+if(trueL == 1) callfunc "AnjoLuz";
+		  	                                                       
+        mes set(.@nfn$, "[^FF0000Facções^000000]");
+   	  	mes "Olá, seja bem vindo ao sistema de facções, escolha uma facção";
+   	  	next;
+		
+    	    .@menu = select("-> ^990000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000:-> ^000080Informações^000000:-> ^000080Sair^000000");	         
+          	if(@menu == 1){ 
+			if($bloq_m == 1){
+			mes .@nfn$;
+			mes "O administrador bloqueou a entrada de membros nessa facção.";
+			close;
+				}  	      
+				query_sql "SELECT faccao_anjos_da_morte, nivel_m, total_z_m, vitoria_gdf_m FROM contagem_faccao ORDER BY faccao_anjos_da_morte DESC LIMIT 100",@mm,@nm,@rm,@gdf_m;          	
+				mes "[^990000"+$nomem$+"^000000]";
+         		mes "Total de membros na facção:";
+         		mes "-> ^339966"+@mm+"^000000";
+         		mes "Nível da facção:";
+         		mes "-> ^339966"+@nm+"^000000";
+         		mes "Riqueza da facção:";
+         		mes "-> ^339966"+@rm+"^000000";
+				mes "Total de ponto de duelo:";
+         		mes "-> ^339966"+@gdf_m+"^000000";
+                next;
+				
+                 	if(select("-> ^000080Entra na facção^000000:-> ^000080Ver membros da facção^000000") == 1){             
+					mes .@nfn$;
+                 	mes "Tem certeza que quer fazer parte da facção ^99000"+$nomem$+"^000000?";	
+          			if(select("Sim:Não") == 1){ next;
+                 		
+						if($first == 0){
+						query_sql "INSERT INTO `faccaom` (`char_id`,`kills_m`,`death_m`,`anjos_da_morte`,`status_m`,`fama_m`,`bau_points`,`zenny_m`,`pontos_gdf_m`,`nivel_m`) VALUES ('"+getcharid(0)+"',0,0,'"+strcharinfo(0)+"','^00FF00Online^000000','"+$fama_10$+"',0,0,0,1)";
+						query_sql "INSERT INTO `contagem_faccao` (`faccao_anjos_da_morte`,`faccao_anjos_da_noite`,`faccao_anjos_da_luz`,`total_z_m`,`total_z_n`,`total_z_l`,`nivel_m`,`nivel_n`,`nivel_l`,`vitoria_gdf_m`,`vitoria_gdf_n`,`vitoria_gdf_l`) VALUES (1,0,0,0,0,0,0,0,0,0,0,0)";
+						if ( $prefixo == 1 ) query_sql "UPDATE `char` set `name`='"+$prefixom$+""+strcharinfo(0)+"' WHERE `char_id`='"+getcharid (0)+"'";
+						announce "[Facções]: "+strcharinfo(0)+" acaba de entrar para facção "+$nomem$+".",0;
+               			mes .@nfn$;
+               			mes "Muito bem você acaba de entra para facção ^99000"+$nomem$+"^000000.";
+               			trueM = 1; regi = 1; $first = 1; nome_normal$ = ""+strcharinfo(0)+"";	
+						close;
+						
+							}else{
+							query_sql "INSERT INTO `faccaom` (`char_id`,`kills_m`,`death_m`,`anjos_da_morte`,`status_m`,`fama_m`,`bau_points`,`zenny_m`,`pontos_gdf_m`,`nivel_m`) VALUES ('"+getcharid(0)+"',0,0,'"+strcharinfo(0)+"','^00FF00Online^000000','"+$fama_10$+"',0,0,0,1)";
+							query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_morte` = `faccao_anjos_da_morte` +1";
+							if ( $prefixo == 1 ) query_sql "UPDATE `char` set `name`='"+$prefixom$+""+strcharinfo(0)+"' WHERE `char_id`='"+getcharid (0)+"'";
+							announce "[Facções]: "+strcharinfo(0)+" acaba de entrar para facção ["+$nomem$+"].",0;
+                 			mes .@nfn$;
+                 			mes "Muito bem você acaba de entra para facção ^99000"+$nomem$+"^000000.";
+                 			trueM = 1; regi = 1; nome_normal$ = ""+strcharinfo(0)+"";			
+							close;
+							}
+							
+								}else{
+								next;
+								mes .@nfn$;
+								mes "Ok quando quizer e só volta";
+								close; 
+								}	
+									}
+									callfunc "MenbroMorte";
+									}
+		  
+	  		if(@menu == 2){
+			if($bloq_n == 1){
+			mes .@nfn$;
+			mes "O administrador bloqueou a entrada de membros nessa facção.";
+			close;
+				}  
+				query_sql "SELECT faccao_anjos_da_noite, nivel_n, total_z_n, vitoria_gdf_n FROM contagem_faccao ORDER BY faccao_anjos_da_noite DESC LIMIT 100",@mn,@nn,@rn,@gdf_n;          	
+				mes "[^0000FF"+$nomen$+"^000000]";
+         		mes "Total de membros na facção:";
+         		mes "-> ^339966"+@mn+"^000000";
+         		mes "Nível da facção:";
+         		mes "-> ^339966"+@nn+"^000000";
+         		mes "Riqueza da facção:";
+				mes "-> ^339966"+@rn+"^000000";
+				mes "Total de ponto de duelo:";
+         		mes "-> ^339966"+@gdf_n+"^000000";
+				next;
+				
+                 	if(select("-> ^000080Entra na facção^000000:-> ^000080Ver membros da facção^000000") == 1){
+                 	mes .@nfn$;
+                 	mes "Tem certeza que quer fazer parte da facção ^0000FF"+$nomen$+"^000000?";
+                 	if(select("Sim:Não") == 1){ next;
+				        		
+						if($first == 0){
+						query_sql "INSERT INTO `faccaon` (`char_id`,`kills_n`,`death_n`,`anjos_da_noite`,`status_n`,`fama_n`,`bau_points`,`zenny_n`,`pontos_gdf_n`,`nivel_n`) VALUES ('"+getcharid(0)+"',0,0,'"+strcharinfo(0)+"','^00FF00Online^000000','"+$fama_10$+"',0,0,0,1)";
+						query_sql "INSERT INTO `contagem_faccao` (`faccao_anjos_da_morte`,`faccao_anjos_da_noite`,`faccao_anjos_da_luz`,`total_z_m`,`total_z_n`,`total_z_l`,`nivel_m`,`nivel_n`,`nivel_l`,`vitoria_gdf_m`,`vitoria_gdf_n`,`vitoria_gdf_l`) VALUES (0,1,0,0,0,0,0,0,0,0,0,0)";
+						if ( $prefixo == 1 ) query_sql "UPDATE `char` set `name`='"+$prefixon$+""+strcharinfo(0)+"' WHERE `char_id`='"+getcharid (0)+"'";
+						announce "[Facções]: "+strcharinfo(0)+" acaba de entrar para facção ["+$nomen$+"].",0;
+               			mes .@nfn$;
+               			mes "Muito bem você acaba de entra para facção ^0000FF"+$nomen$+"^000000.";
+						trueN = 1; regi = 1; $cont_m = 1; $first = 1; nome_normal$ = ""+strcharinfo(0)+"";
+						close;
+	
+							}else{
+							query_sql "INSERT INTO `faccaon` (`char_id`,`kills_n`,`death_n`,`anjos_da_noite`,`status_n`,`fama_n`,`bau_points`,`zenny_n`,`pontos_gdf_n`,`nivel_n`) VALUES ('"+getcharid(0)+"',0,0,'"+strcharinfo(0)+"','^00FF00Online^000000','"+$fama_10$+"',0,0,0,1)";
+							query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_noite` = `faccao_anjos_da_noite` +1";
+							if ( $prefixo == 1 ) query_sql "UPDATE `char` set `name`='"+$prefixon$+""+strcharinfo(0)+"' WHERE `char_id`='"+getcharid (0)+"'";
+							announce "[Facções]: "+strcharinfo(0)+" acaba de entrar para facção ["+$nomen$+"].",0;
+                 			mes .@nfn$;
+                 			mes "Muito bem você acaba de entra para facção ^0000FF"+$nomen$+"^000000.";
+							trueN = 1; regi = 1; nome_normal$ = ""+strcharinfo(0)+"";
+							close;
+							}
+	
+								}else{
+								next;
+								mes .@nfn$;
+								mes "Ok quando quizer e só volta";
+								close; 
+								}
+									}              
+									callfunc "MenbroNoite";
+									}
+
+	 		if(@menu == 3){
+			if($bloq_l == 1){
+			mes .@nfn$;
+			mes "O administrador bloqueou a entrada de membros nessa facção.";
+			close;
+				}  
+				query_sql "SELECT faccao_anjos_da_luz, nivel_l, total_z_l, vitoria_gdf_l FROM contagem_faccao ORDER BY faccao_anjos_da_luz DESC LIMIT 100",@ml,@nl,@rl,@gdf_l;          	
+				mes "[^33CC99"+$nomel$+"^000000]";
+         		mes "Total de membros na facção:";
+         		mes "-> ^339966"+@ml+"^000000";
+         		mes "Nível da facção:";
+         		mes "-> ^339966"+@nl+"^000000";
+         		mes "Riqueza da facção:";
+         		mes "-> ^339966"+@rl+"^000000";
+				mes "Total de ponto de duelo:";
+         		mes "-> ^339966"+@gdf_l+"^000000";
+				next;
+				
+                 	if(select("-> ^000080Entra na facção^000000:-> ^000080Ver membros da facção^000000") == 1){      
+                 	mes .@nfn$;
+                 	mes "Tem certeza que quer fazer parte da facção ^33CC99"+$nomel$+"^000000?";
+                 	if(select("Sim:Não") == 1){ next;
+
+						if($first == 0){
+						query_sql "INSERT INTO `faccaol` (`char_id`,`kills_l`,`death_l`,`anjos_da_luz`,`status_l`,`fama_l`,`bau_points`,`zenny_l`,`pontos_gdf_l`,`nivel_l`) VALUES ('"+getcharid(0)+"',0,0,'"+strcharinfo(0)+"','^00FF00Online^000000','"+$fama_10$+"',0,0,0,1)";
+						query_sql "INSERT INTO `contagem_faccao` (`faccao_anjos_da_morte`,`faccao_anjos_da_noite`,`faccao_anjos_da_luz`,`total_z_m`,`total_z_n`,`total_z_l`,`nivel_m`,`nivel_n`,`nivel_l`,`vitoria_gdf_m`,`vitoria_gdf_n`,`vitoria_gdf_l`) VALUES (0,0,1,0,0,0,0,0,0,0,0,0)";
+						if ( $prefixo == 1 ) query_sql "UPDATE `char` set `name`='"+$prefixol$+""+strcharinfo(0)+"' WHERE `char_id`='"+getcharid (0)+"'";
+						announce "[Facções]: "+strcharinfo(0)+" acaba de entrar para facção ["+$nomel$+"].",0;
+               			mes .@nfn$;
+               			mes "Muito bem você acaba de entra para facção ^33CC99"+$nomel$+"^000000.";
+               			trueL = 1; regi = 1; $first = 1; nome_normal$ = ""+strcharinfo(0)+"";
+						close;
+	
+							}else{
+							query_sql "INSERT INTO `faccaol` (`char_id`,`kills_l`,`death_l`,`anjos_da_luz`,`status_l`,`fama_l`,`bau_points`,`zenny_l`,`pontos_gdf_l`,`nivel_l`) VALUES ('"+getcharid(0)+"',0,0,'"+strcharinfo(0)+"','^00FF00Online^000000','"+$fama_10$+"',0,0,0,1)";
+							query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_luz` = `faccao_anjos_da_luz` +1";
+							if ( $prefixo == 1 ) query_sql "UPDATE `char` set `name`='"+$prefixol$+""+strcharinfo(0)+"' WHERE `char_id`='"+getcharid (0)+"'";
+							announce "[Facções]: "+strcharinfo(0)+" acaba de entrar para facção ["+$nomel$+"].",0;
+                 			mes .@nfn$;
+                 			mes "Muito bem você acaba de entra para facção ^33CC99"+$nomel$+"^000000.";
+                 			set trueL, 1; set regi, 1; set nome_normal$, ""+strcharinfo(0)+"";
+							close;
+							}
+	
+								}else{
+								next;
+								mes .@nfn$;
+								mes "Ok quando quizer e só volta";
+								close; 
+								}
+									}              
+									callfunc "MenbroLuz";
+									}
+
+			if ( @menu == 4 ) {
+			mes .@nfn$;
+		 	mes "O sistema de facções é dividido em 3 facções.";
+		 	mes "-> ^990000"+$nomem$+"^000000";
+		 	mes "-> ^0000FF"+$nomen$+"^000000";
+		 	mes "-> ^33CC99"+$nomel$+"^000000";
+		 	mes "Os guerreiros de cada facção tem que fazer duelos com guerreiros das outras facções.";
+		 	mes "Cada duelo que você ganhar para sua facção, você vai adquirir pontos, quando você obter uma certa quantia de pontos,";
+			mes "você poderá abrir o baú da sua facção é pegar os itens.";
+		 	mes "Os membros das facções pode também doar zeny para facção almentando a riqueza da facção, e melhorando o ranking doador de zeny.";
+		 	close;	
+			
+			}
+			if(@menu == 5)close; 	       
+}
+//|============================================================================================================================|
+//|				XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       |
+//|================================================**Functions das Facções**===================================================|
+	  
+function	script	AnjoMorte	{
+
+    	mes "[^990000"+$nomem$+"^000000]";
+		mes "Olá, você é membro da facção:";
+		mes "^990000"+$nomem$+"^000000";
+		mes "O que deseja ?";
+		next;
+		.@menu = select ( "-> ^000080Acessar minha facção^000000:-> ^000080Ver as outras duas facções^000000:-> ^000080Abrir baú da facção^000000:-> ^000080Ver última mensagem do ADM^000000:-> ^000080Quests "+$nomem$+"^000000:-> Sair" );
+			
+		if(@menu == 1){   
+		query_sql "SELECT faccao_anjos_da_morte, nivel_m, total_z_m, vitoria_gdf_m FROM contagem_faccao ORDER BY faccao_anjos_da_morte DESC LIMIT 100",@mm,@nm,@rm,@gdf_m;              
+		mes "[^990000"+$nomem$+"^000000]";
+		mes "Total de membros na facção:";
+		mes "-> ^339966"+@mm+"^000000";
+		mes "Nível da facção:";
+        mes "-> ^339966"+@nm+"^000000";
+        mes "Riqueza da facção:";
+        mes "-> ^339966"+@rm+"^000000";
+		mes "Total de pontos de duelo:";
+        mes "-> ^339966"+@gdf_m+"^000000";
+		next;
+        switch(select("-> ^000080Depoosita zeny para riqueza da facção^000000:-> ^000080Ver membros da facção^000000:-> ^000080Abandonar facção^000000:-> Sair")){
+
+			case 1:
+				next;
+				mes "[^990000"+$nomem$+"^000000]";
+				mes "Digite a quantidade de zeny.";
+				mes "O máximo é 10 milhões(10kk).";
+				next;
+				input @rqm;
+
+					if(Zeny < @rqm){
+					mes "[^990000"+$nomem$+"^000000]";
+					mes "Me desculpa mais você não tem essa quantia em zeny.";
+					close;
+					
+						}
+						@id_m = getcharid(0);
+						set Zeny, Zeny - @rqm;
+						query_sql "UPDATE `faccaom` set `zenny_m` = `zenny_m` +"+@rqm+" WHERE `char_id`="+@id_m+"";
+						query_sql "UPDATE `contagem_faccao` set `total_z_m` = `total_z_m` +"+@rqm+"";
+						mes "[^990000"+$nomem$+"^000000]";;
+						mes "Sua doação foi depositada!";                                                                                        
+						close2; 
+						callfunc "AnjoMorte";
+		
+			case 2:
+                callfunc "MenbroMorte"; 
+									
+			case 3:
+				mes "[^990000"+$nomem$+"^000000]";
+				mes "Tem certeza que deseja sair da facção?";		
+				mes "Seu nome será apagado de todos os rankings e da lista de membros!";
+				next;
+				
+					if(select( "Sim:Não" ) == 2){
+					mes "[^990000"+$nomem$+"^000000]";
+					mes "Òtimo é melhor assim, a facção precisa de você.";
+					close;
+					
+						}
+						query_sql "DELETE FROM `faccaom` WHERE `char_id`='"+getcharid (0)+"'";
+						query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_morte` = `faccao_anjos_da_morte` -1";
+						query_sql "UPDATE `char` set `name`='"+nome_normal$+"' WHERE `char_id`='"+getcharid (0)+"'";
+						trueM = 0; regi = 0;  
+						mes "[^990000"+$nomem$+"^000000]";
+						mes "Ok, se essa é sua decisão, agora você está livre para entrar em outra facção";
+						next;
+						mes "[^990000"+$nomem$+"^000000]";
+						mes "Você será desconectado para atualização do seus dados.";
+						close2;
+						sleep2 3000;
+	      				atcommand "@Kick "+strcharinfo(0); 
+						end;		
+			case 4:
+				close;
+				
+			}
+		}
+		if(@menu == 2){
+       	mes "[^990000"+$nomem$+"^000000]";
+	  	mes "Escolha a facção que deseja visitar.";
+	  	next;
+		
+			if (select("^0000FF"+$nomen$+"^000000:^33CC99"+$nomel$+"^000000") == 1){
+			callfunc "NoiteVisita";
+		 	close;
+			
+					}
+		 			callfunc "LuzVisita";
+		 			close;		
+					
+		}				
+		if(@menu == 3) callfunc "BauMorte";
+		if(@menu == 4){
+		mes "[^990000"+$nomem$+"^000000]";
+		mes "Data da mensagem: "+$data_m$+"";
+		mes "Mensagem do administrador:";
+		mes "^0000FF "+$talk_m$+" ^000000";
+		close;	
+		}
+		
+		if(@menu == 5) callshop "Loja_Morte", 1;
+		if(@menu == 6) close;
+}
+
+function	script	AnjoNoite	{
+
+		mes "[^0000FF"+$nomen$+"^000000]";
+		mes "Olá você é membro da facção:";
+		mes "^0000FF"+$nomen$+"^000000";
+		mes "O que deseja ?";
+		next;
+		.@menu = select ( "-> ^000080Acessar minha facção^000000:-> ^000080Ver as outras duas facções^000000:-> ^000080Abrir baú da facção^000000:-> ^000080Ver última mensagem do ADM^000000:-> ^000080Quests "+$nomen$+"^000000:-> Sair" );
+		
+		if(@menu ==1){ 
+		query_sql "SELECT faccao_anjos_da_noite, nivel_n, total_z_n, vitoria_gdf_n FROM contagem_faccao ORDER BY faccao_anjos_da_noite DESC LIMIT 100",@mn,@nn,@rn,@gdf_n;          	
+		mes "[^0000FF"+$nomen$+"^000000]";
+        mes "Total de membros na facção:";
+        mes "-> ^339966"+@mn+"^000000";
+        mes "Nível da facção:";
+        mes "-> ^339966"+@nn+"^000000";
+        mes "Riqueza da facção:";
+        mes "-> ^339966"+@rn+"^000000";
+		mes "Total de pontos de duelo:";
+        mes "-> ^339966"+@gdf_n+"^000000"; 
+        next;
+        switch(select("-> ^000080Deposita zeny para riqueza da facção^000000:-> ^000080Ver membros da facção^000000:-> ^000080Abandonar facção^000000:-> Sair")){ 
+
+		case 1:
+			next;
+			mes "[^0000FF"+$nomen$+"^000000]";
+			mes "Digite a quantidade de zeny.";
+			mes "O máximo é 10 milhões(10kk).";
+			next;
+			input @rqm;
+	 
+	        	if(Zeny < @rqm){	 	 
+       			mes "[^0000FF"+$nomen$+"^000000]";
+				mes "Me desculpa mais você não tem essa quantia em zeny.";
+				close;
+				
+					}
+					@id_n = getcharid(0);
+					Zeny = Zeny - @rqm;
+					query_sql "UPDATE `faccaon` set `zenny_n` = `zenny_n` +"+@rqm+" WHERE `char_id`="+@id_n+"";
+					query_sql "UPDATE `contagem_faccao` set `total_z_n` = `total_z_n` +"+@rqm+"";	
+	        		mes "[^0000FF"+$nomen$+"^000000]";
+					mes "Sua doação foi depositada!";                                                                                        
+					close2; 
+					callfunc "AnjoNoite"; 
+
+		case 2:
+        	callfunc "MenbroNoite"; 
+						
+		case 3:
+			next;					
+	     	mes "[^0000FF"+$nomen$+"^000000]";
+			mes "Tem certeza que deseja sair da facção?";		
+			mes "Seu nome será apagado de todos os rankings e da lista de membros!";
+			next;
+			if(select("Sim:Não") == 2){
+			mes "[^0000FF"+$nomen$+"^000000]";
+			mes "Òtimo é melhor assim, a facção precisa de você.";
+			close;
+			
+				}
+				query_sql "DELETE FROM `faccaon` WHERE `char_id`='"+getcharid (0)+"'";
+				query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_noite` = `faccao_anjos_da_noite` -1";
+				query_sql "UPDATE `char` set `name`='"+nome_normal$+"' WHERE `char_id`='"+getcharid (0)+"'";
+				trueN = 0; regi = 0;  
+				mes "[^0000FF"+$nomen$+"^000000]";
+				mes "Ok, se essa é sua decisão, agora você está livre para entrar em outra facção";
+				next;
+				mes "[^0000FF"+$nomen$+"^000000]";
+				mes "Você será desconectado para atualização do seus dados.";
+				close2;
+				sleep2 3000;
+	      		atcommand "@Kick "+strcharinfo(0); 
+				end;	
+		case 4:
+			close;
+		
+			}
+		}		
+		if(@menu == 2){
+		mes "[^0000FF"+$nomen$+"^000000]";
+		mes "Escolha a facção que deseja visitar.";
+	 	next;
+			
+			if(select("^990000"+$nomem$+"^000000:^33CC99"+$nomel$+"^000000") == 1){
+			callfunc "MorteVisita";
+			close;
+			
+         			}
+					callfunc "LuzVisita";
+					close;		 	           
+						
+		}
+	 	if(@menu == 3) callfunc "BauNoite";
+		if(@menu == 4){
+		mes "[^0000FF"+$nomen$+"^000000]";
+		mes "Data da mensagem: "+$data_n$+"";
+		mes "Mensagem do administrador:";
+		mes "^0000FF "+$talk_n$+" ^000000";	
+		close;	
+		}
+		
+        if(@menu == 5) callshop "Loja_Noite", 1;
+		if(@menu == 6) close;
+}
+
+function	script	AnjoLuz	{
+
+    	mes "[^33CC99"+$nomel$+"^000000]";
+		mes "Olá você e membro da facção:";
+		mes "^33CC99"+$nomel$+"^000000";
+		mes "O que deseja ?";
+		next;
+		.@menu = select ( "-> ^000080Acessar minha facção^000000:-> ^000080Ver as outras duas facções^000000:-> ^000080Abrir baú da facção^000000:-> ^000080Ver última mensagem do ADM^000000:-> ^000080Quests "+$nomel$+"^000000:-> Sair");
+		
+		if(@menu ==1){     
+		query_sql "SELECT faccao_anjos_da_luz, nivel_l, total_z_l, vitoria_gdf_l FROM contagem_faccao ORDER BY faccao_anjos_da_luz DESC LIMIT 100",@ml,@nl,@rl,@gdf_l;          	
+		mes "[^33CC99"+$nomel$+"^000000]";
+        mes "Total de membros na facção:";
+        mes "-> ^339966"+@ml+"^000000";
+        mes "Nível da facção:";
+        mes "-> ^339966"+@nl+"^000000";
+        mes "Riqueza da facção:";
+        mes "-> ^339966"+@rl+"^000000";
+		mes "Total de pontos de duelo:";
+        mes "-> ^339966"+@gdf_l+"^000000"; 
+        next;
+        switch(select("-> ^000080Deposita zeny para riqueza da facção^000000:-> ^000080Ver membros da facção^000000:-> ^000080Abandonar facção^000000:-> Sair")){
+
+		 case 1:			
+			next;
+	        mes "[^33CC99"+$nomel$+"^000000]";
+			mes "Digite a quantidade de zeny.";
+			mes "O máximo é 10 milhões(10kk).";
+			next;
+			input @rqm;
+	 
+				if(Zeny < @rqm){
+				mes "[^33CC99"+$nomel$+"^000000]";
+				mes "Me desculpa mais você não tem essa quantia em zeny.";
+				close;
+         			}
+					@id_l = getcharid(0);
+					Zeny = Zeny - @rqm;
+					query_sql "UPDATE `faccaol` set `zenny_l` = `zenny_l` +"+@rqm+" WHERE `char_id`="+@id_l+"";
+					query_sql "UPDATE `contagem_faccao` set `total_z_l` = `total_z_l` +"+@rqm+"";
+					mes "[^33CC99"+$nomel$+"^000000]";
+					mes "Sua doação foi depositada!";                                                                                        
+					close2; 
+					callfunc "AnjoLuz";
+
+		case 2:
+        callfunc "MenbroLuz"; 
+						
+		case 3:
+			next;
+			mes "[^33CC99"+$nomel$+"^000000]";
+			mes "Tem certeza que deseja sair da facção?";		
+			mes "Seu nome será apagado de todos os rankings e da lista de membros!";
+			next;
+			if(select("Sim:Não") == 2){
+			mes "[^33CC99"+$nomel$+"^000000]";
+			mes "Òtimo é melhor assim, a facção precisa de você.";
+			close;
+			
+					}
+					query_sql "DELETE FROM `faccaol` WHERE `char_id`='"+getcharid (0)+"'";
+					query_sql "UPDATE `contagem_faccao` set `faccao_anjos_da_luz` = `faccao_anjos_da_luz` -1";
+					query_sql "UPDATE `char` set `name`='"+nome_normal$+"' WHERE `char_id`='"+getcharid (0)+"'";
+					trueL = 0; regi = 0; 
+					mes "[^33CC99"+$nomel$+"^000000]";
+					mes "Ok, se essa é sua decisão, agora você está livre para entrar em outra facção.";
+					next;
+					mes "[^33CC99"+$nomel$+"^000000]";
+					mes "Você será desconectado para atualização do seus dados.";
+					close2;
+					sleep2 3000;
+	      			atcommand "@Kick "+strcharinfo(0); 
+					end;
+					
+		case 4:
+			close;
+			
+			}
+		}
+        if(@menu == 2){
+		mes "[^33CC99"+$nomel$+"^000000]";
+	    mes "Escolha a facção que deseja visitar.";
+	    next;
+		
+			if(select("^0000FF"+$nomen$+"^000000:^990000"+$nomem$+"^000000") == 1){
+			callfunc "NoiteVisita";
+		 	close;
+			
+         	 		}
+		 			callfunc "MorteVisita";
+		 			close;	
+        }
+	 	if(@menu == 3) callfunc "BauLuz";
+		if(@menu == 4){
+		mes "[^33CC99"+$nomel$+"^000000]";
+		mes "Data da mensagem: "+$data_l$+"";
+		mes "Mensagem do administrador:";
+		mes "^0000FF "+$talk_l$+" ^000000";	
+		close;	
+		}
+		
+		if(@menu == 5) callshop "Loja_Luz", 1;
+		if(@menu == 6) close;
+}
+
+
+//|============================================================================================================================|
+//|										XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|=================================================**Sistema de visita**======================================================|
+
+function	script	NoiteVisita	{
+
+		query_sql "SELECT faccao_anjos_da_noite, nivel_n, total_z_n, vitoria_gdf_n FROM contagem_faccao ORDER BY faccao_anjos_da_noite DESC LIMIT 1000",@mn,@nn,@rn,@gdf_n;   
+		mes "[^0000FF"+$nomen$+"^000000]";       	
+       	mes "Total de membros na facção:";
+        mes "-> ^339966"+@mn+"^000000";
+        mes "Nível da facção:";
+        mes "-> ^339966"+@nn+"^000000";
+        mes "Riqueza da facção:";
+        mes "-> ^339966"+@rn+"^000000";
+	 	mes "Total de pontos de duelo:";
+        mes "-> ^339966"+@gdf_n+"^000000";           
+		next;
+		callfunc "MenbroNoite";
+		
+}	
+function	script	MorteVisita	{
+
+	 	query_sql "SELECT faccao_anjos_da_morte, nivel_m, total_z_m, vitoria_gdf_m FROM contagem_faccao ORDER BY faccao_anjos_da_morte DESC LIMIT 1000",@mm,@nm,@rm,@gdf_m; 
+		mes "[^990000"+$nomem$+"^000000]";             
+        mes "Total de membros na facção:";
+        mes "-> ^339966"+@mm+"^000000";
+        mes "Nível da facção:";
+        mes "-> ^339966"+@nm+"^000000";
+        mes "Riqueza da facção:";
+        mes "-> ^339966"+@rm+"^000000";
+	  	mes "Total de pontos de duelo:";
+        mes "-> ^339966"+@gdf_m+"^000000";
+		next;
+		callfunc "MenbroMorte";	
+		
+}
+function	script	LuzVisita	{
+
+        query_sql "SELECT faccao_anjos_da_luz, nivel_l, total_z_l, vitoria_gdf_l FROM contagem_faccao ORDER BY faccao_anjos_da_luz DESC LIMIT 1000",@ml,@nl,@rl,@gdf_l;   
+		mes "[^33CC99"+$nomel$+"^000000]";       	
+        mes "Total de membros na facção:";
+        mes "-> ^339966"+@ml+"^000000";
+        mes "Nível da facção:";
+        mes "-> ^339966"+@nl+"^000000";
+        mes "Riqueza da facção:";
+        mes "-> ^339966"+@rl+"^000000";
+	 	mes "Total de pontos de duelo:";
+        mes "-> ^339966"+@gdf_l+"^000000";
+		next;
+		callfunc "MenbroLuz";
+		
+}       
+//|============================================================================================================================|
+//|				               		XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|============================================Lista de membros das Facções====================================================|
+
+function	script	MenbroMorte	{
+
+	query_sql "SELECT anjos_da_morte, status_m FROM faccaom ORDER BY id DESC LIMIT 1000",@smi$,@st_mi$;        
+	mes "[^000080Membros^000000] - [^990000"+$nomem$+"]^000000";         
+	for(.@A = 0; .@A < $limit_menber_list; .@A = .@A + 1)
+	mes ""+@smi$[.@A]+" "+@st_mi$[.@A]+"";
+	close;
+	
+} 
+function	script	MenbroNoite	{
+
+	query_sql "SELECT anjos_da_noite, status_n FROM faccaon ORDER BY id DESC LIMIT 1000",@sni$,@st_ni$;
+	mes "[^000080Membros^000000] - [^0000FF"+$nomen$+"]^000000";                 
+	for(.@A = 0; .@A < $limit_menber_list; .@A = .@A + 1)
+	mes ""+@sni$[.@A]+" "+@st_ni$[.@A]+"";
+	close;
+	
+}    
+function	script	MenbroLuz	{
+
+	query_sql "SELECT anjos_da_luz, status_l FROM faccaol ORDER BY id DESC LIMIT 1000",@sli$,@st_li$;  
+	mes "[^000080Membros^000000] - [^33CC99"+$nomel$+"]^000000";               
+	for(.@A = 0; .@A < $limit_menber_list; .@A = .@A + 1)
+	mes ""+@sli$[.@A]+" "+@st_li$[.@A]+"";
+	close;
+	
+}      
+//|============================================================================================================================|
+//|									XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|============================================Sistema de Duelos de Facções====================================================|
+
+moc_para01,35,95,3	script	Duelo de Facções	966,{
+
+			if(regi == 0){
+			mes  "[^FF0000Duelo de Facções^000000]";
+			mes "Só membros de facções podem fazer duelos.";
+			close;
+			
+				}
+				if($duel_bloq == 1){
+				mes "[^FF0000Duelo de Facções^000000]";
+				mes "Os duelos estão desativados no momento.";
+				close;
+				
+					} 
+					if(BaseLevel < $nvl){
+					mes "[^FF0000Duelo de Facções^000000]";
+					mes "Seu level é muito baixo, você precisa ter level "+$nvl+" para participar.";
+					close;	
+					
+						}		
+						if(trueM == 1){
+						if($@lotm == 1){
+						mes "[^FF0000Duelo de Facções^000000]";
+						mes "Só é permitido um membro de cada facção no duelo.";
+						close;
+						
+					}
+					mes "[^FF0000Duelo de Facções^000000]";
+					mes "Olá gostaria de participa de um duelo de facçoes?";
+					next;
+					
+					if(select("Sim:Não") == 2)close;	
+					if($@exit == 1){
+					warp "quiz_02",45,381; $@lotm = 1; @char_check$ = "faccaom"; $@facm$ = "Verdadeiro"; 
+					announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomem$+" acaba de entrar no duelo.",bc_all,0xFFDEAD;
+					if($buff_off == 1) sc_end -1;
+					}else{
+					warp "quiz_02",45,381; $@lotm = 1; $@check = $@check + 1; @char_check$ = "faccaom"; $@facm$ = "Verdadeiro"; 
+					announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomem$+" acaba de entrar no duelo.",bc_all,0xFFDEAD;
+					if($buff_off == 1) sc_end -1;
+					if($@lotl == 1 && $@lotm == 1 && $@lotn == 1){
+					sleep2 10000;
+					announce "[Duelo Das Facções]: Os membros das facções tem 5 minutos para começar o duelo.",bc_all,0xFFDEAD;
+					sleep2 60000;
+					if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 4 minutos para começar o duelo.",bc_all,0xFFDEAD;
+					sleep2 60000;
+					if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 3 minutos para começar o duelo.",bc_all,0xFFDEAD;
+					sleep2 60000;
+					if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 2 minutos para começar o duelo.",bc_all,0xFFDEAD;
+					sleep2 60000;
+					if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 1 minutos para começar o duelo.",bc_all,0xFFDEAD;
+					sleep2 60000;
+					if($@check == 3) announce "[Duelo Das Facções]: O duelo não foi iniciado pelos membros das facções. O duelo foi cancelado!",bc_all,0xFFDEAD;
+					mapwarp "quiz_02","prontera",150,150; $@check = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0; $@prontam = 0; $@prontan = 0; $@prontal = 0;
+					$@confirm$ = ""; $@confirn$ = ""; $@confirl$ = ""; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; @exit = 0; end;
+					}
+					}
+				}	
+				if(trueN == 1){
+				if($@lotn == 1){
+				mes "[^FF0000Duelo de Facções^000000]";
+				mes "Só é permitido um membro de cada facção no duelo.";
+				close;
+				
+			}
+			mes "[^FF0000Duelo de Facções^000000]";
+			mes "Olá gostaria de participa de um duelo de facçoes?";
+			next;
+			
+			if(select("Sim:Não") == 2) close;	
+			if($@exit == 1){			
+			warp "quiz_02",30,380; $@lotn = 1; @char_check$ = "faccaon"; $@facn$ = "Verdadeiro"; 
+			announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomen$+" acaba de entrar no duelo.",bc_all,0xFFDEAD;
+			if($buff_off == 1) sc_end -1; 
+			}else{
+			warp "quiz_02",30,380; $@lotn = 1; $@check = $@check + 1; @char_check$ = "faccaon"; $@facn$ = "Verdadeiro"; 
+			announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomen$+" acaba de entrar no duelo.",bc_all,0xFFDEAD;
+			if($buff_off == 1) sc_end -1;  
+			if($@lotl == 1 && $@lotm == 1 && $@lotn == 1){
+			sleep2 10000;
+			announce "[Duelo Das Facções]: Os membros das facções tem 5 minutos para começar o duelo.",bc_all,0xFFDEAD;
+			sleep2 60000;
+			if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 4 minutos para começar o duelo.",bc_all,0xFFDEAD;
+			sleep2 60000;
+			if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 3 minutos para começar o duelo.",bc_all,0xFFDEAD;
+			sleep2 60000;
+			if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 2 minutos para começar o duelo.",bc_all,0xFFDEAD;
+			sleep2 60000;
+			if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 1 minutos para começar o duelo.",bc_all,0xFFDEAD;
+			sleep2 60000;
+			if($@check == 3) announce "[Duelo Das Facções]: O duelo não foi iniciado pelos membros das facções. O duelo foi cancelado!",bc_all,0xFFDEAD;
+			mapwarp "quiz_02","prontera",150,150; $@check = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0; $@prontam = 0; $@prontan = 0; $@prontal = 0; 
+			$@confirm$ = ""; $@confirn$ = ""; $@confirl$ = ""; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; @exit = 0; end;
+			if($buff_off == 1) sc_end -1; 		
+			}
+			}
+		
+		}
+		if(trueL == 1){
+		if($@lotl == 1){
+		mes "[^FF0000Duelo de Facções^000000]";
+		mes "Só é permitido um membro de cada facção no duelo.";
+		close;
+		
+	}
+	mes "[^FF0000Duelo de Facções^000000]";
+	mes "Olá gostaria de participa de um duelo de facçoes?";
+	next;
+	
+	if(select("Sim:Não") == 2) close;	
+	if($@exit == 1){
+	warp "quiz_02",58,381; $@lotl = 1; @char_check$ = "faccaol"; $@facl$ = "Verdadeiro"; 
+	announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomel$+" acaba de entrar no duelo.",bc_all,0xFFDEAD;
+	if($buff_off == 1) sc_end -1;
+	}else{
+	warp "quiz_02",58,381; $@lotl = 1; $@check = $@check + 1; @char_check$ = "faccaol"; $@facl$ = "Verdadeiro"; 
+	announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomel$+" acaba de entrar no duelo.",bc_all,0xFFDEAD;
+	if($buff_off == 1) sc_end -1;
+	if($@lotl == 1 && $@lotm == 1 && $@lotn == 1){
+	sleep2 10000;
+	announce "[Duelo Das Facções]: Os membros das facções tem 5 minutos para começar o duelo.",bc_all,0xFFDEAD;
+	sleep2 60000;
+	if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 4 minutos para começar o duelo.",bc_all,0xFFDEAD;
+	sleep2 60000;
+	if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 3 minutos para começar o duelo.",bc_all,0xFFDEAD;
+	sleep2 60000;
+	if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 2 minutos para começar o duelo.",bc_all,0xFFDEAD;
+	sleep2 60000;
+	if($@check == 3) announce "[Duelo Das Facções]: Os membros das facções tem 1 minutos para começar o duelo.",bc_all,0xFFDEAD;
+	sleep2 60000;
+	if($@check == 3) announce "[Duelo Das Facções]: O duelo não foi iniciado pelos membros das facções. O duelo foi cancelado!",bc_all,0xFFDEAD;
+	mapwarp "quiz_02","prontera",150,150; $@check = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0; $@prontam = 0; $@prontan = 0; $@prontal = 0;
+	$@confirm$ = ""; $@confirn$ = ""; $@confirl$ = "";	enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; @exit = 0; end;
+	}
+	}
+}	
+}
+
+
+//|============================================================================================================================|
+//|				                      XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|============================================Sistema de cadastro para o duelo================================================|
+
+quiz_02,45,383,5	script	Morte	415,{
+
+	if($@prontam == 1){
+	end;
+	}else if( @char_check$ != "faccaom"){ end;}
+	
+		$@prontam = 1; $@confirm$ = ""+strcharinfo(0)+"";
+		if($@prontam == 1 && $@prontan == 1 && $@prontal == 1){ 
+		mapannounce "quiz_02","[Duelo Das Facções]: Todos estão pronto! O duelo irar começa em 10 segundos.",bc_map,0xFFDEAD;
+		disablenpc "Saida#FCS4"; disablenpc "Saida#FCS2"; disablenpc "Saida#FCS3";
+		sleep2 10000; 
+		$@check = 0; $@confirm$ = ""; $@confirn$ = ""; $@confirl$ = "";
+		mapwarp "quiz_02","job_knt",42,145;
+		sleep2 10000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 5 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 4 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 3 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 2 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 1 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		if($@check == 3) mapannounce "job_knt", "[Duelo Das Facções]: O membros das facções não derrotaram as facções inimigas!",bc_all,0xFFDEAD;
+		mapwarp "job_knt","prontera",150,150; $@check = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0; $@prontam = 0; $@prontan = 0; $@prontal = 0;
+		@exit = 0; $@confirm$ = ""; $@confirn$ = ""; $@confirl$ = ""; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; end;
+			
+			}
+			if($@facm$ == "Verdadeiro"){
+			announce "[Duelo Das Facções]: "+$nomem$+" está pronta para o duelo.",bc_all,0xFFDEAD;
+			sleep 5000; 
+			if($@prontan == 0 && $@prontal == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomen$+" e "+$nomel$+".",bc_all,0xFFDEAD;
+			} else if($@prontan == 0){ 
+			announce "[Duelo Das Facções]: Falta a facção "+$nomen$+".",bc_all,0xFFDEAD;
+			} else if($@prontal == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomel$+".",bc_all,0xFFDEAD;
+			}
+		}
+end;
+OnInit:
+waitingroom "",0;
+OnTimer2000:
+setarray .@rand$,"[CONFIRMAR]",""+$@confirm$+"";
+.@msg = rand(getarraysize(.@rand$));
+delwaitingroom;
+if($@confirm$ == ""){ waitingroom .@rand$[.@msg],0; }else{ waitingroom ""+$@confirm$+"",0;}
+initnpctimer;
+}
+quiz_02,31,383,5	script	Noite	415,{
+
+	if($@prontan == 1){
+	end;
+	}else if( @char_check$ != "faccaon"){ end;}
+	
+		$@prontan = 1; $@confirn$ = ""+strcharinfo(0)+"";
+		if($@prontan == 1 && $@prontam == 1 && $@prontal == 1){
+		mapannounce "quiz_02","[Duelo Das Facções]: Todos estão pronto! O duelo irar começa em 10 segundos.",bc_map,0xFFDEAD;
+		disablenpc "Saida#FCS4"; disablenpc "Saida#FCS2"; disablenpc "Saida#FCS3";
+		sleep2 10000;  
+		$@check = 0;$@confirm$ = ""; $@confirn$ = ""; $@confirl$ = "";
+		mapwarp "quiz_02","job_knt",42,145; 
+		sleep2 10000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 5 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 4 para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 3 para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 2 para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 1 para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: O membros das facções não derrotaram as facções inimigas!",bc_all,0xFFDEAD;
+		mapwarp "job_knt","prontera",150,150; $@check = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0; $@prontam = 0; $@prontan = 0; $@prontal = 0;
+		@exit = 0; $@confirm$ = ""; $@confirn$ = ""; $@confirl$ = ""; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; end;
+		
+			}
+			if($@facn$ == "Verdadeiro"){
+			announce "[Duelo Das Facções]: "+$nomen$+" está pronta para o duelo.",bc_all,0xFFDEAD;
+			sleep2 5000; 
+			if($@prontam == 0 && $@prontal == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomem$+" e "+$nomel$+".",bc_all,0xFFDEAD;
+			}else if($@prontam == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomem$+".",bc_all,0xFFDEAD;
+			}else if($@prontal == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomel$+".",bc_all,0xFFDEAD;
+			}
+		}
+end;
+OnInit:
+waitingroom "",0;
+OnTimer2000:
+setarray .@rand$,"[CONFIRMAR]",""+$@confirn$+"";
+.@msg = rand(getarraysize(.@rand$));
+delwaitingroom;
+if($@confirn$ == ""){ waitingroom .@rand$[.@msg],0; }else{ waitingroom ""+$@confirn$+"",0;}
+initnpctimer;
+}
+quiz_02,59,383,5	script	Luz	415,{
+
+	if($@prontal == 1){
+	end;
+	}else if( @char_check$ != "faccaol"){ end;}
+			
+		$@prontal = 1; $@confirl$ = ""+strcharinfo(0)+"";
+		if($@prontan == 1 && $@prontam == 1 && $@prontal == 1){	
+		mapannounce "quiz_02","[Duelo Das Facções]: Todos estão pronto! O duelo irar começa em 10 segundos.",bc_map,0xFFDEAD;
+		disablenpc "Saida#FCS4"; disablenpc "Saida#FCS2"; disablenpc "Saida#FCS3";
+		sleep2 10000; 
+		$@check = 0;
+		mapwarp "quiz_02","job_knt",42,145; 
+		sleep2 10000; 
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 5 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 4 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 3 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 2 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: Os membros das facções tem 1 minutos para derrotar as facções inimigas.",bc_map,0xFFDEAD;
+		sleep2 60000;
+		mapannounce "job_knt","[Duelo Das Facções]: O membros das facções não derrotaram as facções inimigas!",bc_all,0xFFDEAD;
+		mapwarp "job_knt","prontera",150,150; $@check = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0; $@prontam = 0; $@prontan = 0; $@prontal = 0;
+		@exit = 0; $@confirm$ = ""; $@confirn$ = ""; $@confirl$ = ""; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; end;
+	
+			}
+			if($@facl$ == "Verdadeiro"){
+			announce "[Duelo Das Facções]: "+$nomel$+" está pronta para o duelo.",bc_all,0xFFDEAD; 
+			sleep2 5000; 
+			if($@prontam == 0 && $@prontan == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomen$+" e "+$nomem$+".",bc_all,0xFFDEAD;
+			}else if($@prontam == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomem$+".",bc_all,0xFFDEAD;
+			}else if($@prontan == 0){
+			announce "[Duelo Das Facções]: Falta a facção "+$nomen$+".",bc_all,0xFFDEAD;
+			}
+		}
+end;
+OnInit:
+waitingroom "",0;
+OnTimer2000:
+setarray .@rand$,"[CONFIRMAR]",""+$@confirl$+"";
+.@msg = rand(getarraysize(.@rand$));
+delwaitingroom;
+if($@confirl$ == ""){ waitingroom .@rand$[.@msg],0; }else{ waitingroom ""+$@confirl$+"",0;}
+initnpctimer;
+}
+//|============================================================================================================================|
+//|										 XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|=================================================**Controle de Mortes**=====================================================|
+
+-	script	ControLeDie	-1,{
+
+OnPCDieEvent:
+
+	if(trueM == 1){
+	getmapxy @map$,@x,@y,0;
+	if(@map$ == "job_knt"){
+	mapannounce "job_knt","[Duelo Das Facções]: A facção "+$nomem$+" foi destruida.",bc_map,0xFFDEAD;
+	query_sql "UPDATE `faccaom` set `death_m` = `death_m` +1 WHERE `char_id`='"+getcharid (0)+"'";
+	$@m_perdeu = 1; warp "prontera", 150,150; end;	
+	}
+		}
+		if(trueN == 1){
+		getmapxy @map$,@x,@y,0;	
+		if(@map$ == "job_knt"){
+		mapannounce "job_knt","[Duelo Das Facções]: A facção "+$nomen$+" foi destruida.",bc_map,0xFFDEAD;
+		query_sql "UPDATE `faccaon` set `death_n` = `death_n` +1 WHERE `char_id`='"+getcharid (0)+"'";
+		$@n_perdeu = 1; warp "prontera", 150,150; end;
+		}
+			}
+			if(trueL == 1){
+			getmapxy @map$,@x,@y,0;
+			if(@map$ == "job_knt"){
+			mapannounce "job_knt","[Duelo Das Facções]: A facção "+$nomel$+" foi destruida.",bc_map,0xFFDEAD;
+			query_sql "UPDATE `faccaol` set `death_l` = `death_l` +1 WHERE `char_id`='"+getcharid (0)+"'";
+			$@l_perdeu = 1; warp "prontera", 150,150; end;
+			}
+	   }
+}
+
+//|============================================================================================================================|
+//|									XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|=================================================**Controle de Kills**======================================================|
+
+-	script	ControLeKill	-1,{
+									                                     
+OnPCKillEvent:
+
+	if(trueM == 1){
+	getmapxy @map$,@x,@y,0;
+	if(@map$ == "job_knt"){	
+	query_sql "UPDATE `faccaom` set `kills_m` = `kills_m` +1 WHERE `char_id`='"+getcharid (0)+"'";
+	query_sql "SELECT kills_m FROM faccaom WHERE `char_id` ='"+getcharid (0)+"'",@kill;
+	if(@kill == $fama_noob   ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_10$+"'";
+	if(@kill == $fama_normal ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_9$+"'";
+	if(@kill == $fama_boa    ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_8$+"'";
+	if(@kill == $fama_otima  ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_7$+"'";
+	if(@kill == $fama_mestre ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_6$+"'";
+	if(@kill == $fama_rei    ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_5$+"'";
+	if(@kill == $fama_deus1  ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_4$+"'";
+	if(@kill == $fama_deus2  ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_3$+"'";
+	if(@kill == $fama_deus3  ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_2$+"'";
+	if(@kill == $fama_deus4  ) query_sql "UPDATE `faccaom` set `fama_m`='"+$fama_1$+"'";
+				
+		if($@n_perdeu ==  1 && $@l_perdeu == 1){
+		query_sql "UPDATE `faccaom` set `pontos_gdf_m` = `pontos_gdf_m` +1 WHERE `char_id`='"+getcharid (0)+"'";
+		query_sql "UPDATE `faccaom` set `nivel_m` = `nivel_m` +1 WHERE `char_id`='"+getcharid (0)+"'";
+		query_sql "UPDATE `contagem_faccao` set `nivel_m`= +1";
+		query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_m`= +1";
+		query_sql "UPDATE `faccaom` set `bau_points` = `bau_points` +1 WHERE `char_id`='"+getcharid (0)+"'";
+		$@m_perdeu = 0; $n_perdeu = 0; $@l_perdeu = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0;
+		sleep 8000;
+		announce "[Duelo Das Facções]: A facção vencendora foi a "+$nomem$+".",bc_all,0xFFDEAD; 
+		mapwarp "job_knt","prontera",155,178; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; end;	
+		}
+			}
+			}
+			if(trueN == 1){
+			getmapxy @map$,@x,@y,0;
+			if(@map$ == "job_knt"){
+			query_sql "UPDATE `faccaon` set `kills_n` = `kills_n` +1 WHERE `char_id`='"+getcharid (0)+"'";
+			query_sql "SELECT kills_n FROM faccaon WHERE `char_id` ='"+getcharid (0)+"'",@kill; 
+			if(@kill == $fama_noob   ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_10$+"'";
+			if(@kill == $fama_normal ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_9$+"'";
+			if(@kill == $fama_boa    ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_8$+"'";
+			if(@kill == $fama_otima  ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_7$+"'";
+			if(@kill == $fama_mestre ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_6$+"'";
+			if(@kill == $fama_rei    ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_5$+"'";
+			if(@kill == $fama_deus1  ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_4$+"'";
+			if(@kill == $fama_deus2  ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_3$+"'";
+			if(@kill == $fama_deus3  ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_2$+"'";
+			if(@kill == $fama_deus4  ) query_sql "UPDATE `faccaon` set `fama_n`='"+$fama_1$+"'";
+
+				if($@m_perdeu ==  1 && $@l_perdeu == 1){
+				query_sql "UPDATE `faccaon` set `pontos_gdf_n` = `pontos_gdf_n` +1 WHERE `char_id`='"+getcharid (0)+"'";
+				query_sql "UPDATE `faccaon` set `nivel_n` = `nivel_n` +1 WHERE `char_id`='"+getcharid (0)+"'";
+				query_sql "UPDATE `contagem_faccao` set `nivel_n`= +1";
+				query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_n`= +1";
+				query_sql "UPDATE `faccaon` set `bau_points` = `bau_points` +1 WHERE `char_id`='"+getcharid (0)+"'";
+				$@m_perdeu = 0; $n_perdeu = 0; $@l_perdeu = 0; $@lotm = 0; $@lotn = 0; $@lotl = 0;			
+				sleep 8000;
+				announce "[Duelo Das Facções]: A facção vencendora foi a "+$nomen$+".",bc_all,0xFFDEAD; 
+				mapwarp "job_knt","prontera",155,178; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; end;
+				}
+					}
+					}
+					if(trueL == 1){
+					getmapxy @map$,@x,@y,0;
+					if(@map$ == "job_knt"){
+					query_sql "UPDATE `faccaol` set `kills_l` = `kills_l` +1 WHERE `char_id`='"+getcharid (0)+"'";
+					query_sql "SELECT kills_l FROM faccaol WHERE `char_id` ='"+getcharid (0)+"'",@kill;
+					if(@kill == $fama_noob   ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_10$+"'";
+					if(@kill == $fama_normal ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_9$+"'";
+					if(@kill == $fama_boa    ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_8$+"'";
+					if(@kill == $fama_otima  ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_7$+"'";
+					if(@kill == $fama_mestre ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_6$+"'";
+					if(@kill == $fama_rei    ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_5$+"'";
+					if(@kill == $fama_deus1  ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_4$+"'";
+					if(@kill == $fama_deus2  ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_3$+"'";
+					if(@kill == $fama_deus3  ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_2$+"'";
+					if(@kill == $fama_deus4  ) query_sql "UPDATE `faccaol` set `fama_l`='"+$fama_1$+"'";
+
+						if($@n_perdeu ==  1 && $@m_perdeu == 1){
+						query_sql "UPDATE `faccaol` set `pontos_gdf_l` = `pontos_gdf_l` +1 WHERE `char_id`='"+getcharid (0)+"'";
+						query_sql "UPDATE `faccaol` set `nivel_l` = `nivel_l` +1 WHERE `char_id`='"+getcharid (0)+"'";
+						query_sql "UPDATE `contagem_faccao` set `nivel_l`= +1";
+						query_sql "UPDATE `contagem_faccao` set `vitoria_gdf_l`= +1";
+						query_sql "UPDATE `faccaol` set `bau_points` = `bau_points` +1 WHERE `char_id`='"+getcharid (0)+"'";
+						$@m_perdeu = 0; $n_perdeu = 0; $@l_perdeu = 0; bau_point = bau_point + 1; $@lotm = 0; $@lotn = 0; $@lotl = 0;
+						sleep 8000;
+						announce "[Duelo Das Facções]: A facção vencendora foi a "+$nomel$+".",bc_all,0xFFDEAD;  
+						mapwarp "job_knt","prontera",155,178; enablenpc "Saida#FCS4"; enablenpc "Saida#FCS2"; enablenpc "Saida#FCS3"; end;
+						
+						}
+				}
+		}
+}
+//|============================================================================================================================|
+//|				                      XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|=================================================**Controle de Status**=====================================================|
+
+-	script	ControleStatus	-1,{
+
+OnPCLoginEvent:
+
+	if(trueM == 1){	
+	query_sql "UPDATE `faccaom` set `status_m`='^00FF00Online^000000' WHERE `char_id`='"+getcharid (0)+"'"; end;
+		
+		}
+		if(trueN == 1){
+		query_sql "UPDATE `faccaon` set `status_n`='^00FF00Online^000000' WHERE `char_id`='"+getcharid (0)+"'"; end;
+		
+			}
+			if ( trueL == 1 ) {
+			query_sql "UPDATE `faccaol` set `status_l`='^00FF00Online^000000' WHERE `char_id`='"+getcharid (0)+"'"; end;
+			
+}
+OnPCLogoutEvent:
+
+	if(trueM == 1){	
+	query_sql "UPDATE `faccaom` set `status_m`='^FF0000Offline^000000' WHERE `char_id`='"+getcharid (0)+"'"; end;
+	
+		}
+		if(trueN == 1){
+		query_sql "UPDATE `faccaon` set `status_n`='^FF0000Offline^000000' WHERE `char_id`='"+getcharid (0)+"'"; end;	
+		
+			}
+			if(trueL == 1){
+			query_sql "UPDATE `faccaol` set `status_l`='^FF0000Offline^000000' WHERE `char_id`='"+getcharid (0)+"'"; end;
+			
+    }	
+}
+//|============================================================================================================================|
+//|										XXX Atenção: Não mecha se não sabee oque está fazendo XXX				       
+//|															       
+//|===================================================**Sistema de ranking**======================================================|
+
+moc_para01,22,95,5,	script	Ranking das Facções	417,{
+
+	mes "[^FF0000Ranking das Facções^000000]";
+	mes "Quais Rankings você deseja ver?";
+	if(select("-> ^000080Ranking de facções^000000:-> ^000080Ranking de Membro das facções^000000" ) == 1){next;
+
+		mes "[^FF0000Ranking das Facções^000000]";
+		mes "Escolha um Ranking.";
+		switch ( select ( "-> ^000080Ranking riqueza^000000:-> ^000080Ranking duelos^000000:-> ^000080Ranking quantidade de membros^000000") ) { next;
+				
+			case 1:
+				query_sql "SELECT total_z_m, total_z_n, total_z_l FROM contagem_faccao",@rzm$,@rzn$,@rzl$;
+				mes "[^FF0000Ranking Riqueza^000000]";
+				mes "";                  
+				mes "^990000"+$nomem$+"^000000: "+@rzm$;
+				mes "^0000FF"+$nomen$+"^000000: "+@rzn$; 
+				mes "^33CC99"+$nomel$+"^000000: "+@rzl$;  
+				close;
+				
+			case 2:
+				query_sql "SELECT vitoria_gdf_m, vitoria_gdf_n, vitoria_gdf_l FROM contagem_faccao",@duem,@duen,@duel; 
+				mes "[^FF0000Ranking duelos^000000]";
+				mes "";                  
+				mes "^990000"+$nomem$+"^000000: "+@duem;
+				mes "^0000FF"+$nomen$+"^000000: "+@duen; 
+				mes "^33CC99"+$nomel$+"^000000: "+@duel;
+				close;
+				
+			case 3:
+				query_sql "SELECT faccao_anjos_da_morte, faccao_anjos_da_noite, faccao_anjos_da_luz FROM contagem_faccao",@mem,@men,@mel;     
+				mes "[^FF0000Ranking quantidade de membros^000000]";
+				mes "";             
+				mes "^990000"+$nomem$+"^000000: "+@mem;
+				mes "^0000FF"+$nomen$+"^000000: "+@men; 
+				mes "^33CC99"+$nomel$+"^000000: "+@mel;
+				close;
+						}
+		}
+		mes "[^FF0000Ranking de Membro das facções^000000]";
+		mes "Escolha um Ranking.";
+		next;
+		switch(select("-> ^000080Ranking Matador^000000:-> ^000080Ranking doador de zeny^000000:-> ^000080Ranking de duelos^000000:-> ^000080Ranking de nivel^000000")){ next;
+
+			case 1:
+				mes "[^FF0000Ranking de Membro das facções^000000]";
+				mes "Selecione a facção.";
+				switch(select("-> ^99000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000")){ next;
+							
+					case 1:	
+						query_sql "SELECT anjos_da_morte, Kills_m, death_m FROM faccaom ORDER BY kills_m DESC LIMIT 1000",@matado_m$,@kill_m,@death_m;
+						mes "[^FF0000Ranking Matador^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Matou^000000 - ^FFD700Morreu^000000";
+						for(.@A = 0; .@A < getarraysize($lmt_matador); .@A++) 
+						mes(.@A+1)+"º - "+@matado_m$[.@A]+" - "+@kill_m[.@A]+" - "+@death_m[.@A];
+						close;
+						
+					case 2:
+						query_sql "SELECT anjos_da_noite, Kills_n, death_n FROM faccaon ORDER BY kills_n DESC LIMIT 1000",@matado_n$,@kill_n,@death_n;
+						mes "[^FF0000Ranking Matador^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Matou^000000 - ^FFD700Morreu^000000";
+						for(.@A = 0; .@A < getarraysize($lmt_matador); .@A++)   
+						mes(.@A+1)+"º - "+@matado_n$[.@A]+" - "+@kill_n[.@A]+" - "+@death_n[.@A];
+						close;
+					
+					case 3:	
+						query_sql "SELECT anjos_da_luz, Kills_l, death_l FROM faccaol ORDER BY kills_l DESC LIMIT 1000",@matado_l$,@kill_l,@death_l;
+						mes "[^FF0000Ranking Matador^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Matou^000000 - ^FFD700Morreu^000000";
+						for(.@A = 0; .@A < getarraysize($lmt_matador); .@A++) 
+						mes(.@A+1)+"º - "+@matado_l$[.@A]+" - "+@kill_l[.@A]+" - "+@death_l[.@A];
+						close;
+				
+			}
+			case 2:
+				mes "[^FF0000Ranking doador de zeny^000000]";
+				mes "Selecione a facção.";
+				switch(select("-> ^99000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000")){ next;
+
+					case 1:	
+						query_sql "SELECT anjos_da_morte, zenny_m FROM faccaom ORDER BY zenny_m DESC LIMIT 1000",@nome_m$,@zenny_m;
+						mes "[^FF0000Ranking doador de zeny^000000]";
+						mes "^FF8C00Posição^000000  - ^008B00Nome^000000 - ^4682B4Zenny Doado^000000";
+						for(.@A = 0; .@A < getarraysize($limit_doador); .@A++) 
+						mes(.@A+1)+"º - "+@nome_m$[.@A]+" - "+@zenny_m[.@A]+"";
+						close;
+						
+					case 2:					
+						query_sql "SELECT anjos_da_noite, zenny_n FROM faccaon ORDER BY zenny_n DESC LIMIT 1000",@nome_n$,@zenny_n;
+						mes "[^FF0000Ranking doador de zeny^000000]";
+						mes "^FF8C00Posição^000000  - ^008B00Nome^000000 -  ^4682B4Zenny Doado^000000";
+						for(.@A = 0; .@A < getarraysize($limit_doador); .@A++) 
+						mes(.@A+1)+"º - "+@nome_n$[.@A]+" - "+@zenny_n[.@A]+"";
+						close;	
+						
+					case 3:	
+						query_sql "SELECT anjos_da_luz, zenny_l FROM faccaol ORDER BY zenny_l DESC LIMIT 10",@nome_l$,@zenny_l;
+						mes "[^FF0000Ranking doador de zeny^000000]";
+						mes "^FF8C00Posição^000000  - ^008B00Nome^000000 - ^4682B4Zenny Doado^000000";
+						for(.@A = 0; .@A < getarraysize($limit_doador); .@A++) 
+						mes (.@A+1)+"º - "+@nome_l$[.@A]+" - "+@zenny_l[.@A]+"";
+						close;		
+			}
+			case 3:	
+				mes "[^FF0000Ranking de duelos^000000]";
+				mes "Selecione a facção.";
+				switch(select("-> ^99000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000")){ next;
+						
+					case 1:	
+						query_sql "SELECT anjos_da_morte, pontos_gdf_m FROM faccaom ORDER BY pontos_gdf_m DESC LIMIT 1000",@nomed_m$,@duelo_m;
+						mes "[^FF0000Ranking Pontos de duelo^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Pontos de duelo^000000";
+						for(.@A = 0; .@A < getarraysize($limit_duelos); .@A++) 
+						mes(.@A+1)+"º - "+@nomed_m$[.@A]+" - "+@duelo_m[.@A]+"";
+						close;	
+						
+					case 2:	
+						query_sql "SELECT anjos_da_noite, pontos_gdf_n FROM faccaon ORDER BY pontos_gdf_n DESC LIMIT 1000",@nomed_n$,@duelo_n;
+						mes "[^FF0000Ranking Pontos de duelo^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Pontos de duelo^000000";
+						for(.@A = 0; .@A < getarraysize($limit_duelos); .@A++)
+						mes (.@A+1)+"º - "+@nomed_n$[.@A]+" - "+@duelo_n[.@A]+"";
+						close;
+						
+					case 3:	
+						query_sql "SELECT anjos_da_luz, pontos_gdf_l FROM faccaol ORDER BY pontos_gdf_l DESC LIMIT 1000",@nomed_l$,@duelo_l;
+						mes "[^FF0000Ranking Pontos de duelo^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Pontos de duelo^000000";
+						for(.@A = 0; .@A < getarraysize($limit_duelos); .@A++)
+						mes (.@A+1)+"º - "+@nomed_l$[.@A]+" - "+@duelo_l[.@A]+"";
+						close;	
+			}
+			case 4:
+				mes "[^FF0000Ranking de nivel^000000]";
+				mes "Selecione a facção.";
+				switch(select("-> ^99000"+$nomem$+"^000000:-> ^0000FF"+$nomen$+"^000000:-> ^33CC99"+$nomel$+"^000000")){ next;
+					
+					case 1:	
+						query_sql "SELECT anjos_da_morte, nivel_m FROM faccaom ORDER BY nivel_m DESC LIMIT 1000",@nomen_m$,@nivel_m;
+						mes "[^FF0000Ranking de nivel^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Nivel^000000";
+						for(.@A = 0; .@A < getarraysize($limit_nivel); .@A++)
+						mes(.@A+1)+"º - "+@nomen_m$[.@A]+" - "+@nivel_m[.@A]+"";
+						close;	
+						
+					case 2:	
+						query_sql "SELECT anjos_da_noite, nivel_n FROM faccaon ORDER BY nivel_n DESC LIMIT 1000",@nomen_n$,@nivel_n;
+						mes "[^FF0000Ranking de nivel^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Nivel^000000";
+						for(.@A = 0; .@A < getarraysize($limit_nivel); .@A++)
+						mes(.@A+1)+"º - "+@nomen_n$[.@A]+" - "+@niveln[.@A]+"";
+						close;
+					
+					case 3:	
+						query_sql "SELECT anjos_da_luz, nivel_l FROM faccaol ORDER BY nivel_l DESC LIMIT 1000",@nomen_l$,@nivel_l;
+						mes "[^FF0000Ranking de nivel^000000]";
+						mes "^FF8C00Posição^000000 - ^008B00Nome^000000 - ^4682B4Nivel^000000";
+						for(.@A = 0; .@A < getarraysize($limit_nivel); .@A++)
+						mes(.@A+1)+"º - "+@nomen_l$[.@A]+" - "+@nivel_l[.@A]+"";
+						close;	
+		}
+	}
+}
+//|============================================================================================================================|
+//|									XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|======================================================**NPC Saída**=========================================================|
+
+-	script	Saida#FCS::DPS	413,{
+
+	if(trueM == 1){
+	mes "[^FF0000Saida^000000]";
+	mes "Deseja sair ?";
+	next;
+	if(select("Sim:Não") == 2) close;
+	mes "[^FF0000Saida^000000]";
+	mes "Até a próxima.";
+	close2;
+	announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomem$+" deixou o duelo. Uma vaga foi aberta.",bc_all,0xFFDEAD;
+	warp "prontera", 152,152; 
+	$@lotm = 0; $@prontam = 0; $@confirm$ = ""; $@exit = 1; 
+	end;
+
+		}
+		if(trueN == 1){
+		mes "[^FF0000Saida^000000]";
+		mes "Deseja sair ?";
+		next;
+		if(select("Sim:Não") == 2) close;
+		mes "[^FF0000Saida^000000]";
+		mes "Até a próxima.";
+		close2;
+		announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomen$+" deixou o duelo. Uma vaga foi aberta.",bc_all,0xFFDEAD;
+		warp "prontera", 152,152;
+		$@lotn = 0; $@prontan = 0; $@confirn$ = ""; $@exit = 1; 
+		end; 
+
+			}
+			if(trueL == 1){
+			mes "[^FF0000Saida^000000]";
+			mes "Deseja sair ?";
+			next;
+			if(select ("Sim:Não") == 2) close;
+			mes "[^FF0000Saida^000000]";
+			mes "Até a próxima.";
+			close2;
+			announce "[Duelo Das Facções]: "+strcharinfo(0)+" da facção "+$nomel$+" deixou o duelo. Uma vaga foi aberta.",bc_all,0xFFDEAD;
+			warp "prontera", 152,152;
+			$@lotl = 0; $@prontal = 0; $@confirl$ = ""; $@exit = 1;  
+			end;
+				
+	}
+}	
+quiz_02,39,385,5	duplicate(DPS)	Saida#FCS2	413
+quiz_02,54,385,5	duplicate(DPS)	Saida#FCS3	413
+quiz_02,25,385,5	duplicate(DPS)	Saida#FCS4	413
+
+//|============================================================================================================================|
+//|									XXX Atenção: Não mecha se não sabe o que está fazendo XXX				       
+//|															       
+//|======================================================**MapaFlags**==========================================================|
+
+job_knt	mapflag	nowarp
+job_knt	mapflag	noteleport
+job_knt	mapflag	nowarpto
+job_knt	mapflag	nobranch
+job_knt	mapflag	nosave	SavePoint
+job_knt	mapflag	nomemo
+job_knt	mapflag	nopenalty
+job_knt	mapflag	noexp
+job_knt	mapflag	pvp
+
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	noteleport
+quiz_02	mapflag	nowarpto
+quiz_02	mapflag	nobranch
+quiz_02	mapflag	nosave	SavePoint
+quiz_02	mapflag	nomemo
+quiz_02	mapflag	nopenalty
+quiz_02	mapflag	noexp
+
+     	

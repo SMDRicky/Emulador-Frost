@@ -1,0 +1,28 @@
+// Copyright (c) RomuloSM
+// Email: romulodevel@gmail.com
+// Facebook: https://www.facebook.com/RomuloDevel
+// Description: Mensagens em Português (Brasil) 
+
+// Restock System
+// ------------------------------------------------------------------
+1786: O Sistema de reabastecimento está desativado.
+1787: Falha ao adicionar o item no reabastecimento.
+1788: Digite o nome ou ID de um item (uso: @restockadditem <nome do item/ID> <quantidade>).
+1789: Informa uma quantidade válida entre 1 à %d.
+1790: Falha ao remover o item do reabastecimento.
+1791: Digite o nome ou ID de um item (uso: @restockremitem <nome do item/ID>).
+1792: Você não tem mais espaço disponível, 
+1793: Tente remover um item que não deseja mais da lista de reabastecimento.
+1794: %s adicionado com sucesso no sistema de reabastecimento.
+1795: %s removido com sucesso no sistema de reabastecimento.
+1796: Lista de Itens Reabastecendo:
+1797: Nenhum item na lista de reabastecimento.
+1798: Total de (%d) itens.
+1799: Você não tem Zeny suficiente para adicionar este item a Lista de Reabastecimento.
+1800: A Central de Reabastecimento não está ativa de momento no servidor.
+
+// Restock System (mensagens complementares)
+// ------------------------------------------------------------------
+1846: Você não pode adicionar este tipo de item no sistema de reabastecimento.
+1847:  Itens Permitidos:
+1848:   Curáveis / Usáveis / Munições / Consumíveis / ETC

@@ -1,0 +1,28 @@
+-	script	Comando Evento	-1,{
+OnInit:
+	unbindatcmd "evento";
+	bindatcmd "evento",strnpcinfo(3)+"::OnEvent",0,100;
+    	set .intervalo,0;	// Tempo de intervalo para usar o comando novamente
+	end;
+	
+OnEvent:
+	menu "Devill Square",devill,"Zumbi vs Aprendiz",zumbi,"Poring Premiado",poring;
+	
+devill:
+next;
+doevent "devillsquare::OnTalk";
+close;
+
+zumbi:
+next;
+doevent "zumbi::OnTalk";
+close;
+
+poring:
+next;
+doevent "poring::OnTalk";
+close;
+
+end;
+
+}

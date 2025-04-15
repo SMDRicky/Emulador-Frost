@@ -1,0 +1,19 @@
+prontera,150,180,4 script TaekwonFreestyle 910,{
+
+    OnInit:
+        waitingroom "Mestre Taekwon",0;
+        end;
+
+    OnTouch:
+        if (BaseClass != Job_Taekwon) {
+            dispbottom "Apenas Taekwons podem receber esse efeito!";
+            end;
+        }
+
+        if (#taekwon_free_style == 1) {
+            set posture_active, 1; // Força a ativação da postura automaticamente
+            specialeffect2 EF_BLESSING;
+            dispbottom "Seu estilo Taekwon Livre está ativo!";
+        }
+        end;
+}

@@ -1,0 +1,18 @@
+function	script	FarmControl	{
+    mes "[Painel de Farm PVM]";
+    mes "Você deseja ativar ou desativar o sistema de farm?";
+    next;
+
+    switch(select("Ativar:Desativar")) {
+        case 1:
+            useatcmd "@boton";
+            mes "Configure o Sistema antes de Ativar!";
+            break;
+        case 2:
+            useatcmd "@botoff";
+            mes "O sistema de farm foi desativado!";
+            break;
+    }
+
+    close;
+}

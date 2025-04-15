@@ -1,0 +1,5 @@
+function	script	caixa_awkinstinct#1	{
+setarray .@items[0], 50078,50079,50080,50081,50082,50083,50084,50085,50086,50087,50088;
+getitem .@items[rand(getarraysize(.@items))], 1;
+end;
+}

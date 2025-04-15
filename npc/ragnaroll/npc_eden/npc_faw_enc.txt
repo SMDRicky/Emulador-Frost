@@ -1,0 +1,130 @@
+firstcity,214,267,4	script	Encantamento Arcanjo	403,{
+	mes "Olá eu sou responsavel por encantar " + getitemname(.faw_itemid);
+	mes " ";
+	if (getequipid(EQI_GARMENT) == .faw_itemid) {
+		.@refine = getequiprefinerycnt(EQI_GARMENT);
+		for (.@i = 0; .@i < 4; .@i++)
+			.@card[.@i] = getequipcardid(EQI_GARMENT, .@i);
+
+		switch (select("Encantar FaW", "Resetar Encantamento")) {
+		case 1:
+			mes "Escolha um slot para encantar.";
+			mes "Você pode encantar mais slots quando tiver um refinamento mais alto.";
+			mes "^777777( Refine min ~ [+6] )^000000";
+
+			if (countitem(25127) < 35) {
+				mes "Você precisa de 35 unidades de " + getitemname(25127) + " para cada encantamento.";
+				close;
+			}
+
+			.@slot = select(
+				(.@card[1] || .@refine < 6) ? "" : "Encantar Slot 1",
+				(.@card[2] || .@refine < 7) ? "" : "Encantar Slot 2",
+				(.@card[3] || .@refine < 9) ? "" : "Encantar Slot 3",
+				"Cancel"
+			);
+			if (.@slot < 4) {
+				mes "Escolha o tipo de encantamento";
+				.@type = select(.enchant_type_menu$) - 1;
+				.@size = .enchant_list_size[.@type];
+				if (.@size) {
+					copyarray(.@enchant_list[0], getd(".enchant_list_" + (.@type + 1) + "[0]"), .@size);
+					if (.@refine >= 9) {
+						.@enchant_list[.@size] = .special_enchant[.@type];
+						.@size++;
+					}
+					delequip(EQI_GARMENT);
+
+					if (rand(100) < .success_rate) {
+						setd(".@card[" + .@slot + "]", .@enchant_list[rand(.@size)]);
+						delitem(25127, 35); // Remove 35 units of the item
+						mes "Feito, sucesso no encantamento do item.";
+						getitem2(.faw_itemid, 1, 1, .@refine, 0, .@card[0], .@card[1], .@card[2], .@card[3]);
+						equip(.faw_itemid);
+					} else {
+						mes "Pena que não consegui encantar o item.";
+					}
+				}
+			}
+			break;
+		case 2:
+			mes "Você precisa " + .enchant_reset_Zeny + " Zenys.";
+			if (Zeny >= .enchant_reset_Zeny) {
+				if (select("Confirme para redefinir todos os encantamentos ??", "Cancelar") == 1) {
+					if (!.@card[1] && !.@card[2] && !.@card[3]) {
+						mes "Seu item não possui nenhum slot encantado.";
+					} else {
+						Zeny -= .enchant_reset_Zeny;
+						delequip(EQI_GARMENT);
+						getitem2(.faw_itemid, 1, 1, .@refine, 0, .@card[0], 0, 0, 0);
+						equip(.faw_itemid);
+						mes "Feito, todos os slots encantados foram removidos.";
+					}
+				}
+			}
+		default:
+			break;
+		}
+
+	} else {
+		mes "Certifique-se de ter equipado " + getitemname(.faw_itemid);
+	}
+	close;
+
+OnInit:
+	// FAW item id
+	.faw_itemid = 2589;
+
+	// enchant success rate
+	.success_rate = 100;
+
+	// enchant reset cost
+	.enchant_reset_Zeny = 5000000;
+
+	// enchant type category
+	setarray .enchant_type$, "Ataque", "Ataque Magico", "Distancia", "Critico", "HP Max", "SP Max", "ASPD", "STR", "AGI", "DEX", "VIT", "INT", "LUK";
+
+	// enchant list ( Fighting Spirit )
+	setarray .enchant_list_1, 4809, 4808, 4820;
+	// enchant list ( Magic )
+	setarray .enchant_list_2, 4812, 4827, 4826;
+	// enchant list ( Archer )
+	setarray .enchant_list_3, 4832, 4833, 4834;
+	// enchant list ( Critical )
+	setarray .enchant_list_4, 4764, 4765;
+	// enchant list ( Max HP )
+	setarray .enchant_list_5, 4861, 4862;
+	// enchant list ( Max SP )
+	setarray .enchant_list_6, 4870, 4871;
+	// enchant list ( ASPD )
+	setarray .enchant_list_7, 4807, 4842;
+	// enchant list ( STR )
+	setarray .enchant_list_8, 4702, 4703, 4705;
+	// enchant list ( AGI )
+	setarray .enchant_list_9, 4732, 4733, 4735;
+	// enchant list ( DEX )
+	setarray .enchant_list_10, 4722, 4723, 4725;
+	// enchant list ( VIT )
+	setarray .enchant_list_11, 4742, 4743, 4745;
+	// enchant list ( INT )
+	setarray .enchant_list_12, 4712, 4713, 4715;
+	// enchant list ( LUK )
+	setarray .enchant_list_13, 4752, 4753, 4755;
+
+	// extra 1 special enchant for 3rd slot if refine above 9 (follow by category sequences)
+	setarray .special_enchant, 4821, 4828, 4835, 4765, 4868, 4801, 4807, 4853, 4854, 4857, 4855, 4856, 4858;
+
+	setunittitle getnpcid(0), "Valquiria Obscura";
+
+	.enchant_type_size = getarraysize(.enchant_type$);
+	for (.@i = 0; .@i < .enchant_type_size; .@i++) {
+		.enchant_list_size[.@i] = getarraysize(getd(".enchant_list_" + (.@i + 1)));
+		if (!.enchant_list_size[.@i]) {
+			.enchant_type$[.@i] = "";
+		} else {
+			.enchant_type_menu$ = .enchant_type_menu$ + .enchant_type$[.@i];
+		}
+		.enchant_type_menu$ = .enchant_type_menu$ + ":";
+	}
+	end;
+}

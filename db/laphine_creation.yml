@@ -1,0 +1,44 @@
+###########################################################################
+# Laphine Creation Database
+###########################################################################
+#
+# Laphine Creation Settings
+#
+###########################################################################
+# - SkillId                    Skill that triggers Laphine Creation.
+#   Requirements:              List of possible requirement items.
+#     - Item                   Item name of the required item
+#       Amount                 Amount of specific required item. (Default: 1)
+#   RewardItem                 Item name of the produced item
+###########################################################################
+
+Header:
+  Type: LAPHINE_CREATE_DB
+  Version: 1
+
+Footer:
+  Imports:
+  - Path: db/forge/laphine_creation_2haxe.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_2hspear.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_2hsword.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_axe.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_bow.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_dagger.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_katar.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_knuckle.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_musical_instrument.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_spear.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_sword.yml
+    Mode: Prerenewal
+  - Path: db/forge/laphine_creation_whip.yml
+    Mode: Prerenewal

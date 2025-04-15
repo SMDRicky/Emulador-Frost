@@ -1,0 +1,5 @@
+prontera,150,150,5	script	invi	-1,{
+mes "oi";
+end;
+
+}

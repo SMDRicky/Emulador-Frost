@@ -1,0 +1,137 @@
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado por Douglas Santos
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Nome do Npc Evento Macaco Premiado
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Versão atual 1.0
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado em 04/01/2016
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Compatível com eAthena eAmod
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+-	script	MacacoPremiado	-1,{
+OnTalk:
+
+
+		mes "^FF1493[ Macaco Premiado ]^000000";
+		mes (gettime(3)>= 6&&gettime(3)<= 12?"Bom-dia":(gettime(3)>=13&&gettime(3)<=18?"Boa-tarde":"Boa-noite"))+", ^008aff"+strcharinfo(0)+"^000000 !";
+		mes "O que posso fazer por você?";
+		next;
+		switch(select("^0084ff[ • ]^000000 Entrar no evento.:^0084ff[ • ]^000000 Informação."))
+		{
+			case 1:
+				mes "^FF1493[ Macaco Premiado ]^000000";
+				mes "Divirta-se!";
+				next;
+				warp "guild_vs1",0,0;
+				end;
+
+			case 2:
+				mes "^FF1493[ Macaco Premiado ]^000000";
+				mes "São invocados 100 Macacos.";
+				mes "Apenas UM é o verdadeiro e você terá de acha-lo.";
+				mes "Caso consiga, ganhará 3x Coin de Evento como prêmio.";
+				mes "Boa Sorte "+strcharinfo(0)+". ";
+				next;
+				mes "^FF1493[ Macaco Premiado ]^000000";
+				mes "Abre as 09:00 e ás 15:00";
+				close;
+OnClock0000:
+OnClock0900:
+OnClock1700:
+
+	set $Macaco_premiado,1;
+
+	announce "O Evento Macaco Premiado começará em 3 minutos. Use o comando @evento para participar.",0;
+	sleep 30000;
+	announce "O Evento Macaco Premiado começará em 2 minutos e 30 segundos.",0;
+	sleep 30000;
+	announce "O Evento Macaco Premiado começará em 2 minutos.",0;
+	sleep 15000;
+	announce "Para participar do evento, use o comando @evento para participar.",0;
+	sleep 3000;
+	announce "O Evento Macaco Premiado começará em breve.",0;
+	sleep 22000;
+	sleep 20000;
+	announce "Evento Macaco Premiado começará em 1 minuto!",0;
+	sleep 1000;
+	announce "Para participar do evento, use o comando @evento para participar.",0;
+	sleep 15000;
+	mapannounce "guild_vs1","O Evento Macaco Premiado começará em 30 segundos.",0;
+	sleep 30000;
+	announce "Os registros foram encerrados.",0;
+	set $Macaco_premiado,0;
+	sleep 3000;
+	mapannounce "guild_vs1","Evento Macaco Premiado começará em ~5~",0;
+	sleep 1000;
+	mapannounce "guild_vs1","Evento Macaco Premiado começará em ~4~",0;
+	sleep 1000;
+	mapannounce "guild_vs1","Evento Macaco Premiado começará em ~3~",0;
+	sleep 1000;
+	mapannounce "guild_vs1","Evento Macaco Premiado começará em ~2~",0;
+	sleep 1000;
+	mapannounce "guild_vs1","Evento Macaco Premiado começará em ~1~",0;
+	sleep 1000;
+	mapannounce "guild_vs1","Macaco Premiado Começou!",0;
+
+			initnpctimer;
+			monster "guild_vs1",0,0,"Macaco",1057,5,strnpcinfo(0)+"::OnMobKilled";
+			monster "guild_vs1",0,0,"Mascaco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Masqueico",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Mocaco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Macoca",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Moucaco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Mascoco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Moscaco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Malcaco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Moucoco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Mouscaco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Mamei",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Macraco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Mocraco",1057,10,strnpcinfo(0)+"::OnWrongKilled";
+			monster "guild_vs1",0,0,"Macacro",1057,1,strnpcinfo(0)+"::OnWrongKilled";
+			end;
+			return;
+
+		OnTimer300000:
+			stopnpctimer;
+			announce "[Evento Macaco]: O tempo acabou, tente na próxima vez.",0;
+			killmonsterall "guild_vs1";
+			end;
+
+		OnMobKilled:
+			stopnpctimer;
+			set @CID,getcharid(0);
+			set @name$,"";
+			query_sql "SELECT `name` FROM `eventos` WHERE `char_id`="+@CID+"",@name$;
+			if ( @name$ == "" ) {
+			query_sql "INSERT INTO `eventos` (`char_id`,`account_id`,`name`,`poring_premiado`) VALUES ("+@CID+",'"+getcharid(3)+"','"+strcharinfo(0)+"',1)",@esc$; 
+			announce "[Macaco Premiado] "+strcharinfo(0)+" encontrou um dos Macacos Premiados.",0;
+			getitem 35015,3;
+			warp "cockpit",100,107;
+			end;
+			}
+			query_sql "UPDATE `eventos` SET `poring_premiado` = `poring_premiado` +1 WHERE `char_id`="+@CID+"",@esc$;
+			announce "[Macaco Premiado] "+strcharinfo(0)+" encontrou um dos Macacos Premiados.",0;
+			dispbottom "Parabéns, você me achou.";
+			getitem 35015,2;
+			warp "cockpit",100,107;
+			end;
+
+		OnWrongKilled:
+			dispbottom "Opaaa, você errou feio não foi dessa vez.";
+			warp "cockpit",100,107;
+			end;
+			
+}
+	}
+cockpit,97,114,5	duplicate(MacacoPremiado)	Macaco Premiado	788
+
+guild_vs1	mapflag	nosave
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	nobranch
+guild_vs1	mapflag	nowarpto
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	noteleport 
+guild_vs1	mapflag	noskill

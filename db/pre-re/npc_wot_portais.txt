@@ -1,0 +1,62 @@
+//WOT PORTAIS CALLEB
+
+-	script	tesouro#0	FAKE_NPC,{
+	end();
+	OnTouch:{
+		if(getstatus(SC_CHASEWALK,0)||getstatus(SC_HIDING,0)||getstatus(SC_CLOAKING,0)){
+			end();
+		}	else	{
+			if(!getcharid(2)){
+				announce("Guerra dos Tesouros: Você deve fazer parte de um Clã para acessar o mapa do Evento.",bc_self,0xFF007F);
+				end();
+			}	else	{
+				set(@r,rand(1,6));
+						if(@r==1){	set(@x,85);		set(@y,102);	}	// Noroeste
+				else	if(@r==2){	set(@x,78);		set(@y,87);		}	// Oeste
+				else	if(@r==3){	set(@x,85);		set(@y,73);		}	// Sudoeste
+				else	if(@r==4){	set(@x,114);	set(@y,102);	}	// Nordeste
+				else	if(@r==5){	set(@x,121);	set(@y,87);		}	// Leste
+				else	if(@r==6){	set(@x,114);	set(@y,73);		}	// Sudeste
+				warp("arena_room",@x,@y);
+			}
+		}
+	}	end();
+}
+
+izlude,127,226,0	duplicate(tesouro#0)	tesouro#1	WARPNPC,1,1
+izlude,128,226,0	duplicate(tesouro#0)	tesouro#2	WARPNPC,1,1
+arena_room,99,88,0	warp	tesouro#3	1,1,izlude,128,220			//	Saída
+
+arena_room,99,25,0	warp	tesouro#4	1,1,prt_are_in,97,23		//	Transição entre o corredor e a sala PRINCIPAL
+prt_are_in,97,30,0	warp	tesouro#5	1,1,arena_room,99,28		//	Transição entre a sala PRINCIPAL e o corredor
+
+prt_are_in,21,75,0	warp	tesouro#6	1,1,prt_are_in,58,13		//	Transição entre a sala de BAIXO e a SALA PRINCIPAL
+prt_are_in,21,127,0	warp	tesouro#7	1,1,prt_are_in,97,10		//	Transição entre a sala do MEIO e a SALA PRINCIPAL
+
+prt_are_in,21,179,0	warp	tesouro#8	1,1,prt_are_in,139,13		//	Transição entre a sala de CIMA e a SALA PRINCIPAL
+prt_are_in,55,13,0	warp	tesouro#9	1,1,prt_are_in,21,78		//	Transição entre a SALA PRINCIPAL e a sala de BAIXO
+
+prt_are_in,97,7,0	warp	tesouro#10	1,1,prt_are_in,21,130		//	Transição entre a SALA PRINCIPAL e a sala do MEIO
+prt_are_in,142,13,0	warp	tesouro#11	1,1,prt_are_in,21,182		//	Transição entre a SALA PRINCIPAL e a sala de CIMA
+
+
+//mapflags
+prt_are_in	mapflag	gvgon
+prt_are_in	mapflag	nowarp
+prt_are_in	mapflag	nowarpto
+prt_are_in	mapflag	nomemo
+prt_are_in	mapflag	noteleport
+prt_are_in	mapflag	novending
+prt_are_in	mapflag	nopenalty
+prt_are_in	mapflag	nobranch
+prt_are_in	mapflag	noloot
+
+arena_room	mapflag	gvgon
+arena_room	mapflag	nowarp
+arena_room	mapflag	nowarpto
+arena_room	mapflag	nomemo
+arena_room	mapflag	noteleport
+arena_room	mapflag	novending
+arena_room	mapflag	nopenalty
+arena_room	mapflag	nobranch
+arena_room	mapflag	noloot

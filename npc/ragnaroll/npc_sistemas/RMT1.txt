@@ -1,0 +1,269 @@
+/*
+// Tabelas Sql do sistema
+alter table `login` add `pix` varchar(255) NOT NULL DEFAULT '0';
+alter table `login` add  `pixconf` int(1) NOT NULL DEFAULT '0';
+alter table `login` add  `nome_completo` varchar(255) NOT NULL DEFAULT '0';
+
+CREATE TABLE IF NOT EXISTS `rmt_control` (
+  `id` int(11) NOT NULL,
+  `account_id` int(23) NOT NULL,
+  `charid` int(23) NOT NULL,
+  `nome_completo` varchar(255) NOT NULL DEFAULT '0',
+  `char_name` varchar(255) NOT NULL DEFAULT '0',
+  `valor` int(5) NOT NULL,
+  `pix` varchar(255) NOT NULL,
+  `data` datetime NOT NULL,
+  `status` int(11) NOT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `rmt_log` (
+  `id` int(11) NOT NULL,
+  `account_id` int(23) NOT NULL,
+  `charid` int(23) NOT NULL,
+  `valor` int(5) NOT NULL,
+  `quant_del` int(5) NOT NULL,
+  `data` datetime NOT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+*/
+-	script	Assistente RMT	-1,{
+
+OnRMT:
+	if(getgroupid() == 99 || getgroupid() == 50 ){
+		switch (select("^0084ff[>]^000000 Verificar RMT Pendente:^0084ff[>]^000000 Confirmar RMT:^0084ff[>]^000000 Continuar")) {
+		case 1:
+		goto OnPendente;
+		end;
+		case 2:
+			mes "^8dc701[ Sistema RMT ]^000000";
+			mes "Digite o ID da transacao que deseja confirmar:";
+			input .@idpendente;
+			if(.@idpendente == 0){
+				mes "O ID n o pode ser igual a 0.";
+				end;
+			}
+			query_sql("SELECT `account_id`, `valor`, `pix` FROM `rmt_control` WHERE id = '"+.@idpendente+"'",.@accid,.@valor,.@pix$);
+			mes "  AccountID: "+.@accid+"";
+			mes "  Valor: R$"+.@valor+",00";
+			mes "  Chave: "+.@pix$+"";
+			switch (select("^0084ff[>]^000000 Confirmar:^2a2a2a[>]^000000 Cancelar")) {
+			case 1:
+				mes "Transa  o confirmada com sucesso!";
+				query_sql "UPDATE `rmt_control` SET `status` = '1' WHERE `id` = '"+.@idpendente+"'";
+			end;
+			case 2:
+			end;
+			}
+		end;
+		case 3:
+		goto OnContinue;
+		end;
+		case 4:
+		end;
+		}
+	}
+OnContinue:
+	disable_items;
+	.@rmt = countitem(810); // ID DO TICKET RMT
+	if((.@rmt % 2) == 0){
+	   set .@valor, (.@rmt-.@rmt*150/1000);
+	}else{
+	   set .@valor, ((.@rmt-1)-.@rmt*150/1000);
+	}
+	query_sql("SELECT `pixconf`, `pix` ,`nome_completo` FROM `login` WHERE account_id = '"+getcharid(3)+"'",.@pixconf,.@pix$,.@nome_completo$);
+		mes "^8dc701[ Sistema RMT ]^000000";
+		mes (gettime(3)>= 6&&gettime(3)<= 12?"Bom dia":(gettime(3)>=13&&gettime(3)<=18?"Boa tarde":"Boa noite"))+" ^FF0066"+strcharinfo(0)+"^000000, deseja realizar o saque do seu saldo RMT?";
+		mes "^FF0000Aten  o, saques de RMT s  ser o feito no sabado.^000000";
+		mes "Siga o ^0084ffpasso a passo^000000 abaixo para concluir a sua transa  o, lembre-se voc  pode consultar o hist rico das suas transa  o sempre que necess rio no menu anterior.";
+		next;
+	switch(select("^0084ff[>]^000000 Sacar meu saldo (RMT):^0084ff[>]^000000 Hist rico de Transa  es:^2a2a2a[>]^000000 Trocar Moeda RMT:^2a2a2a[>]^000000 Cancelar")) {
+		case 1:
+		switch(select("^0084ff[ ]^000000 Saque agora (^ff0000R$"+.@valor+",00^000000):^0084ff[ ]^000000 Chave PIX "+(.@pixconf > 0?"^5d9308 [Configurado] ^000000":"^d72608 [Pendente] ^000000")+":^2a2a2a[ ]^000000 Cancelar")) {
+			case 1:
+				mes "^8dc701[ Sistema RMT ]^000000";
+				if(.@pixconf < 1 || .@nome_completo$ == ""){
+					mes "Configure a sua Chave PIX, para dar continuidade no processo de saque.";
+					next;
+					switch(select("^0084ff[>]^000000 Configurar Chave PIX "+(.@pixconf > 0?"^5d9308 [Configurado] ^000000":"^d72608 [Pendente] ^000000")+":^2a2a2a[>]^000000 Cancelar")) {
+						case 1:
+							goto OnEdit;
+						end;
+						case 2:
+						end;
+					}
+					end;
+				}
+				if(.@rmt < 20){
+					mes "Requer um minimo de ^ff000020x Moeda RMT^000000, para processar a sua solicita  o.";
+					end;
+				}
+				mes "Ser o convertidos: ^ff0000"+.@rmt+"^000000 Moeda RMT da sua conta.";
+				mes "^cccccc---------------------------------^000000";
+				mes "Voc  ir  receber: ^77db00R$"+.@valor+",00^000000";
+				mes "Na conta bancaria informada nas configura  es de PIX.";
+					switch(select("^0084ff[>]^000000 Continuar:^2a2a2a[>]^000000 Cancelar")) {
+					case 1:
+						next;
+						mes "^8dc701[ Sistema RMT ]^000000";
+						mes "Sua solicita  o foi realizada com sucesso!";
+						mes "Voc  pode consultar o status de suas transa  es em ^0084ffHist rico de Transa  es^000000.";
+						//mes "Pr ximos pagamentos: ^ff000004/05/2021^000000";
+						query_sql "select MAX(`id`) from `rmt_control` ",.@id;
+						set .@id_real,.@id+1;
+						query_sql("INSERT INTO `rmt_control` (`id`, `account_id`,`charid`, `nome_completo`,`char_name`,`valor`, `pix`, `data`, `status`) VALUES ('"+.@id_real+"', '"+getcharid(3)+"','"+getcharid(0)+"', '"+.@nome_completo$+"','"+strcharinfo(0,getcharid(0))+"','"+.@valor+"', '"+.@pix$+"', '"+gettimestr("%Y-%m-%d %H:%M:%S",21)+"', '0')");
+						query_sql("INSERT INTO `rmt_log` (`id`, `account_id`,`charid`, `valor`, `quant_del`,`data`) VALUES ('"+.@id_real+"', '"+getcharid(3)+"','"+getcharid(0)+"', '"+.@valor+"', '"+countitem(810)+"',now())");
+						delitem 810,.@rmt;
+						switch(select("^0084ff[>]^000000 Hist rico de Transa  o:^2a2a2a[>]^000000 Sair")) {
+						case 1:
+						next;
+						goto OnHistorico;
+						end;
+						case 2:
+						end;
+						}
+					end;
+					case 2:
+					end;
+					}
+			end;
+			case 2:
+			if(.@pixconf < 1){
+				OnEdit:
+					mes "^8dc701[ Sistema RMT ]^000000";
+					mes "Tipo de Chave";
+					mes " ^0084ff ^000000 Aleat ria";
+					mes " ^0084ff ^000000 CPF/CNPJ";
+					mes " ^0084ff ^000000 Celular";
+					mes " ^0084ff ^000000 Email";
+					switch (select("^0084ff[>]^000000 Aleat ria:^0084ff[>]^000000 CPF/CNPJ:^0084ff[>]^000000 Celular:^0084ff[>]^000000 Email")) {
+					case 1:
+						set .@key$,"Aleat ria";
+						next;
+						goto OnSetei;
+					case 2:
+						set .@key$,"CPF/CNPJ";
+						next;
+						goto OnSetei;
+					case 3:
+						set .@key$,"Celular";
+						next;
+						goto OnSetei;
+					case 4:
+						set .@key$,"Email";
+						next;
+						goto OnSetei;
+					}
+					OnSetei:
+						mes "^8dc701[ Sistema RMT ]^000000";
+						mes "Voc  selecionou: ^ff0000"+.@Key$+"^000000";
+						mes "Digite sua chave PIX:";
+						input .@pix$;
+						mes "^ff0000Repita sua chave PIX novamente^000000:";
+						input .@pixr$;
+						next;
+						if(.@pix$ == .@pixr$){
+							mes "Digite seu nome completo";
+							input .@name$;
+							if(.@name$ == ""){mes "digite seu nome completo para completa a configura  o."; end;}
+							mes "^8dc701[ Sistema RMT ]^000000";
+							mes "  Chave PIX configurada com sucesso!";
+							query_sql "UPDATE `login` SET `pix` = '"+escape_sql(.@Key$)+": "+escape_sql(.@pix$)+"', `pixconf` = '1',`nome_completo`='"+escape_sql(.@name$)+"' WHERE `account_id` = '"+getcharid(3)+"'";
+						} else {
+							mes "^8dc701[ Sistema RMT ]^000000";
+							mes "Chaves incorretas e/ou n o coincidem...";
+							end;
+						}
+			} else {
+				mes "^8dc701[ Sistema RMT ]^000000";
+				mes "Deseja mudar a sua chave PIX?";
+				switch(select("^0084ff[>]^000000 Mudar chave PIX:^0084ff[>]^000000 Remover chave PIX:^2a2a2a[>]^000000 Cancelar")) {
+				case 1:
+					next;
+					goto OnEdit;
+				case 2:
+					mes "   ^ff0000Chave removida com sucesso.^000000";
+					query_sql "UPDATE `login` SET `pix` = '0', `pixconf` = '0' WHERE `account_id` = '"+getcharid(3)+"'";
+					end;
+				case 3:
+					end;
+				}
+			}
+			end;
+		}
+		end;
+		case 2:
+		OnHistorico:
+			mes "^8dc701[ Sistema RMT ]^000000";
+			mes "Hist rico enviado para o seu chat.";
+			//query_sql("SELECT `valor`, `status` FROM `rmt_control` WHERE account_id = '"+getcharid(3)+"'",.@valor,.@data);
+			dispbottom "[RMT]   HIST RICO DE TRANSA  ES ================ ",0x40f1f9;
+			//dispbottom "  "+.@valor+", "+.@data+"",0xFF9B00;
+	
+			set .@size, query_sql("SELECT `id`, `pix`, `valor`, `status` FROM `rmt_control` WHERE account_id = '"+getcharid(3)+"' ORDER BY id DESC",.@id,.@px$,.@valor,.@status);
+				for (set .@c, 0; .@c < .@size; set .@c, .@c + 1)
+					dispbottom "   ID: " + .@id[.@c] +" | Transa  es no valor de R$" + .@valor[.@c] +",00 | Status: "+(.@status[.@c] > 0?"Conclu do":"Em processamento")+"",0x40f1f9; 
+			end;			
+		case 4:
+		end;
+	
+			
+			case 3:
+			next;
+			mes "Voc  desejar trocar sua moeda RMT em Moedas de Cash Points?";
+			menu "^0084ff[>]^000000 Sim",sim,"^0084ff[>]^000000 N o",nao;
+	sim:
+	next;
+	mes .npc$;
+	mes "Ol ! Eu posso trocar suas Moedas RMT por Moedas de Cash na propor  o de 1:1.";
+	next;
+	mes "Quantas Moedas RMT voc  gostaria de trocar?";
+	input .@quantidade;
+	
+	if (.@quantidade <= 0) {
+		mes "Voc  deve trocar pelo menos 1 Moeda RMT.";
+		close;
+	}
+
+	if (countitem(.item_rmt) < .@quantidade) {
+		mes "Voc  n o tem Moedas RMT suficientes.";
+		close;
+	}
+
+	delitem .item_rmt, .@quantidade;
+	getitem .item_cash, .@quantidade;
+
+	mes "Voc  trocou " + .@quantidade + " Moedas RMT por " + .@quantidade + " Moedas de Cash.";
+	end;
+	
+	nao:
+	close;
+	
+end;
+	}
+
+end;
+
+OnPendente:
+	mes "^8dc701[ Sistema RMT ]^000000";
+	mes "RMT Pendente foi enviado para o seu chat";
+	dispbottom "[RMT] HIST RICO DE RMT PENDENTE ================ ",0x40f1f9;
+	set .@size, query_sql("SELECT `id`, `valor`, `pix`,`charid`, `nome_completo` FROM `rmt_control` WHERE status = '0' ORDER BY id DESC",.@id,.@valor,.@pix$,.@char_id,.@nome$);
+		for (set .@c, 0; .@c < .@size; set .@c, .@c + 1)
+			dispbottom "   ID: " + .@id[.@c] +" | Nome: "+.@nome$[.@c]+" | Char: "+strcharinfo(0,.@char_id[.@c])+" | Valor: R$" + .@valor[.@c] +",00 | "+.@pix$[.@c]+"",0x40f1f9; 
+	end;
+
+
+OnInit:
+    setunitdata getnpcid(0), UNPC_GROUP_ID, 66;
+    setunittitle getnpcid(0), "[Saque seu RMT]";
+	set .npc$, "^2F4F4F[Troca Moeda RMT]^000000"; // Nome do NPC
+	set .item_rmt, 810; // ID da Moeda RMT (substitua pelo ID correto)
+	set .item_cash, 35004; // ID da Moeda de Cash (substitua pelo ID correto)
+	set .qtt, 100;
+	bindatcmd "rmtpendente",strnpcinfo(0)+"::OnPendente", 99,100;
+	bindatcmd "rmt", strnpcinfo(0)+"::OnRMT", 0,99;
+end;
+}
+

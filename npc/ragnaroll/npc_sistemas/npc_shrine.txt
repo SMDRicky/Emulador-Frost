@@ -1,0 +1,108 @@
+-	script	shrine_system	100,{
+	end;
+OnTouch:
+	if ( @shrine_start_timer > gettimetick(2) || @shrine_cooldown > gettimetick(2) ) end;
+	progressbar_npc "",3;
+	@shrine_cooldown = gettimetick(2) + .cooldown;
+	explode(.@tag$, strnpcinfo(2), "|");
+	for ( .@i = 0; .@i < getarraysize(.data$); .@i++ ) {
+		explode(.@T$,.data$[.@i],"|");
+		if ( .@T$[0] == .@tag$[0] ) {
+			.@script_bonus$ = .@T$[2];
+			.@duration = atoi(.@T$[3]);
+			.@status_icon = getd(.@T$[4]);
+			.@message$ = .@T$[5];
+		}
+	}
+	showscript .@message$, getcharid(3), AREA;
+	bonus_script .@script_bonus$,.@duration,1|8,0,.@status_icon;
+	@shrine_start_timer = gettimetick(2)+.@duration;
+	addtimer 1000, strnpcinfo(3)+"::OnCheckMap";
+	end;
+
+OnCheckMap:
+	.@time = @shrine_start_timer-gettimetick(2);
+	if ( .@time && .@time < 60 ) {
+		if ( strcharinfo(3) != strnpcinfo(4) ) {
+			bonus_script_clear;
+			end;
+		}
+		addtimer 1000, strnpcinfo(3)+"::OnCheckMap";
+	}
+	end;
+
+OnInit:
+	if ( strnpcinfo(0) == "shrine_system" ) end;
+
+	explode(.@tag$, strnpcinfo(2), "|");
+
+	// How long before you can use a shrine again
+	.cooldown = 60*5; // <sec>*<min>
+
+	setarray .data$,
+	// Format:
+	// <tag>|<shrine name>|{ <script bonus> }|<duration>|<status_icon>|<message>
+	// <tag>
+	//		- unique identifier for the npc
+	// <shrine name>
+	//		- name of the shrine...
+	// <script bonus>
+	//		- effect of the shrine
+	//		- NOTE: You should enclose the script bonus inside a bracket "{ }".
+	//				you can use any item bonuses for the effect and be creative
+	// <duration>
+	//		- how long the buff will be activated
+	// <status_icon>
+	//		- check src/map/script_constant.hpp for status icon list "EFST_*"
+	// 		- ideally, you should make a custom one for this system
+	//		- but I am too lazy to do it for you.
+	// <message>
+	//		- this message will appear when the buff activates
+		"pow|Bonus de Ataque|{ bonus bStr, 200; bonus bAtkRate, 100; }|1800|EFST_FOOD_STR|Boooouuuuaaaa Toma Força!",
+		"mag|Bonus de Magia|{ bonus bInt, 200; bonus bMatkRate, 100; }|1800|EFST_FOOD_INT|Boooouuuuaaaa Toma Inteligencia!",
+		"spd|Bonus de Velocidade|{ bonus bSpeedRate, 75; }|1800|EFST_FOOD_AGI|Boooouuuuaaaa Toma Velocidade!",
+		"def|Bonus de Defesa|{ bonus bMaxHPrate, 200; bonus bDef, 90; }|1800|EFST_FOOD_VIT|Boooouuuuaaaa Toma Defesa!",
+		"crt|Bonus de Critico|{ bonus bCritical, 100; bonus bCriticalRate, 90; }|1800|EFST_FOOD_LUK|Boooouuuuaaaa Toma Sorte e Critico!",
+		"cx2|Cogumelo Vermelho|{ bonus bDef, 80; bonus bStr, 200; bonus bAgi, 200; bonus bVit, 200; bonus bDex, 200; bonus bInt, 200; bonus bLuk, 200; bonus bAtkRate, 300; bonus bMaxHPrate, 100; bonus bCritical, 100; bonus bCriticalRate, 90; bonus bMatkRate, 100; }|8000|EFST_FOOD_LUK|HAHAHAH VOCÊ RECEBEU O BUFF DO CAIXA 2!";
+	
+	for ( .@i = 0; .@i < getarraysize(.data$); .@i++ ) {
+		explode(.@T$,.data$[.@i],"|");
+		if ( .@T$[0] == .@tag$[0] ) {
+			.@npcname$ = .@T$[1];
+			setnpcdisplay(strnpcinfo(0),.@npcname$+"#"+strnpcinfo(2));
+		}
+	}
+	end;
+}
+// To duplicate the npc, follow the format how to do it properly:
+// <map>,<x>,<y>,<dir>%TAB%duplicate(shrine_system)%TAB%Shrine#<tag>|<number>%TAB%<npc_id>,<trigger_x>,<trigger_y>
+// Legend:
+// <map>,<x>,<y>,<dir> 
+//		- map coordinate and facing direction
+// <tag>
+//		- which shrine tag you assigned on the system
+// <number>
+//		- this number should always increase depending on the tag
+//		- IE. pow|1, pow|2, pow|3 then also mag|1, mag|2, and mag|3
+//		- Its important for this to be unique per tag so that the 
+// 		  console will not throw any npc duplicate errors.
+// <npc_id>,<trigger_x>,<trigger_y>
+//		- npc id and how many cell will the npc trigger. 
+//		- IE. 3,3 = 3x3 cell, the npc will be triggered.
+//gld2_prt,140,215,0	duplicate(shrine_system)	Shrine#pow|1	10042,1,1
+//gld2_prt,145,215,0	duplicate(shrine_system)	Shrine#mag|1	10043,1,1
+//gld2_prt,150,215,0	duplicate(shrine_system)	Shrine#spd|1	10044,1,1
+//gld2_prt,155,215,0	duplicate(shrine_system)	Shrine#def|1	10045,1,1
+//gld2_prt,160,215,0	duplicate(shrine_system)	Shrine#crt|1	10046,1,1
+//veins,204,171,0	duplicate(shrine_system)	Shrine#cx2|1	1085,1,1
+
+//veins,210,167,0	warp	warpbonusxx	1,1,gld2_prt,149,209
+//gld2_prt,150,202,0	warp	warpbonusxx2	1,1,veins,216,166
+moc_para01,48,16,0	warp	warpedeninstancia	1,1,moc_para01,47,172
+moc_para01,47,169,0	warp	warpedeninstancia2	1,1,moc_para01,48,22
+
+moc_para01,57,26,0	warp	warpedeninstancia3	1,1,moc_para01,164,26
+moc_para01,159,26,0	warp	warpedeninstancia4	1,1,moc_para01,52,27
+
+juperos_01,99,114,0	warp	juperos1	1,1,juperos_02,127,277
+juperos_02,130,150,0	warp	juperos2	1,1,jupe_core,150,287
